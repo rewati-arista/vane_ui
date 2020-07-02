@@ -1,1 +1,8 @@
 pytest
+
+# pytest plugins
+pytest-excel
+pytest-xdist
+pytest-html
+pytest-json
+pytest-cache
