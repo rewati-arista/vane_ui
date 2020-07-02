@@ -14,7 +14,7 @@ VOLUME ["/project"]
 # Install python modules required by the repo
 ADD requirements.txt /tmp/requirements.txt
 RUN pip3 install --trusted-host pypi.python.org -r /tmp/requirements.txt \
-    && python3 -m pip install --user --upgrade setuptools wheel
+    && pip3 install --upgrade pip
 
 # Create the user/group that will be used in the container
 # Set some defaults that can be overridden in the build command
