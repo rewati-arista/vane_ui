@@ -1,0 +1,8 @@
+{% for dut in duts -%}
+[connection:{{ dut.name }}]
+host: {{ dut.mgmt_ip }}
+username: {{ dut.username }}
+password: {{ dut.password }}
+transport: {{ dut.transport}}
+
+{% endfor -%}

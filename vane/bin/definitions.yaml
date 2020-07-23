@@ -1,0 +1,32 @@
+parameters:
+  test_cases: All
+  test_suites: test_base_feature_checklist.py
+  report_dir: ../reports
+  html_report: null
+  excel_report: null
+  json_report: null
+  processes: null
+  show_log: show_output.log
+  eapi_template: ../templates/eapi.conf.j2
+  eapi_file: /home/docker/.eapi.conf
+
+duts:
+  - name: spine01
+    mgmt_ip: 3.128.107.209
+    username: kgrozis
+    password: arista123
+    transport: https
+    neighbors:
+      - neighborDevice: leaf01
+        neighborPort: Ethernet2
+        port: Ethernet1
+
+  #- name: leaf01
+  #  mgmt_ip: 1.1.1.2
+  #  username: kgrozis
+  #  password: arista123
+  #  transport: https
+  #  neighbors:
+  #    - neighborDevice: spine01
+  #      neighborPort: Ethernet2
+  #      port: Ethernet1
