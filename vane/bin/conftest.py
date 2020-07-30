@@ -36,7 +36,7 @@ def definitions(request):
     cli_arg = request.config.getoption("--definitions")
     return cli_arg
 
-@pytest.fixture
+@pytest.fixture(scope='function')
 def test_suite_setup():
     """ Do tasks to setup test suite """
 
@@ -47,3 +47,11 @@ def test_suite_setup():
     duts_list = tests_tools.return_dut_list(test_parameters)
     tests_tools.init_show_log(test_parameters)
     duts_struct = tests_tools.init_duts(EOS_SHOW_CMDS, test_parameters)
+
+@pytest.fixture
+def parameter_is_terminattr_daemon_running():
+    return True
+
+@pytest.fixture
+def parameter_is_terminattr_daemon_enabled():
+    return True

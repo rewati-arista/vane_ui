@@ -9,4 +9,5 @@ pytest-xdist
 pytest-html
 pytest-json
 pytest-cache
-pytest-sugar
+#pytest-sugar
+pytest-spec

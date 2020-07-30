@@ -50,13 +50,6 @@ import yaml
 import logging
 import sys
 
-class TestsReporting:
-
-    def __init__(self, test_value):
-        self.test_value = test_value
-    
-    def print_value(self):
-        print(f'\n\n\n\ >>>>> {self.test_value}\n\n\n')
 
 class TestsClient:
     """ Creates an instance of the rendering engine.
@@ -107,17 +100,15 @@ class TestsClient:
 
         logging.info(f'Starting Test')
         nrfu_results = pytest.main(test_paramters)
-        #print("\n\n\n >>>>>", nrfu_results)
-
-        #test_results = self._compile_test_results(nrfu_results)
-        #return test_results, error_entry
 
     def _set_test_parameters(self):
         """ Use data-model to create test parameters
         """
 
+        logging.info('Use data-model to create test parameters')
+
         logging.info('Setting test parameters')
-        test_parameters = ['-v', '-s']
+        test_parameters = []
         test_cases = self.data_model['parameters']['test_cases']
         test_suites = self.data_model['parameters']['test_suites']
         report_dir = self.data_model['parameters']['report_dir']
@@ -125,6 +116,21 @@ class TestsClient:
         excel_report = self.data_model['parameters']['excel_report']
         json_report = self.data_model['parameters']['json_report']
         processes = self.data_model['parameters']['processes']
+        setup_show = self.data_model['parameters']['setup_show']
+        verbose = self.data_model['parameters']['verbose']
+        stdout = self.data_model['parameters']['stdout']
+
+        if verbose:
+            logging.info('Enable pytest output verbosity')
+            test_parameters.append('-v')
+        else:
+            logging.warning('Disable pytest output verbosity')
+
+        if stdout:
+            logging.info('Enable pytest printf to stdout')
+            test_parameters.append('-s')
+        else:
+            logging.warning('Disable pytest printf to stdout')
 
         logging.info(f'Run the following tests: {test_cases}')
         if test_cases == 'All':
@@ -159,16 +165,11 @@ class TestsClient:
         else:
             logging.warning(f'Using single PyTest processes')
 
-        test_obj = TestsReporting('hello world')
-        #test_obj.print_value()
-        object_id = id(test_obj)
-        #print('>>>>>>', object_id)
-        #print(dir(test_obj))
-
-        # pytest.main(["-qq"], plugins=[MyPlugin()])
-        # https://docs.pytest.org/en/3.0.4/usage.html
-        test_parameters.append(f'--definitions={object_id}')
-        #test_parameters.append('test_obj')
+        if setup_show:
+            logging.info('Enable debug for setup and teardown')
+            test_parameters.append('--setup-show')
+        else:
+            logging.warning('Disable debug for setup and teardown')
 
         if test_suites:
             logging.info(f'Run the following tests suites: {test_cases}')

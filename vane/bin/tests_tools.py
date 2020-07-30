@@ -43,6 +43,39 @@ import os
 import stat
 
 
+# TODO: Remove from conftest.py
+EOS_SHOW_CMDS = ["show daemon",
+                 "dir",
+                 "show extensions",
+                 "show running-config section username",
+                 "show tacacs",
+                 "show aaa counters",
+                 "show users detail",
+                 "show aaa methods all",
+                 "show management api http-commands",
+                 "show logging",
+                 "show zerotouch",
+                 "dir flash:zerotouch-config",
+                 "show ntp status",
+                 "show ntp associations"]
+
+
+def test_suite_setup():
+    """ Do tasks to setup test suite """
+
+    logging.info('Starting Test Suite setup')
+    # TODO: Don't hard code yaml_file
+    yaml_file = "definitions.yaml"
+    test_parameters = import_yaml(yaml_file)
+    duts_list = return_dut_list(test_parameters)
+    init_show_log(test_parameters)
+    duts = init_duts(EOS_SHOW_CMDS, test_parameters)
+
+    logging.info(f'Return to test suites: \nduts_lists: {duts_list}'
+                 f'\nduts: {duts}')
+    return duts, duts_list
+
+
 def init_show_log(test_parameters):
     """ Open log file for logging test show commands
 
@@ -157,13 +190,11 @@ def init_duts(show_cmds, test_parameters):
     duts = login_duts(test_parameters)
     workers = len(duts)
 
-    #with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
-    #    {executor.submit(dut_thread, dut, show_cmds, test_suite, xlsx_workbook): 
-    #        dut for dut in duts}
     with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
         {executor.submit(dut_worker, dut, show_cmds, test_parameters): 
             dut for dut in duts}
 
+    logging.info(f'Return duts data structure: {duts}')
     return duts
 
 
@@ -250,10 +281,12 @@ def dut_worker(dut, show_cmds, test_parameters):
     for show_cmd in show_cmds:
         function_def = f'test_{("_").join(show_cmd.split())}'
         logging.info(f'Executing show command: {show_cmd} for test {function_def}')
-        dut["output"]["interface_list"] = return_interfaces(dut["name"], test_parameters)
+
+        dut["output"]["interface_list"] = return_interfaces(name, test_parameters)
 
         json_output, text_output = return_show_cmd(show_cmd, dut, function_def, test_parameters)
 
+        logging.info(f'Adding output of {show_cmd} to duts data structure')
         dut["output"][show_cmd] = {}
         dut["output"][show_cmd]["json"] = json_output[0]["result"]
         dut["output"][show_cmd]["text"] = text_output[0]["output"]
@@ -283,7 +316,6 @@ def return_show_cmd(show_cmd, dut, test_name, test_parameters):
     raw_text = show_output_text[0]['output']
 
     export_logs(test_name, name, raw_text, test_parameters)
-    logging.info(f'loggity log log log')
 
     return show_output, show_output_text
 
@@ -341,8 +373,10 @@ def export_logs(test_name, hostname, output, test_parameters):
         with open(show_log, 'a') as log_file:
             log_file.write(f"\ntest_suite::{test_name}[{hostname}]:\n{output}")
     except BaseException as error:
-        print(f">>>  Error opening log file: {error}")
-        raise
+        print(f">>>  ERROR OPENING LOG FILE: {error}")
+        logging.error(f"ERROR OPENING LOG FILE: {error}")
+        logging.error('EXITING TEST RUNNER')
+        sys.exit(1)
 
 
 def output_to_log_file(test_suite, test_name, hostname, output):

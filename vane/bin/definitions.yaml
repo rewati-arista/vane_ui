@@ -2,13 +2,16 @@ parameters:
   test_cases: All
   test_suites: test_base_feature_checklist.py
   report_dir: ../reports
-  html_report: null
+  html_report: ../reports/report
   excel_report: null
   json_report: null
   processes: null
   show_log: show_output.log
   eapi_template: ../templates/eapi.conf.j2
   eapi_file: /home/docker/.eapi.conf
+  setup_show: False
+  verbose: True
+  stdout: False
 
 duts:
   - name: spine01
@@ -21,12 +24,29 @@ duts:
         neighborPort: Ethernet2
         port: Ethernet1
 
-  #- name: leaf01
-  #  mgmt_ip: 1.1.1.2
-  #  username: kgrozis
-  #  password: arista123
-  #  transport: https
-  #  neighbors:
-  #    - neighborDevice: spine01
-  #      neighborPort: Ethernet2
-  #      port: Ethernet1
+  - name: leaf01
+    mgmt_ip: 3.13.88.77
+    username: kgrozis
+    password: arista123
+    transport: https
+    neighbors:
+      - neighborDevice: spine01
+        neighborPort: Ethernet2
+        port: Ethernet1
+
+show_cmds:
+  test_base_feature_checklist:
+    - dir
+    - show daemon
+    - show extensions
+    - show running-config section username
+    - show tacacs
+    - show aaa counters
+    - show users detail
+    - show aaa methods all
+    - show management api http-commands
+    - show logging
+    - show zerotouch
+    - dir flash:zerotouch-config
+    - show ntp status
+    - show ntp associations

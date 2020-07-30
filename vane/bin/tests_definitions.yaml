@@ -1,0 +1,15 @@
+test_suites:
+  - name: test_base_feature_checklist
+    testcases:
+      - name: test_is_terminattr_daemon_running_on_
+        description: Verify TerminAttr daemon is running
+        expected_output:
+        actual_output:
+        comment: null
+        result:
+      - name: test_is_daemon_enabled_on_
+        description: Verify TerminAttr daemon is enabled
+        expected_output:
+        actual_output:
+        comment: null
+        result:

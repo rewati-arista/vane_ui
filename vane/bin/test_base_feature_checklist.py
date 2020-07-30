@@ -39,52 +39,27 @@ import os
 import argparse
 import logging
 import _ctypes
+import tests_tools
 
 
 logging.basicConfig(level=logging.INFO, filename='base_features.log', filemode='w',
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logging.info('Starting base_features.log file')
 
-# List EOS show commands to use in test cases
-EOS_SHOW_CMDS = ["dir",
-                 "show daemon",
-                 "show extensions",
-                 "show running-config section username",
-                 "show tacacs",
-                 "show aaa counters",
-                 "show users detail",
-                 "show aaa methods all",
-                 "show management api http-commands",
-                 "show logging",
-                 "show zerotouch",
-                 "dir flash:zerotouch-config",
-                 "show ntp status",
-                 "show ntp associations"]
-DEFINITIONS_FILE = "definitions.yaml"
+
+duts, duts_list = tests_tools.test_suite_setup()
 
 
-# PyTest from Test Engine 
-#if os.path.isfile(definitions.TEST_DEFINITION_FILE): 
-#    TEST_DEFINITION = common_nrfu_infra.import_test_definition()
-#    CONNECTION_LIST = common_nrfu_infra.generate_connection_list(TEST_DEFINITION)
-#    common_nrfu_infra.open_log_file()
-#    TEST_SUITE = __file__.split("/")[-1]
-#    DUTS = common_nrfu_infra.generate_dut_info_threaded(EOS_SHOW_CMDS, TEST_SUITE)
-#Native PyTest
-#else:
-#    XLSX_WORKBOOK = common_nrfu_infra.import_spreadsheet()
-#    CONNECTION_LIST = common_nrfu_infra.return_connection_list(XLSX_WORKBOOK)
-#    common_nrfu_infra.open_log_file()
-#    TEST_SUITE = __file__.split("/")[-1]#
-#    DUTS = common_nrfu_infra.return_dut_info_threaded(EOS_SHOW_CMDS, TEST_SUITE)
-
-
-def test_assert_true(test_suite_setup):
+logging.info('Starting base feature test cases')
+#@pytest.mark.usefixtures('test_suite_setup')
+#@pytest.mark.parametrize("dut", duts, ids=['spine1', 'spine2'])
+def test_assert_true():
+#def test_assert_true(test_suite_setup):
     """ Prior to running any tests this test Validates that PyTest is working
         correct by verifying PyTest can assert True.
     """
-    test_suite_setup
-
+    logging.info('Prior to running any tests this test Validates that PyTest '
+                 'is working correct by verifying PyTest can assert True.')
     #print('\n\n>>>>>>>>>>>>>>> ', definitions)
     #print('hello world')
     #test_report = _ctypes.PyObj_FromPtr(int(definitions))
@@ -93,24 +68,24 @@ def test_assert_true(test_suite_setup):
     assert True
 
 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# @pytest.mark.xfail
-# def test_dr(dut):
-#     """ Verify filesystem is correct
-# 
-#         Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     show_cmd = "dir"
-#     eos_dir = dut["output"][show_cmd]["text"]
-# 
-#     print(f"\nNO AUTOMATED TEST.  MUST TEST MANUALLY")
-#     print(f"\nOn router |{dut['name']}|: dir:\n{eos_dir}")
-# 
-#     assert False
-# 
-# 
+@pytest.mark.parametrize("dut", duts, ids=duts_list)
+@pytest.mark.xfail
+def test_dir(dut):
+    """ Verify filesystem is correct
+
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
+    """
+
+    show_cmd = "dir"
+    eos_dir = dut["output"][show_cmd]["text"]
+
+    print(f"\nNO AUTOMATED TEST.  MUST TEST MANUALLY")
+    print(f"\nOn router |{dut['name']}|: dir:\n{eos_dir}")
+
+    assert False
+
+ 
 # @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
 # def test_daemon(dut):
 #     """ Verify TerminAttr daemon is enabled and running
@@ -122,43 +97,59 @@ def test_assert_true(test_suite_setup):
 #     test_daemon_running(dut)
 #     test_daemon_enabled(dut)
 # 
-# 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# def test_daemon_running(dut):
-#     """ Verify TerminAttr daemon is enabled and running
-# 
-#         Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     show_cmd = "show daemon"
-#     eos_daemon = \
-#         dut["output"][show_cmd]['json']['daemons']['TerminAttr']['running']
-# 
-#     print(f"\nOn router |{dut['name']}|: TerminAttr daemon running is \
-# |{eos_daemon}|")
-# 
-#     assert eos_daemon is True
-# 
-# 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# def test_daemon_enabled(dut):
-#     """ Verify TerminAttr daemon is enabled and running
-# 
-#         Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     show_cmd = "show daemon"
-#     eos_daemon = \
-#         dut["output"][show_cmd]['json']['daemons']['TerminAttr']['enabled']
-# 
-#     print(f"\nOn router |{dut['name']}|: TerminAttr daemon enabled is \
-# |{eos_daemon}|")
-# 
-#     assert eos_daemon is True
-# 
-# 
+
+@pytest.mark.parametrize("dut", duts, ids=duts_list)
+def test_is_terminattr_daemon_running_on_(dut, parameter_is_terminattr_daemon_running):
+    """ Verify TerminAttr daemon is running
+
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
+    """
+
+    daemon_state = parameter_is_terminattr_daemon_running
+    dut_name = dut['name']
+    logging.info(f'TEST is terminattr daemon running on |{dut_name}|')
+    logging.info(f'GIVEN expected terminattr​ running state: |{daemon_state}|')
+
+    show_cmd = "show daemon"
+    eos_daemon = \
+        dut["output"][show_cmd]['json']['daemons']['TerminAttr']['running']
+    logging.info(f'WHEN terminattr​ device running state is |{eos_daemon}|')    
+
+    test_result = eos_daemon is daemon_state
+    logging.info(f'THEN test case result is |{test_result}|')  
+
+    print(f"\nOn router |{dut_name}|: TerminAttr daemon running is "
+          f"|{eos_daemon}|")
+    assert eos_daemon is daemon_state
+
+
+@pytest.mark.parametrize("dut", duts, ids=duts_list)
+def test_is_daemon_enabled_on_(dut, parameter_is_terminattr_daemon_enabled):
+    """ Verify TerminAttr daemon is enabled
+
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
+    """
+
+    daemon_state = parameter_is_terminattr_daemon_enabled
+    dut_name = dut['name']
+    logging.info(f'TEST is terminattr daemon enabled on |{dut_name}|')
+    logging.info(f'GIVEN expected terminattr​ enabled state: |{daemon_state}|')
+
+    show_cmd = "show daemon"
+    eos_daemon = \
+        dut["output"][show_cmd]['json']['daemons']['TerminAttr']['enabled']
+    logging.info(f'WHEN terminattr​ device enabled state is |{eos_daemon}|')    
+
+    test_result = eos_daemon is daemon_state
+    logging.info(f'THEN test case result is |{test_result}|') 
+
+    print(f"\nOn router |{dut['name']}|: TerminAttr daemon enabled is "
+          f"|{eos_daemon}|")
+    assert eos_daemon is True
+
+
 # @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
 # def test_extensions(dut):
 #     """ Verify TerminAttr extension is installed and not erroring
