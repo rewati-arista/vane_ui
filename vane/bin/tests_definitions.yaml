@@ -1,15 +1,22 @@
 test_suites:
-  - name: test_base_feature_checklist
+  - name: test_base_feature_checklist.py
     testcases:
       - name: test_is_terminattr_daemon_running_on_
         description: Verify TerminAttr daemon is running
-        expected_output:
-        actual_output:
+        expected_output: True
+        actual_output: null
         comment: null
-        result:
+        result: True
       - name: test_is_daemon_enabled_on_
         description: Verify TerminAttr daemon is enabled
-        expected_output:
-        actual_output:
+        expected_output: True
+        actual_output: null
         comment: null
-        result:
+        result: True
+      - name: test_is_aws_extension_installed_on_
+        description: Verify awslogs extension is installed and not erroring
+        show_cmd: show extensions
+        expected_output: installed
+        actual_output: null
+        comment: null
+        result: True

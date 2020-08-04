@@ -55,3 +55,7 @@ def parameter_is_terminattr_daemon_running():
 @pytest.fixture
 def parameter_is_terminattr_daemon_enabled():
     return True
+
+@pytest.fixture
+def tests_parameters():
+    return tests_tools.import_yaml('tests_definitions.yaml') 

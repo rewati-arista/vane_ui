@@ -379,6 +379,27 @@ def export_logs(test_name, hostname, output, test_parameters):
         sys.exit(1)
 
 
+def get_parameters(tests_parameters, test_suite, test_case):
+    """ Return test parameters for a test case
+
+        Args:
+            tests_parameter 
+    """
+
+    logging.info('Identify test case and return parameters')
+    test_suite = test_suite.split('/')[-1]
+
+    logging.info(f'Return testcases for Test Suite: {test_suite}')
+    suite_parameters = [param for param in tests_parameters['test_suites'] if param['name'] == test_suite]
+    logging.info(f'Suite_parameters: {suite_parameters}')
+
+    logging.info(f'Return parameters for Test Case: {test_case}')
+    case_parameters = [param for param in suite_parameters[0]['testcases'] if param['name'] == test_case]
+    logging.info(f'Case_parameters: {case_parameters}')
+
+    return case_parameters[0]
+
+
 def output_to_log_file(test_suite, test_name, hostname, output):
     """ Open log file for logging test show commands
 

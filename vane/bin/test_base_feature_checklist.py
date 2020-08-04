@@ -47,7 +47,8 @@ logging.basicConfig(level=logging.INFO, filename='base_features.log', filemode='
 logging.info('Starting base_features.log file')
 
 
-duts, duts_list = tests_tools.test_suite_setup()
+DUTS, DUTS_NAME = tests_tools.test_suite_setup()
+TEST_SUITE = __file__
 
 
 logging.info('Starting base feature test cases')
@@ -68,7 +69,7 @@ def test_assert_true():
     assert True
 
 
-@pytest.mark.parametrize("dut", duts, ids=duts_list)
+@pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
 @pytest.mark.xfail
 def test_dir(dut):
     """ Verify filesystem is correct
@@ -85,28 +86,19 @@ def test_dir(dut):
 
     assert False
 
- 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# def test_daemon(dut):
-#     """ Verify TerminAttr daemon is enabled and running
-# 
-#         Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     test_daemon_running(dut)
-#     test_daemon_enabled(dut)
-# 
 
-@pytest.mark.parametrize("dut", duts, ids=duts_list)
-def test_is_terminattr_daemon_running_on_(dut, parameter_is_terminattr_daemon_running):
+@pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
+def test_is_terminattr_daemon_running_on_(dut, tests_parameters):
     """ Verify TerminAttr daemon is running
 
         Args:
           dut (dict): Encapsulates dut details including name, connection
     """
 
-    daemon_state = parameter_is_terminattr_daemon_running
+    test_case = inspect.currentframe().f_code.co_name
+    test_parameters = tests_tools.get_parameters(tests_parameters, TEST_SUITE, test_case)
+
+    daemon_state = test_parameters["expected_output"]
     dut_name = dut['name']
     logging.info(f'TEST is terminattr daemon running on |{dut_name}|')
     logging.info(f'GIVEN expected terminattr​ running state: |{daemon_state}|')
@@ -124,44 +116,71 @@ def test_is_terminattr_daemon_running_on_(dut, parameter_is_terminattr_daemon_ru
     assert eos_daemon is daemon_state
 
 
-@pytest.mark.parametrize("dut", duts, ids=duts_list)
-def test_is_daemon_enabled_on_(dut, parameter_is_terminattr_daemon_enabled):
+@pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
+def test_is_daemon_enabled_on_(dut, tests_parameters):
     """ Verify TerminAttr daemon is enabled
 
         Args:
           dut (dict): Encapsulates dut details including name, connection
     """
 
-    daemon_state = parameter_is_terminattr_daemon_enabled
+    test_case = inspect.currentframe().f_code.co_name
+    test_parameters = tests_tools.get_parameters(tests_parameters, TEST_SUITE, test_case)
+
+    daemon_state = test_parameters["expected_output"]
     dut_name = dut['name']
     logging.info(f'TEST is terminattr daemon enabled on |{dut_name}|')
     logging.info(f'GIVEN expected terminattr​ enabled state: |{daemon_state}|')
 
     show_cmd = "show daemon"
+    show_cmd_txt = dut["output"][show_cmd]['text']
     eos_daemon = \
         dut["output"][show_cmd]['json']['daemons']['TerminAttr']['enabled']
     logging.info(f'WHEN terminattr​ device enabled state is |{eos_daemon}|')    
 
     test_result = eos_daemon is daemon_state
-    logging.info(f'THEN test case result is |{test_result}|') 
+    logging.info(f'THEN test case result is |{test_result}|')
+    logging.info(f'OUTPUT of |{show_cmd}|:\n\n{show_cmd_txt}') 
 
     print(f"\nOn router |{dut['name']}|: TerminAttr daemon enabled is "
-          f"|{eos_daemon}|")
+          f"|{eos_daemon}| and expected value is |{daemon_state}|.\nTest "
+          f"result is {test_result}")
     assert eos_daemon is True
 
 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# def test_extensions(dut):
-#     """ Verify TerminAttr extension is installed and not erroring
-# 
-#         Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     test_extensions_status(dut)
-#     test_extensions_error(dut)
-# 
-# 
+@pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
+def test_is_aws_extension_installed_on_(dut, tests_parameters):
+    """ Verify awslogs extension is installed and not erroring
+
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
+    """
+
+    test_case = inspect.currentframe().f_code.co_name
+    test_parameters = tests_tools.get_parameters(tests_parameters, TEST_SUITE, test_case)
+
+    expected_output = test_parameters["expected_output"]
+    dut_name = dut['name']
+    logging.info(f'TEST is awslogs extension installed on |{dut_name}|')
+    logging.info(f'GIVEN expected awslog extension status: |{expected_output}|')
+
+    show_cmd = test_parameters["show_cmd"]
+    show_cmd_txt = dut["output"][show_cmd]['text']
+
+    if 'awslogs.swix' in dut["output"][show_cmd]['json']['extensions']:
+
+        eos_extension = dut["output"][show_cmd]['json']['extensions\
+']['awslogs.swix']['status']
+        print(f"\nOn router |{dut['name']}| TerminAttr-1.6.1-1.swix extension is \
+|{eos_extension}|")
+    else:
+        print(f"\nOn router |{dut['name']}| TerminAttr-1.6.1-1.swix extension \
+            is |NOT installed|")
+        assert False
+
+    assert eos_extension == 'installed'
+
+
 # @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
 # def test_extensions_status(dut):
 #     """ Verify TerminAttr extension is installed and not erroring
