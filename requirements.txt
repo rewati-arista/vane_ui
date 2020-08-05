@@ -1,4 +1,7 @@
 pytest
+pyyaml
+jinja2
+pyeapi
 
 # pytest plugins
 pytest-excel
@@ -6,3 +9,5 @@ pytest-xdist
 pytest-html
 pytest-json
 pytest-cache
+#pytest-sugar
+pytest-spec
