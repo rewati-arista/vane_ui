@@ -1,20 +1,50 @@
 test_suites:
   - name: test_base_feature_checklist.py
     testcases:
-      - name: test_is_terminattr_daemon_running_on_
-        description: Verify TerminAttr daemon is running
-        expected_output: True
+      - name: test_if_files_on_
+        description: Verify a list of daemons are running on DUT
+        files:
+          - flash:startup-config
+          - flash:veos-config
+          - flash:zerotouch-config
+        expected_output: False
+        show_cmd: show daemon
         actual_output: null
         comment: null
         result: True
-      - name: test_is_daemon_enabled_on_
-        description: Verify TerminAttr daemon is enabled
+      - name: test_if_daemons_are_running_on_
+        description: Verify a list of daemons are running on DUT
+        daemons:
+          - TerminAttr
         expected_output: True
+        show_cmd: show daemon
         actual_output: null
         comment: null
         result: True
-      - name: test_is_aws_extension_installed_on_
-        description: Verify awslogs extension is installed and not erroring
+      - name: test_if_daemons_are_enabled_on_
+        description: Verify a list of daemons are enabled on DUT
+        daemons:
+          - TerminAttr
+        expected_output: True
+        show_cmd: show daemon
+        actual_output: null
+        comment: null
+        result: True
+      - name: test_if_extensions_are_installed_on_
+        description: Verify awslogs extension is installed
+        extensions:
+          - awslogs.swix
+          - awsha.rpm
+        show_cmd: show extensions
+        expected_output: installed
+        actual_output: null
+        comment: null
+        result: True
+      - name: test_if_extensions_are_erroring_on_
+        description: Verify awslogs extension is not erroring
+        extensions:
+          - awslogs.swix
+          - awsha.rpm
         show_cmd: show extensions
         expected_output: installed
         actual_output: null

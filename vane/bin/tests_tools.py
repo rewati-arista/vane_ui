@@ -400,6 +400,26 @@ def get_parameters(tests_parameters, test_suite, test_case):
     return case_parameters[0]
 
 
+def verify_show_cmd(show_cmd, dut):
+    """ Verify if show command was successfully executed on dut
+
+        show_cmd (str): show command 
+        dut (dict): data structure of dut parameters
+    """
+
+    logging.info(f'Verify if show command |{show_cmd}| was successfully executed '
+                 'on dut')
+
+    if show_cmd in dut["output"]:
+        logging.info(f'Verified output for show command |{show_cmd}|')
+        show_cmd_bool = True
+    else:
+        logging.critical('Not Verified')
+        assert False
+    
+    #logging.info()
+    #return show_cmd_bool
+
 def output_to_log_file(test_suite, test_name, hostname, output):
     """ Open log file for logging test show commands
 
