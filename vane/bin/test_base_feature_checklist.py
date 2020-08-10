@@ -185,6 +185,7 @@ def test_if_extensions_are_installed_on_(dut, tests_definitions):
     extensions = test_parameters["extensions"]
 
     show_cmd = test_parameters["show_cmd"]
+    tests_tools.verify_show_cmd(show_cmd, dut)
     show_cmd_txt = dut["output"][show_cmd]['text']
 
     for extension in extensions:
@@ -199,7 +200,8 @@ def test_if_extensions_are_installed_on_(dut, tests_definitions):
             logging.info(f'WHEN {extension} extenstion installation state is |{eos_extension}|')
 
             test_result = (eos_extension == expected_output)
-            logging.info(f'THEN test case result is |{test_result}|\n')    
+            logging.info(f'THEN test case result is |{test_result}|\n') 
+            logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}') 
         else:
             print(f"\nOn router |{dut['name']}| {extension} extension "
                 f"is |NOT installed|")
@@ -221,81 +223,96 @@ def test_if_extensions_are_erroring_on_(dut, tests_definitions):
 
     expected_output = test_parameters["expected_output"]
     dut_name = dut['name']
-    logging.info(f'TEST is awslogs extension not erroring on |{dut_name}|')
-    logging.info(f'GIVEN expected awslog extension status: |{expected_output}|')
+    extensions = test_parameters["extensions"]
 
     show_cmd = test_parameters["show_cmd"]
+    tests_tools.verify_show_cmd(show_cmd, dut)
+    show_cmd_txt = dut["output"][show_cmd]['text']
 
-    if 'awslogs.swix' in dut["output"][show_cmd]['json']['extensions']:
-        eos_extension = dut["output"][show_cmd]['json']['extensions']['awslogs.swix']['error']
-        print(f"\nOn router |{dut['name']}| awslogs.swix extension error is "
-              f"|{eos_extension}|")
+    for extension in extensions:
+        logging.info(f'TEST is {extension} extension not erroring on |{dut_name}|')
+        logging.info(f'GIVEN expected {extension} extension status: |{expected_output}|')
+
+        if extension in dut["output"][show_cmd]['json']['extensions']:
+            eos_extension = dut["output"][show_cmd]['json']['extensions'][extension]['error']
+            print(f"\nOn router |{dut['name']}| {extension} extension error is "
+                f"|{eos_extension}|")
+
+            logging.info(f'WHEN {extension} extenstion error state is |{eos_extension}|')
+
+            test_result = (eos_extension == expected_output)
+            logging.info(f'THEN test case result is |{test_result}|\n')   
+            logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}') 
+        else:
+            print(f"\nOn router |{dut['name']}| {extension} extension "
+                f"is |NOT installed|")
+            assert False
+
+        assert eos_extension is False
+
+    
+@pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
+def test_if_usernames_are_configured_on_(dut, tests_definitions):
+    """ Verify username is set correctly
+
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
+    """
+
+    test_case = inspect.currentframe().f_code.co_name
+    test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+    expected_output = test_parameters["expected_output"]
+    dut_name = dut['name']
+    usernames = test_parameters["usernames"]
+
+    for username in usernames:
+        logging.info(f'TEST is {username} username configured |{dut_name}|')
+        logging.info(f'GIVEN {username} username configured status: |{expected_output}|')
+
+        show_cmd = "show running-config section username"
+        show_cmd_txt = dut["output"][show_cmd]['text']
+
+        if username in show_cmd_txt:
+            print(f"\nOn router |{dut['name']}| |admin| username is |configured|")
+            logging.info(f'WHEN {username} username configured status is |True|')
+            logging.info(f'THEN test case result is |True|\n')
+            logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}') 
+        else:
+            print(f"\nOn router |{dut['name']}| |{username}| username is "
+                   "|NOT configured|")
+
+        assert (username in show_cmd_txt) is True
+
+
+
+@pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
+def test_show_tacacs_sent(dut):
+    """ Verify tacacs is working correctly
+
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
+    """
+
+    show_cmd = "show tacacs"
+    eos_messages_sent_1 = \
+        dut["output"][show_cmd]['json']['tacacsServers'][0]['messagesSent']
+
+    show_output, _ = common_nrfu_infra.return_show_cmd_output(
+        show_cmd, dut, TEST_SUITE, inspect.stack()[0][3])
+    eos_messages_sent_2 = \
+        show_output[0]['result']['tacacsServers'][0]['messagesSent']
+
+    if eos_messages_sent_1 < eos_messages_sent_2:
+        print(f"\nOn router |{dut['name']}| TACACS messages2 sent: |{eos_messages_sent_2}| \
+increments from TACACS messages1 sent: |{eos_messages_sent_1}|")
     else:
-        print(f"\nOn router |{dut['name']}| awslogs.swix extension is |False|")
-        assert False
+        print(f"\nOn router |{dut['name']}| TACACS messages2 sent: |{eos_messages_sent_2}| \
+doesn't increments from TACACS messages1 sent: |{eos_messages_sent_1}|")
 
-    assert eos_extension is False
+    assert eos_messages_sent_1 < eos_messages_sent_2
 
-#     
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# def test_show_username(dut):
-#     """ Verify username is set correctly
-# 
-#         Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     show_cmd = "show running-config section username"
-#     eos_username = dut["output"][show_cmd]['text']
-# 
-#     if "admin" in eos_username:
-#         print(f"\nOn router |{dut['name']}| |admin| username is |configured|")
-#     else:
-#         print(f"\nOn router |{dut['name']}| |admin| username is \
-# |NOT configured|")
-# 
-#     assert ("admin" in eos_username) is True
-# 
-# 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# def test_show_tacacs(dut):
-#     """ Verify tacacs is working correctly
-# 
-#         Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     test_show_tacacs_sent(dut)
-#     test_show_tacacs_received(dut)
-# 
-# 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# def test_show_tacacs_sent(dut):
-#     """ Verify tacacs is working correctly
-# 
-#         Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     show_cmd = "show tacacs"
-#     eos_messages_sent_1 = \
-#         dut["output"][show_cmd]['json']['tacacsServers'][0]['messagesSent']
-# 
-#     show_output, _ = common_nrfu_infra.return_show_cmd_output(
-#         show_cmd, dut, TEST_SUITE, inspect.stack()[0][3])
-#     eos_messages_sent_2 = \
-#         show_output[0]['result']['tacacsServers'][0]['messagesSent']
-# 
-#     if eos_messages_sent_1 < eos_messages_sent_2:
-#         print(f"\nOn router |{dut['name']}| TACACS messages2 sent: |{eos_messages_sent_2}| \
-# increments from TACACS messages1 sent: |{eos_messages_sent_1}|")
-#     else:
-#         print(f"\nOn router |{dut['name']}| TACACS messages2 sent: |{eos_messages_sent_2}| \
-# doesn't increments from TACACS messages1 sent: |{eos_messages_sent_1}|")
-# 
-#     assert eos_messages_sent_1 < eos_messages_sent_2
-# 
-# 
+
 # @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
 # def test_show_tacacs_received(dut):
 #     """ Verify tacacs is working correctly

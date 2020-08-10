@@ -8,7 +8,7 @@ test_suites:
           - flash:veos-config
           - flash:zerotouch-config
         expected_output: False
-        show_cmd: show daemon
+        show_cmd: show file information
         actual_output: null
         comment: null
         result: True
@@ -46,7 +46,17 @@ test_suites:
           - awslogs.swix
           - awsha.rpm
         show_cmd: show extensions
-        expected_output: installed
+        expected_output: False
+        actual_output: null
+        comment: null
+        result: True
+      - name: test_if_usernames_are_configured_on_
+        description: Verify username is set correctly
+        usernames:
+          - ec2-user
+          - kgrozis
+        show_cmd: show running-config section username
+        expected_output: True
         actual_output: null
         comment: null
         result: True
