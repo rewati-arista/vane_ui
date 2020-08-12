@@ -325,7 +325,7 @@ def test_if_tacacs_is_sending_messages_on_(dut, tests_definitions):
         else:
             print(f"\nOn router |{dut_name}| TACACS messages2 sent: |{eos_messages_sent_2}| "
                   f"doesn't increments from TACACS messages1 sent: |{eos_messages_sent_1}|")
-            logging.info(f'THEN test case result is |True|')  
+            logging.info(f'THEN test case result is |False|')  
 
         logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
 
@@ -345,26 +345,43 @@ def test_show_if_tacacs_is_receiving_messages_on_(dut, tests_definitions):
     test_case = inspect.currentframe().f_code.co_name
     test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
 
-    show_cmd = "show tacacs"
-    eos_messages_received_1 = \
-        dut["output"][show_cmd]['json']['tacacsServers'][0]['messagesReceived']
+    dut_name = dut['name']
 
-    show_output, _ = common_nrfu_infra.return_show_cmd_output(
-        show_cmd, dut, TEST_SUITE, inspect.stack()[0][3])
-    eos_messages_received_2 = \
-        show_output[0]['result']['tacacsServers'][0]['messagesReceived']
+    show_cmd = test_parameters["show_cmd"]
+    tests_tools.verify_show_cmd(show_cmd, dut)
+    tacacs_servers = tests_tools.verify_tacacs(dut)
 
-    if eos_messages_received_1 < eos_messages_received_2:
-        print(f"\nOn router |{dut['name']}| TACACS messages2 received: \
-            |{eos_messages_received_2}| increments from TACACS messages1 \
-            received: |{eos_messages_received_1}|")
+    show_cmd_txt = dut["output"][show_cmd]['text']
+
+    logging.info(f'TEST is |{dut_name}| receiving messages to TACACS server')
+
+    if tacacs_servers:
+        eos_messages_received_1 = \
+            dut["output"][show_cmd]['json']['tacacsServers'][0]['messagesReceived']
+        logging.info(f'GIVEN {eos_messages_sent_1} TACACS messages recieved at time 1')
+
+
+        show_output, _ = tests_tools.return_show_cmd(show_cmd, dut, test_case, LOG_FILE)
+        eos_messages_received_2 = \
+            show_output[0]['result']['tacacsServers'][0]['messagesReceived']
+        logging.info(f'WHEN {eos_messages_sent_2} TACACS messages sent at time 2')
+
+        if eos_messages_received_1 < eos_messages_received_2:
+            print(f"\nOn router |{dut['name']}| TACACS messages2 received: "
+                  f"|{eos_messages_received_2}| increments from TACACS messages1 "
+                  f"received: |{eos_messages_received_1}|")
+            logging.info(f'THEN test case result is |True|')  
+        else:
+            print(f"\nOn router |{dut['name']}| TACACS messages2 received: "
+                  f"|{eos_messages_received_2}| doesn't increments from TACACS "
+                  f"messages1 received: |{eos_messages_received_1}|")
+            logging.info(f'THEN test case result is |False|')  
+
+        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+
+        assert eos_messages_received_1 < eos_messages_received_2
     else:
-        print(f"\nOn router |{dut['name']}| TACACS messages2 received: \
-            |{eos_messages_received_2}| doesn't increments from TACACS \
-            messages1 received: |{eos_messages_received_1}|")
-
-    assert eos_messages_received_1 < eos_messages_received_2
-
+        print(f"\nOn router |{dut_name}| does not have TACACS servers configured")
 
 # @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
 # def test_aaa_counters(dut):
