@@ -74,3 +74,10 @@ test_suites:
         actual_output: null
         comment: null
         result: True
+      - name: test_if_authentication_counters_are_incrementing_on_
+        description: Verify AAA counters are working correctly
+        show_cmd: show aaa counters
+        expected_output: null
+        actual_output: null
+        comment: null
+        result: True

@@ -14,8 +14,8 @@ parameters:
   stdout: False
 
 duts:
-  - name: test_spine01
-    mgmt_ip: 3.128.107.209
+  - name: kg_spine01
+    mgmt_ip: 3.132.90.164
     username: kgrozis
     password: arista123
     transport: https
@@ -24,8 +24,28 @@ duts:
         neighborPort: Ethernet2
         port: Ethernet1
 
-  - name: test_spine02
-    mgmt_ip: 3.13.88.77
+  - name: kg_spine02
+    mgmt_ip: 3.131.34.190
+    username: kgrozis
+    password: arista123
+    transport: https
+    neighbors:
+      - neighborDevice: spine01
+        neighborPort: Ethernet2
+        port: Ethernet1
+
+  - name: kg_rr01
+    mgmt_ip: 3.22.137.44
+    username: kgrozis
+    password: arista123
+    transport: https
+    neighbors:
+      - neighborDevice: leaf01
+        neighborPort: Ethernet2
+        port: Ethernet1
+
+  - name: kg_rr02
+    mgmt_ip: 3.131.6.163
     username: kgrozis
     password: arista123
     transport: https

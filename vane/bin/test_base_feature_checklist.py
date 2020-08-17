@@ -383,35 +383,50 @@ def test_show_if_tacacs_is_receiving_messages_on_(dut, tests_definitions):
     else:
         print(f"\nOn router |{dut_name}| does not have TACACS servers configured")
 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# def test_aaa_counters(dut):
-#     """ Verify AAA counters are working correctly
-# 
-#         Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     show_cmd = "show aaa counters"
-#     eos_authorization_allowed_1 = \
-#         dut["output"][show_cmd]['json']['authorizationAllowed']
-# 
-#     show_output, _ = common_nrfu_infra.return_show_cmd_output(
-#         show_cmd, dut, TEST_SUITE, inspect.stack()[0][3])
-#     eos_authorization_allowed_2 = \
-#         show_output[0]['result']['authorizationAllowed']
-# 
-#     if eos_authorization_allowed_1 < eos_authorization_allowed_2:
-#         print(f"\nOn router |{dut['name']}| AAA authorization allowed \
-# messages2: |{eos_authorization_allowed_2}| increments from AAA authorization \
-# allowed message1: |{eos_authorization_allowed_1}|")
-#     else:
-#         print(f"\nOn router |{dut['name']}| AAA authorization allowed \
-# messages2: |{eos_authorization_allowed_2}| doesn't increments from AAA \
-# authorization allowed message1: |{eos_authorization_allowed_1}|")
-# 
-#     assert eos_authorization_allowed_1 < eos_authorization_allowed_2
-# 
-# 
+
+@pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
+def test_if_authentication_counters_are_incrementing_on_(dut, tests_definitions):
+    """ Verify AAA counters are working correctly
+
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
+    """
+
+    test_case = inspect.currentframe().f_code.co_name
+    test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+    dut_name = dut['name']
+
+    show_cmd = test_parameters["show_cmd"]
+    tests_tools.verify_show_cmd(show_cmd, dut)
+    show_cmd_txt = dut["output"][show_cmd]['text']
+
+    logging.info(f'TEST is |{dut_name}| authentication counters incrementing')
+
+    eos_authorization_allowed_1 = \
+        dut["output"][show_cmd]['json']['authorizationAllowed']
+    logging.info(f'GIVEN {eos_authorization_allowed_1} authentication counters at time 1')
+
+    show_output, _ = tests_tools.return_show_cmd(show_cmd, dut, test_case, LOG_FILE)
+    eos_authorization_allowed_2 = \
+        show_output[0]['result']['authorizationAllowed']
+    logging.info(f'WHEN {eos_authorization_allowed_2} authentication counters at time 2')
+
+    if eos_authorization_allowed_1 < eos_authorization_allowed_2:
+        print(f"\nOn router |{dut['name']}| AAA authorization allowed "
+              f"messages2: |{eos_authorization_allowed_2}| increments from AAA authorization "
+              f"allowed message1: |{eos_authorization_allowed_1}|")
+        logging.info(f'THEN test case result is |True|')  
+    else:
+        print(f"\nOn router |{dut['name']}| AAA authorization allowed "
+              f"messages2: |{eos_authorization_allowed_2}| doesn't increments from AAA "
+              f"authorization allowed message1: |{eos_authorization_allowed_1}|")
+        logging.info(f'THEN test case result is |False|')  
+
+    logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+    assert eos_authorization_allowed_1 < eos_authorization_allowed_2
+
+
 # @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
 # def test_aaa_sessions(dut):
 #     """ Verify AAA session logging is working by identifying eapi connection
