@@ -12,7 +12,11 @@ parameters:
   setup_show: False
   verbose: True
   stdout: False
-  mark: base_feature
+  # "pytest --markers" lists all registered markers
+  # To use multiple marker for all test cases use an "or" between markers
+  # To use multiple marker for a test case use "and" between markers
+  # To negate a marker use "not" before a marker
+  mark: not extensions
 
 duts:
   - name: kg_spine01
