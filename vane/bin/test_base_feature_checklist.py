@@ -54,425 +54,439 @@ logging.info('Starting base feature test cases')
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 
 
-def test_assert_true():
-    """ Prior to running any tests this test Validates that PyTest is working
-        correct by verifying PyTest can assert True.
-    """
-    logging.info('Prior to running any tests this test Validates that PyTest '
-                 'is working correct by verifying PyTest can assert True.')
-    assert True
-
-
-@pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
-def test_if_files_on_(dut, tests_definitions):
-    """ Verify filesystem is correct and expected files are present
-
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
+class pytestTests():
+    """ EOS Extensions Test Suite
     """
 
-    test_case = inspect.currentframe().f_code.co_name
-    test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+    def test_assert_true(self):
+        """ Prior to running any tests this test Validates that PyTest is working
+            correct by verifying PyTest can assert True.
+        """
+        logging.info('Prior to running any tests this test Validates that PyTest '
+                    'is working correct by verifying PyTest can assert True.')
+        assert True
 
-    files = test_parameters["files"]
-    expected_output = test_parameters["expected_output"]
-    dut_name = dut['name']
-
-    for file_name in files:
-        show_cmd = f"show file information {file_name}"
-        logging.info(f'TEST is {file_name} file present on |{dut_name}|')
-        logging.info(f'GIVEN expected {file_name} isDir state: '
-                     f'|{expected_output}|')
-
-        show_output, show_cmd_txt = tests_tools.return_show_cmd(show_cmd, dut, test_case, LOG_FILE)
-        file_state = show_output[0]["result"]['isDir']
-        
-        logging.info(f'WHEN {file_name} file isDir state is |{file_state}|')    
-
-        test_result = file_state is expected_output
-        logging.info(f'THEN test case result is |{test_result}|')  
-        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}') 
-
-        print(f"\nOn router |{dut_name}|: {file_name} file isDir state is "
-            f"|{file_state}|")        
-        assert expected_output is file_state
-
-
-@pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
-def test_if_daemons_are_running_on_(dut, tests_definitions):
-    """ Verify a list of daemons are running on DUT
-
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
-          tests_definitions (dict): Test parameters
+class filesystemTests():
+    """ EOS File System Test Suite
     """
 
-    test_case = inspect.currentframe().f_code.co_name
-    test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+    @pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
+    def test_if_files_on_(self, dut, tests_definitions):
+        """ Verify filesystem is correct and expected files are present
 
-    show_cmd = test_parameters["show_cmd"]
-    tests_tools.verify_show_cmd(show_cmd, dut)
-    show_cmd_txt = dut["output"][show_cmd]['text']
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
 
-    expected_output = test_parameters["expected_output"]
-    dut_name = dut['name']
-    daemons = test_parameters["daemons"]
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
 
-    for daemon in daemons:
-        logging.info(f'TEST is {daemon} daemon running on |{dut_name}|')
-        logging.info(f'GIVEN expected {daemon} running state: '
-                     f'|{expected_output}|')
+        files = test_parameters["files"]
+        expected_output = test_parameters["expected_output"]
+        dut_name = dut['name']
 
+        for file_name in files:
+            show_cmd = f"show file information {file_name}"
+            logging.info(f'TEST is {file_name} file present on |{dut_name}|')
+            logging.info(f'GIVEN expected {file_name} isDir state: '
+                         f'|{expected_output}|')
+
+            show_output, show_cmd_txt = tests_tools.return_show_cmd(show_cmd, dut, test_case, LOG_FILE)
+            file_state = show_output[0]["result"]['isDir']
+
+            logging.info(f'WHEN {file_name} file isDir state is |{file_state}|')    
+
+            test_result = file_state is expected_output
+            logging.info(f'THEN test case result is |{test_result}|')  
+            logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}') 
+
+            print(f"\nOn router |{dut_name}|: {file_name} file isDir state is "
+                f"|{file_state}|")        
+            assert expected_output is file_state
+
+class daemonTests():
+    """ EOS Daemon Test Suite
+    """
+
+    @pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
+    def test_if_daemons_are_running_on_(self, dut, tests_definitions):
+        """ Verify a list of daemons are running on DUT
+
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+              tests_definitions (dict): Test parameters
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+
+        expected_output = test_parameters["expected_output"]
+        dut_name = dut['name']
+        daemons = test_parameters["daemons"]
+
+        for daemon in daemons:
+            logging.info(f'TEST is {daemon} daemon running on |{dut_name}|')
+            logging.info(f'GIVEN expected {daemon} running state: '
+                         f'|{expected_output}|')
+
+            eos_daemon = \
+                dut["output"][show_cmd]['json']['daemons'][daemon]['running']
+            logging.info(f'WHEN {daemon} device running state is |{eos_daemon}|')    
+
+            test_result = eos_daemon is expected_output
+            logging.info(f'THEN test case result is |{test_result}|')  
+            logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}') 
+
+            print(f"\nOn router |{dut_name}|: {daemon} daemon running is "
+                f"|{eos_daemon}|")
+            assert eos_daemon is expected_output
+
+
+    @pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
+    def test_if_daemons_are_enabled_on_(self,dut, tests_definitions):
+        """ Verify a list of daemons are enabled on DUT
+
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+        expected_output = test_parameters["expected_output"]
+        dut_name = dut['name']
+        logging.info(f'TEST is terminattr daemon enabled on |{dut_name}|')
+        logging.info(f'GIVEN expected terminattr​ enabled state: |{expected_output}|')
+
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
         eos_daemon = \
-            dut["output"][show_cmd]['json']['daemons'][daemon]['running']
-        logging.info(f'WHEN {daemon} device running state is |{eos_daemon}|')    
+            dut["output"][show_cmd]['json']['daemons']['TerminAttr']['enabled']
+        logging.info(f'WHEN terminattr​ device enabled state is |{eos_daemon}|')    
 
         test_result = eos_daemon is expected_output
-        logging.info(f'THEN test case result is |{test_result}|')  
-        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}') 
+        logging.info(f'THEN test case result is |{test_result}|')
+        logging.info(f'OUTPUT of |{show_cmd}|:\n\n{show_cmd_txt}') 
 
-        print(f"\nOn router |{dut_name}|: {daemon} daemon running is "
-            f"|{eos_daemon}|")
+        print(f"\nOn router |{dut['name']}|: TerminAttr daemon enabled is "
+              f"|{eos_daemon}| and expected value is |{expected_output}|.\nTest "
+              f"result is {test_result}")
         assert eos_daemon is expected_output
 
 
-@pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
-def test_if_daemons_are_enabled_on_(dut, tests_definitions):
-    """ Verify a list of daemons are enabled on DUT
 
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
+class extenstionsTests():
+    """ EOS Extensions Test Suite
     """
 
-    test_case = inspect.currentframe().f_code.co_name
-    test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+    @pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
+    def test_if_extensions_are_installed_on_(self, dut, tests_definitions):
+        """ Verify a list of extension are installed on a DUT
 
-    expected_output = test_parameters["expected_output"]
-    dut_name = dut['name']
-    logging.info(f'TEST is terminattr daemon enabled on |{dut_name}|')
-    logging.info(f'GIVEN expected terminattr​ enabled state: |{expected_output}|')
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
 
-    show_cmd = test_parameters["show_cmd"]
-    tests_tools.verify_show_cmd(show_cmd, dut)
-    show_cmd_txt = dut["output"][show_cmd]['text']
-    eos_daemon = \
-        dut["output"][show_cmd]['json']['daemons']['TerminAttr']['enabled']
-    logging.info(f'WHEN terminattr​ device enabled state is |{eos_daemon}|')    
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
 
-    test_result = eos_daemon is expected_output
-    logging.info(f'THEN test case result is |{test_result}|')
-    logging.info(f'OUTPUT of |{show_cmd}|:\n\n{show_cmd_txt}') 
+        expected_output = test_parameters["expected_output"]
+        dut_name = dut['name']
+        extensions = test_parameters["extensions"]
 
-    print(f"\nOn router |{dut['name']}|: TerminAttr daemon enabled is "
-          f"|{eos_daemon}| and expected value is |{expected_output}|.\nTest "
-          f"result is {test_result}")
-    assert eos_daemon is expected_output
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
 
+        for extension in extensions:
+            logging.info(f'TEST is {extension} extension installed on |{dut_name}|')
+            logging.info(f'GIVEN expected {extension} extension status: '
+                         f'|{expected_output}|')
 
-@pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
-def test_if_extensions_are_installed_on_(dut, tests_definitions):
-    """ Verify a list of extension are installed on a DUT
+            if extension in dut["output"][show_cmd]['json']['extensions']:
+                eos_extension = dut["output"][show_cmd]['json']['extensions'][extension]['status']
+                print(f"\nOn router |{dut['name']}| {extension} extension is "
+                      f"|{eos_extension}|")
+                logging.info(f'WHEN {extension} extenstion installation state is |{eos_extension}|')
 
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
+                test_result = (eos_extension == expected_output)
+                logging.info(f'THEN test case result is |{test_result}|\n') 
+                logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}') 
+            else:
+                print(f"\nOn router |{dut['name']}| {extension} extension "
+                    f"is |NOT installed|")
+                assert False
+
+            assert eos_extension == expected_output
+
+    @pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
+    def test_if_extensions_are_erroring_on_(self, dut, tests_definitions):
+        """ Verify a list of extension are not erroring on a DUT
+
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+        expected_output = test_parameters["expected_output"]
+        dut_name = dut['name']
+        extensions = test_parameters["extensions"]
+
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+
+        for extension in extensions:
+            logging.info(f'TEST is {extension} extension not erroring on |{dut_name}|')
+            logging.info(f'GIVEN expected {extension} extension status: |{expected_output}|')
+
+            if extension in dut["output"][show_cmd]['json']['extensions']:
+                eos_extension = dut["output"][show_cmd]['json']['extensions'][extension]['error']
+                print(f"\nOn router |{dut['name']}| {extension} extension error is "
+                    f"|{eos_extension}|")
+
+                logging.info(f'WHEN {extension} extenstion error state is |{eos_extension}|')
+
+                test_result = (eos_extension == expected_output)
+                logging.info(f'THEN test case result is |{test_result}|\n')   
+                logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}') 
+            else:
+                print(f"\nOn router |{dut['name']}| {extension} extension "
+                    f"is |NOT installed|")
+                assert False
+
+            assert eos_extension is False
+
+class usersTests():
+    """ EOS Users Test Suite
     """
 
-    test_case = inspect.currentframe().f_code.co_name
-    test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+    @pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
+    def test_if_usernames_are_configured_on_(self, dut, tests_definitions):
+        """ Verify username is set correctly
 
-    expected_output = test_parameters["expected_output"]
-    dut_name = dut['name']
-    extensions = test_parameters["extensions"]
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
 
-    show_cmd = test_parameters["show_cmd"]
-    tests_tools.verify_show_cmd(show_cmd, dut)
-    show_cmd_txt = dut["output"][show_cmd]['text']
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
 
-    for extension in extensions:
-        logging.info(f'TEST is {extension} extension installed on |{dut_name}|')
-        logging.info(f'GIVEN expected {extension} extension status: '
-                     f'|{expected_output}|')
+        expected_output = test_parameters["expected_output"]
+        dut_name = dut['name']
+        usernames = test_parameters["usernames"]
 
-        if extension in dut["output"][show_cmd]['json']['extensions']:
-            eos_extension = dut["output"][show_cmd]['json']['extensions'][extension]['status']
-            print(f"\nOn router |{dut['name']}| {extension} extension is "
-                  f"|{eos_extension}|")
-            logging.info(f'WHEN {extension} extenstion installation state is |{eos_extension}|')
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
 
-            test_result = (eos_extension == expected_output)
-            logging.info(f'THEN test case result is |{test_result}|\n') 
-            logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}') 
+        for username in usernames:
+            logging.info(f'TEST is {username} username configured |{dut_name}|')
+            logging.info(f'GIVEN {username} username configured status: |{expected_output}|')
+
+            if username in show_cmd_txt:
+                print(f"\nOn router |{dut['name']}| |admin| username is |configured|")
+                logging.info(f'WHEN {username} username configured status is |True|')
+                logging.info(f'THEN test case result is |True|\n')
+                logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}') 
+            else:
+                print(f"\nOn router |{dut['name']}| |{username}| username is "
+                       "|NOT configured|")
+
+            assert (username in show_cmd_txt) is True
+
+class tacacsTests():
+    """ AAA TACACS Test Suite
+    """
+
+    @pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
+    def test_if_tacacs_is_sending_messages_on_(self, dut, tests_definitions):
+        """ Verify tacacs is working correctly
+
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+        dut_name = dut['name']
+
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        tacacs_servers = tests_tools.verify_tacacs(dut)
+
+        show_cmd_txt = dut["output"][show_cmd]['text']
+
+        logging.info(f'TEST is |{dut_name}| sending messages to TACACS server')
+
+        if tacacs_servers:
+            eos_messages_sent_1 = \
+                dut["output"][show_cmd]['json']['tacacsServers'][0]['messagesSent']
+            logging.info(f'GIVEN {eos_messages_sent_1} TACACS messages sent at time 1')
+
+            show_output, _ = tests_tools.return_show_cmd(show_cmd, dut, test_case, LOG_FILE)
+            eos_messages_sent_2 = \
+                show_output[0]['result']['tacacsServers'][0]['messagesSent']
+            logging.info(f'WHEN {eos_messages_sent_2} TACACS messages sent at time 2')
+
+            if eos_messages_sent_1 < eos_messages_sent_2:
+                print(f"\nOn router |{dut_name}| TACACS messages2 sent: |{eos_messages_sent_2}| "
+                      f"increments from TACACS messages1 sent: |{eos_messages_sent_1}|")
+                logging.info(f'THEN test case result is |True|')  
+            else:
+                print(f"\nOn router |{dut_name}| TACACS messages2 sent: |{eos_messages_sent_2}| "
+                      f"doesn't increments from TACACS messages1 sent: |{eos_messages_sent_1}|")
+                logging.info(f'THEN test case result is |False|')  
+
+            logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+
+            assert eos_messages_sent_1 < eos_messages_sent_2
         else:
-            print(f"\nOn router |{dut['name']}| {extension} extension "
-                f"is |NOT installed|")
-            assert False
+            print(f"\nOn router |{dut_name}| does not have TACACS servers configured")       
 
-        assert eos_extension == expected_output
 
- 
-@pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
-def test_if_extensions_are_erroring_on_(dut, tests_definitions):
-    """ Verify a list of extension are not erroring on a DUT
+    @pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
+    def test_show_if_tacacs_is_receiving_messages_on_(self, dut, tests_definitions):
+        """ Verify tacacs is working correctly
 
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
-    """
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
 
-    test_case = inspect.currentframe().f_code.co_name
-    test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
 
-    expected_output = test_parameters["expected_output"]
-    dut_name = dut['name']
-    extensions = test_parameters["extensions"]
+        dut_name = dut['name']
 
-    show_cmd = test_parameters["show_cmd"]
-    tests_tools.verify_show_cmd(show_cmd, dut)
-    show_cmd_txt = dut["output"][show_cmd]['text']
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        tacacs_servers = tests_tools.verify_tacacs(dut)
 
-    for extension in extensions:
-        logging.info(f'TEST is {extension} extension not erroring on |{dut_name}|')
-        logging.info(f'GIVEN expected {extension} extension status: |{expected_output}|')
+        show_cmd_txt = dut["output"][show_cmd]['text']
 
-        if extension in dut["output"][show_cmd]['json']['extensions']:
-            eos_extension = dut["output"][show_cmd]['json']['extensions'][extension]['error']
-            print(f"\nOn router |{dut['name']}| {extension} extension error is "
-                f"|{eos_extension}|")
+        logging.info(f'TEST is |{dut_name}| receiving messages to TACACS server')
 
-            logging.info(f'WHEN {extension} extenstion error state is |{eos_extension}|')
+        if tacacs_servers:
+            eos_messages_received_1 = \
+                dut["output"][show_cmd]['json']['tacacsServers'][0]['messagesReceived']
+            logging.info(f'GIVEN {eos_messages_sent_1} TACACS messages recieved at time 1')
 
-            test_result = (eos_extension == expected_output)
-            logging.info(f'THEN test case result is |{test_result}|\n')   
-            logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}') 
+
+            show_output, _ = tests_tools.return_show_cmd(show_cmd, dut, test_case, LOG_FILE)
+            eos_messages_received_2 = \
+                show_output[0]['result']['tacacsServers'][0]['messagesReceived']
+            logging.info(f'WHEN {eos_messages_sent_2} TACACS messages sent at time 2')
+
+            if eos_messages_received_1 < eos_messages_received_2:
+                print(f"\nOn router |{dut['name']}| TACACS messages2 received: "
+                      f"|{eos_messages_received_2}| increments from TACACS messages1 "
+                      f"received: |{eos_messages_received_1}|")
+                logging.info(f'THEN test case result is |True|')  
+            else:
+                print(f"\nOn router |{dut['name']}| TACACS messages2 received: "
+                      f"|{eos_messages_received_2}| doesn't increments from TACACS "
+                      f"messages1 received: |{eos_messages_received_1}|")
+                logging.info(f'THEN test case result is |False|')  
+
+            logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+
+            assert eos_messages_received_1 < eos_messages_received_2
         else:
-            print(f"\nOn router |{dut['name']}| {extension} extension "
-                f"is |NOT installed|")
-            assert False
+            print(f"\nOn router |{dut_name}| does not have TACACS servers configured")
 
-        assert eos_extension is False
-
-    
-@pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
-def test_if_usernames_are_configured_on_(dut, tests_definitions):
-    """ Verify username is set correctly
-
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
+class aaaTests():
+    """ AAA Test Suite
     """
+    @pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
+    def test_if_authentication_counters_are_incrementing_on_(self, dut, tests_definitions):
+        """ Verify AAA counters are working correctly
 
-    test_case = inspect.currentframe().f_code.co_name
-    test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
 
-    expected_output = test_parameters["expected_output"]
-    dut_name = dut['name']
-    usernames = test_parameters["usernames"]
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
 
-    show_cmd = test_parameters["show_cmd"]
-    tests_tools.verify_show_cmd(show_cmd, dut)
-    show_cmd_txt = dut["output"][show_cmd]['text']
+        dut_name = dut['name']
 
-    for username in usernames:
-        logging.info(f'TEST is {username} username configured |{dut_name}|')
-        logging.info(f'GIVEN {username} username configured status: |{expected_output}|')
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
 
-        if username in show_cmd_txt:
-            print(f"\nOn router |{dut['name']}| |admin| username is |configured|")
-            logging.info(f'WHEN {username} username configured status is |True|')
-            logging.info(f'THEN test case result is |True|\n')
-            logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}') 
-        else:
-            print(f"\nOn router |{dut['name']}| |{username}| username is "
-                   "|NOT configured|")
+        logging.info(f'TEST is |{dut_name}| authentication counters incrementing')
 
-        assert (username in show_cmd_txt) is True
-
-
-
-@pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
-def test_if_tacacs_is_sending_messages_on_(dut, tests_definitions):
-    """ Verify tacacs is working correctly
-
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
-    """
-
-    test_case = inspect.currentframe().f_code.co_name
-    test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
-
-    dut_name = dut['name']
-
-    show_cmd = test_parameters["show_cmd"]
-    tests_tools.verify_show_cmd(show_cmd, dut)
-    tacacs_servers = tests_tools.verify_tacacs(dut)
-
-    show_cmd_txt = dut["output"][show_cmd]['text']
-
-    logging.info(f'TEST is |{dut_name}| sending messages to TACACS server')
-
-    if tacacs_servers:
-        eos_messages_sent_1 = \
-            dut["output"][show_cmd]['json']['tacacsServers'][0]['messagesSent']
-        logging.info(f'GIVEN {eos_messages_sent_1} TACACS messages sent at time 1')
+        eos_authorization_allowed_1 = \
+            dut["output"][show_cmd]['json']['authorizationAllowed']
+        logging.info(f'GIVEN {eos_authorization_allowed_1} authentication counters at time 1')
 
         show_output, _ = tests_tools.return_show_cmd(show_cmd, dut, test_case, LOG_FILE)
-        eos_messages_sent_2 = \
-            show_output[0]['result']['tacacsServers'][0]['messagesSent']
-        logging.info(f'WHEN {eos_messages_sent_2} TACACS messages sent at time 2')
+        eos_authorization_allowed_2 = \
+            show_output[0]['result']['authorizationAllowed']
+        logging.info(f'WHEN {eos_authorization_allowed_2} authentication counters at time 2')
 
-        if eos_messages_sent_1 < eos_messages_sent_2:
-            print(f"\nOn router |{dut_name}| TACACS messages2 sent: |{eos_messages_sent_2}| "
-                  f"increments from TACACS messages1 sent: |{eos_messages_sent_1}|")
+        if eos_authorization_allowed_1 < eos_authorization_allowed_2:
+            print(f"\nOn router |{dut['name']}| AAA authorization allowed "
+                  f"messages2: |{eos_authorization_allowed_2}| increments from AAA authorization "
+                  f"allowed message1: |{eos_authorization_allowed_1}|")
             logging.info(f'THEN test case result is |True|')  
         else:
-            print(f"\nOn router |{dut_name}| TACACS messages2 sent: |{eos_messages_sent_2}| "
-                  f"doesn't increments from TACACS messages1 sent: |{eos_messages_sent_1}|")
+            print(f"\nOn router |{dut['name']}| AAA authorization allowed "
+                  f"messages2: |{eos_authorization_allowed_2}| doesn't increments from AAA "
+                  f"authorization allowed message1: |{eos_authorization_allowed_1}|")
             logging.info(f'THEN test case result is |False|')  
 
         logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
-
-        assert eos_messages_sent_1 < eos_messages_sent_2
-    else:
-        print(f"\nOn router |{dut_name}| does not have TACACS servers configured")       
+        assert eos_authorization_allowed_1 < eos_authorization_allowed_2
 
 
-@pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
-def test_show_if_tacacs_is_receiving_messages_on_(dut, tests_definitions):
-    """ Verify tacacs is working correctly
+    @pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
+    def test_if_aaa_session_logging_is_working_on_(self, dut, tests_definitions):
+        """ Verify AAA session logging is working by identifying eapi connection
 
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
-    """
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
 
-    test_case = inspect.currentframe().f_code.co_name
-    test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
 
-    dut_name = dut['name']
+        dut_name = dut['name']
 
-    show_cmd = test_parameters["show_cmd"]
-    tests_tools.verify_show_cmd(show_cmd, dut)
-    tacacs_servers = tests_tools.verify_tacacs(dut)
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
 
-    show_cmd_txt = dut["output"][show_cmd]['text']
+        logging.info(f'TEST is |{dut_name}| AAA session logging is working by identifying eapi connection')
 
-    logging.info(f'TEST is |{dut_name}| receiving messages to TACACS server')
+        eos_non_interactives = dut["output"][show_cmd]['json']['nonInteractives']
+        aaa_flag = False
 
-    if tacacs_servers:
-        eos_messages_received_1 = \
-            dut["output"][show_cmd]['json']['tacacsServers'][0]['messagesReceived']
-        logging.info(f'GIVEN {eos_messages_sent_1} TACACS messages recieved at time 1')
+        for non_interactive in eos_non_interactives:
+            service = eos_non_interactives[non_interactive]['service']
+            logging.info(f'GIVEN {service} nonInteractive sessions')
 
+            if service == 'commandApi':
+                print(f"\nOn router |{dut['name']}| identified eAPi AAA session: \
+    |{eos_non_interactives[non_interactive]['service']}|")
+                aaa_flag = True
 
-        show_output, _ = tests_tools.return_show_cmd(show_cmd, dut, test_case, LOG_FILE)
-        eos_messages_received_2 = \
-            show_output[0]['result']['tacacsServers'][0]['messagesReceived']
-        logging.info(f'WHEN {eos_messages_sent_2} TACACS messages sent at time 2')
+        if not aaa_flag:
+            print(f"\nOn router |{dut['name']}| did NOT identified eAPi AAA session: \
+    |{eos_non_interactives[non_interactive]['service']}|")
 
-        if eos_messages_received_1 < eos_messages_received_2:
-            print(f"\nOn router |{dut['name']}| TACACS messages2 received: "
-                  f"|{eos_messages_received_2}| increments from TACACS messages1 "
-                  f"received: |{eos_messages_received_1}|")
-            logging.info(f'THEN test case result is |True|')  
-        else:
-            print(f"\nOn router |{dut['name']}| TACACS messages2 received: "
-                  f"|{eos_messages_received_2}| doesn't increments from TACACS "
-                  f"messages1 received: |{eos_messages_received_1}|")
-            logging.info(f'THEN test case result is |False|')  
-
-        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
-
-        assert eos_messages_received_1 < eos_messages_received_2
-    else:
-        print(f"\nOn router |{dut_name}| does not have TACACS servers configured")
+        for non_interactive in eos_non_interactives:
+            assert eos_non_interactives[non_interactive]['service'] == 'commandApi'
 
 
-@pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
-def test_if_authentication_counters_are_incrementing_on_(dut, tests_definitions):
-    """ Verify AAA counters are working correctly
-
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
-    """
-
-    test_case = inspect.currentframe().f_code.co_name
-    test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
-
-    dut_name = dut['name']
-
-    show_cmd = test_parameters["show_cmd"]
-    tests_tools.verify_show_cmd(show_cmd, dut)
-    show_cmd_txt = dut["output"][show_cmd]['text']
-
-    logging.info(f'TEST is |{dut_name}| authentication counters incrementing')
-
-    eos_authorization_allowed_1 = \
-        dut["output"][show_cmd]['json']['authorizationAllowed']
-    logging.info(f'GIVEN {eos_authorization_allowed_1} authentication counters at time 1')
-
-    show_output, _ = tests_tools.return_show_cmd(show_cmd, dut, test_case, LOG_FILE)
-    eos_authorization_allowed_2 = \
-        show_output[0]['result']['authorizationAllowed']
-    logging.info(f'WHEN {eos_authorization_allowed_2} authentication counters at time 2')
-
-    if eos_authorization_allowed_1 < eos_authorization_allowed_2:
-        print(f"\nOn router |{dut['name']}| AAA authorization allowed "
-              f"messages2: |{eos_authorization_allowed_2}| increments from AAA authorization "
-              f"allowed message1: |{eos_authorization_allowed_1}|")
-        logging.info(f'THEN test case result is |True|')  
-    else:
-        print(f"\nOn router |{dut['name']}| AAA authorization allowed "
-              f"messages2: |{eos_authorization_allowed_2}| doesn't increments from AAA "
-              f"authorization allowed message1: |{eos_authorization_allowed_1}|")
-        logging.info(f'THEN test case result is |False|')  
-
-    logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
-    assert eos_authorization_allowed_1 < eos_authorization_allowed_2
-
-
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# def test_aaa_sessions(dut):
-#     """ Verify AAA session logging is working by identifying eapi connection
-# 
-#         Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     show_cmd = "show users detail"
-#     eos_non_interactives = dut["output"][show_cmd]['json']['nonInteractives']
-#     aaa_flag = False
-# 
-#     for non_interactive in eos_non_interactives:
-#         if eos_non_interactives[non_interactive]['service'] == 'commandApi':
-#             print(f"\nOn router |{dut['name']}| identified eAPi AAA session: \
-# |{eos_non_interactives[non_interactive]['service']}|")
-#             aaa_flag = True
-# 
-#     if not aaa_flag:
-#         print(f"\nOn router |{dut['name']}| did NOT identified eAPi AAA session: \
-# |{eos_non_interactives[non_interactive]['service']}|")
-# 
-#     for non_interactive in eos_non_interactives:
-#         assert eos_non_interactives[non_interactive]['service'] == 'commandApi'
-# 
-# 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# def test_aaa_method_list_all(dut):
-#     """ Verify AAA method-lists are correctly set
-# 
-#         Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     test_aaa_method_list_all_author_priv15(dut)
-#     test_aaa_method_list_all_author_exec(dut)
-#     test_aaa_method_list_all_authen_default(dut)
-#     test_aaa_method_list_all_authen_login(dut)
-#     test_aaa_method_list_all_authen_dot1x(dut)
-#     test_aaa_method_list_all_authen_enable(dut)
-#     test_aaa_method_list_all_acct_system(dut)
-#     test_aaa_method_list_all_acct_exec(dut)
-#     test_aaa_method_list_all_acct_priv15(dut)
-#     test_aaa_method_list_all_acct_dot1x(dut)
-# 
-# 
 # @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
 # def test_aaa_method_list_all_author_priv15(dut):
 #     """ Verify AAA method-lists are correctly set
