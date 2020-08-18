@@ -12,6 +12,7 @@ parameters:
   setup_show: False
   verbose: True
   stdout: False
+  mark: base_feature
 
 duts:
   - name: kg_spine01

@@ -66,6 +66,8 @@ class pytestTests():
                     'is working correct by verifying PyTest can assert True.')
         assert True
 
+@pytest.mark.base_feature
+@pytest.mark.filesystem
 class filesystemTests():
     """ EOS File System Test Suite
     """
@@ -104,6 +106,8 @@ class filesystemTests():
                 f"|{file_state}|")        
             assert expected_output is file_state
 
+@pytest.mark.base_feature
+@pytest.mark.daemons
 class daemonTests():
     """ EOS Daemon Test Suite
     """
@@ -178,9 +182,9 @@ class daemonTests():
               f"result is {test_result}")
         assert eos_daemon is expected_output
 
-
-
-class extenstionsTests():
+@pytest.mark.base_feature
+@pytest.mark.extensions
+class extensionsTests():
     """ EOS Extensions Test Suite
     """
 
@@ -264,6 +268,8 @@ class extenstionsTests():
 
             assert eos_extension is False
 
+@pytest.mark.base_feature
+@pytest.mark.users
 class usersTests():
     """ EOS Users Test Suite
     """
@@ -302,6 +308,8 @@ class usersTests():
 
             assert (username in show_cmd_txt) is True
 
+@pytest.mark.base_feature
+@pytest.mark.tacacs
 class tacacsTests():
     """ AAA TACACS Test Suite
     """
@@ -402,6 +410,8 @@ class tacacsTests():
         else:
             print(f"\nOn router |{dut_name}| does not have TACACS servers configured")
 
+@pytest.mark.base_feature
+@pytest.mark.aaa
 class aaaTests():
     """ AAA Test Suite
     """
