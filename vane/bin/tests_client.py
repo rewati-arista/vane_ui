@@ -119,6 +119,7 @@ class TestsClient:
         setup_show = self.data_model['parameters']['setup_show']
         verbose = self.data_model['parameters']['verbose']
         stdout = self.data_model['parameters']['stdout']
+        mark = self.data_model['parameters']['mark']
 
         if verbose:
             logging.info('Enable pytest output verbosity')
@@ -170,6 +171,12 @@ class TestsClient:
             test_parameters.append('--setup-show')
         else:
             logging.warning('Disable debug for setup and teardown')
+
+        if mark:
+            logging.info(f'Run the test cases with mark: {mark}')
+            test_parameters.append(f'-m {mark}')
+        else:
+            logging.info('Do NOT use marking within test run')
 
         if test_suites:
             logging.info(f'Run the following tests suites: {test_cases}')

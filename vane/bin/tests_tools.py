@@ -400,6 +400,47 @@ def get_parameters(tests_parameters, test_suite, test_case):
     return case_parameters[0]
 
 
+def verify_show_cmd(show_cmd, dut):
+    """ Verify if show command was successfully executed on dut
+
+        show_cmd (str): show command 
+        dut (dict): data structure of dut parameters
+    """
+
+    dut_name = dut["name"]
+    logging.info(f'Verify if show command |{show_cmd}| was successfully executed '
+                 f'on {dut_name} dut')
+
+    if show_cmd in dut["output"]:
+        logging.info(f'Verified output for show command |{show_cmd}| on {dut_name}')
+    else:
+        logging.critical(f'Show command |{show_cmd}| not executed on {dut_name}')
+        assert False
+
+def verify_tacacs(dut):
+    """ Verify if tacacs servers are configured
+
+        dut (dict): data structure of dut parameters
+    """
+
+    dut_name = dut["name"]
+    show_cmd = "show tacacs"
+
+    tacacs_bool = True
+    tacacs = dut["output"][show_cmd]['json']['tacacsServers']
+    tacacs_servers = len(tacacs)
+    logging.info(f'Verify if tacacs server(s) are configured '
+                 f'on {dut_name} dut')
+    
+    if tacacs_servers == 0:
+        tacacs_bool = False
+
+    logging.info(f'{tacacs_servers} tacacs serverws are configured so returning {tacacs_bool}')
+
+    return tacacs_bool
+
+
+
 def output_to_log_file(test_suite, test_name, hostname, output):
     """ Open log file for logging test show commands
 
