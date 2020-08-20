@@ -88,3 +88,10 @@ test_suites:
         actual_output: null
         comment: null
         result: True
+      - name: test_if_hostname_is_correcet_on_
+        description: Verify hostname is set on device is correct
+        expected_output: False
+        show_cmd: show hostname
+        actual_output: null
+        comment: null
+        result: True

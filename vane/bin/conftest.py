@@ -23,7 +23,8 @@ EOS_SHOW_CMDS = ["show daemon",
                  "show zerotouch",
                  "dir flash:zerotouch-config",
                  "show ntp status",
-                 "show ntp associations"]
+                 "show ntp associations",
+                 "show hostname"]
 
 def pytest_addoption(parser):
     parser.addoption(
@@ -36,8 +37,7 @@ def definitions(request):
     cli_arg = request.config.getoption("--definitions")
     return cli_arg
 
-@pytest.fixture(scope='function')
-def test_suite_setup():
+def return_duts():
     """ Do tasks to setup test suite """
 
     logging.info('Starting Test Suite setup')
@@ -46,16 +46,30 @@ def test_suite_setup():
     test_parameters = tests_tools.import_yaml(yaml_file)
     duts_list = tests_tools.return_dut_list(test_parameters)
     tests_tools.init_show_log(test_parameters)
-    duts_struct = tests_tools.init_duts(EOS_SHOW_CMDS, test_parameters)
+    duts = tests_tools.init_duts(EOS_SHOW_CMDS, test_parameters)
+
+    logging.info(f'Return to test suites: \nduts: {duts}')
+    return duts
+
+def return_duts_names():
+    """ Do tasks to setup test suite """
+
+    logging.info('Starting Test Suite setup')
+    # TODO: Don't hard code yaml_file
+    yaml_file = "definitions.yaml"
+    test_parameters = tests_tools.import_yaml(yaml_file)
+    duts_names = tests_tools.return_dut_list(test_parameters)
+
+    logging.info(f'Return to test suites: \nduts_lists: {duts_names}')
+    return duts_names
+
+@pytest.fixture(params=return_duts(), ids=return_duts_names(), scope='session')
+def dut(request):
+    dut = request.param
+    return dut
+
 
 @pytest.fixture
-def parameter_is_terminattr_daemon_running():
-    return True
-
-@pytest.fixture
-def parameter_is_terminattr_daemon_enabled():
-    return True
-
-@pytest.fixture
-def tests_definitions():
-    return tests_tools.import_yaml('tests_definitions.yaml') 
+def tests_definitions(scope='session'):
+    yield tests_tools.import_yaml('tests_definitions.yaml') 
+    logging.info('Cleaning up test_defintions fixture')
