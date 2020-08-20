@@ -57,7 +57,8 @@ EOS_SHOW_CMDS = ["show daemon",
                  "show zerotouch",
                  "dir flash:zerotouch-config",
                  "show ntp status",
-                 "show ntp associations"]
+                 "show ntp associations",
+                 "show hostname"]
 
 
 def test_suite_setup():

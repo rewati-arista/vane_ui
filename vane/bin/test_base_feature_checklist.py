@@ -38,7 +38,6 @@ import tests_tools
 import os
 import argparse
 import logging
-import _ctypes
 import tests_tools
 
 
@@ -47,7 +46,6 @@ logging.basicConfig(level=logging.INFO, filename='base_features.log', filemode='
 logging.info('Starting base_features.log file')
 
 
-DUTS, DUTS_NAME = tests_tools.test_suite_setup()
 TEST_SUITE = __file__
 logging.info('Starting base feature test cases')
 # TODO: Remove hard code reference
@@ -66,13 +64,53 @@ class pytestTests():
                     'is working correct by verifying PyTest can assert True.')
         assert True
 
+def test_dut_fixture(dut):
+    print(f'dut data is: {dut}')
+
+
+@pytest.mark.platform_status
+@pytest.mark.host
+class hostTests():
+    """ Host status Test Suite
+    """
+
+    def test_if_hostname_is_correcet_on_(self, dut, tests_definitions):
+        """ Verify hostname is set on device is correct
+
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+    
+        expected_output = dut['name']
+        dut_name = dut['name']    
+        eos_hostname = dut["output"][show_cmd]["json"]["hostname"]
+
+        logging.info(f'TEST is hostname {dut_name} correct')
+        logging.info(f'GIVEN hostname {dut_name}')
+        logging.info(f'WHEN hostname is {eos_hostname}')    
+
+        print(f"\nOn router |{dut_name}| the configured hostname is "
+              f"|{eos_hostname}| and the correct hostname is |{expected_output}|")
+        
+        test_result = eos_hostname is expected_output
+        logging.info(f'THEN test case result is |{test_result}|')  
+        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}') 
+
+        assert eos_hostname == expected_output
+
 @pytest.mark.base_feature
 @pytest.mark.filesystem
 class filesystemTests():
     """ EOS File System Test Suite
     """
 
-    @pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
     def test_if_files_on_(self, dut, tests_definitions):
         """ Verify filesystem is correct and expected files are present
 
@@ -112,7 +150,6 @@ class daemonTests():
     """ EOS Daemon Test Suite
     """
 
-    @pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
     def test_if_daemons_are_running_on_(self, dut, tests_definitions):
         """ Verify a list of daemons are running on DUT
 
@@ -150,7 +187,6 @@ class daemonTests():
             assert eos_daemon is expected_output
 
 
-    @pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
     def test_if_daemons_are_enabled_on_(self,dut, tests_definitions):
         """ Verify a list of daemons are enabled on DUT
 
@@ -188,7 +224,6 @@ class extensionsTests():
     """ EOS Extensions Test Suite
     """
 
-    @pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
     def test_if_extensions_are_installed_on_(self, dut, tests_definitions):
         """ Verify a list of extension are installed on a DUT
 
@@ -228,7 +263,6 @@ class extensionsTests():
 
             assert eos_extension == expected_output
 
-    @pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
     def test_if_extensions_are_erroring_on_(self, dut, tests_definitions):
         """ Verify a list of extension are not erroring on a DUT
 
@@ -274,7 +308,6 @@ class usersTests():
     """ EOS Users Test Suite
     """
 
-    @pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
     def test_if_usernames_are_configured_on_(self, dut, tests_definitions):
         """ Verify username is set correctly
 
@@ -314,7 +347,6 @@ class tacacsTests():
     """ AAA TACACS Test Suite
     """
 
-    @pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
     def test_if_tacacs_is_sending_messages_on_(self, dut, tests_definitions):
         """ Verify tacacs is working correctly
 
@@ -361,7 +393,6 @@ class tacacsTests():
             print(f"\nOn router |{dut_name}| does not have TACACS servers configured")       
 
 
-    @pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
     def test_show_if_tacacs_is_receiving_messages_on_(self, dut, tests_definitions):
         """ Verify tacacs is working correctly
 
@@ -415,7 +446,8 @@ class tacacsTests():
 class aaaTests():
     """ AAA Test Suite
     """
-    @pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
+
+    @pytest.mark.skip(reason="No AAA setup on DUTs")
     def test_if_authentication_counters_are_incrementing_on_(self, dut, tests_definitions):
         """ Verify AAA counters are working correctly
 
@@ -458,7 +490,6 @@ class aaaTests():
         assert eos_authorization_allowed_1 < eos_authorization_allowed_2
 
 
-    @pytest.mark.parametrize("dut", DUTS, ids=DUTS_NAME)
     def test_if_aaa_session_logging_is_working_on_(self, dut, tests_definitions):
         """ Verify AAA session logging is working by identifying eapi connection
 
