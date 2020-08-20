@@ -19,6 +19,9 @@ build1:
     - echo "Do your build here"
     - pwd
     - ls
+    - python -v
+    - python3 -v
+    - pip3 install -r requirements.txt
 #    - make
 
 test1:
