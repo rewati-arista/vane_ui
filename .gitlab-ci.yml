@@ -23,10 +23,10 @@ build1:
     - pwd
     - ls
     - docker ps
+    - make
     #- python -v
     #- python3 -v
     #- pip3 install -r requirements.txt
-     - make
 
 test1:
   stage: test
