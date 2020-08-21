@@ -28,7 +28,7 @@ build:
 	- docker ps
 	- docker stop vane
 	- docker rm vane
-	- docker ps
+    - docker ps
     #- python -v
     #- python3 -v
     #- pip3 install -r requirements.txt
