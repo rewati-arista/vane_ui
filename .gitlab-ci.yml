@@ -9,12 +9,11 @@ services:
  
 before_script:
   - echo "Before script section"
-  - echo "For example you might run an update here or install a build dependency"
-  - echo "Or perhaps you might print out some debugging details"
+  - docker stop vane
 
 after_script:
   - echo "After script section"
-  - echo "For example you might do some cleanup here"
+  - docker stop vane
 
 build:
   stage: build
@@ -32,6 +31,8 @@ test:
   stage: test
   script:
     - echo "Do a test here"
+    - docker exec -i vane ls
+    - docker exec -i vane pwd
     - docker exec -i vane bash -c "cd /project/vane/bin && ./vane.py"
 
 
