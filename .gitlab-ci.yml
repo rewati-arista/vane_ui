@@ -16,7 +16,7 @@ after_script:
   - echo "After script section"
   - echo "For example you might do some cleanup here"
 
-build1:
+build:
   stage: build
   script:
     - echo "Do your build here"
@@ -33,19 +33,14 @@ build1:
     #- python3 -v
     #- pip3 install -r requirements.txt
 
-test1:
+test:
   stage: test
   script:
     - echo "Do a test here"
     - echo "For example run a test suite"
 
-test2:
-  stage: test
-  script:
-    - echo "Do another parallel test here"
-    - echo "For example run a lint test"
 
-deploy1:
+deploy:
   stage: deploy
   script:
     - echo "Do your deploy here"
