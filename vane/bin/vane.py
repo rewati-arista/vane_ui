@@ -44,7 +44,7 @@ logging.basicConfig(level=logging.INFO, filename='vane.log', filemode='w',
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logging.info('Starting vane.log file')
 
-DEFINITIONS_FILE = "definitions.yaml"
+DEFINITIONS_FILE = "/project/vane/bin/definitions.yaml"
 
 
 def parse_cli():

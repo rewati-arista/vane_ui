@@ -38,7 +38,7 @@ test:
   stage: test
   script:
     - echo "Do a test here"
-    - echo "For example run a test suite"
+    - docker exec -it vane bash -c "cd /project/vane/bin && ./vane.py"
 
 
 deploy:

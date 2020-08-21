@@ -121,6 +121,8 @@ class TestsClient:
         stdout = self.data_model['parameters']['stdout']
         mark = self.data_model['parameters']['mark']
 
+        test_parameters.append('--junit-xml=report.xml')
+
         if verbose:
             logging.info('Enable pytest output verbosity')
             test_parameters.append('-v')
