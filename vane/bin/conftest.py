@@ -37,6 +37,7 @@ def definitions(request):
     cli_arg = request.config.getoption("--definitions")
     return cli_arg
 
+
 def return_duts():
     """ Do tasks to setup test suite """
 
@@ -51,6 +52,7 @@ def return_duts():
     logging.info(f'Return to test suites: \nduts: {duts}')
     return duts
 
+
 def return_duts_names():
     """ Do tasks to setup test suite """
 
@@ -62,6 +64,7 @@ def return_duts_names():
 
     logging.info(f'Return to test suites: \nduts_lists: {duts_names}')
     return duts_names
+
 
 @pytest.fixture(params=return_duts(), ids=return_duts_names(), scope='session')
 def dut(request):

@@ -64,10 +64,6 @@ class pytestTests():
                     'is working correct by verifying PyTest can assert True.')
         assert True
 
-def test_dut_fixture(dut):
-    print(f'dut data is: {dut}')
-
-
 @pytest.mark.platform_status
 @pytest.mark.host
 class hostTests():
