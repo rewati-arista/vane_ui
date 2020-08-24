@@ -2,7 +2,9 @@ import pytest
 import yaml 
 import logging
 import tests_tools
-
+from datetime import datetime
+from py.xml import html
+import re
 
 logging.basicConfig(level=logging.INFO, filename='conftest.log', filemode='w',
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -76,3 +78,33 @@ def dut(request):
 def tests_definitions(scope='session'):
     yield tests_tools.import_yaml('tests_definitions.yaml') 
     logging.info('Cleaning up test_defintions fixture')
+
+
+def find_nodeid(nodeid):
+
+    if re.match('.*\[(.*)\]',nodeid):
+        return re.match('.*\[(.*)\]',nodeid)[1]
+    else:
+        return "NONE"
+
+def pytest_html_results_table_header(cells):
+    cells.insert(2, html.th('Description'))
+    cells.insert(1, html.th('Device', class_='sortable string', col='device'))
+    cells.pop()
+
+def pytest_html_results_table_row(report, cells):
+    cells.insert(2, html.td(report.description))
+    cells.insert(1, html.td(find_nodeid(report.nodeid), class_='col-device'))
+    cells.pop()
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    outcome = yield
+    report = outcome.get_result()
+
+    if str(item.function.__doc__).split('Args:')[0]:
+        report.description = str(item.function.__doc__).split('Args:')[0]
+    elif str(item.function.__doc__):
+        report.description = str(item.function.__doc__)
+    else:
+        report.description = "No Description"

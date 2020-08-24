@@ -5,7 +5,7 @@ parameters:
   html_report: ../reports/report
   excel_report: null
   json_report: null
-  processes:
+  processes: null
   show_log: show_output.log
   eapi_template: ../templates/eapi.conf.j2
   eapi_file: /home/docker/.eapi.conf
