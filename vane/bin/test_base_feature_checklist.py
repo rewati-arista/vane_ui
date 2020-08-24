@@ -485,7 +485,6 @@ class aaaTests():
         logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
         assert eos_authorization_allowed_1 < eos_authorization_allowed_2
 
-
     def test_if_aaa_session_logging_is_working_on_(self, dut, tests_definitions):
         """ Verify AAA session logging is working by identifying eapi connection
 
@@ -523,26 +522,38 @@ class aaaTests():
         for non_interactive in eos_non_interactives:
             assert eos_non_interactives[non_interactive]['service'] == 'commandApi'
 
+    def test_if_commands_authorization_methods_set_on_(self, dut, tests_definitions):
+        """ Verify AAA method-lists are correctly set
 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# def test_aaa_method_list_all_author_priv15(dut):
-#     """ Verify AAA method-lists are correctly set
-# 
-#         Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     show_cmd = "show aaa methods all"
-#     eos_auth_priv15_methods = \
-#         dut["output"][show_cmd]['json']['authorization']['commandsAuthzMethods\
-# ']['privilege0-15']['methods']
-# 
-#     print(f"\nOn router |{dut['name']}| AAA authorization methods for \
-# privilege0-15: |{eos_auth_priv15_methods}|")
-# 
-#     assert eos_auth_priv15_methods == ['group tacacs+', 'local']
-# 
-# 
+            Args:
+            dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+        dut_name = dut['name']
+        cmd_auth = test_parameters["cmd_auth"]
+
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+
+        logging.info(f'TEST is command authorization methods list set correct on |{dut_name}| ')
+        logging.info(f'GIVEN command authorization method list: |{cmd_auth}|')
+
+        eos_cmd_auth = \
+            dut["output"][show_cmd]['json']['authorization']['commandsAuthzMethods']['privilege0-15']['methods']
+        logging.info(f'WHEN EOS command authorization method list is set to |{eos_cmd_auth}|')
+
+        test_result = eos_cmd_auth == cmd_auth
+        logging.info(f'THEN test case result is |{test_result}|')  
+        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+
+        print(f"\nOn router |{dut_name}| AAA authorization methods for privilege0-15: |{eos_cmd_auth}|")
+
+        assert eos_cmd_auth == cmd_auth
+
 # @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
 # def test_aaa_method_list_all_author_exec(dut):
 #     """ Verify AAA method-lists are correctly set
