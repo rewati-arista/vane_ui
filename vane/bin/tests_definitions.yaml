@@ -104,3 +104,21 @@ test_suites:
         actual_output: null
         comment: null
         result: True
+      - name: test_if_exec_authorization_methods_set_on_
+        description: Verify AAA method-lists are correctly set
+        exec_auth:
+          - none
+        show_cmd: show aaa methods all
+        expected_output: True
+        actual_output: null
+        comment: null
+        result: True
+      - name: test_if_login_authentication_methods_set_on_
+        description: Verify AAA method-lists are correctly set
+        login_auth:
+          - local
+        show_cmd: show aaa methods all
+        expected_output: True
+        actual_output: null
+        comment: null
+        result: True
