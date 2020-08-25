@@ -32,7 +32,8 @@ test:
     - echo "Do a test here"
     - docker exec -i vane ls
     - docker exec -i vane pwd
-    - docker exec -i vane bash -c "cd /project/vane/bin && ./vane.py"
+    - /usr/local/bin/python3 /project/vane/bin/vane.py
+#    - docker exec -i vane bash -c "cd /project/vane/bin && ./vane.py"
 
 
 deploy:
