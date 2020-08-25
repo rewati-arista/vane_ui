@@ -9,8 +9,7 @@ services:
  
 before_script:
   - echo "Before script section"
-  - if [ "$( docker container inspect -f '{{.State.Running}}' $container_name )" == "true" ]; then docker stop vane
-
+  - if [ "$( docker container inspect -f '{{.State.Running}}' $container_name )" == "true" ]; then docker stop vane fi
 
 after_script:
   - echo "After script section"
