@@ -24,6 +24,7 @@ build:
     - ls
     - cat /etc/issue
     - docker ps
+    - docker top vane || docker stop vane
     - docker build -t vane:0.0.1 . --build-arg UID=$(shell id -u) --build-arg GID=$(shell id -g)
     - docker run -t -d --rm --name vane -v $(pwd):/project vane:0.0.1
     - docker ps
