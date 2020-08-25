@@ -521,6 +521,7 @@ class aaaTests():
         for non_interactive in eos_non_interactives:
             assert eos_non_interactives[non_interactive]['service'] == 'commandApi'
 
+    @pytest.mark.authorization
     def test_if_commands_authorization_methods_set_on_(self, dut, tests_definitions):
         """ Verify AAA method-lists are correctly set
 
@@ -553,6 +554,7 @@ class aaaTests():
 
         assert eos_cmd_auth == cmd_auth
 
+    @pytest.mark.authorization
     def test_if_exec_authorization_methods_set_on_(self, dut, tests_definitions):
         """ Verify AAA method-lists are correctly set
 
@@ -585,6 +587,7 @@ class aaaTests():
 
         assert eos_exec_auth == exec_auth
 
+    @pytest.mark.authentication
     def test_if_default_login_authentication_methods_set_on_(self, dut, tests_definitions):
         """ Verify AAA method-lists are correctly set
 
@@ -617,6 +620,7 @@ class aaaTests():
 
         assert eos_login_auth == login_auth
 
+    @pytest.mark.authentication
     def test_if_login_authentication_methods_set_on_(self, dut, tests_definitions):
         """ Verify AAA method-lists are correctly set
 
@@ -655,6 +659,7 @@ class aaaTests():
             logging.info(f'THEN test case result is |True|')  
             logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
 
+    @pytest.mark.authentication
     def test_if_dot1x_authentication_methods_set_on_(self, dut, tests_definitions):
         """ Verify AAA method-lists are correctly set
 
@@ -687,25 +692,39 @@ class aaaTests():
 
         assert eos_dot1x_auth == dot1x_auth
 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# def test_aaa_method_list_all_authen_enable(dut):
-#     """ Verify AAA method-lists are correctly set
-# 
-#         Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     show_cmd = "show aaa methods all"
-#     eos_auth_enable_methods = \
-#         dut["output"][show_cmd]['json']['authentication']['enableAuthenMethods\
-# ']['default']['methods']
-# 
-#     print(f"\nOn router |{dut['name']}| AAA authentication methods for \
-# enable default: |{eos_auth_enable_methods}|")
-# 
-#     assert eos_auth_enable_methods == ['group tacacs+', 'local']
-# 
-# 
+    @pytest.mark.authentication
+    def test_if_enable_authentication_methods_set_on_(self, dut, tests_definitions):
+        """ Verify AAA method-lists are correctly set
+
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+        dut_name = dut['name']
+        enable_auth = test_parameters["enable_auth"]
+
+        logging.info(f'TEST is enable authentication methods list set correct on |{dut_name}| ')
+        logging.info(f'GIVEN enable authentication method list: |{enable_auth}|')
+    
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+
+        eos_enable_auth = \
+            dut["output"][show_cmd]['json']['authentication']['enableAuthenMethods']['default']['methods']
+
+        print(f"\nOn router |{dut['name']}| AAA authentication methods for enable default: |{eos_enable_auth}|")
+        logging.info(f'WHEN EOS enable authentication method list is set to |{eos_enable_auth}|')
+
+        test_result = eos_enable_auth == enable_auth
+        logging.info(f'THEN test case result is |{test_result}|')  
+        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+
+        assert eos_enable_auth == enable_auth
+
 # @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
 # def test_aaa_method_list_all_acct_system(dut):
 #     """ Verify AAA method-lists are correctly set
