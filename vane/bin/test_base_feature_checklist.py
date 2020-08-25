@@ -586,7 +586,7 @@ class aaaTests():
 
         assert eos_exec_auth == exec_auth
 
-    def test_if_login_authentication_methods_set_on_(self, dut, tests_definitions):
+    def test_if_default_login_authentication_methods_set_on_(self, dut, tests_definitions):
         """ Verify AAA method-lists are correctly set
 
             Args:
@@ -618,25 +618,44 @@ class aaaTests():
 
         assert eos_login_auth == login_auth
 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# def test_aaa_method_list_all_authen_login(dut):
-#     """ Verify AAA method-lists are correctly set
-# 
-#         Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     show_cmd = "show aaa methods all"
-#     eos_auth_local_methods = \
-#         dut["output"][show_cmd]['json']['authentication']['loginAuthenMethods\
-# ']['login']['methods']
-# 
-#     print(f"\nOn router |{dut['name']}| AAA authentication methods for login: \
-# |{eos_auth_local_methods}|")
-# 
-#     assert eos_auth_local_methods == ['local']
-# 
-# 
+    def test_if_login_authentication_methods_set_on_(self, dut, tests_definitions):
+        """ Verify AAA method-lists are correctly set
+
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+        dut_name = dut['name']
+        login_auth = test_parameters["login_auth"]
+
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+
+        logging.info(f'TEST is login authentication methods list set correct on |{dut_name}| ')
+        logging.info(f'GIVEN login authentication method list: |{login_auth}|')
+
+        if login_auth:
+            eos_login_auth = \
+                dut["output"][show_cmd]['json']['authentication']['loginAuthenMethods']['login']['methods']
+            logging.info(f'WHEN EOS login authentication method list is set to |{eos_login_auth}|')
+
+            test_result = eos_login_auth == login_auth
+            logging.info(f'THEN test case result is |{test_result}|')  
+            logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+
+            print(f"\nOn router |{dut_name}| AAA authentication methods for login: |{eos_login_auth}|")
+
+            assert eos_login_auth == login_auth
+        else:
+            logging.info(f'WHEN EOS login authentication method list is set to |None|')
+
+            logging.info(f'THEN test case result is |True|')  
+            logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+
 # @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
 # def test_aaa_method_list_all_authen_dot1x(dut):
 #     """ Verify AAA method-lists are correctly set
