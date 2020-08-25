@@ -38,7 +38,6 @@ import tests_tools
 import os
 import argparse
 import logging
-import tests_tools
 
 
 logging.basicConfig(level=logging.INFO, filename='base_features.log', filemode='w',
@@ -656,25 +655,38 @@ class aaaTests():
             logging.info(f'THEN test case result is |True|')  
             logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# def test_aaa_method_list_all_authen_dot1x(dut):
-#     """ Verify AAA method-lists are correctly set
-# 
-#         Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     show_cmd = "show aaa methods all"
-#     eos_auth_dot1x_methods = \
-#         dut["output"][show_cmd]['json']['authentication']['dot1xAuthenMethods\
-# ']['default']['methods']
-# 
-#     print(f"\nOn router |{dut['name']}| AAA authentication methods for \
-# dot1x default: |{eos_auth_dot1x_methods}|")
-# 
-#     assert eos_auth_dot1x_methods == []
-# 
-# 
+    def test_if_dot1x_authentication_methods_set_on_(self, dut, tests_definitions):
+        """ Verify AAA method-lists are correctly set
+
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+        dut_name = dut['name']
+        dot1x_auth = test_parameters["dot1x_auth"]
+
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+
+        logging.info(f'TEST is dot1x authentication methods list set correct on |{dut_name}| ')
+        logging.info(f'GIVEN dot1x authentication method list: |{dot1x_auth}|')
+
+        eos_dot1x_auth = \
+            dut["output"][show_cmd]['json']['authentication']['dot1xAuthenMethods']['default']['methods']
+        logging.info(f'WHEN EOS dot1x authentication method list is set to |{eos_dot1x_auth}|')
+
+        test_result = eos_dot1x_auth == dot1x_auth
+        logging.info(f'THEN test case result is |{test_result}|')  
+        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+
+        print(f"\nOn router |{dut_name}| AAA authentication methods for dot1x default: |{eos_dot1x_auth}|")
+
+        assert eos_dot1x_auth == dot1x_auth
+
 # @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
 # def test_aaa_method_list_all_authen_enable(dut):
 #     """ Verify AAA method-lists are correctly set
