@@ -32,7 +32,7 @@ test:
     - echo "Do a test here"
     - docker exec -i vane ls
     - docker exec -i vane pwd
-    - /usr/local/bin/python3 /project/vane/bin/vane.py
+    - docker exec -i vane bash -c "/usr/local/bin/python3 /project/vane/bin/vane.py"
 #    - docker exec -i vane bash -c "cd /project/vane/bin && ./vane.py"
 
 
