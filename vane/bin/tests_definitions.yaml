@@ -147,3 +147,12 @@ test_suites:
         actual_output: null
         comment: null
         result: True
+      - name: test_if_system_accounting_methods_set_on_
+        description: Verify AAA method-lists are correctly set
+        default_acct: []
+        console_acct: []
+        show_cmd: show aaa methods all
+        expected_output: True
+        actual_output: null
+        comment: null
+        result: True

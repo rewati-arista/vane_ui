@@ -725,25 +725,48 @@ class aaaTests():
 
         assert eos_enable_auth == enable_auth
 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# def test_aaa_method_list_all_acct_system(dut):
-#     """ Verify AAA method-lists are correctly set
-# 
-#         Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     show_cmd = "show aaa methods all"
-#     eos_acct_system_methods = \
-#         dut["output"][show_cmd]['json']['accounting']['systemAcctMethods\
-# ']['system']['defaultMethods']
-# 
-#     print(f"\nOn router |{dut['name']}| AAA accounting methods for default: \
-# |{eos_acct_system_methods}|")
-# 
-#     assert eos_acct_system_methods == ['logging']
-# 
-# 
+    @pytest.mark.accounting
+    def test_if_system_accounting_methods_set_on_(self, dut, tests_definitions):
+        """ Verify AAA method-lists are correctly set
+
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+        dut_name = dut['name']
+        default_acct = test_parameters["default_acct"]
+        console_acct = test_parameters["console_acct"]
+
+        logging.info(f'TEST is system accounting methods list set correct on |{dut_name}| ')
+        logging.info(f'GIVEN default system accounting method list: '
+                     f'|{default_acct}| and console system accounting method'
+                     f'list: |{console_acct}|')
+    
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+
+        eos_default_acct = \
+            dut["output"][show_cmd]['json']['accounting']['systemAcctMethods']['system']['defaultMethods']
+        eos_console_acct = \
+            dut["output"][show_cmd]['json']['accounting']['systemAcctMethods']['system']['consoleMethods']
+
+        print(f"\nOn router |{dut['name']}| AAA accounting methods for default: |{eos_default_acct}|")
+        logging.info(f'WHEN default system accounting method list: '
+                     f'|{eos_default_acct}| and console system accounting method'
+                     f'list: |{eos_console_acct}|')
+
+        test_result = (eos_default_acct == default_acct) and (eos_console_acct == console_acct)
+        logging.info(f'THEN test case result is |{test_result}|')  
+        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+
+        assert eos_default_acct == default_acct
+        assert eos_console_acct == console_acct
+
+
 # @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
 # def test_aaa_method_list_all_acct_exec(dut):
 #     """ Verify AAA method-lists are correctly set
