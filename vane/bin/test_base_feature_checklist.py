@@ -104,46 +104,6 @@ class hostTests():
 
 
 @pytest.mark.base_feature
-@pytest.mark.dns
-class dnsTests():
-    """ DNS Test Suite
-    """
-
-    def test_if_dns_resolves_on_(self, dut, tests_definitions):
-        """ Verify DNS is running by performing pings and verifying name resolution
-
-             Args:
-              dut (dict): Encapsulates dut details including name, connection
-        """
-
-        test_case = inspect.currentframe().f_code.co_name
-        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
-
-        urls = test_parameters["urls"]
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
-        dut_conn = dut['connection']
-
-        for url in urls:
-            show_cmd = f"ping {url}"
-            logging.info(f'TEST can |{dut_name}| resolve {url}')
-            logging.info(f'GIVEN URL is |{url}|')
-            logging.info(f'WHEN exception is |Name or service not known| string')
-
-            show_cmd_txt = dut_conn.run_commands(show_cmd, encoding='text')
-            show_cmd_txt = show_cmd_txt[0]['output']
-
-            if 'Name or service not known' in show_cmd_txt:
-                print(f"\nOn router |{dut_name}| DNS resolution |Failed| for {url}")
-                logging.info(f'THEN test case result is |Failed|')  
-                logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
-                assert False
-            else:
-                print(f"\nOn router |{dut_name}| DNS resolution |Passed| for {url}")
-                logging.info(f'THEN test case result is |Passed|')  
-                logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
-
-@pytest.mark.base_feature
 @pytest.mark.logging
 class loggingTests():
     """ Logging Test Suite
