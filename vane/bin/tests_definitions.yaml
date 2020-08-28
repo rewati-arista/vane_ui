@@ -179,33 +179,39 @@ test_suites:
         expected_output: null
         comment: null
         result: True
+      # api tests
       - name: test_if_management_https_api_server_is_running_on_
-        description: Verify management api is running, httpsserver is enabled on port 443, httpserver is not running, and local httpserver is not running
+        description: Verify management api https server is running
         show_cmd: show management api http-commands
+        # If HTTPS API server is running
         expected_output: True
         comment: null
         result: True
       - name: test_if_management_https_api_server_port_is_correct_on_
-        description: Verify management api is running, httpsserver is enabled on port 443, httpserver is not running, and local httpserver is not running
+        description: Verify https server is enabled on port 443
         show_cmd: show management api http-commands
+        # HTTPS API server port number
         expected_output: 443
         comment: null
         result: True
       - name: test_if_management_https_api_server_is_enabled_on_
-        description: Verify management api is running, httpsserver is enabled on port 443, httpserver is not running, and local httpserver is not running
+        description: Verify management api https server is enabled
         show_cmd: show management api http-commands
+        # If HTTPS API server is enabled
         expected_output: True
         comment: null
         result: True
       - name: test_if_management_http_api_server_is_running_on_
-        description: Verify management api is running, httpsserver is enabled on port 443, httpserver is not running, and local httpserver is not running
+        description: Verify management api http server is not running
         show_cmd: show management api http-commands
+        # If HTTP API server is running
         expected_output: False
         comment: null
         result: True
       - name: test_if_management_local_http_api_server_is_running_on_
-        description: Verify management api is running, httpsserver is enabled on port 443, httpserver is not running, and local httpserver is not running
+        description: Verify management api local httpserver is not running
         show_cmd: show management api http-commands
+        # If Local HTTP API server is running
         expected_output: False
         comment: null
         result: True
@@ -217,7 +223,6 @@ test_suites:
           - cnn.com
           - arista.com
         expected_output: True
-        actual_output: null
         comment: null
         result: True
       - name: test_if_log_messages_appear_on_
