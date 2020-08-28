@@ -104,45 +104,6 @@ class hostTests():
 
 
 @pytest.mark.base_feature
-@pytest.mark.users
-class usersTests():
-    """ EOS Users Test Suite
-    """
-
-    def test_if_usernames_are_configured_on_(self, dut, tests_definitions):
-        """ Verify username is set correctly
-
-            Args:
-              dut (dict): Encapsulates dut details including name, connection
-        """
-
-        test_case = inspect.currentframe().f_code.co_name
-        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
-
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
-        usernames = test_parameters["usernames"]
-
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
-
-        for username in usernames:
-            logging.info(f'TEST is {username} username configured |{dut_name}|')
-            logging.info(f'GIVEN {username} username configured status: |{expected_output}|')
-
-            if username in show_cmd_txt:
-                print(f"\nOn router |{dut['name']}| |admin| username is |configured|")
-                logging.info(f'WHEN {username} username configured status is |True|')
-                logging.info(f'THEN test case result is |True|\n')
-                logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}') 
-            else:
-                print(f"\nOn router |{dut['name']}| |{username}| username is "
-                       "|NOT configured|")
-
-            assert (username in show_cmd_txt) is True
-
-@pytest.mark.base_feature
 @pytest.mark.tacacs
 class tacacsTests():
     """ AAA TACACS Test Suite

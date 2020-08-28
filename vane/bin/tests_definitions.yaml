@@ -52,12 +52,12 @@ test_suites:
         result: True
       - name: test_if_usernames_are_configured_on_
         description: Verify username is set correctly
+        # List usernames to check on DUT
         usernames:
           - ec2-user
           - kgrozis
         show_cmd: show running-config section username
         expected_output: True
-        actual_output: null
         comment: null
         result: True
       - name: test_if_tacacs_is_sending_messages_on_
