@@ -9,7 +9,6 @@ test_suites:
           - flash:zerotouch-config
         expected_output: False
         show_cmd: show file information
-        actual_output: null
         comment: null
         result: True
       - name: test_if_daemons_are_running_on_

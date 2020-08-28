@@ -104,6 +104,80 @@ class hostTests():
 
 
 @pytest.mark.base_feature
+@pytest.mark.daemons
+class daemonTests():
+    """ EOS Daemon Test Suite
+    """
+
+    def test_if_daemons_are_running_on_(self, dut, tests_definitions):
+        """ Verify a list of daemons are running on DUT
+
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+              tests_definitions (dict): Test parameters
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+
+        expected_output = test_parameters["expected_output"]
+        dut_name = dut['name']
+        daemons = test_parameters["daemons"]
+
+        for daemon in daemons:
+            logging.info(f'TEST is {daemon} daemon running on |{dut_name}|')
+            logging.info(f'GIVEN expected {daemon} running state: '
+                         f'|{expected_output}|')
+
+            eos_daemon = \
+                dut["output"][show_cmd]['json']['daemons'][daemon]['running']
+            logging.info(f'WHEN {daemon} device running state is |{eos_daemon}|')    
+
+            test_result = eos_daemon is expected_output
+            logging.info(f'THEN test case result is |{test_result}|')  
+            logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}') 
+
+            print(f"\nOn router |{dut_name}|: {daemon} daemon running is "
+                f"|{eos_daemon}|")
+            assert eos_daemon is expected_output
+
+
+    def test_if_daemons_are_enabled_on_(self,dut, tests_definitions):
+        """ Verify a list of daemons are enabled on DUT
+
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+        expected_output = test_parameters["expected_output"]
+        dut_name = dut['name']
+        logging.info(f'TEST is terminattr daemon enabled on |{dut_name}|')
+        logging.info(f'GIVEN expected terminattr​ enabled state: |{expected_output}|')
+
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+        eos_daemon = \
+            dut["output"][show_cmd]['json']['daemons']['TerminAttr']['enabled']
+        logging.info(f'WHEN terminattr​ device enabled state is |{eos_daemon}|')    
+
+        test_result = eos_daemon is expected_output
+        logging.info(f'THEN test case result is |{test_result}|')
+        logging.info(f'OUTPUT of |{show_cmd}|:\n\n{show_cmd_txt}') 
+
+        print(f"\nOn router |{dut['name']}|: TerminAttr daemon enabled is "
+              f"|{eos_daemon}| and expected value is |{expected_output}|.\nTest "
+              f"result is {test_result}")
+        assert eos_daemon is expected_output
+
+@pytest.mark.base_feature
 @pytest.mark.extensions
 class extensionsTests():
     """ EOS Extensions Test Suite
