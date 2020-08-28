@@ -104,43 +104,6 @@ class hostTests():
 
 
 @pytest.mark.base_feature
-@pytest.mark.logging
-class loggingTests():
-    """ Logging Test Suite
-    """
-    
-    def test_if_log_messages_appear_on_(self, dut, tests_definitions):
-        """ Verify local log messages
-
-            Args:
-              dut (dict): Encapsulates dut details including name, connection
-        """
-
-        test_case = inspect.currentframe().f_code.co_name
-        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
-
-        sys_msgs = test_parameters["sys_msgs"]
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
-
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
-
-        for sys_msg in sys_msgs:
-            logging.info(f'TEST for local log message {sys_msg} on |{dut_name}|')
-
-            if sys_msg in show_cmd_txt:
-                print(f"\nOn router |{dut_name}| message |{sys_msg}| found in local log")
-                logging.info(f'THEN test case result is |Failed|')  
-                logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
-                assert False
-            else:
-                print(f"\nOn router |{dut_name}| message |{sys_msg}| NOT found in local log")
-                logging.info(f'THEN test case result is |Passed|')  
-                logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
-
-@pytest.mark.base_feature
 @pytest.mark.ztp
 class ztpTests():
     """ Zero Touch Provisioning Test Suite
