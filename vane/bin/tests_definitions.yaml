@@ -238,18 +238,22 @@ test_suites:
         expected_output: null
         comment: null
         result: True
+      # ztp tests
       - name: test_if_zerotouch_is_disabled_on_
         description: Verify local log messages
         show_cmd: show zerotouch
+        # ztp state 
         expected_output: disabled
         comment: null
         result: True
       - name: test_for_zerotouch_config_file_on_
         description: Verify zerotoucn-config file is on flash
         show_cmd: dir flash:zerotouch-config
+        # if ztp file is on flash
         expected_output: True
         comment: null
         result: True
+      # ntp tests
       - name: test_if_ntp_is_synchronized_on_
         description: Verify ntp is setup and working correctly
         show_cmd: show ntp status
@@ -266,7 +270,6 @@ test_suites:
         description: Verify ntp is setup and working correctly
         show_cmd: show ntp associations
         expected_output: 1
-        actual_output: null
         comment: null
         result: True
       - name: test_if_process_is_running_on_
@@ -275,13 +278,11 @@ test_suites:
         processes:
           - ntpd
         expected_output: 1
-        actual_output: null
         comment: null
         result: True
       - name: test_if_hostname_is_correcet_on_
         description: Verify hostname is set on device is correct
         expected_output: False
         show_cmd: show hostname
-        actual_output: null
         comment: null
         result: True
