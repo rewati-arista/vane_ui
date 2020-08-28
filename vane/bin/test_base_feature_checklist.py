@@ -38,6 +38,7 @@ import tests_tools
 import os
 import argparse
 import logging
+import re
 
 
 logging.basicConfig(level=logging.INFO, filename='base_features.log', filemode='w',
@@ -806,259 +807,499 @@ class aaaTests():
         assert eos_default_acct == default_acct
         assert eos_console_acct == console_acct
 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# def test_aaa_method_list_all_acct_priv15(dut):
-#     """ Verify AAA method-lists are correctly set
-# 
-#         Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     show_cmd = "show aaa methods all"
-#     eos_acct_priv15_methods = \
-#         dut["output"][show_cmd]['json']['accounting']['commandsAcctMethods\
-# ']['privilege0-15']['consoleMethods']
-# 
-#     print(f"\nOn router |{dut['name']}| AAA accounting methods for \
-# privilege0-15: |{eos_acct_priv15_methods}|")
-# 
-#     assert eos_acct_priv15_methods == ['logging']
-# 
-# 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# def test_aaa_method_list_all_acct_dot1x(dut):
-#     """ Verify AAA method-lists are correctly set
-# 
-#          Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     show_cmd = "show aaa methods all"
-#     eos_acct_dot1x_methods = \
-#         dut["output"][show_cmd]['json']['accounting']['dot1xAcctMethods']['dot1x\
-# ']['consoleMethods']
-# 
-#     print(f"\nOn router |{dut['name']}| AAA accounting methods for \
-# dot1x: |{eos_acct_dot1x_methods}|")
-# 
-#     assert eos_acct_dot1x_methods == []
-# 
-# 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# def test_management_api_http_cmds_https_server_running(dut):
-#     """ Verify management api is running, httpsserver is enabled on port 443,
-#         httpserver is not running, and local httpserver is not running
-# 
-#          Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     show_cmd = "show management api http-commands"
-#     eos_show_mgmt = dut["output"][show_cmd]['json']['httpsServer']['running']
-# 
-#     print(f"\nOn router |{dut['name']}| HTTPS Server is running state: \
-# |{eos_show_mgmt}|")
-# 
-#     assert eos_show_mgmt is True
-# 
-# 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# def test_management_api_http_cmds_https_server_port(dut):
-#     """ Verify management api is running, httpsserver is enabled on port 443,
-#         httpserver is not running, and local httpserver is not running
-# 
-#          Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     show_cmd = "show management api http-commands"
-#     eos_show_mgmt = dut["output"][show_cmd]['json']['httpsServer']['port']
-# 
-#     print(f"\nOn router |{dut['name']}| HTTPS Server is running on port: \
-# |{eos_show_mgmt}|")
-# 
-#     assert eos_show_mgmt == 443
-# 
-# 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# def test_management_api_http_cmds_enabled(dut):
-#     """ Verify management api is running, httpsserver is enabled on port 443,
-#         httpserver is not running, and local httpserver is not running
-# 
-#          Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     show_cmd = "show management api http-commands"
-#     eos_show_mgmt = dut["output"][show_cmd]['json']['enabled']
-# 
-#     print(f"\nOn router |{dut['name']}| API is enabled state: \
-# |{eos_show_mgmt}|")
-# 
-#     assert eos_show_mgmt is True
-# 
-# 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# def test_management_api_http_cmds_http_server_running(dut):
-#     """ Verify management api is running, httpsserver is enabled on port 443,
-#         httpserver is not running, and local httpserver is not running
-# 
-#          Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     show_cmd = "show management api http-commands"
-#     eos_show_mgmt = dut["output"][show_cmd]['json']['httpServer']['running']
-# 
-#     print(f"\nOn router |{dut['name']}| HTTP Server is running state: \
-# |{eos_show_mgmt}|")
-# 
-#     assert eos_show_mgmt is False
-# 
-# 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# def test_management_api_http_cmds_local_http_server_running(dut):
-#     """ Verify management api is running, httpsserver is enabled on port 443,
-#         httpserver is not running, and local httpserver is not running
-# 
-#          Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     show_cmd = "show management api http-commands"
-#     eos_show_mgmt = \
-#         dut["output"][show_cmd]['json']['localHttpServer']['running']
-# 
-#     print(f"\nOn router |{dut['name']}| Local HTTP Server is running state: \
-# |{eos_show_mgmt}|")
-# 
-#     assert eos_show_mgmt is False
-# 
-# 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# def test_dns(dut):
-#     """ Verify DNS is running by performing pings and verifying name resolution
-# 
-#          Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     show_cmd = "ping google.com"
-#     _, show_output_text = common_nrfu_infra.return_show_cmd_output(
-#         show_cmd, dut, TEST_SUITE, inspect.stack()[0][3])
-#     show_ping = dut['connection'].run_commands(
-#         'ping google.com', encoding='text')
-# 
-#     if 'failure' in show_output_text[0]['output']:
-#         print(f"\nOn router |{dut['name']}| ping |Failed|")
-#     else:
-#         print(f"\nOn router |{dut['name']}| ping |Passed|")
-# 
-#     assert ('failure' in show_ping[0]['output']) is False
-# 
-# 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# @pytest.mark.xfail
-# def test_show_logging(dut):
-#     """ Verify local log messages
-# 
-#         Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     show_cmd = "show logging"
-#     eos_show_logging = dut["output"][show_cmd]["text"]
-# 
-#     print(f"NO AUTOMATED TEST.  MUST TEST MANUALLY")
-#     print(f"\nOn router |{dut['name']}| logs:\n{eos_show_logging}")
-# 
-#     assert False
-# 
-# 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# def test_zerotouch(dut):
-#     """ Verify ztp is disabled
-# 
-#         Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     show_cmd = "show zerotouch"
-#     eos_show_ztp = dut["output"][show_cmd]['json']['mode']
-# 
-#     print(f"\nOn router |{dut['name']}| ZTP process is in mode: \
-# |{eos_show_ztp}|")
-# 
-#     assert eos_show_ztp == 'disabled'
-# 
-# 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# def test_zerotouch_config(dut):
-#     """ Verify zerotoucn-config file is on flash
-# 
-#         Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     show_cmd = "dir flash:zerotouch-config"
-#     eos_dir_ztp_cfg = dut["output"][show_cmd]["text"]
-# 
-#     print(f"\nOn router |{dut['name']}| ZTP configuration file is on flash: \
-# |{('zerotouch-config' in eos_dir_ztp_cfg)}|")
-# 
-#     assert ("zerotouch-config" in eos_dir_ztp_cfg) is True
-# 
-# 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# def test_show_ntp_status(dut):
-#     """ Verify ntp is setup and working correctly
-# 
-#         Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     show_cmd = "show ntp status"
-#     eos_show_ntp = dut["output"][show_cmd]['text']
-# 
-#     print(f"\nOn router |{dut['name']}| NTP synchronized status is: \
-# |{('synchronised' in eos_show_ntp)}|")
-# 
-#     assert ("synchronised" in eos_show_ntp) is True
-# 
-# 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# def test_show_ntp_associations(dut):
-#     """ Verify ntp peers are correct
-# 
-#         Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     show_cmd = "show ntp associations"
-#     eos_show_ntp = dut["output"][show_cmd]['json']['peers']
-# 
-#     print(f"\nOn router |{dut['name']}| has \
-# |{len(eos_show_ntp)}| NTP peer associations")
-# 
-#     assert len(eos_show_ntp) > 0
-# 
-# 
-# @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-# @pytest.mark.xfail
-# def test_ntp_process(dut):
-#     """ Verify ntp process is running
-# 
-#         Args:
-#           dut (dict): Encapsulates dut details including name, connection
-#     """
-# 
-#     show_cmd = "bash ps -ef | grep ntp"
-#     _, show_output_text = common_nrfu_infra.return_show_cmd_output(
-#         show_cmd, dut, TEST_SUITE, inspect.stack()[0][3])
-# 
-#     print(f"NO AUTOMATED TEST.  MUST TEST MANUALLY")
-#     print(f"\nOn router |{dut['name']}| NTP process:\
-# \n{show_output_text[0]['output']}")
-# 
-#     assert False
-# 
+    @pytest.mark.accounting
+    def test_if_priviledge_accounting_methods_set_on_(self, dut, tests_definitions):
+        """ Verify AAA method-lists are correctly set
+
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+        dut_name = dut['name']
+        default_acct = test_parameters["default_acct"]
+        console_acct = test_parameters["console_acct"]
+
+        logging.info(f'TEST is priviledge accounting methods list set correct on |{dut_name}| ')
+        logging.info(f'GIVEN priviledge system accounting method list: '
+                     f'|{default_acct}| and priviledge system accounting method'
+                     f'list: |{console_acct}|')
+    
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+
+        eos_default_acct = \
+            dut["output"][show_cmd]['json']['accounting']['commandsAcctMethods']['privilege0-15']['defaultMethods']
+        eos_console_acct = \
+            dut["output"][show_cmd]['json']['accounting']['commandsAcctMethods']['privilege0-15']['consoleMethods']
+
+        print(f"\nOn router |{dut['name']}| AAA accounting exec methods for console: |{eos_console_acct}|")
+        logging.info(f'WHEN default privilege accounting method list: '
+                     f'|{eos_default_acct}| and console privilege accounting method'
+                     f'list: |{eos_console_acct}|')
+
+        test_result = (eos_default_acct == default_acct) and (eos_console_acct == console_acct)
+        logging.info(f'THEN test case result is |{test_result}|')  
+        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+
+        assert eos_default_acct == default_acct
+        assert eos_console_acct == console_acct
+    
+    @pytest.mark.accounting
+    def test_if_dot1x_accounting_methods_set_on_(self, dut, tests_definitions):
+        """ Verify AAA method-lists are correctly set
+
+             Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+        dut_name = dut['name']
+        default_acct = test_parameters["default_acct"]
+        console_acct = test_parameters["console_acct"]
+
+        logging.info(f'TEST is dot1x accounting methods list set correct on |{dut_name}| ')
+        logging.info(f'GIVEN dot1x system accounting method list: '
+                     f'|{default_acct}| and dot1x system accounting method'
+                     f'list: |{console_acct}|')
+    
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+
+        eos_default_acct = \
+            dut["output"][show_cmd]['json']['accounting']['dot1xAcctMethods']['dot1x']['defaultMethods']
+        eos_console_acct = \
+            dut["output"][show_cmd]['json']['accounting']['dot1xAcctMethods']['dot1x']['consoleMethods']
+
+        print(f"\nOn router |{dut['name']}| AAA accounting exec methods for dot1x: |{eos_console_acct}|")
+        logging.info(f'WHEN default dot1x accounting method list: '
+                     f'|{eos_default_acct}| and console dot1x accounting method'
+                     f'list: |{eos_console_acct}|')
+
+        test_result = (eos_default_acct == default_acct) and (eos_console_acct == console_acct)
+        logging.info(f'THEN test case result is |{test_result}|')  
+        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+
+        assert eos_default_acct == default_acct
+        assert eos_console_acct == console_acct
+
+@pytest.mark.base_feature
+@pytest.mark.api
+class apiTests():
+    """ AAA Test Suite
+    """
+
+    def test_if_management_https_api_server_is_running_on_(self, dut, tests_definitions):
+        """ Verify management api is running, httpsserver is enabled on port 443,
+            httpserver is not running, and local httpserver is not running
+
+             Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+        dut_name = dut['name']
+        https_status = test_parameters["expected_output"]
+
+        logging.info(f'TEST is HTTPS API running on |{dut_name}| ')
+        logging.info(f'GIVEN HTTPS API state is |{https_status}|')
+
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+        eos_https_status = dut["output"][show_cmd]['json']['httpsServer']['running']
+
+        print(f"\nOn router |{dut_name}| HTTPS Server is running state: |{eos_https_status}|")
+        logging.info(f'WHEN HTTPS API state is |{eos_https_status}|')
+
+        test_result = https_status == eos_https_status
+        logging.info(f'THEN test case result is |{test_result}|')  
+        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+
+        assert https_status == eos_https_status
+
+    def test_if_management_https_api_server_port_is_correct_on_(self, dut, tests_definitions):
+        """ Verify management api is running, httpsserver is enabled on port 443,
+            httpserver is not running, and local httpserver is not running
+
+             Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+        dut_name = dut['name']
+        https_port = test_parameters["expected_output"]
+
+        logging.info(f'TEST is HTTPS API port on |{dut_name}| ')
+        logging.info(f'GIVEN HTTPS API port is |{https_port}|')
+
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+        eos_https_port = dut["output"][show_cmd]['json']['httpsServer']['port']
+
+        print(f"\nOn router |{dut_name}| HTTPS Server is running on port: |{eos_https_port}|")
+        logging.info(f'WHEN HTTPS API port is |{eos_https_port}|')
+
+        test_result = https_port == eos_https_port
+        logging.info(f'THEN test case result is |{test_result}|')  
+        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+    
+        assert eos_https_port == https_port
+
+    def test_if_management_https_api_server_is_enabled_on_(self, dut, tests_definitions):
+        """ Verify management api is running, httpsserver is enabled on port 443,
+            httpserver is not running, and local httpserver is not running
+
+             Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+        dut_name = dut['name']
+        https_enabled = test_parameters["expected_output"]
+
+        logging.info(f'TEST is HTTPS API enabled on |{dut_name}| ')
+        logging.info(f'GIVEN HTTPS API enabled is |{https_enabled}|')
+
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+        eos_https_enabled = dut["output"][show_cmd]['json']['enabled']
+
+        print(f"\nOn router |{dut_name}| API is enabled state: |{eos_https_enabled}|")
+        logging.info(f'WHEN HTTPS API enabled is |{eos_https_enabled}|')
+
+        test_result = https_enabled == eos_https_enabled
+        logging.info(f'THEN test case result is |{test_result}|')  
+        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+    
+        assert https_enabled == eos_https_enabled
+
+    def test_if_management_http_api_server_is_running_on_(self, dut, tests_definitions):
+        """ Verify management api is running, httpsserver is enabled on port 443,
+            httpserver is not running, and local httpserver is not running
+
+             Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+        dut_name = dut['name']
+        http_status = test_parameters["expected_output"]
+
+        logging.info(f'TEST is HTTP API running on |{dut_name}| ')
+        logging.info(f'GIVEN HTTP API state is |{http_status}|')
+
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+        eos_http_status = dut["output"][show_cmd]['json']['httpServer']['running']
+
+        print(f"\nOn router |{dut_name}| HTTP Server is running state: |{eos_http_status}|")
+        logging.info(f'WHEN HTTP API state is |{eos_http_status}|')
+
+        test_result = http_status == eos_http_status
+        logging.info(f'THEN test case result is |{test_result}|')  
+        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+
+        assert http_status is eos_http_status
+
+    def test_if_management_local_http_api_server_is_running_on_(self, dut, tests_definitions):
+        """ Verify management api is running, httpsserver is enabled on port 443,
+            httpserver is not running, and local httpserver is not running
+
+             Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+        dut_name = dut['name']
+        http_status = test_parameters["expected_output"]
+
+        logging.info(f'TEST is local HTTP API running on |{dut_name}| ')
+        logging.info(f'GIVEN local HTTP API state is |{http_status}|')
+
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+        eos_http_status = \
+            dut["output"][show_cmd]['json']['localHttpServer']['running']
+
+        print(f"\nOn router |{dut['name']}| Local HTTP Server is running state: |{http_status}|")
+        logging.info(f'WHEN HTTP API state is |{eos_http_status}|')
+
+        test_result = http_status == eos_http_status
+        logging.info(f'THEN test case result is |{test_result}|')  
+        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+
+        assert http_status is eos_http_status
+
+@pytest.mark.base_feature
+@pytest.mark.dns
+class dnsTests():
+    """ DNS Test Suite
+    """
+
+    def test_if_dns_resolves_on_(self, dut, tests_definitions):
+        """ Verify DNS is running by performing pings and verifying name resolution
+
+             Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+        urls = test_parameters["urls"]
+        expected_output = test_parameters["expected_output"]
+        dut_name = dut['name']
+        dut_conn = dut['connection']
+
+        for url in urls:
+            show_cmd = f"ping {url}"
+            logging.info(f'TEST can |{dut_name}| resolve {url}')
+            logging.info(f'GIVEN URL is |{url}|')
+            logging.info(f'WHEN exception is |Name or service not known| string')
+
+            show_cmd_txt = dut_conn.run_commands(show_cmd, encoding='text')
+            show_cmd_txt = show_cmd_txt[0]['output']
+
+            if 'Name or service not known' in show_cmd_txt:
+                print(f"\nOn router |{dut_name}| DNS resolution |Failed| for {url}")
+                logging.info(f'THEN test case result is |Failed|')  
+                logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+                assert False
+            else:
+                print(f"\nOn router |{dut_name}| DNS resolution |Passed| for {url}")
+                logging.info(f'THEN test case result is |Passed|')  
+                logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+
+@pytest.mark.base_feature
+@pytest.mark.logging
+class loggingTests():
+    """ Logging Test Suite
+    """
+    
+    def test_if_log_messages_appear_on_(self, dut, tests_definitions):
+        """ Verify local log messages
+
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+        sys_msgs = test_parameters["sys_msgs"]
+        expected_output = test_parameters["expected_output"]
+        dut_name = dut['name']
+
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+
+        for sys_msg in sys_msgs:
+            logging.info(f'TEST for local log message {sys_msg} on |{dut_name}|')
+
+            if sys_msg in show_cmd_txt:
+                print(f"\nOn router |{dut_name}| message |{sys_msg}| found in local log")
+                logging.info(f'THEN test case result is |Failed|')  
+                logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+                assert False
+            else:
+                print(f"\nOn router |{dut_name}| message |{sys_msg}| NOT found in local log")
+                logging.info(f'THEN test case result is |Passed|')  
+                logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+
+@pytest.mark.base_feature
+@pytest.mark.ztp
+class ztpTests():
+    """ Zero Touch Provisioning Test Suite
+    """    
+
+    def test_if_zerotouch_is_disabled_on_(self, dut, tests_definitions):
+        """ Verify ztp is disabled
+
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+        expected_output = test_parameters["expected_output"]
+        dut_name = dut['name']
+
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+
+        logging.info(f'TEST is ZTP disabled on |{dut_name}| ')
+        logging.info(f'GIVEN ZTP state is |{expected_output}|')
+
+        actual_output = dut["output"][show_cmd]['json']['mode']
+
+        print(f"\nOn router |{dut['name']}| ZTP process is in mode: |{actual_output}|")
+        logging.info(f'WHEN ZTP state is |{actual_output}|')
+
+        test_result = actual_output == expected_output
+        logging.info(f'THEN test case result is |{test_result}|')  
+        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+
+        assert actual_output == expected_output
+
+    def test_for_zerotouch_config_file_on_(self, dut, tests_definitions):
+        """ Verify zerotoucn-config file is on flash
+
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+        expected_output = test_parameters["expected_output"]
+        dut_name = dut['name']
+
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+
+        logging.info(f'TEST is ZTP configuration file is on |{dut_name}| ')
+        logging.info(f'GIVEN ZTP configuration file is |{expected_output}|')
+
+        actual_output = ("zerotouch-config" in show_cmd_txt) is expected_output
+
+        print(f"\nOn router |{dut_name}| ZTP configuration file is on flash: |{actual_output}|")
+        logging.info(f'WHEN ZTP configuration file is |{actual_output}|')
+
+        test_result = actual_output == expected_output
+        logging.info(f'THEN test case result is |{test_result}|')  
+        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+
+        assert actual_output == expected_output
+
+@pytest.mark.base_feature
+@pytest.mark.ntp
+class ntpTests():
+    """ NTP Test Suite
+    """  
+
+    def test_if_ntp_is_synchronized_on_(self, dut, tests_definitions):
+        """ Verify ntp is setup and working correctly
+
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+        expected_output = test_parameters["expected_output"]
+        dut_name = dut['name']
+
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+
+        logging.info(f'TEST is NTP synchronized on |{dut_name}| ')
+        logging.info(f'GIVEN NTP synchronized is |{expected_output}|')
+
+        actual_output = ("synchronised" in show_cmd_txt)
+
+        print(f"\nOn router |{dut['name']}| NTP synchronized status is: |{actual_output}|")
+        logging.info(f'WHEN NTP configuration file is |{actual_output}|')
+
+        test_result = actual_output == expected_output
+        logging.info(f'THEN test case result is |{test_result}|')  
+        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+
+        assert actual_output == expected_output
+
+    def test_if_ntp_associated_with_peers_on_(self, dut, tests_definitions):
+        """ Verify ntp peers are correct
+
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+        expected_output = test_parameters["expected_output"]
+        dut_name = dut['name']
+
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+
+        logging.info(f'TEST is NTP associations with peers on |{dut_name}| ')
+        logging.info(f'GIVEN NTP associated are greater than or equal to |{expected_output}|')
+
+        actual_output = dut["output"][show_cmd]['json']['peers']
+
+        print(f"\nOn router |{dut_name}| has |{len(actual_output)}| NTP peer associations")
+        logging.info(f'WHEN NTP associated peers fare |{len(actual_output)}|')
+
+        test_result = len(actual_output) >= expected_output
+        logging.info(f'THEN test case result is |{test_result}|')  
+        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+
+        assert len(actual_output) >= expected_output
+
+    @pytest.mark.ntp
+    def test_if_process_is_running_on_(self, dut, tests_definitions):
+        """ Verify ntp processes are running
+
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+
+        expected_output = test_parameters["expected_output"]
+        processes = test_parameters["processes"]
+        dut_name = dut['name']
+
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+
+        actual_output = dut["output"][show_cmd]['json']['processes']
+
+        process_list = []
+        for process_num in actual_output:
+            process_list.append(actual_output[process_num]["cmd"])
+
+        for process in processes:
+            logging.info(f'TEST is {process} running on |{dut_name}| ')
+            logging.info(f'GIVEN {process} state is |{expected_output}|')
+
+            results = [i for i in process_list if process in i]
+
+            print(f"\nOn router |{dut_name}| has |{len(results)}| process for {process}")
+            logging.info(f'WHEN {process} number is |{len(results)}|')
+
+            test_result = len(results) >= expected_output
+            logging.info(f'THEN test case result is |{test_result}|')  
+            logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+
+            assert len(results) >= expected_output

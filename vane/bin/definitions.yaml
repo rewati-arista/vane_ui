@@ -39,8 +39,8 @@ duts:
         neighborPort: Ethernet2
         port: Ethernet1
 
-  - name: kgrozis-topology-CloudEOSEdge1
-    mgmt_ip: 3.15.89.170
+  - name: kg-topology-CloudEOSEdge1
+    mgmt_ip: 3.132.90.164
     username: kgrozis
     password: arista123
     transport: https
@@ -49,8 +49,8 @@ duts:
         neighborPort: Ethernet2
         port: Ethernet1
 
-  - name: kgrozis-topology-CloudEOSEdge2
-    mgmt_ip: 3.129.171.155
+  - name: kg-topology-CloudEOSEdge2
+    mgmt_ip: 3.131.34.190
     username: kgrozis
     password: arista123
     transport: https

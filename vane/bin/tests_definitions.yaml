@@ -165,3 +165,121 @@ test_suites:
         actual_output: null
         comment: null
         result: True
+      - name: test_if_priviledge_accounting_methods_set_on_
+        description: Verify AAA method-lists are correctly set
+        default_acct: []
+        console_acct: []
+        show_cmd: show aaa methods all
+        expected_output: True
+        actual_output: null
+        comment: null
+        result: True
+      - name: test_if_dot1x_accounting_methods_set_on_
+        description: Verify AAA method-lists are correctly set
+        default_acct: []
+        console_acct: []
+        show_cmd: show aaa methods all
+        expected_output: True
+        actual_output: null
+        comment: null
+        result: True
+      - name: test_if_management_https_api_server_is_running_on_
+        description: Verify management api is running, httpsserver is enabled on port 443, httpserver is not running, and local httpserver is not running
+        show_cmd: show management api http-commands
+        expected_output: True
+        actual_output: null
+        comment: null
+        result: True
+      - name: test_if_management_https_api_server_port_is_correct_on_
+        description: Verify management api is running, httpsserver is enabled on port 443, httpserver is not running, and local httpserver is not running
+        show_cmd: show management api http-commands
+        expected_output: 443
+        actual_output: null
+        comment: null
+        result: True
+      - name: test_if_management_https_api_server_is_enabled_on_
+        description: Verify management api is running, httpsserver is enabled on port 443, httpserver is not running, and local httpserver is not running
+        show_cmd: show management api http-commands
+        expected_output: True
+        actual_output: null
+        comment: null
+        result: True
+      - name: test_if_management_http_api_server_is_running_on_
+        description: Verify management api is running, httpsserver is enabled on port 443, httpserver is not running, and local httpserver is not running
+        show_cmd: show management api http-commands
+        expected_output: False
+        actual_output: null
+        comment: null
+        result: True
+      - name: test_if_management_local_http_api_server_is_running_on_
+        description: Verify management api is running, httpsserver is enabled on port 443, httpserver is not running, and local httpserver is not running
+        show_cmd: show management api http-commands
+        expected_output: False
+        actual_output: null
+        comment: null
+        result: True
+      - name: test_if_dns_resolves_on_
+        description: Verify DNS is running by performing pings and verifying name resolution
+        show_cmd: show management api http-commands
+        urls:
+          - google.com
+          - cnn.com
+          - arista.com
+        expected_output: True
+        actual_output: null
+        comment: null
+        result: True
+      - name: test_if_log_messages_appear_on_
+        description: Verify local log messages
+        show_cmd: show logging
+        sys_msgs:
+          - critical
+          - warning
+        expected_output: True
+        actual_output: null
+        comment: null
+        result: True
+      - name: test_if_zerotouch_is_disabled_on_
+        description: Verify local log messages
+        show_cmd: show zerotouch
+        expected_output: disabled
+        actual_output: null
+        comment: null
+        result: True
+      - name: test_for_zerotouch_config_file_on_
+        description: Verify zerotoucn-config file is on flash
+        show_cmd: dir flash:zerotouch-config
+        expected_output: True
+        actual_output: null
+        comment: null
+        result: True
+      - name: test_if_ntp_is_synchronized_on_
+        description: Verify ntp is setup and working correctly
+        show_cmd: show ntp status
+        expected_output: True
+        actual_output: null
+        comment: null
+        result: True
+      - name: test_if_ntp_associated_with_peers_on_
+        description: Verify ntp is setup and working correctly
+        show_cmd: show ntp associations
+        expected_output: 1
+        actual_output: null
+        comment: null
+        result: True
+      - name: test_if_ntp_associated_with_peers_on_
+        description: Verify ntp is setup and working correctly
+        show_cmd: show ntp associations
+        expected_output: 1
+        actual_output: null
+        comment: null
+        result: True
+      - name: test_if_process_is_running_on_
+        description: Verify processes are running
+        show_cmd: show processes
+        processes:
+          - ntpd
+        expected_output: 1
+        actual_output: null
+        comment: null
+        result: True

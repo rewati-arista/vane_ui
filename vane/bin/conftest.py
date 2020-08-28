@@ -26,7 +26,8 @@ EOS_SHOW_CMDS = ["show daemon",
                  "dir flash:zerotouch-config",
                  "show ntp status",
                  "show ntp associations",
-                 "show hostname"]
+                 "show hostname",
+                 "show processes"]
 
 def pytest_addoption(parser):
     parser.addoption(

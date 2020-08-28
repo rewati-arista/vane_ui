@@ -24,12 +24,12 @@ ARG UID
 ARG GID
 # Create the sudo and UNAME groups and add the sudo group to sudoers
 # Create the user, add to the sudo group, and set the password to UPASS
-# RUN echo "%sudo   ALL=(ALL:ALL) ALL" >> /etc/sudoers \
-#     && groupadd -r -g $GID -o $UNAME \
-#     && useradd -r -m -u $UID -g $GID -G sudo -o -s /bin/bash -p $(perl -e 'print crypt($ENV{"UPASS"}, "salt")') $UNAME
+RUN echo "%sudo   ALL=(ALL:ALL) ALL" >> /etc/sudoers \
+    && groupadd -r -g $GID -o $UNAME \
+    && useradd -r -m -u $UID -g $GID -G sudo -o -s /bin/bash -p $(perl -e 'print crypt($ENV{"UPASS"}, "salt")') $UNAME
 
 # Switch to the new user for when the container is run
-# USER $UNAME
-# RUN echo "PS1='🐳  \[\033[1;36m\]\h \[\033[1;34m\]\W\[\033[0;35m\] \[\033[1;36m\]# \[\033[0m\]'" >> /home/${UNAME}/.bashrc
+USER $UNAME
+RUN echo "PS1='🐳  \[\033[1;36m\]\h \[\033[1;34m\]\W\[\033[0;35m\] \[\033[1;36m\]# \[\033[0m\]'" >> /home/${UNAME}/.bashrc
 
 CMD ["/bin/sh"]
