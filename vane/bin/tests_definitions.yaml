@@ -1,6 +1,7 @@
 test_suites:
   - name: test_base_feature_checklist.py
     testcases:
+      # filesystem tests
       - name: test_if_files_on_
         description: Verify filesystem is correct and expected files are present
         # List files to check on DUT
@@ -12,6 +13,7 @@ test_suites:
         show_cmd: show file information
         comment: null
         result: True
+      # daemon tests
       - name: test_if_daemons_are_running_on_
         description: Verify a list of daemons are running on DUT
         # List daemons to check on DUT
@@ -30,6 +32,7 @@ test_suites:
         show_cmd: show daemon
         comment: null
         result: True
+      # extensions tests
       - name: test_if_extensions_are_installed_on_
         description: Verify a list of extension are installed on a DUT
         # List extensions to check on DUT
@@ -50,6 +53,7 @@ test_suites:
         expected_output: False
         comment: null
         result: True
+      # user tests
       - name: test_if_usernames_are_configured_on_
         description: Verify username is set correctly
         # List usernames to check on DUT
@@ -60,20 +64,20 @@ test_suites:
         expected_output: True
         comment: null
         result: True
+      # tacacs tests
       - name: test_if_tacacs_is_sending_messages_on_
-        description: Verify tacacs is working correctly
+        description: Verify tacacs messages are sending correctly
         show_cmd: show tacacs
         expected_output: null
-        actual_output: null
         comment: null
         result: True
       - name: test_show_if_tacacs_is_receiving_messages_on_
-        description: Verify tacacs is working correctly
+        description: Verify tacacs messages are received correctly
         show_cmd: show tacacs
         expected_output: null
-        actual_output: null
         comment: null
         result: True
+      ### aaa tests
       - name: test_if_authentication_counters_are_incrementing_on_
         description: Verify AAA counters are working correctly
         show_cmd: show aaa counters
