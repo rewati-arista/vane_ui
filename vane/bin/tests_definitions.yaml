@@ -257,24 +257,21 @@ test_suites:
       - name: test_if_ntp_is_synchronized_on_
         description: Verify ntp is setup and working correctly
         show_cmd: show ntp status
+        # if ntp synchronization
         expected_output: True
         comment: null
         result: True
       - name: test_if_ntp_associated_with_peers_on_
-        description: Verify ntp is setup and working correctly
+        description: Verify ntp peers are correct
         show_cmd: show ntp associations
-        expected_output: 1
-        comment: null
-        result: True
-      - name: test_if_ntp_associated_with_peers_on_
-        description: Verify ntp is setup and working correctly
-        show_cmd: show ntp associations
+        # number of ntp associations
         expected_output: 1
         comment: null
         result: True
       - name: test_if_process_is_running_on_
         description: Verify processes are running
         show_cmd: show processes
+        # processes to check
         processes:
           - ntpd
         expected_output: 1
