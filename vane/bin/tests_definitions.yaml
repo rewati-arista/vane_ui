@@ -77,73 +77,65 @@ test_suites:
         expected_output: null
         comment: null
         result: True
-      ### aaa tests
+      # aaa tests
       - name: test_if_authentication_counters_are_incrementing_on_
         description: Verify AAA counters are working correctly
         show_cmd: show aaa counters
         expected_output: null
-        actual_output: null
         comment: null
         result: True
       - name: test_if_aaa_session_logging_is_working_on_
         description: Verify AAA session logging is working by identifying eapi connection
         show_cmd: show users detail
-        expected_output: null
-        actual_output: null
-        comment: null
-        result: True
-      - name: test_if_hostname_is_correcet_on_
-        description: Verify hostname is set on device is correct
-        expected_output: False
-        show_cmd: show hostname
-        actual_output: null
+        expected_output: commandApi
         comment: null
         result: True
       - name: test_if_commands_authorization_methods_set_on_
-        description: Verify AAA method-lists are correctly set
+        description: Verify AAA command authorization are method-lists set correct
+        # List command authorizations to check on DUT
         cmd_auth:
           - none
         show_cmd: show aaa methods all
-        expected_output: True
-        actual_output: null
+        expected_output: null
         comment: null
         result: True
       - name: test_if_exec_authorization_methods_set_on_
-        description: Verify AAA method-lists are correctly set
+        description: Verify AAA exec authorization are method-lists set correct
+        # List exec authorizations to check on DUT
         exec_auth:
           - none
         show_cmd: show aaa methods all
-        expected_output: True
-        actual_output: null
+        expected_output: null
         comment: null
         result: True
       - name: test_if_default_login_authentication_methods_set_on_
-        description: Verify AAA method-lists are correctly set
+        description: Verify AAA default login authentication are method-lists set correct
+        # List default login authentication to check on DUT
         login_auth:
           - local
         show_cmd: show aaa methods all
-        expected_output: True
-        actual_output: null
+        expected_output: null
         comment: null
         result: True
       - name: test_if_login_authentication_methods_set_on_
-        description: Verify AAA method-lists are correctly set
+        description: AAA login authentication are method-lists set correct
+        # List login authentication to check on DUT
         login_auth: null
         show_cmd: show aaa methods all
-        expected_output: True
-        actual_output: null
+        expected_output: null
         comment: null
         result: True
       - name: test_if_dot1x_authentication_methods_set_on_
-        description: Verify AAA method-lists are correctly set
+        description: Verify AAA dot1x authentication are method-lists set correct
+        # List dot1x authentication to check on DUT
         dot1x_auth: []
         show_cmd: show aaa methods all
-        expected_output: True
-        actual_output: null
+        expected_output: null
         comment: null
         result: True
       - name: test_if_enable_authentication_methods_set_on_
-        description: Verify AAA method-lists are correctly set
+        description: Verify AAA enable authentication are method-lists set correct
+        # List enable login authentication to check on DUT
         enable_auth:
           - local
         show_cmd: show aaa methods all
@@ -152,74 +144,69 @@ test_suites:
         comment: null
         result: True
       - name: test_if_system_accounting_methods_set_on_
-        description: Verify AAA method-lists are correctly set
+        description: Verify AAA system accounting method-lists are set correct
+        # List default system accounting to check on DUT
         default_acct: []
         console_acct: []
         show_cmd: show aaa methods all
-        expected_output: True
-        actual_output: null
+        expected_output: null
         comment: null
         result: True
       - name: test_if_exec_accounting_methods_set_on_
-        description: Verify AAA method-lists are correctly set
+        description: Verify AAA exec accounting method-lists are set correct
+        # List exec system accounting to check on DUT
         default_acct: []
         console_acct: []
         show_cmd: show aaa methods all
-        expected_output: True
-        actual_output: null
+        expected_output: null
         comment: null
         result: True
       - name: test_if_priviledge_accounting_methods_set_on_
-        description: Verify AAA method-lists are correctly set
+        description: Verify AAA priviledge accounting method-lists are set correct
+        # List priviledge system accounting to check on DUT
         default_acct: []
         console_acct: []
         show_cmd: show aaa methods all
-        expected_output: True
-        actual_output: null
+        expected_output: null
         comment: null
         result: True
       - name: test_if_dot1x_accounting_methods_set_on_
-        description: Verify AAA method-lists are correctly set
+        description: Verify AAA dot1x accounting method-lists are set correct
+        # List dot1x system accounting to check on DUT
         default_acct: []
         console_acct: []
         show_cmd: show aaa methods all
-        expected_output: True
-        actual_output: null
+        expected_output: null
         comment: null
         result: True
       - name: test_if_management_https_api_server_is_running_on_
         description: Verify management api is running, httpsserver is enabled on port 443, httpserver is not running, and local httpserver is not running
         show_cmd: show management api http-commands
         expected_output: True
-        actual_output: null
         comment: null
         result: True
       - name: test_if_management_https_api_server_port_is_correct_on_
         description: Verify management api is running, httpsserver is enabled on port 443, httpserver is not running, and local httpserver is not running
         show_cmd: show management api http-commands
         expected_output: 443
-        actual_output: null
         comment: null
         result: True
       - name: test_if_management_https_api_server_is_enabled_on_
         description: Verify management api is running, httpsserver is enabled on port 443, httpserver is not running, and local httpserver is not running
         show_cmd: show management api http-commands
         expected_output: True
-        actual_output: null
         comment: null
         result: True
       - name: test_if_management_http_api_server_is_running_on_
         description: Verify management api is running, httpsserver is enabled on port 443, httpserver is not running, and local httpserver is not running
         show_cmd: show management api http-commands
         expected_output: False
-        actual_output: null
         comment: null
         result: True
       - name: test_if_management_local_http_api_server_is_running_on_
         description: Verify management api is running, httpsserver is enabled on port 443, httpserver is not running, and local httpserver is not running
         show_cmd: show management api http-commands
         expected_output: False
-        actual_output: null
         comment: null
         result: True
       - name: test_if_dns_resolves_on_
@@ -284,6 +271,13 @@ test_suites:
         processes:
           - ntpd
         expected_output: 1
+        actual_output: null
+        comment: null
+        result: True
+      - name: test_if_hostname_is_correcet_on_
+        description: Verify hostname is set on device is correct
+        expected_output: False
+        show_cmd: show hostname
         actual_output: null
         comment: null
         result: True
