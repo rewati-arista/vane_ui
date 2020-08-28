@@ -14,6 +14,7 @@ test_suites:
         result: True
       - name: test_if_daemons_are_running_on_
         description: Verify a list of daemons are running on DUT
+        # List daemons to check on DUT
         daemons:
           - TerminAttr
         expected_output: True
@@ -22,6 +23,7 @@ test_suites:
         result: True
       - name: test_if_daemons_are_enabled_on_
         description: Verify a list of daemons are enabled on DUT
+        # List daemons to check on DUT
         daemons:
           - TerminAttr
         expected_output: True
@@ -29,23 +31,23 @@ test_suites:
         comment: null
         result: True
       - name: test_if_extensions_are_installed_on_
-        description: Verify awslogs extension is installed
+        description: Verify a list of extension are installed on a DUT
+        # List extensions to check on DUT
         extensions:
           - awslogs.swix
           - awsha.rpm
         show_cmd: show extensions
         expected_output: installed
-        actual_output: null
         comment: null
         result: True
       - name: test_if_extensions_are_erroring_on_
-        description: Verify awslogs extension is not erroring
+        description: Verify a list of extension are not erroring on a DUT
+        # List extensions to check on DUT
         extensions:
           - awslogs.swix
           - awsha.rpm
         show_cmd: show extensions
         expected_output: False
-        actual_output: null
         comment: null
         result: True
       - name: test_if_usernames_are_configured_on_
