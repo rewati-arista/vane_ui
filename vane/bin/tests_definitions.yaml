@@ -277,9 +277,24 @@ test_suites:
         expected_output: 1
         comment: null
         result: True
+  - name: test_dut_platform_status.py
+    testcases:
       - name: test_if_hostname_is_correcet_on_
         description: Verify hostname is set on device is correct
         expected_output: null
         show_cmd: show hostname
+        comment: null
+        result: True
+      - name: test_if_system_environment_temperature_are_in_spec_on_
+        description: Verify system temperature environmentals are functional within spec
+        # List temperature values 
+        # item1: System status
+        # item2: Power Supply Slots
+        # item3: Temperature Sensors
+        expected_output:
+          - temperatureOk
+          - False
+          - False
+        show_cmd: show system environment temperature
         comment: null
         result: True

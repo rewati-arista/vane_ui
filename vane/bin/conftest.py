@@ -27,7 +27,8 @@ EOS_SHOW_CMDS = ["show daemon",
                  "show ntp status",
                  "show ntp associations",
                  "show hostname",
-                 "show processes"]
+                 "show processes",
+                 "show system environment temperature"]
 
 def pytest_addoption(parser):
     parser.addoption(

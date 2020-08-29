@@ -43,24 +43,6 @@ import os
 import stat
 
 
-# TODO: Remove from conftest.py
-EOS_SHOW_CMDS = ["show daemon",
-                 "dir",
-                 "show extensions",
-                 "show running-config section username",
-                 "show tacacs",
-                 "show aaa counters",
-                 "show users detail",
-                 "show aaa methods all",
-                 "show management api http-commands",
-                 "show logging",
-                 "show zerotouch",
-                 "dir flash:zerotouch-config",
-                 "show ntp status",
-                 "show ntp associations",
-                 "show hostname"]
-
-
 def test_suite_setup():
     """ Do tasks to setup test suite """
 
@@ -278,6 +260,7 @@ def dut_worker(dut, show_cmds, test_parameters):
     dut["output"] = {}
     name = dut["name"]
     logging.info(f'Executing show commands on {name}')
+    logging.info(f'List of show commands {show_cmds}')
 
     for show_cmd in show_cmds:
         function_def = f'test_{("_").join(show_cmd.split())}'

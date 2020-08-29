@@ -75,3 +75,4 @@ show_cmds:
     - dir flash:zerotouch-config
     - show ntp status
     - show ntp associations
+    - show system environment temperature
