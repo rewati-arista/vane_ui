@@ -37,7 +37,7 @@ import pytest
 
 @pytest.mark.pytest
 class PyTestTests():
-    """ EOS Extensions Test Suite
+    """ PyTest Test Suite
     """
 
     def test_assert_true(self):
