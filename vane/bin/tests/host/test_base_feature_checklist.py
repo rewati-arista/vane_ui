@@ -31,43 +31,20 @@
 
 """ Tests to validate base feature status."""
 
-from pprint import pprint
 import inspect
+import logging
 import pytest
 import tests_tools
-import os
-import argparse
-import logging
-import re
-
-
-logging.basicConfig(level=logging.INFO, filename='base_features.log', filemode='w',
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logging.info('Starting base_features.log file')
 
 
 TEST_SUITE = __file__
-logging.info('Starting base feature test cases')
-# TODO: Remove hard code reference
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 
-
-class pytestTests():
-    """ EOS Extensions Test Suite
-    """
-
-    def test_assert_true(self):
-        """ Prior to running any tests this test Validates that PyTest is working
-            correct by verifying PyTest can assert True.
-        """
-        logging.info('Prior to running any tests this test Validates that PyTest '
-                    'is working correct by verifying PyTest can assert True.')
-        assert True
 
 @pytest.mark.nrfu
 @pytest.mark.platform_status
 @pytest.mark.host
-class hostTests():
+class HostTests():
     """ Host status Test Suite
     """
 
@@ -79,25 +56,28 @@ class hostTests():
         """
 
         test_case = inspect.currentframe().f_code.co_name
-        test_parameters = tests_tools.get_parameters(tests_definitions, TEST_SUITE, test_case)
+        test_parameters = tests_tools.get_parameters(tests_definitions,
+                                                     TEST_SUITE,
+                                                     test_case)
 
         show_cmd = test_parameters["show_cmd"]
         tests_tools.verify_show_cmd(show_cmd, dut)
         show_cmd_txt = dut["output"][show_cmd]['text']
-    
+
         expected_output = dut['name']
-        dut_name = dut['name']    
-        eos_hostname = dut["output"][show_cmd]["json"]["hostname"]
+        dut_name = dut['name']
+        actual_output = dut["output"][show_cmd]["json"]["hostname"]
 
         logging.info(f'TEST is hostname {dut_name} correct')
         logging.info(f'GIVEN hostname {dut_name}')
-        logging.info(f'WHEN hostname is {eos_hostname}')    
+        logging.info(f'WHEN hostname is {actual_output}')
 
         print(f"\nOn router |{dut_name}| the configured hostname is "
-              f"|{eos_hostname}| and the correct hostname is |{expected_output}|")
-        
-        test_result = eos_hostname is expected_output
-        logging.info(f'THEN test case result is |{test_result}|')  
-        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}') 
+              f"|{actual_output}| and the correct hostname is "
+              f"|{expected_output}|")
 
-        assert eos_hostname == expected_output
+        test_result = actual_output is expected_output
+        logging.info(f'THEN test case result is |{test_result}|')
+        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+
+        assert actual_output == expected_output

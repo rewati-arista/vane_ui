@@ -279,7 +279,7 @@ test_suites:
         result: True
       - name: test_if_hostname_is_correcet_on_
         description: Verify hostname is set on device is correct
-        expected_output: False
+        expected_output: null
         show_cmd: show hostname
         comment: null
         result: True
