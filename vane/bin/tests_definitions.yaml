@@ -1,145 +1,141 @@
 test_suites:
   - name: test_base_feature_checklist.py
     testcases:
+      # filesystem tests
       - name: test_if_files_on_
-        description: Verify a list of daemons are running on DUT
+        description: Verify filesystem is correct and expected files are present
+        # List files to check on DUT
         files:
           - flash:startup-config
           - flash:veos-config
           - flash:zerotouch-config
         expected_output: False
         show_cmd: show file information
-        actual_output: null
         comment: null
         result: True
+      # daemon tests
       - name: test_if_daemons_are_running_on_
         description: Verify a list of daemons are running on DUT
+        # List daemons to check on DUT
         daemons:
           - TerminAttr
         expected_output: True
         show_cmd: show daemon
-        actual_output: null
         comment: null
         result: True
       - name: test_if_daemons_are_enabled_on_
         description: Verify a list of daemons are enabled on DUT
+        # List daemons to check on DUT
         daemons:
           - TerminAttr
         expected_output: True
         show_cmd: show daemon
-        actual_output: null
         comment: null
         result: True
+      # extensions tests
       - name: test_if_extensions_are_installed_on_
-        description: Verify awslogs extension is installed
+        description: Verify a list of extension are installed on a DUT
+        # List extensions to check on DUT
         extensions:
           - awslogs.swix
           - awsha.rpm
         show_cmd: show extensions
         expected_output: installed
-        actual_output: null
         comment: null
         result: True
       - name: test_if_extensions_are_erroring_on_
-        description: Verify awslogs extension is not erroring
+        description: Verify a list of extension are not erroring on a DUT
+        # List extensions to check on DUT
         extensions:
           - awslogs.swix
           - awsha.rpm
         show_cmd: show extensions
         expected_output: False
-        actual_output: null
         comment: null
         result: True
+      # user tests
       - name: test_if_usernames_are_configured_on_
         description: Verify username is set correctly
+        # List usernames to check on DUT
         usernames:
           - ec2-user
           - kgrozis
         show_cmd: show running-config section username
         expected_output: True
-        actual_output: null
         comment: null
         result: True
+      # tacacs tests
       - name: test_if_tacacs_is_sending_messages_on_
-        description: Verify tacacs is working correctly
+        description: Verify tacacs messages are sending correctly
         show_cmd: show tacacs
         expected_output: null
-        actual_output: null
         comment: null
         result: True
       - name: test_show_if_tacacs_is_receiving_messages_on_
-        description: Verify tacacs is working correctly
+        description: Verify tacacs messages are received correctly
         show_cmd: show tacacs
         expected_output: null
-        actual_output: null
         comment: null
         result: True
+      # aaa tests
       - name: test_if_authentication_counters_are_incrementing_on_
         description: Verify AAA counters are working correctly
         show_cmd: show aaa counters
         expected_output: null
-        actual_output: null
         comment: null
         result: True
       - name: test_if_aaa_session_logging_is_working_on_
         description: Verify AAA session logging is working by identifying eapi connection
         show_cmd: show users detail
-        expected_output: null
-        actual_output: null
-        comment: null
-        result: True
-      - name: test_if_hostname_is_correcet_on_
-        description: Verify hostname is set on device is correct
-        expected_output: False
-        show_cmd: show hostname
-        actual_output: null
+        expected_output: commandApi
         comment: null
         result: True
       - name: test_if_commands_authorization_methods_set_on_
-        description: Verify AAA method-lists are correctly set
+        description: Verify AAA command authorization are method-lists set correct
+        # List command authorizations to check on DUT
         cmd_auth:
           - none
         show_cmd: show aaa methods all
-        expected_output: True
-        actual_output: null
+        expected_output: null
         comment: null
         result: True
       - name: test_if_exec_authorization_methods_set_on_
-        description: Verify AAA method-lists are correctly set
+        description: Verify AAA exec authorization are method-lists set correct
+        # List exec authorizations to check on DUT
         exec_auth:
           - none
         show_cmd: show aaa methods all
-        expected_output: True
-        actual_output: null
+        expected_output: null
         comment: null
         result: True
       - name: test_if_default_login_authentication_methods_set_on_
-        description: Verify AAA method-lists are correctly set
+        description: Verify AAA default login authentication are method-lists set correct
+        # List default login authentication to check on DUT
         login_auth:
           - local
         show_cmd: show aaa methods all
-        expected_output: True
-        actual_output: null
+        expected_output: null
         comment: null
         result: True
       - name: test_if_login_authentication_methods_set_on_
-        description: Verify AAA method-lists are correctly set
+        description: AAA login authentication are method-lists set correct
+        # List login authentication to check on DUT
         login_auth: null
         show_cmd: show aaa methods all
-        expected_output: True
-        actual_output: null
+        expected_output: null
         comment: null
         result: True
       - name: test_if_dot1x_authentication_methods_set_on_
-        description: Verify AAA method-lists are correctly set
+        description: Verify AAA dot1x authentication are method-lists set correct
+        # List dot1x authentication to check on DUT
         dot1x_auth: []
         show_cmd: show aaa methods all
-        expected_output: True
-        actual_output: null
+        expected_output: null
         comment: null
         result: True
       - name: test_if_enable_authentication_methods_set_on_
-        description: Verify AAA method-lists are correctly set
+        description: Verify AAA enable authentication are method-lists set correct
+        # List enable login authentication to check on DUT
         enable_auth:
           - local
         show_cmd: show aaa methods all
@@ -148,138 +144,142 @@ test_suites:
         comment: null
         result: True
       - name: test_if_system_accounting_methods_set_on_
-        description: Verify AAA method-lists are correctly set
+        description: Verify AAA system accounting method-lists are set correct
+        # List default system accounting to check on DUT
         default_acct: []
         console_acct: []
         show_cmd: show aaa methods all
-        expected_output: True
-        actual_output: null
+        expected_output: null
         comment: null
         result: True
       - name: test_if_exec_accounting_methods_set_on_
-        description: Verify AAA method-lists are correctly set
+        description: Verify AAA exec accounting method-lists are set correct
+        # List exec system accounting to check on DUT
         default_acct: []
         console_acct: []
         show_cmd: show aaa methods all
-        expected_output: True
-        actual_output: null
+        expected_output: null
         comment: null
         result: True
       - name: test_if_priviledge_accounting_methods_set_on_
-        description: Verify AAA method-lists are correctly set
+        description: Verify AAA priviledge accounting method-lists are set correct
+        # List priviledge system accounting to check on DUT
         default_acct: []
         console_acct: []
         show_cmd: show aaa methods all
-        expected_output: True
-        actual_output: null
+        expected_output: null
         comment: null
         result: True
       - name: test_if_dot1x_accounting_methods_set_on_
-        description: Verify AAA method-lists are correctly set
+        description: Verify AAA dot1x accounting method-lists are set correct
+        # List dot1x system accounting to check on DUT
         default_acct: []
         console_acct: []
         show_cmd: show aaa methods all
-        expected_output: True
-        actual_output: null
+        expected_output: null
         comment: null
         result: True
+      # api tests
       - name: test_if_management_https_api_server_is_running_on_
-        description: Verify management api is running, httpsserver is enabled on port 443, httpserver is not running, and local httpserver is not running
+        description: Verify management api https server is running
         show_cmd: show management api http-commands
+        # If HTTPS API server is running
         expected_output: True
-        actual_output: null
         comment: null
         result: True
       - name: test_if_management_https_api_server_port_is_correct_on_
-        description: Verify management api is running, httpsserver is enabled on port 443, httpserver is not running, and local httpserver is not running
+        description: Verify https server is enabled on port 443
         show_cmd: show management api http-commands
+        # HTTPS API server port number
         expected_output: 443
-        actual_output: null
         comment: null
         result: True
       - name: test_if_management_https_api_server_is_enabled_on_
-        description: Verify management api is running, httpsserver is enabled on port 443, httpserver is not running, and local httpserver is not running
+        description: Verify management api https server is enabled
         show_cmd: show management api http-commands
+        # If HTTPS API server is enabled
         expected_output: True
-        actual_output: null
         comment: null
         result: True
       - name: test_if_management_http_api_server_is_running_on_
-        description: Verify management api is running, httpsserver is enabled on port 443, httpserver is not running, and local httpserver is not running
+        description: Verify management api http server is not running
         show_cmd: show management api http-commands
+        # If HTTP API server is running
         expected_output: False
-        actual_output: null
         comment: null
         result: True
       - name: test_if_management_local_http_api_server_is_running_on_
-        description: Verify management api is running, httpsserver is enabled on port 443, httpserver is not running, and local httpserver is not running
+        description: Verify management api local httpserver is not running
         show_cmd: show management api http-commands
+        # If Local HTTP API server is running
         expected_output: False
-        actual_output: null
         comment: null
         result: True
+      # dns tests
       - name: test_if_dns_resolves_on_
         description: Verify DNS is running by performing pings and verifying name resolution
         show_cmd: show management api http-commands
+        # List of URLs to test DNS against
         urls:
           - google.com
           - cnn.com
           - arista.com
-        expected_output: True
-        actual_output: null
+        expected_output: null
         comment: null
         result: True
+      # logging tests
       - name: test_if_log_messages_appear_on_
         description: Verify local log messages
         show_cmd: show logging
+        # List of log messages to check for
         sys_msgs:
           - critical
           - warning
-        expected_output: True
-        actual_output: null
+        expected_output: null
         comment: null
         result: True
+      # ztp tests
       - name: test_if_zerotouch_is_disabled_on_
         description: Verify local log messages
         show_cmd: show zerotouch
+        # ztp state 
         expected_output: disabled
-        actual_output: null
         comment: null
         result: True
       - name: test_for_zerotouch_config_file_on_
         description: Verify zerotoucn-config file is on flash
         show_cmd: dir flash:zerotouch-config
+        # if ztp file is on flash
         expected_output: True
-        actual_output: null
         comment: null
         result: True
+      # ntp tests
       - name: test_if_ntp_is_synchronized_on_
         description: Verify ntp is setup and working correctly
         show_cmd: show ntp status
+        # if ntp synchronization
         expected_output: True
-        actual_output: null
         comment: null
         result: True
       - name: test_if_ntp_associated_with_peers_on_
-        description: Verify ntp is setup and working correctly
+        description: Verify ntp peers are correct
         show_cmd: show ntp associations
+        # number of ntp associations
         expected_output: 1
-        actual_output: null
-        comment: null
-        result: True
-      - name: test_if_ntp_associated_with_peers_on_
-        description: Verify ntp is setup and working correctly
-        show_cmd: show ntp associations
-        expected_output: 1
-        actual_output: null
         comment: null
         result: True
       - name: test_if_process_is_running_on_
         description: Verify processes are running
         show_cmd: show processes
+        # processes to check
         processes:
           - ntpd
         expected_output: 1
-        actual_output: null
+        comment: null
+        result: True
+      - name: test_if_hostname_is_correcet_on_
+        description: Verify hostname is set on device is correct
+        expected_output: null
+        show_cmd: show hostname
         comment: null
         result: True

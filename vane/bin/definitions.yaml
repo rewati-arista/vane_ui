@@ -1,6 +1,6 @@
 parameters:
   test_cases: All
-  test_suites: test_base_feature_checklist.py
+  test_suites: null
   report_dir: ../reports
   html_report: ../reports/report
   excel_report: null

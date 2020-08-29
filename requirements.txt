@@ -3,6 +3,10 @@ pyyaml
 jinja2
 pyeapi
 
+# Dev
+pylint
+flake8
+
 # pytest plugins
 pytest-excel
 pytest-xdist
