@@ -16,6 +16,7 @@ after_script:
 build:
   stage: build
   script:
+    - uname -a
     - echo "Do your build here"
     - pwd
     - ls
