@@ -6,7 +6,10 @@ image: docker:19.03.12
 
 services:
   - docker:19.03.12-dind
- 
+
+variables:
+  SHARED_PATH: /builds/shared/$CI_PROJECT_PATH
+
 before_script:
   - echo "Before script section"
 
@@ -22,12 +25,11 @@ build:
     - ls
     - cat /etc/issue
     - docker ps
-    - docker ps -aq -f label="com.gitlab.gitlab-runner.cache.dir"
+    - mkdir -p ${SHARED_PATH}
     - if [ "$( docker container inspect -f '{{.State.Running}}' vane )" == "true" ]; then docker stop vane; fi
     - docker build -t vane:0.0.1 . --build-arg UID=$(id -u) --build-arg GID=$(id -g)
-    - docker run --volumes-from $(docker ps -aq -f label="com.gitlab.gitlab-runner.cache.dir") -t -d --rm --name vane vane:0.0.1
+    - docker run -t -d --rm --name vane -v $SHARED_PATH:/project vane:0.0.1
 #    - docker run -t -d --rm --name vane --mount type=bind,source=$(pwd),target=/project vane:0.0.1
-#    - docker run -t -d --rm --name vane -v $CI_PROJECT_CIR:/project vane:0.0.1
 
 test:
   stage: test
