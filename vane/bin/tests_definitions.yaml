@@ -71,7 +71,7 @@ test_suites:
         expected_output: null
         comment: null
         result: True
-      - name: test_show_if_tacacs_is_receiving_messages_on_
+      - name: test_if_tacacs_is_receiving_messages_on_
         description: Verify tacacs messages are received correctly
         show_cmd: show tacacs
         expected_output: null
@@ -285,7 +285,7 @@ test_suites:
         show_cmd: show hostname
         comment: null
         result: True
-      - name: test_if_system_environment_temperature_are_in_spec_on_
+      - name: test_if_system_environment_temp_are_in_spec_on_
         description: Verify system temperature environmentals are functional within spec
         # List temperature values 
         # item1: System status
@@ -296,5 +296,19 @@ test_suites:
           - False
           - False
         show_cmd: show system environment temperature
+        comment: null
+        result: True
+      - name: test_if_system_environment_power_are_in_spec_on_
+        description: Verify system power environmentals are functional within spec
+        # Expected state of power
+        expected_output: ok
+        show_cmd: show system environment power
+        comment: null
+        result: True
+      - name: test_if_system_environment_cooling_is_in_spec_on_
+        description: Verify system cooling environmentals are functional within spec
+        # Expected state of cooling
+        expected_output: coolingOk
+        show_cmd: show system environment cooling
         comment: null
         result: True

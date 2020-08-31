@@ -6,9 +6,9 @@ from datetime import datetime
 from py.xml import html
 import re
 
-logging.basicConfig(level=logging.INFO, filename='conftest.log', filemode='w',
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logging.info('Starting conftest.log file')
+# logging.basicConfig(level=logging.INFO, filename='conftest.log', filemode='w',
+#                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# logging.info('Starting conftest.log file')
 
 
 # TODO: Remove from conftest.py
@@ -28,7 +28,10 @@ EOS_SHOW_CMDS = ["show daemon",
                  "show ntp associations",
                  "show hostname",
                  "show processes",
-                 "show system environment temperature"]
+                 "show system environment cooling",
+                 "show system environment temperature",
+                 # Below show commands breaks dut connection on cloudeos
+                 "show system environment power"]
 
 def pytest_addoption(parser):
     parser.addoption(

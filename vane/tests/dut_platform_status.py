@@ -66,43 +66,6 @@ else:
 
 
 @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-def test_show_system_environment_power(dut):
-    """ Verify system power environmentals are functional within spec
-
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
-    """
-
-    show_cmd = "show system environment power"
-    eos_power_supplies = dut["output"][show_cmd]["json"]["powerSupplies"]
-
-    print(f"\nOn router |{dut['name']}|")
-
-    for powersupply in eos_power_supplies:
-        print(f"Power Supply |{powersupply}| state is \
-|{eos_power_supplies[powersupply]['state']}|")
-
-        assert eos_power_supplies[powersupply]['state'] == 'ok'
-
-
-@pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-def test_show_system_environment_cooling(dut):
-    """ Verify system cooling environmentals are functional within spec
-
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
-    """
-
-    show_cmd = "show system environment cooling"
-    eos_system_status = dut["output"][show_cmd]["json"]["systemStatus"]
-
-    print(f"\nOn router |{dut['name']}| system cooling status is \
-|{eos_system_status}|")
-
-    assert eos_system_status == 'coolingOk'
-
-
-@pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
 @pytest.mark.xfail
 def test_show_module_all(dut):
     """ NO AUTOMATED TEST.  MUST TEST MANUALLY

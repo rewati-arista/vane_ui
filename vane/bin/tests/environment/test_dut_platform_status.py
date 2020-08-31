@@ -48,9 +48,10 @@ class EnvironmentTests():
     """ Environment Test Suite
     """
 
-    def test_if_system_environment_temperature_are_in_spec_on_(self,
-                                                               dut,
-                                                               tests_definitions):
+    @pytest.mark.skip(reason="CloudEOS doesnt have temp sensors")
+    def test_if_system_environment_temp_are_in_spec_on_(self,
+                                                        dut,
+                                                        tests_definitions):
         """ Verify system temperature environmentals are functional within spec
 
             Args:
@@ -105,3 +106,86 @@ class EnvironmentTests():
 
         logging.info('THEN test case result is |PASS|')
         logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+
+    @pytest.mark.skip(reason="CloudEOS doesnt have power supplies")
+    def test_if_system_environment_power_are_in_spec_on_(self,
+                                                         dut,
+                                                         tests_definitions):
+        """ Verify system power environmentals are functional within spec
+
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+              tests_definitions (dict): Test parameters
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions,
+                                                     TEST_SUITE,
+                                                     test_case)
+
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+
+        expected_output = test_parameters["expected_output"]
+        dut_name = dut['name']
+
+        logging.info(f'TEST is |{dut_name}| system power '
+                     'environmentals functioning within spec')
+        logging.info(f'GIVEN expected power state is {expected_output}')
+
+        power_supplies = dut["output"][show_cmd]["json"]["powerSupplies"]
+
+        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+        print(f"\nOn router |{dut_name}|")
+
+        for powersupply in power_supplies:
+            actual_output = power_supplies[powersupply]['state']
+            test_result = actual_output == expected_output
+
+            logging.info(f'WHEN actual power state is {actual_output}')
+            logging.info(f'THEN test case result is |{test_result}|')
+            logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+
+            print(f"Power Supply |{powersupply}| state is |{actual_output}|")
+
+            assert actual_output == expected_output
+
+    @pytest.mark.skip(reason="CloudEOS doesnt have cooling")
+    def test_if_system_environment_cooling_is_in_spec_on_(self,
+                                                          dut,
+                                                          tests_definitions):
+        """ Verify system cooling environmentals are functional within spec
+
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+              tests_definitions (dict): Test parameters
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions,
+                                                     TEST_SUITE,
+                                                     test_case)
+
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+
+        expected_output = test_parameters["expected_output"]
+        dut_name = dut['name']
+
+        logging.info(f'TEST is |{dut_name}| system cooling '
+                     'environmentals functioning within spec')
+        logging.info(f'GIVEN expected cooling state is {expected_output}')
+
+        actual_output = dut["output"][show_cmd]["json"]["systemStatus"]
+        logging.info(f'WHEN actual cooling state is {actual_output}')
+
+        test_result = actual_output == expected_output
+        logging.info(f'THEN test case result is |{test_result}|')
+        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+
+        print(f"\nOn router |{dut_name}| system cooling status is "
+              f"|{actual_output}|")
+
+        assert actual_output == expected_output
