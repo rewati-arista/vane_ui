@@ -25,13 +25,13 @@ build:
     - if [ "$( docker container inspect -f '{{.State.Running}}' vane )" == "true" ]; then docker stop vane; fi
     - docker build -t vane:0.0.1 . --build-arg UID=$(id -u) --build-arg GID=$(id -g)
     - docker run -t -d --rm --name vane -v $(pwd):/project vane:0.0.1
-    - docker inspect
     - docker ps
 
 test:
   stage: test
   script:
     - echo "Do a test here"
+    - docker inspect vane
     - docker exec -i vane ls
     - docker exec -i vane pwd
     - docker exec -i vane bash -c "/usr/local/bin/python3 /project/vane/bin/vane.py"
