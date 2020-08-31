@@ -96,19 +96,6 @@ def test_show_redundancy_states(dut):
 
 
 @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-def test_show_logging_errors(dut):
-    """ Verify system environmentals are functional within spec
-
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
-    """
-
-    test_show_logging_ecc_errors(dut)
-    test_show_logging_server_errors(dut)
-    test_show_logging_parity_errors(dut)
-
-
-@pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
 def test_show_logging_ecc_errors(dut):
     """ Verify log messages does not have ECC errors, servers errors, parity errors
 
@@ -122,52 +109,6 @@ def test_show_logging_ecc_errors(dut):
     print(f"\nOn router |{dut['name']}| logs:\n{eos_show_logging}")
 
     assert ("ECC" in eos_show_logging) is False
-
-
-@pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-def test_show_logging_server_errors(dut):
-    """ Verify log messages does not have ECC errors, servers errors, parity errors
-
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
-    """
-
-    show_cmd = "show logging"
-    eos_show_logging = dut["output"][show_cmd]["text"]
-
-    print(f"\nOn router |{dut['name']}| logs:\n{eos_show_logging}")
-
-    assert ("servers errors" in eos_show_logging) is False
-
-
-@pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-def test_show_logging_parity_errors(dut):
-    """ Verify log messages does not have ECC errors, servers errors, parity errors
-
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
-    """
-
-    show_cmd = "show logging"
-    eos_show_logging = dut["output"][show_cmd]["text"]
-
-    print(f"\nOn router |{dut['name']}| logs:\n{eos_show_logging}")
-
-    assert ("parity" in eos_show_logging) is False
-
-
-@pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-def test_show_processes(dut):
-    """ Verify system environmentals are functional within spec
-
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
-    """
-
-    test_show_processes_1second(dut)
-    test_show_processes_1minute(dut)
-    test_show_processes_5minutes(dut)
-
 
 @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
 def test_show_processes_1second(dut):
