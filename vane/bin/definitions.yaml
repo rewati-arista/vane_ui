@@ -58,20 +58,3 @@ duts:
       - neighborDevice: spine01
         neighborPort: Ethernet2
         port: Ethernet1
-
-show_cmds:
-  test_base_feature_checklist:
-    - dir
-    - show daemon
-    - show extensions
-    - show running-config section username
-    - show tacacs
-    - show aaa counters
-    - show users detail
-    - show aaa methods all
-    - show management api http-commands
-    - show logging
-    - show zerotouch
-    - dir flash:zerotouch-config
-    - show ntp status
-    - show ntp associations

@@ -53,6 +53,7 @@ class HostTests():
 
             Args:
               dut (dict): Encapsulates dut details including name, connection
+              tests_definitions (dict): Test parameters
         """
 
         test_case = inspect.currentframe().f_code.co_name

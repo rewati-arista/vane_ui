@@ -43,22 +43,8 @@ import os
 import stat
 
 
-# TODO: Remove from conftest.py
-EOS_SHOW_CMDS = ["show daemon",
-                 "dir",
-                 "show extensions",
-                 "show running-config section username",
-                 "show tacacs",
-                 "show aaa counters",
-                 "show users detail",
-                 "show aaa methods all",
-                 "show management api http-commands",
-                 "show logging",
-                 "show zerotouch",
-                 "dir flash:zerotouch-config",
-                 "show ntp status",
-                 "show ntp associations",
-                 "show hostname"]
+logging.basicConfig(level=logging.INFO, filename='vane.log', filemode='w',
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
 def test_suite_setup():
@@ -175,7 +161,7 @@ def init_duts(show_cmds, test_parameters):
         make method more efficent.
 
         Args:
-          show_cmds (str):        list of interesting show commands
+          show_cmds (str): list of interesting show commands
           test_parameters (dict): Abstraction of testing parameters
           test_suite (str): test suite name
 
@@ -187,7 +173,6 @@ def init_duts(show_cmds, test_parameters):
     logging.info('Finding DUTs and then execute inputted show commands on '
                  'each dut.  Return structured data of DUTs output data, '
                  'hostname, and connection.')
-    render_eapi_cfg(test_parameters)
     duts = login_duts(test_parameters)
     workers = len(duts)
 
@@ -198,45 +183,6 @@ def init_duts(show_cmds, test_parameters):
     logging.info(f'Return duts data structure: {duts}')
     return duts
 
-
-def render_eapi_cfg(test_parameters):
-    """ Render .eapi.conf file so pytests can log into devices
-
-        Args:
-          test_parameters (dict): Abstraction of testing parameters
-    """
-
-    logging.info('Render .eapi.conf file for device access')
-    eapi_template = test_parameters["parameters"]["eapi_template"]
-    eapi_file = test_parameters["parameters"]["eapi_file"]
-    duts = test_parameters["duts"]
-
-    try:
-        logging.info(f'Open {eapi_template} Jinja2 template for reading')
-        with open(eapi_template, 'r') as jinja_file:
-            logging.info(f'Read and save contents of {eapi_template} Jinja2 template')
-            jinja_template = jinja_file.read()
-            logging.info(f'Using {eapi_template} Jinja2 template to render {eapi_file} file')
-            resource_file = jinja2.Environment().from_string(jinja_template).render(duts=duts)
-    except IOError as e:
-        print(f">>> ERROR READING {eapi_template}: {e}")
-        logging.error(f'ERROR READING {eapi_template}: {e}')
-        logging.error('EXITING TEST RUNNER')
-        sys.exit(1)
-
-    logging.info(f'Rendered {eapi_file} as: {resource_file}')
-    try:
-        logging.info(f'Open {eapi_file} for writing')
-        with open(eapi_file, 'w') as output_file:
-            output_file.write(resource_file)
-    except IOError as e:
-        print(f">>> ERROR WRITING {eapi_file}: {e}")
-        logging.error(f'ERROR WRITING {eapi_file}: {e}')
-        logging.error('EXITING TEST RUNNER')
-        sys.exit(1)
-    
-    logging.info(f'Change permissions of {eapi_file} to 777')
-    os.chmod(eapi_file, stat.S_IRWXU)
 
 def login_duts(test_parameters):
     """ Use eapi to connect to Arista switches for testing
@@ -278,6 +224,7 @@ def dut_worker(dut, show_cmds, test_parameters):
     dut["output"] = {}
     name = dut["name"]
     logging.info(f'Executing show commands on {name}')
+    logging.info(f'List of show commands {show_cmds}')
 
     for show_cmd in show_cmds:
         function_def = f'test_{("_").join(show_cmd.split())}'
@@ -286,8 +233,11 @@ def dut_worker(dut, show_cmds, test_parameters):
         dut["output"]["interface_list"] = return_interfaces(name, test_parameters)
 
         json_output, text_output = return_show_cmd(show_cmd, dut, function_def, test_parameters)
+        logging.info(f'Returned JSON output {json_output}')
+        logging.info(f'Returned text output {text_output}')
 
         logging.info(f'Adding output of {show_cmd} to duts data structure')
+
         dut["output"][show_cmd] = {}
         dut["output"][show_cmd]["json"] = json_output[0]["result"]
         dut["output"][show_cmd]["text"] = text_output[0]["output"]
@@ -396,7 +346,7 @@ def get_parameters(tests_parameters, test_suite, test_case):
 
     logging.info(f'Return parameters for Test Case: {test_case}')
     case_parameters = [param for param in suite_parameters[0]['testcases'] if param['name'] == test_case]
-    logging.info(f'Case_parameters: {case_parameters}')
+    logging.info(f'Case_parameters: {case_parameters[0]}')
 
     return case_parameters[0]
 
@@ -606,6 +556,7 @@ def generate_dut_info_threaded(show_cmds, test_suite):
 
     return duts
 
+
 def dut_thread2(dut, show_cmds, test_suite, test_definition):
     """ Execute inputted show commands on dut.  Update dut structured data
         with show output.
@@ -625,6 +576,7 @@ def dut_thread2(dut, show_cmds, test_suite, test_definition):
             show_cmd, dut, test_suite, function_def)
         dut["output"][show_cmd]["json"] = json_output[0]["result"]
         dut["output"][show_cmd]["text"] = text_output[0]["output"]
+
 
 def generate_interface_list(dut_name, test_definition):
     """ test_definition is used to createa a interface_list for active

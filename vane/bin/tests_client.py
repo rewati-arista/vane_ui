@@ -45,10 +45,17 @@
 import pathlib
 import json
 import re
+import stat
+import os
+import sys
+import logging
 import pytest
 import yaml
-import logging
-import sys
+import jinja2
+
+
+logging.basicConfig(level=logging.INFO, filename='vane.log', filemode='w',
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
 class TestsClient:
@@ -83,23 +90,24 @@ class TestsClient:
                     logging.info(f'Inputed the following yaml: '
                                  f'{yaml_data}')
                     return yaml_data
-                except yaml.YAMLError as e:
-                    logging.error(f'Error in YAML file. {e}')
+                except yaml.YAMLError as err_data:
+                    logging.error(f'Error in YAML file. {err_data}')
                     sys.exit(1)
-        except OSError as e:
+        except OSError as err_data:
             logging.error(f'Defintions file: {yaml_file} not '
-                          f'found. {e}')
+                          f'found. {err_data}')
             sys.exit(1)
 
     def test_runner(self):
         """ Run tests
         """
 
-
+        logging.info('Start test setup')
+        self._render_eapi_cfg()
         test_paramters = self._set_test_parameters()
 
-        logging.info(f'Starting Test')
-        nrfu_results = pytest.main(test_paramters)
+        logging.info('Starting Test')
+        pytest.main(test_paramters)
 
     def _set_test_parameters(self):
         """ Use data-model to create test parameters
@@ -146,27 +154,27 @@ class TestsClient:
             logging.info(f'Set HTML report name to: {html_report}')
             test_parameters.append(f'--html={html_report}.html')
         else:
-            logging.warning(f'HTML report will NOT be created')
+            logging.warning('HTML report will NOT be created')
 
         if excel_report:
             excel_report = f'{report_dir}/{excel_report}'
             logging.info(f'Set excel report name to: {excel_report}')
             test_parameters.append(f'--excelreport={excel_report}.xlsx')
         else:
-            logging.warning(f'Excel report will NOT be created')
+            logging.warning('Excel report will NOT be created')
 
         if json_report:
             json_report = f'{report_dir}/{json_report}'
             logging.info(f'Set json report name to: {json_report}')
             test_parameters.append(f'--json={json_report}.json')
         else:
-            logging.warning(f'JSON report will NOT be created')
+            logging.warning('JSON report will NOT be created')
 
         if processes:
             logging.info(f'Set number of PyTest process to: {processes}')
             test_parameters.append(f'-n {processes}')
         else:
-            logging.warning(f'Using single PyTest processes')
+            logging.warning('Using single PyTest processes')
 
         if setup_show:
             logging.info('Enable debug for setup and teardown')
@@ -185,8 +193,9 @@ class TestsClient:
             test_parameters.append(f'{test_suites}')
         else:
             logging.info('Run all tests suites')
- 
-        logging.info(f'Setting the following PyTest parmaters: {test_parameters}')
+
+        logging.info('Setting the following PyTest parmaters: '
+                     f'{test_parameters}')
         return test_parameters
 
     def evaluate_nrfu_reports(self,
@@ -238,8 +247,9 @@ class TestsClient:
             test_results["summaryResults"] = test_data["report"]["summary"]
             test_results["duts"] = \
                 self._parse_testcases(test_data["report"]["tests"])
-        
-        kafka_payload = {"messageType": "003", "messageSubType": "001", "payload": test_results}
+
+        kafka_payload = {"messageType": "003", "messageSubType": "001",
+                         "payload": test_results}
 
         return kafka_payload
 
@@ -269,3 +279,41 @@ class TestsClient:
                     testcases_results[dut_index]["FAIL"] += 1
 
         return testcases_results
+
+    def _render_eapi_cfg(self):
+        """ Render .eapi.conf file so pytests can log into devices
+        """
+
+        logging.info('Render .eapi.conf file for device access')
+        eapi_template = self.data_model["parameters"]["eapi_template"]
+        eapi_file = self.data_model["parameters"]["eapi_file"]
+        duts = self.data_model["duts"]
+
+        try:
+            logging.info(f'Open {eapi_template} Jinja2 template for reading')
+            with open(eapi_template, 'r') as jinja_file:
+                logging.info(f'Read and save contents of {eapi_template} '
+                             'Jinja2 template')
+                jinja_template = jinja_file.read()
+                logging.info(f'Using {eapi_template} Jinja2 template to '
+                             f'render {eapi_file} file with parameters {duts}')
+                resource_file = jinja2.Environment().from_string(jinja_template).render(duts=duts)
+        except IOError as err_data:
+            print(f">>> ERROR READING {eapi_template}: {err_data}")
+            logging.error(f'ERROR READING {eapi_template}: {err_data}')
+            logging.error('EXITING TEST RUNNER')
+            sys.exit(1)
+
+        logging.info(f'Rendered {eapi_file} as: {resource_file}')
+        try:
+            logging.info(f'Open {eapi_file} for writing')
+            with open(eapi_file, 'w') as output_file:
+                output_file.write(resource_file)
+        except IOError as err_data:
+            print(f">>> ERROR WRITING {eapi_file}: {err_data}")
+            logging.error(f'ERROR WRITING {eapi_file}: {err_data}')
+            logging.error('EXITING TEST RUNNER')
+            sys.exit(1)
+
+        logging.info(f'Change permissions of {eapi_file} to 777')
+        os.chmod(eapi_file, stat.S_IRWXU)

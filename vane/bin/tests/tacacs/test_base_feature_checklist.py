@@ -109,7 +109,7 @@ class TacacsTests():
             print(f"\nOn router |{dut_name}| does not have TACACS servers "
                   "configured")
 
-    def test_show_if_tacacs_is_receiving_messages_on_(self,
+    def test_if_tacacs_is_receiving_messages_on_(self,
                                                       dut,
                                                       tests_definitions):
         """ Verify tacacs messages are received correctly

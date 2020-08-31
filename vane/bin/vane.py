@@ -35,8 +35,6 @@ network's readiness for production based on validation tests. """
 
 import argparse
 import logging
-import sys
-import yaml
 import tests_client
 
 
@@ -65,7 +63,7 @@ def parse_cli():
 
     return args
 
- 
+
 def run_tests(definitions_file):
     """ Make request to test client to run tests
 
@@ -81,29 +79,30 @@ def run_tests(definitions_file):
 
 # def error_check(input_data, DEFINITIONS_FILE):
 #     """ Error check input
-# 
+#
 #         Args:
-#             input_data (dict): Input VPC specific data from ADO in JSON format
+#             input_data (dict): Input VPC specific data from ADO in JSON
+#                                format
 #             DEFINITIONS_FILE (str): Path and name of definition file
-# 
+#
 #         return:
 #             raw_input_data (dict): combined definitions, input data, and aws
 #                                    data
 #     """
-# 
+#
 #     logging.info('Creating cas_input_client object')
 #     cas_input_client = input_client.InputClient(DEFINITIONS_FILE, input_data)
 #     logging.info('Querying AWS for addiitonal VPC data')
 #     cas_input_client.query_aws()
 #     logging.info('Checking data for errors')
 #     raw_input_data = cas_input_client.error_check()
-# 
+#
 #     return raw_input_data
-# 
-# 
+#
+#
 # def render_data(raw_input_data):
 #     """ Model data and then render templates
-# 
+#
 #         Args:
 #             raw_input_data (dict): combined definitions, input data, and aws
 #                                    data
@@ -115,54 +114,54 @@ def run_tests(definitions_file):
 #     logging.info('Use common data-model to render configlets and TerraForm '
 #                  'templates')
 #     cas_render_client.render_client(terraform=True, ipsec=False, bgp=False)
-# 
-# 
+#
+#
 # def cvaas_export(cas_cvaas_client, DEFINITIONS_FILE):
 #     """ Export configlets to CVaaS
-# 
+#
 #         Args:
 #             cas_cvaas_client (obj): cvaas object
 #             DEFINITIONS_FILE (str): name / path to definitions file
 #     """
-# 
+#
 #     logging.info('Import definitions')
 #     input_data = import_definitions(DEFINITIONS_FILE)
-# 
+#
 #     logging.info('Creating cas_render_client object')
 #     cas_render_client = render_client.RenderClient(input_data)
 #     logging.info('Use common data-model to render configlets and TerraForm '
 #                  'templates')
 #     cas_render_client.render_client(terraform=False, ipsec=True, bgp=True)
-# 
+#
 #     logging.info('Login into CVaaS')
 #     cas_cvaas_client.cvaas_login()
 #     cas_cvaas_client.apply_configlets('ipsec')
 #     cas_cvaas_client.apply_configlets('bgp_prefix_list')
 #     cas_cvaas_client.apply_configlets('bgp')
 #     cas_cvaas_client.apply_configlets('ops')
-# 
-# 
+#
+#
 # def cvp_import(cas_cvaas_client):
 #     """ Export configlets to CVaaS
-# 
+#
 #         Args:
 #             cas_cvaas_client (obj): cvaas object
 #     """
-# 
+#
 #     logging.info('Logging into CVP')
 #     cas_cvaas_client.cvp_login()
-# 
+#
 #     logging.info('Importing standalone CVP configlets')
 #     cas_cvaas_client.cvp_import()
-# 
-# 
+#
+#
 # def import_definitions(definition_file):
 #     """ Import YAML definitions file
-# 
+#
 #         Args:
 #             defintion_file (str): Name of defintions file
 #     """
-# 
+#
 #     logging.info(f'Opening {definition_file} for read')
 #     try:
 #         with open(definition_file, 'r') as input_yaml:
@@ -179,8 +178,8 @@ def run_tests(definitions_file):
 #         logging.error(f'Defintions file: {definition_file} not '
 #                       f'found. {e}')
 #         sys.exit(1)
- 
- 
+
+
 def main():
     """ main function
     """
@@ -189,10 +188,10 @@ def main():
     args = parse_cli()
 
     if args.definitions_file:
-        logging.warning(f'Changing Definitions name to '
+        logging.warning('Changing Definitions name to '
                         f'{args.definitions_file}')
         DEFINITIONS_FILE = args.definitions_file
-    
+
     run_tests(DEFINITIONS_FILE)
 
 
