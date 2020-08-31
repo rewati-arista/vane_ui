@@ -24,9 +24,9 @@ build:
     - docker ps
     - if [ "$( docker container inspect -f '{{.State.Running}}' vane )" == "true" ]; then docker stop vane; fi
     - docker build -t vane:0.0.1 . --build-arg UID=$(id -u) --build-arg GID=$(id -g)
-    - docker run -t -d --rm --name vane --mount type=bind,source=$(pwd),target=/project vane:0.0.1
+    - docker run -t -d --rm --name vane -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/project vane:0.0.1
     - docker ps
-#    - docker run -t -d --rm --name vane -v $(pwd):/project vane:0.0.1
+#    - docker run -t -d --rm --name vane --mount type=bind,source=$(pwd),target=/project vane:0.0.1
 
 test:
   stage: test
