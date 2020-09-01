@@ -32,7 +32,6 @@ test:
     - docker inspect vane
     - docker exec -i vane ls 
     - docker exec -i vane pwd
-    - docker exec -i vane bash -c "cd /project/vane/bin && ls"
     - docker exec -i vane bash -c "cd /project/vane/bin && ./vane.py"
   artifacts:
     paths:
@@ -45,3 +44,4 @@ deploy:
   stage: deploy
   script:
     - echo "Do your deploy here"
+    - docker exec -i vane bash -c "cd /project/vane/bin && ls"
