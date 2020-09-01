@@ -112,26 +112,6 @@ hardware capacity tables exceeds 10% utilization and there should be |0|")
 
 
 @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-def test_show_memory(dut):
-    """ Verify memory is not exceeding 70%
-
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
-    """
-
-    show_cmd = "show version"
-    eos_memory_total = dut["output"][show_cmd]["json"]['memTotal']
-    eos_memory_free = dut["output"][show_cmd]["json"]['memFree']
-    memory_percent = 0.00
-    memory_percent = (float(eos_memory_free) / float(eos_memory_total)) * 100
-
-    print(f"\nOn router |dut['name']| memory utilization percent is \
-|{memory_percent}%| and should be under 70%")
-
-    assert memory_percent < 70
-
-
-@pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
 @pytest.mark.xfail
 def test_show_inventory(dut):
     """ Verify inventory is correct

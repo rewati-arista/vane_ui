@@ -45,3 +45,6 @@ deploy:
   script:
     - echo "Do your deploy here"
     - docker exec -i vane bash -c "cd /project/vane/bin && ls"
+  artifacts:
+    paths:
+      - /project/vane/bin/vane.log
