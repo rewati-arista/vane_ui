@@ -7,9 +7,6 @@ image: docker:19.03.12
 services:
   - docker:19.03.12-dind
 
-variables:
-  SHARED_PATH: /builds/shared/$CI_PROJECT_PATH
-
 before_script:
   - echo "Before script section"
 
@@ -35,6 +32,7 @@ test:
     - docker inspect vane
     - docker exec -i vane ls
     - docker exec -i vane pwd
+    - docker exec -i vane whoami
     - docker exec -i vane bash -c "cd /project/vane/bin && ./vane.py"
 #    - docker exec -i vane bash -c "/usr/local/bin/python3 /project/vane/bin/vane.py"
 
