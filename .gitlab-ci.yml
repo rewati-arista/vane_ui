@@ -36,7 +36,7 @@ test:
     - docker exec -i vane bash -c "cd /project/vane/bin && ./vane.py"
   artifacts:
     paths:
-      - /project/vane/bin/vane.log
+      - /project/vane/bin
     expire_in: 1 week
 #    - docker exec -i vane bash -c "/usr/local/bin/python3 /project/vane/bin/vane.py"
 
