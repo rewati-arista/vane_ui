@@ -323,3 +323,24 @@ test_suites:
           - parity
         comment: null
         result: True
+      - name: test_1_sec_cpu_utlization_on_
+        description: Verify 1 second CPU % is under specificied value
+        show_cmd: show processes
+        # CPU process ceiling
+        expected_output: 10
+        comment: null
+        result: True
+      - name: test_1_min_cpu_utlization_on_
+        description: Verify 1 minute CPU % is under specificied value
+        show_cmd: show processes
+        # CPU process ceiling
+        expected_output: 10
+        comment: null
+        result: True
+      - name: test_5_min_cpu_utlization_on_
+        description: Verify 5 minute CPU % is under specificied value
+        show_cmd: show processes
+        # CPU process ceiling
+        expected_output: 10
+        comment: null
+        result: True

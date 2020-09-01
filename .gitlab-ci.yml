@@ -19,16 +19,13 @@ after_script:
 build:
   stage: build
   script:
-    - uname -a
     - echo "Do your build here"
-    - pwd
-    - ls
-    - cat /etc/issue
+    - rm Dockerfile
+    - mv ci/Dockerfile.ci Dockerfile
     - docker ps
-    - mkdir -p ${SHARED_PATH}
     - if [ "$( docker container inspect -f '{{.State.Running}}' vane )" == "true" ]; then docker stop vane; fi
     - docker build -t vane:0.0.1 . --build-arg UID=$(id -u) --build-arg GID=$(id -g)
-    - docker run -t -d --rm --name vane -v $SHARED_PATH:/project vane:0.0.1
+    - docker run -t -d --rm --name vane vane:0.0.1
 #    - docker run -t -d --rm --name vane --mount type=bind,source=$(pwd),target=/project vane:0.0.1
 
 test:
