@@ -48,6 +48,9 @@ duts:
       - neighborDevice: spine01
         neighborPort: Ethernet2
         port: Ethernet1
+      - neighborDevice: leaf01
+        neighborPort: Ethernet2
+        port: Ethernet2
 
   - name: kg-topology-CloudEOSEdge2
     mgmt_ip: 3.131.34.190
@@ -58,3 +61,6 @@ duts:
       - neighborDevice: spine01
         neighborPort: Ethernet2
         port: Ethernet1
+      - neighborDevice: leaf01
+        neighborPort: Ethernet2
+        port: Ethernet2

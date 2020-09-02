@@ -28,8 +28,10 @@ EOS_SHOW_CMDS = ["show daemon",
                  "show ntp associations",
                  "show hostname",
                  "show processes",
+                 "show version",
                  "show system environment cooling",
                  "show system environment temperature",
+                 "show interfaces status",
                  # Below show commands breaks dut connection on cloudeos
                  "show system environment power"]
 

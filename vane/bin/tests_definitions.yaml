@@ -312,3 +312,51 @@ test_suites:
         show_cmd: show system environment cooling
         comment: null
         result: True
+      # logging tests
+      - name: test_if_log_messages_appear_on_
+        description: Verify local log messages
+        show_cmd: show logging
+        # List of log messages to check for
+        expected_output:
+          - ECC
+          - servers errors
+          - parity
+        comment: null
+        result: True
+      - name: test_1_sec_cpu_utlization_on_
+        description: Verify 1 second CPU % is under specificied value
+        show_cmd: show processes
+        # CPU process ceiling
+        expected_output: 10
+        comment: null
+        result: True
+      - name: test_1_min_cpu_utlization_on_
+        description: Verify 1 minute CPU % is under specificied value
+        show_cmd: show processes
+        # CPU process ceiling
+        expected_output: 10
+        comment: null
+        result: True
+      - name: test_5_min_cpu_utlization_on_
+        description: Verify 5 minute CPU % is under specificied value
+        show_cmd: show processes
+        # CPU process ceiling
+        expected_output: 10
+        comment: null
+        result: True
+      - name: test_memory_utilization_on_
+        description: Verify memory is not exceeding high utlization
+        show_cmd: show version
+        # memory process ceiling
+        expected_output: 70
+        comment: null
+        result: True
+  - name: test_interfaces_baseline_health.py
+    testcases:
+      - name: test_if_intf_status_is_connected_on_
+        description: Verify the interfaces of interest link statuses are connected
+        # interface status
+        expected_output: up
+        show_cmd: show interfaces status
+        comment: null
+        result: True

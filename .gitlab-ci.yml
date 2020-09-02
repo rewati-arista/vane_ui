@@ -6,7 +6,7 @@ image: docker:19.03.12
 
 services:
   - docker:19.03.12-dind
- 
+
 before_script:
   - echo "Before script section"
 
@@ -17,26 +17,35 @@ build:
   stage: build
   script:
     - echo "Do your build here"
-    - pwd
-    - ls
-    - cat /etc/issue
+    - rm Dockerfile
+    - mv ci/Dockerfile.ci Dockerfile
     - docker ps
     - if [ "$( docker container inspect -f '{{.State.Running}}' vane )" == "true" ]; then docker stop vane; fi
-    - docker build -t vane:0.0.1 . --build-arg UID=$(shell id -u) --build-arg GID=$(shell id -g)
-    - docker run -t -d --rm --name vane -v pwd:/project vane:0.0.1
-    - docker ps
+    - docker build -t vane:0.0.1 . --build-arg UID=$(id -u) --build-arg GID=$(id -g)
+    - docker run -t -d --rm --name vane vane:0.0.1
+#    - docker run -t -d --rm --name vane --mount type=bind,source=$(pwd),target=/project vane:0.0.1
 
 test:
   stage: test
   script:
     - echo "Do a test here"
-    - docker exec -i vane ls
+    - docker inspect vane
+    - docker exec -i vane ls 
     - docker exec -i vane pwd
-    - docker exec -i vane bash -c "/usr/local/bin/python3 /project/vane/bin/vane.py"
-#    - docker exec -i vane bash -c "cd /project/vane/bin && ./vane.py"
+    - docker exec -i vane bash -c "cd /project/vane/bin && ./vane.py"
+  artifacts:
+    paths:
+      - /project/vane/bin
+    expire_in: 1 week
+#    - docker exec -i vane bash -c "/usr/local/bin/python3 /project/vane/bin/vane.py"
 
 
 deploy:
   stage: deploy
   script:
     - echo "Do your deploy here"
+    - docker exec -i vane bash -c "cd /project/vane/bin && ls"
+    - docker exec -i vane bash -c "cd /project/vane/bin && cat vane.log"
+  artifacts:
+    paths:
+      - vane.log
