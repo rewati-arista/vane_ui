@@ -65,15 +65,6 @@ else:
     DUTS = common_nrfu_infra.return_dut_info_threaded(EOS_SHOW_CMDS, TEST_SUITE)
 
 
-@pytest.mark.xpass
-def test_assert_true():
-    """ Prior to running any tests this test Validates that PyTest is working
-        correct by verifying PyTest can assert True.
-    """
-
-    assert True
-
-
 @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
 def test_show_interfaces_description(dut):
     """ Verify the interfaces of interest have the correct description

@@ -65,7 +65,7 @@ class MemoryTests():
         dut_name = dut['name']
 
         show_cmd = test_parameters["show_cmd"]
-        #tests_tools.verify_show_cmd(show_cmd, dut)
+        tests_tools.verify_show_cmd(show_cmd, dut)
         show_cmd_txt = dut["output"][show_cmd]['text']
 
         logging.info('TEST if memory utilization is less than specified '
