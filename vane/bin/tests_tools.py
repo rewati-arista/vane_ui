@@ -41,6 +41,8 @@ import logging
 import sys
 import os
 import stat
+import fcntl
+import time 
 
 
 logging.basicConfig(level=logging.INFO, filename='vane.log', filemode='w',
@@ -391,6 +393,28 @@ def verify_tacacs(dut):
     return tacacs_bool
 
 
+def verify_veos(dut):
+    """ Verify DUT is a VEOS instance
+
+        dut (dict): data structure of dut parameters
+    """
+
+    dut_name = dut["name"]
+    show_cmd = "show version"
+
+    veos_bool = False
+    veos = dut["output"][show_cmd]['json']['modelName']
+    logging.info(f'Verify if {dut_name} DUT is a VEOS instance')
+    
+    if veos == 'vEOS':
+        veos_bool = True
+        logging.info(f'{dut_name} is a VEOS instance so returning {veos_bool}')
+        print(f'{dut_name} is a VEOS instance so test NOT valid')
+    else:
+        logging.info(f'{dut_name} is not a VEOS instance so returning {veos_bool}')
+
+    return veos_bool
+
 
 def output_to_log_file(test_suite, test_name, hostname, output):
     """ Open log file for logging test show commands
@@ -591,3 +615,100 @@ def generate_interface_list(dut_name, test_definition):
     interface_list = test_definition['duts'][dut_index]['test_criteria'][0]['criteria']
     
     return interface_list
+
+def write_results(test_parameters, dut_name, test_suite, actual_output=None, test_result=None):
+    """ Write test results to YAML file for post-processing
+
+        Args:
+            test_parameters (dict): Input DUT test definitions
+            actual_output (?): Output of test case
+            test_result (bool): Pass / Fail condition 
+            dut_name (str): Name of Device Under Test
+            test_suite (str): Name of Test Suite 
+
+        YAML Data structure:
+            testsuites:
+             - name: <test suite>
+               testcases:
+                 - name: <test name>
+                   duts:
+                     - dut: <dut name>
+                       description:
+    """
+
+    test_suite = test_suite.split('/')[-1]
+    test_parameters['actual_output'] = actual_output
+    test_parameters['test_result'] = test_result
+    test_parameters['dut'] = dut_name
+
+    test_case = test_parameters['name']
+
+    #TODO: remove hard code
+    yaml_file = 'result.yml'
+    yaml_data = yaml_io(yaml_file, 'read')
+
+    if not yaml_data:
+        yaml_data = {'test_suites': 
+                        [ {'name': test_suite, 
+                            'test_cases': [
+                                {'name': test_case,
+                                 'duts': []
+                                }
+                         ]}
+                      ]
+                    }
+
+    logging.info(f'Find Index for test suite: {test_suite} on dut {dut_name}')
+    test_suites = [param['name'] for param in yaml_data['test_suites']]
+    if test_suite in test_suites:
+        suite_index = test_suites.index(test_suite)
+        logging.info(f'Test suite {test_suite} exists in results file at index {suite_index}')
+    else:
+        logging.info(f'Create test suite {test_suite} in results file')
+        suite_stub = {'name': test_suite, 'test_cases': []}
+        yaml_data['test_suites'].append(suite_stub)
+        suite_index = (len(yaml_data['test_suites']) - 1)
+
+    logging.info(f'Find Index for test case: {test_case} on dut {dut_name}')
+    test_cases = [param['name'] for param in yaml_data['test_suites'][suite_index]['test_cases']]
+    if test_case in test_cases:
+        test_index = test_cases.index(test_case)
+        logging.info(f'Test case {test_case} exists in results file at index {test_index}')
+    else:
+        logging.info(f'Create test case {test_case} in results file')
+        test_stub = {'name': test_case, 'duts': []}
+        yaml_data['test_suites'][suite_index]['test_cases'].append(test_stub)
+        test_index = (len(yaml_data['test_suites'][suite_index]['test_cases']) - 1)    
+
+    logging.info(f'Add DUT {dut_name} to test case {test_case} with parameters {test_parameters}')
+    yaml_data['test_suites'][suite_index]['test_cases'][test_index]['duts'].append(test_parameters)
+
+    _ = yaml_io(yaml_file, 'write', yaml_data)
+
+
+def yaml_io(yaml_file, io, yaml_data=None):
+    """ Write test results to YAML file for post-processing
+
+        Args:
+            yaml_file (str): Name of YAML file
+            io (str): Read or write to YAML file
+    """
+
+    while True:
+        try:
+            if io == 'read':
+                with open(yaml_file, 'r') as yaml_in:
+                    fcntl.flock(yaml_in, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    yaml_data = yaml.safe_load(yaml_in)
+                    fcntl.flock(yaml_in, fcntl.LOCK_UN)
+                    break
+            else:
+                with open(yaml_file, 'w') as yaml_out:
+                    fcntl.flock(yaml_out, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    yaml.dump(yaml_data, yaml_out, default_flow_style=False)
+                    fcntl.flock(yaml_out, fcntl.LOCK_UN)
+                    break
+        except:
+            time.sleep(0.05)
+    
+    return yaml_data

@@ -1,0 +1,161 @@
+test_suites:
+- name: test_interfaces_baseline_health.py
+  test_cases:
+  - duts:
+    - actual_output: connected
+      comment: null
+      description: Verify the interfaces of interest link statuses are connected
+      dut: kg-topology-CloudEosRR1
+      expected_output: connected
+      name: test_if_intf_link_status_is_connected_on_
+      show_cmd: show interfaces status
+      test_result: true
+    - actual_output: connected
+      comment: null
+      description: Verify the interfaces of interest link statuses are connected
+      dut: kg-topology-CloudEosRR2
+      expected_output: connected
+      name: test_if_intf_link_status_is_connected_on_
+      show_cmd: show interfaces status
+      test_result: true
+    - actual_output: connected
+      comment: null
+      description: Verify the interfaces of interest link statuses are connected
+      dut: kg-topology-CloudEOSEdge1
+      expected_output: connected
+      name: test_if_intf_link_status_is_connected_on_
+      show_cmd: show interfaces status
+      test_result: true
+    - actual_output: connected
+      comment: null
+      description: Verify the interfaces of interest link statuses are connected
+      dut: kg-topology-CloudEOSEdge1
+      expected_output: connected
+      name: test_if_intf_link_status_is_connected_on_
+      show_cmd: show interfaces status
+      test_result: true
+    name: test_if_intf_link_status_is_connected_on_
+  - duts:
+    - actual_output: null
+      comment: null
+      description: Verify the interfaces of interest link statuses are connected
+      dut: kg-topology-CloudEosRR1
+      expected_output: linkUp
+      name: test_if_intf_phy_status_connected_on_
+      show_cmd: show interfaces phy detail
+      test_result: null
+    - actual_output: null
+      comment: null
+      description: Verify the interfaces of interest link statuses are connected
+      dut: kg-topology-CloudEosRR2
+      expected_output: linkUp
+      name: test_if_intf_phy_status_connected_on_
+      show_cmd: show interfaces phy detail
+      test_result: null
+    - actual_output: null
+      comment: null
+      description: Verify the interfaces of interest link statuses are connected
+      dut: kg-topology-CloudEOSEdge1
+      expected_output: linkUp
+      name: test_if_intf_phy_status_connected_on_
+      show_cmd: show interfaces phy detail
+      test_result: null
+    - actual_output: null
+      comment: null
+      description: Verify the interfaces of interest link statuses are connected
+      dut: kg-topology-CloudEOSEdge2
+      expected_output: linkUp
+      name: test_if_intf_phy_status_connected_on_
+      show_cmd: show interfaces phy detail
+      test_result: null
+    name: test_if_intf_phy_status_connected_on_
+  - duts:
+    - actual_output: up
+      comment: null
+      description: Verify the interfaces of interest protocol statuses are connected
+      dut: kg-topology-CloudEosRR1
+      expected_output: up
+      name: test_if_intf_protocol_status_is_connected_on_
+      show_cmd: show interfaces status
+      test_result: true
+    - actual_output: up
+      comment: null
+      description: Verify the interfaces of interest protocol statuses are connected
+      dut: kg-topology-CloudEosRR2
+      expected_output: up
+      name: test_if_intf_protocol_status_is_connected_on_
+      show_cmd: show interfaces status
+      test_result: true
+    - actual_output: up
+      comment: null
+      description: Verify the interfaces of interest protocol statuses are connected
+      dut: kg-topology-CloudEOSEdge1
+      expected_output: up
+      name: test_if_intf_protocol_status_is_connected_on_
+      show_cmd: show interfaces status
+      test_result: true
+    - actual_output: up
+      comment: null
+      description: Verify the interfaces of interest protocol statuses are connected
+      dut: kg-topology-CloudEOSEdge1
+      expected_output: up
+      name: test_if_intf_protocol_status_is_connected_on_
+      show_cmd: show interfaces status
+      test_result: true
+    - actual_output: up
+      comment: null
+      description: Verify the interfaces of interest protocol statuses are connected
+      dut: kg-topology-CloudEOSEdge2
+      expected_output: up
+      name: test_if_intf_protocol_status_is_connected_on_
+      show_cmd: show interfaces status
+      test_result: true
+    - actual_output: up
+      comment: null
+      description: Verify the interfaces of interest protocol statuses are connected
+      dut: kg-topology-CloudEOSEdge2
+      expected_output: up
+      name: test_if_intf_protocol_status_is_connected_on_
+      show_cmd: show interfaces status
+      test_result: true
+    name: test_if_intf_protocol_status_is_connected_on_
+- name: test_dut_platform_status.py
+  test_cases:
+  - duts:
+    - actual_output: 38.89250794187434
+      comment: null
+      description: Verify memory is not exceeding high utlization
+      dut: kg-topology-CloudEosRR1
+      expected_output: 70
+      name: test_memory_utilization_on_
+      result: true
+      show_cmd: show version
+      test_result: true
+    - actual_output: 39.266244569454706
+      comment: null
+      description: Verify memory is not exceeding high utlization
+      dut: kg-topology-CloudEosRR2
+      expected_output: 70
+      name: test_memory_utilization_on_
+      result: true
+      show_cmd: show version
+      test_result: true
+    - actual_output: 36.186207080019074
+      comment: null
+      description: Verify memory is not exceeding high utlization
+      dut: kg-topology-CloudEOSEdge1
+      expected_output: 70
+      name: test_memory_utilization_on_
+      result: true
+      show_cmd: show version
+      test_result: true
+    - actual_output: 37.219715226340846
+      comment: null
+      description: Verify memory is not exceeding high utlization
+      dut: kg-topology-CloudEOSEdge2
+      expected_output: 70
+      name: test_memory_utilization_on_
+      result: true
+      show_cmd: show version
+      test_result: true
+    name: test_memory_utilization_on_

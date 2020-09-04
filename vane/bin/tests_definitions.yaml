@@ -353,10 +353,21 @@ test_suites:
         result: True
   - name: test_interfaces_baseline_health.py
     testcases:
-      - name: test_if_intf_status_is_connected_on_
-        description: Verify the interfaces of interest link statuses are connected
-        # interface status
+      - name: test_if_intf_protocol_status_is_connected_on_
+        description: Verify the interfaces of interest protocol statuses are connected
+        # interface protocol status
         expected_output: up
         show_cmd: show interfaces status
         comment: null
-        result: True
+      - name: test_if_intf_link_status_is_connected_on_
+        description: Verify the interfaces of interest link statuses are connected
+        # interface link status
+        expected_output: connected
+        show_cmd: show interfaces status
+        comment: null
+      - name: test_if_intf_phy_status_connected_on_
+        description: Verify the interfaces of interest link statuses are connected
+        # interface physical status
+        expected_output: linkUp
+        show_cmd: show interfaces phy detail
+        comment: null
