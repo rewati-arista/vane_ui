@@ -104,6 +104,7 @@ class TestsClient:
 
         logging.info('Start test setup')
         self._render_eapi_cfg()
+        self._create_results_file()
         test_paramters = self._set_test_parameters()
 
         logging.info('Starting Test')
@@ -317,3 +318,21 @@ class TestsClient:
 
         logging.info(f'Change permissions of {eapi_file} to 777')
         os.chmod(eapi_file, stat.S_IRWXU)
+
+    def _create_results_file(self):
+        """ Create a file for Test Cases to write results to
+        """
+
+        results_file = self.data_model["parameters"]["results_file"]
+        logging.info(f'Create a file named {results_file} for Test Cases to '
+                     'write results to')
+
+        logging.info(f'Opening {results_file} for write')
+        try:
+            with open(results_file, 'w') as results:
+                logging.info(f'Opened {results_file} for write')
+        except BaseException as error:
+            print(f">>>  ERROR OPENING RESULTS FILE: {error}")
+            logging.error(f"ERROR OPENING RESULTS FILE: {error}")
+            logging.error('EXITING TEST RUNNER')
+            sys.exit(1)

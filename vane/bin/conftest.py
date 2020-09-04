@@ -5,10 +5,7 @@ import tests_tools
 from datetime import datetime
 from py.xml import html
 import re
-
-# logging.basicConfig(level=logging.INFO, filename='conftest.log', filemode='w',
-#                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-# logging.info('Starting conftest.log file')
+import pprint
 
 
 # TODO: Remove from conftest.py
@@ -32,6 +29,7 @@ EOS_SHOW_CMDS = ["show daemon",
                  "show system environment cooling",
                  "show system environment temperature",
                  "show interfaces status",
+                 "show interfaces phy detail",
                  # Below show commands breaks dut connection on cloudeos
                  "show system environment power"]
 
@@ -94,15 +92,18 @@ def find_nodeid(nodeid):
     else:
         return "NONE"
 
+
 def pytest_html_results_table_header(cells):
     cells.insert(2, html.th('Description'))
     cells.insert(1, html.th('Device', class_='sortable string', col='device'))
     cells.pop()
 
+
 def pytest_html_results_table_row(report, cells):
     cells.insert(2, html.td(report.description))
     cells.insert(1, html.td(find_nodeid(report.nodeid), class_='col-device'))
     cells.pop()
+
 
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):

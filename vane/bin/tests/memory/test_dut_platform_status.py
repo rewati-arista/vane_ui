@@ -85,4 +85,10 @@ class MemoryTests():
         print(f"\nOn router |dut_name| memory utilization percent is "
               f"|{actual_output}%| and should be under 70%")
 
+        tests_tools.write_results(test_parameters,
+                                  dut_name,
+                                  TEST_SUITE,
+                                  actual_output,
+                                  test_result)
+
         assert actual_output < expected_output
