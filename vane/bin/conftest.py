@@ -1,46 +1,67 @@
-import pytest
-import yaml 
-import logging
-import tests_tools
-from datetime import datetime
-from py.xml import html
+#!/usr/bin/python3
+#
+# Copyright (c) 2019, Arista Networks EOS+
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+# * Redistributions of source code must retain the above copyright notice, this
+#   list of conditions and the following disclaimer.
+#
+# * Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+#
+# * Neither the name of the Arista nor the names of its
+#   contributors may be used to endorse or promote products derived from
+#   this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+
+""" Alter behavior of PyTest """
+
 import re
-import pprint
+import logging
+import pytest
+from py.xml import html
+import tests_tools
 
-
-# TODO: Remove from conftest.py
-EOS_SHOW_CMDS = ["show daemon",
-                 "dir",
-                 "show extensions",
-                 "show running-config section username",
-                 "show tacacs",
-                 "show aaa counters",
-                 "show users detail",
-                 "show aaa methods all",
-                 "show management api http-commands",
-                 "show logging",
-                 "show zerotouch",
-                 "dir flash:zerotouch-config",
-                 "show ntp status",
-                 "show ntp associations",
-                 "show hostname",
-                 "show processes",
-                 "show version",
-                 "show system environment cooling",
-                 "show system environment temperature",
-                 "show interfaces status",
-                 "show interfaces phy detail",
-                 # Below show commands breaks dut connection on cloudeos
-                 "show system environment power"]
 
 def pytest_addoption(parser):
-    parser.addoption(
-        "--definitions", action="store", default="definitons.yaml", help="my option: type1 or type2"
-    )
+    """ Receive command line value from pytest
+
+    Args:
+        parser (str): Command line value from pytest
+    """
+
+    parser.addoption("--definitions",
+                     action="store",
+                     default="definitons.yaml",
+                     help="my option: type1 or type2")
 
 
 @pytest.fixture
 def definitions(request):
+    """ Place holder for passing args to test
+
+    Args:
+        request (str): Pass value to test
+
+    Returns:
+        [str]: Pass value to test
+    """
+
     cli_arg = request.config.getoption("--definitions")
     return cli_arg
 
@@ -52,9 +73,14 @@ def return_duts():
     # TODO: Don't hard code yaml_file
     yaml_file = "definitions.yaml"
     test_parameters = tests_tools.import_yaml(yaml_file)
-    duts_list = tests_tools.return_dut_list(test_parameters)
     tests_tools.init_show_log(test_parameters)
-    duts = tests_tools.init_duts(EOS_SHOW_CMDS, test_parameters)
+
+    logging.info('Discovering show commands from definitions')
+    # TODO: Don't hard code yaml_file
+    yaml_file = "tests_definitions.yaml"
+    test_data = tests_tools.import_yaml(yaml_file)
+    show_cmds = tests_tools.return_show_cmds(test_data)
+    duts = tests_tools.init_duts(show_cmds, test_parameters)
 
     logging.info(f'Return to test suites: \nduts: {duts}')
     return duts
@@ -75,31 +101,70 @@ def return_duts_names():
 
 @pytest.fixture(params=return_duts(), ids=return_duts_names(), scope='session')
 def dut(request):
+    """ Parameterize each dut for a test case
+
+    Args:
+        request (dict): duts from return_duts
+
+    Returns:
+        [dict]: a single dut in duts data structure
+    """
+
     dut = request.param
     return dut
 
 
 @pytest.fixture
 def tests_definitions(scope='session'):
-    yield tests_tools.import_yaml('tests_definitions.yaml') 
+    """ Return test definitions to each test case
+
+    Args:
+        scope (str, optional): Defaults to 'session'.
+
+    Yields:
+        [dict]: Return test definitions to test case
+    """
+
+    yield tests_tools.import_yaml('tests_definitions.yaml')
     logging.info('Cleaning up test_defintions fixture')
 
 
 def find_nodeid(nodeid):
+    """ Return device parameter
 
-    if re.match('.*\[(.*)\]',nodeid):
-        return re.match('.*\[(.*)\]',nodeid)[1]
+        Args:
+            nodeid (str): Device Name
+
+        Return: Name of device
+
+    """
+
+    if re.match('.*\[(.*)\]', nodeid):
+        return re.match('.*\[(.*)\]', nodeid)[1]
     else:
         return "NONE"
 
 
 def pytest_html_results_table_header(cells):
+    """ Create custom PyTest-HTML Header Row
+
+    Args:
+        cells: Cell data
+    """
+
     cells.insert(2, html.th('Description'))
     cells.insert(1, html.th('Device', class_='sortable string', col='device'))
     cells.pop()
 
 
 def pytest_html_results_table_row(report, cells):
+    """ Create custom PyTest-HTML report row
+
+    Args:
+        report: pytest report
+        cells: Cell data
+    """
+
     cells.insert(2, html.td(report.description))
     cells.insert(1, html.td(find_nodeid(report.nodeid), class_='col-device'))
     cells.pop()
@@ -107,6 +172,11 @@ def pytest_html_results_table_row(report, cells):
 
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
+    """ Called to create a _pytest.reports.TestReport for each of the setup,
+        call and teardown runtest phases of a test item.
+
+    """
+
     outcome = yield
     report = outcome.get_result()
 
