@@ -1,0 +1,13 @@
+name: test_dns.py
+testcases:
+  - name: test_if_dns_resolves_on_
+    description: Verify DNS is running by performing pings and verifying name resolution
+    show_cmd: show management api http-commands
+    # List of URLs to test DNS against
+    urls:
+      - google.com
+      - cnn.com
+      - arista.com
+    expected_output: null
+    comment: null
+    result: True

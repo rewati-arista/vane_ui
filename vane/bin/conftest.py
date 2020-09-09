@@ -76,10 +76,8 @@ def return_duts():
     tests_tools.init_show_log(test_parameters)
 
     logging.info('Discovering show commands from definitions')
-    # TODO: Don't hard code yaml_file
-    yaml_file = "tests_definitions.yaml"
-    test_data = tests_tools.import_yaml(yaml_file)
-    show_cmds = tests_tools.return_show_cmds(test_data)
+    test_defs = tests_tools.return_test_defs(test_parameters)
+    show_cmds = tests_tools.return_show_cmds(test_defs)
     duts = tests_tools.init_duts(show_cmds, test_parameters)
 
     logging.info(f'Return to test suites: \nduts: {duts}')
@@ -125,8 +123,9 @@ def tests_definitions(scope='session'):
         [dict]: Return test definitions to test case
     """
 
-    yield tests_tools.import_yaml('tests_definitions.yaml')
-    logging.info('Cleaning up test_defintions fixture')
+    yaml_file = "definitions.yaml"
+    test_parameters = tests_tools.import_yaml(yaml_file)
+    yield tests_tools.return_test_defs(test_parameters)
 
 
 def find_nodeid(nodeid):

@@ -1,67 +1,61 @@
+duts:
+- mgmt_ip: 3.22.137.44
+  name: kg-topology-CloudEosRR1
+  neighbors:
+  - neighborDevice: leaf01
+    neighborPort: Ethernet2
+    port: Ethernet1
+  password: arista123
+  transport: https
+  username: kgrozis
+- mgmt_ip: 3.131.6.163
+  name: kg-topology-CloudEosRR2
+  neighbors:
+  - neighborDevice: spine01
+    neighborPort: Ethernet2
+    port: Ethernet1
+  password: arista123
+  transport: https
+  username: kgrozis
+- mgmt_ip: 3.132.90.164
+  name: kg-topology-CloudEOSEdge1
+  neighbors:
+  - neighborDevice: spine01
+    neighborPort: Ethernet2
+    port: Ethernet1
+  - neighborDevice: leaf01
+    neighborPort: Ethernet2
+    port: Ethernet2
+  password: arista123
+  transport: https
+  username: kgrozis
+- mgmt_ip: 3.131.34.190
+  name: kg-topology-CloudEOSEdge2
+  neighbors:
+  - neighborDevice: spine01
+    neighborPort: Ethernet2
+    port: Ethernet1
+  - neighborDevice: leaf01
+    neighborPort: Ethernet2
+    port: Ethernet2
+  password: arista123
+  transport: https
+  username: kgrozis
 parameters:
+  eapi_file: /home/docker/.eapi.conf
+  eapi_template: ../templates/eapi.conf.j2
+  excel_report: null
+  html_report: ../reports/report
+  json_report: ../reports/report
+  mark: null
+  processes: 4
+  report_dir: ../reports
+  results_file: result.yml
+  setup_show: false
+  show_log: show_output.log
+  stdout: false
   test_cases: All
   test_suites: null
-  results_file: result.yml
-  report_dir: ../reports
-  html_report: ../reports/report
-  excel_report: null
-  json_report: ../reports/report
-  processes: 4
-  show_log: show_output.log
-  eapi_template: ../templates/eapi.conf.j2
-  eapi_file: /home/docker/.eapi.conf
-  setup_show: False
-  verbose: True
-  stdout: False
-  # "pytest --markers" lists all registered markers
-  # To use multiple marker for all test cases use an "or" between markers
-  # To use multiple marker for a test case use "and" between markers
-  # To negate a marker use "not" before a marker
-  # mark: "daemons or extensions"
-  mark: null
-duts:
-  - name: kg-topology-CloudEosRR1
-    mgmt_ip: 3.22.137.44
-    username: kgrozis
-    password: arista123
-    transport: https
-    neighbors:
-      - neighborDevice: leaf01
-        neighborPort: Ethernet2
-        port: Ethernet1
-
-  - name: kg-topology-CloudEosRR2
-    mgmt_ip: 3.131.6.163
-    username: kgrozis
-    password: arista123
-    transport: https
-    neighbors:
-      - neighborDevice: spine01
-        neighborPort: Ethernet2
-        port: Ethernet1
-
-  - name: kg-topology-CloudEOSEdge1
-    mgmt_ip: 3.132.90.164
-    username: kgrozis
-    password: arista123
-    transport: https
-    neighbors:
-      - neighborDevice: spine01
-        neighborPort: Ethernet2
-        port: Ethernet1
-      - neighborDevice: leaf01
-        neighborPort: Ethernet2
-        port: Ethernet2
-
-  - name: kg-topology-CloudEOSEdge2
-    mgmt_ip: 3.131.34.190
-    username: kgrozis
-    password: arista123
-    transport: https
-    neighbors:
-      - neighborDevice: spine01
-        neighborPort: Ethernet2
-        port: Ethernet1
-      - neighborDevice: leaf01
-        neighborPort: Ethernet2
-        port: Ethernet2
+  tests_dir: ./tests
+  test_definitions: tests_definitions.yaml
+  verbose: true
