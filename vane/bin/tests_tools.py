@@ -36,6 +36,7 @@ import time
 import fcntl
 import sys
 import logging
+import os
 import pyeapi
 import yaml
 
@@ -454,13 +455,15 @@ def write_results(test_parameters, dut_name, test_suite, actual_output=None, tes
 
     if not yaml_data:
         yaml_data = {'test_suites':
-                        [ {'name': test_suite,
+                        [ 
+                            {'name': test_suite,
                             'test_cases': [
                                 {'name': test_case,
                                  'duts': []
                                 }
-                         ]}
-                      ]
+                                ]
+                            }
+                        ]
                     }
 
     logging.info(f'Find Index for test suite: {test_suite} on dut {dut_name}')
@@ -548,3 +551,63 @@ def return_show_cmds(test_parameters):
     logging.info('The following show commands are required for test cases: '
                  f'{show_cmds}')
     return show_cmds
+
+
+def return_test_defs(test_parameters):
+    """Return show commands from the test_defintions
+
+    Args:
+        def_file (test_parameters): Name of definitions file
+    """
+
+
+    test_defs = {'test_suites': []}
+    test_dir = test_parameters['parameters']['tests_dir']
+    test_file = test_parameters['parameters']['test_definitions']
+
+    tests_info = os.walk(test_dir)
+ 
+    for dir_path, dir_names, file_names in tests_info:
+        logging.info(f'dir_path is f{dir_path}')
+        logging.info(f'dir_names is f{dir_names}')
+        for file_name in file_names:
+            if 'test_definition.yaml' == file_name:
+                file_path = f'{dir_path}/{file_name}'
+                logging.info(f'YAML file is {file_path}')
+                test_def = import_yaml(file_path)
+                logging.info(f'Test Definition is {test_def}')
+                test_defs['test_suites'].append(test_def)
+            else:
+                logging.info(f'File {file_name} in not yaml')
+
+    export_yaml('test_definitions.yaml', test_defs)
+    logging.info('Return the following test definitions data strcuture '
+                 f'{test_defs}')
+
+    return test_defs
+
+def export_yaml(yaml_file, yaml_data):
+    """ Export python data structure as a YAML file
+
+        Args:
+            yaml_file (str): Name of YAML file
+    """
+
+    logging.info(f'Opening {yaml_file} for write')
+    try:
+        with open(yaml_file, 'w') as yaml_out:
+            try:
+                logging.info(f'Output the following yaml: '
+                             f'{yaml_data}')
+                yaml.dump(yaml_data, yaml_out, default_flow_style=False)
+            except yaml.YAMLError as err:
+                print(">>> ERROR IN YAML FILE")
+                logging.error(f'ERROR IN YAML FILE: {err}')
+                logging.error('EXITING TEST RUNNER')
+                sys.exit(1)
+    except OSError as err:
+        print(">>> YAML FILE MISSING")
+        logging.error(f'ERROR YAML FILE: {yaml_file} NOT '
+                      f'FOUND. {err}')
+        logging.error('EXITING TEST RUNNER')
+        sys.exit(1)

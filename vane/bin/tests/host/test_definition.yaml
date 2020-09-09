@@ -1,0 +1,8 @@
+name: test_host.py
+testcases:
+  - name: test_if_hostname_is_correcet_on_
+    description: Verify hostname is set on device is correct
+    expected_output: null
+    show_cmd: show hostname
+    comment: null
+    result: True
