@@ -2,6 +2,7 @@ pytest
 pyyaml
 jinja2
 pyeapi
+python-docx
 
 # Dev
 pylint

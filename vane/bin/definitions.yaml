@@ -51,7 +51,7 @@ parameters:
   processes: 4
   report_dir: ../reports
   results_file: result.yml
-  setup_show: false
+  setup_show: true
   show_log: show_output.log
   stdout: false
   test_cases: All

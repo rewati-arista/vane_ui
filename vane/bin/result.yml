@@ -3,7 +3,6 @@ test_suites:
   test_cases:
   - duts:
     - actual_output: connected
-      comment: null
       description: Verify the interfaces of interest link statuses are connected
       dut: kg-topology-CloudEosRR1
       expected_output: connected
@@ -11,7 +10,6 @@ test_suites:
       show_cmd: show interfaces status
       test_result: true
     - actual_output: connected
-      comment: null
       description: Verify the interfaces of interest link statuses are connected
       dut: kg-topology-CloudEosRR2
       expected_output: connected
@@ -19,7 +17,6 @@ test_suites:
       show_cmd: show interfaces status
       test_result: true
     - actual_output: connected
-      comment: null
       description: Verify the interfaces of interest link statuses are connected
       dut: kg-topology-CloudEOSEdge1
       expected_output: connected
@@ -27,7 +24,6 @@ test_suites:
       show_cmd: show interfaces status
       test_result: true
     - actual_output: connected
-      comment: null
       description: Verify the interfaces of interest link statuses are connected
       dut: kg-topology-CloudEOSEdge1
       expected_output: connected
@@ -35,7 +31,6 @@ test_suites:
       show_cmd: show interfaces status
       test_result: true
     - actual_output: connected
-      comment: null
       description: Verify the interfaces of interest link statuses are connected
       dut: kg-topology-CloudEOSEdge2
       expected_output: connected
@@ -43,7 +38,6 @@ test_suites:
       show_cmd: show interfaces status
       test_result: true
     - actual_output: connected
-      comment: null
       description: Verify the interfaces of interest link statuses are connected
       dut: kg-topology-CloudEOSEdge2
       expected_output: connected
@@ -52,8 +46,95 @@ test_suites:
       test_result: true
     name: test_if_intf_link_status_is_connected_on_
   - duts:
+    - actual_output: 0
+      description: Verify the interfaces of interest does not have input errors
+      dut: kg-topology-CloudEosRR1
+      expected_output: 0
+      name: test_if_intf_counters_has_input_errors_on_
+      show_cmd: show interfaces counters errors
+      test_result: true
+    - actual_output: 0
+      description: Verify the interfaces of interest does not have input errors
+      dut: kg-topology-CloudEosRR2
+      expected_output: 0
+      name: test_if_intf_counters_has_input_errors_on_
+      show_cmd: show interfaces counters errors
+      test_result: true
+    - actual_output: 0
+      description: Verify the interfaces of interest does not have input errors
+      dut: kg-topology-CloudEOSEdge1
+      expected_output: 0
+      name: test_if_intf_counters_has_input_errors_on_
+      show_cmd: show interfaces counters errors
+      test_result: true
+    - actual_output: 0
+      description: Verify the interfaces of interest does not have input errors
+      dut: kg-topology-CloudEOSEdge1
+      expected_output: 0
+      name: test_if_intf_counters_has_input_errors_on_
+      show_cmd: show interfaces counters errors
+      test_result: true
+    - actual_output: 0
+      description: Verify the interfaces of interest does not have input errors
+      dut: kg-topology-CloudEOSEdge2
+      expected_output: 0
+      name: test_if_intf_counters_has_input_errors_on_
+      show_cmd: show interfaces counters errors
+      test_result: true
+    - actual_output: 0
+      description: Verify the interfaces of interest does not have input errors
+      dut: kg-topology-CloudEOSEdge2
+      expected_output: 0
+      name: test_if_intf_counters_has_input_errors_on_
+      show_cmd: show interfaces counters errors
+      test_result: true
+    name: test_if_intf_counters_has_input_errors_on_
+  - duts:
+    - actual_output: 0
+      description: Verify the interfaces of interest have no frameTooShorts errors
+      dut: kg-topology-CloudEosRR1
+      expected_output: 0
+      name: test_if_intf_counters_has_frame_too_short_errors_on_
+      show_cmd: show interfaces counters errors
+      test_result: true
+    - actual_output: 0
+      description: Verify the interfaces of interest have no frameTooShorts errors
+      dut: kg-topology-CloudEosRR2
+      expected_output: 0
+      name: test_if_intf_counters_has_frame_too_short_errors_on_
+      show_cmd: show interfaces counters errors
+      test_result: true
+    - actual_output: 0
+      description: Verify the interfaces of interest have no frameTooShorts errors
+      dut: kg-topology-CloudEOSEdge1
+      expected_output: 0
+      name: test_if_intf_counters_has_frame_too_short_errors_on_
+      show_cmd: show interfaces counters errors
+      test_result: true
+    - actual_output: 0
+      description: Verify the interfaces of interest have no frameTooShorts errors
+      dut: kg-topology-CloudEOSEdge1
+      expected_output: 0
+      name: test_if_intf_counters_has_frame_too_short_errors_on_
+      show_cmd: show interfaces counters errors
+      test_result: true
+    - actual_output: 0
+      description: Verify the interfaces of interest have no frameTooShorts errors
+      dut: kg-topology-CloudEOSEdge2
+      expected_output: 0
+      name: test_if_intf_counters_has_frame_too_short_errors_on_
+      show_cmd: show interfaces counters errors
+      test_result: true
+    - actual_output: 0
+      description: Verify the interfaces of interest have no frameTooShorts errors
+      dut: kg-topology-CloudEOSEdge2
+      expected_output: 0
+      name: test_if_intf_counters_has_frame_too_short_errors_on_
+      show_cmd: show interfaces counters errors
+      test_result: true
+    name: test_if_intf_counters_has_frame_too_short_errors_on_
+  - duts:
     - actual_output: null
-      comment: null
       description: Verify the interfaces of interest link statuses are connected
       dut: kg-topology-CloudEosRR1
       expected_output: linkUp
@@ -61,7 +142,6 @@ test_suites:
       show_cmd: show interfaces phy detail
       test_result: null
     - actual_output: null
-      comment: null
       description: Verify the interfaces of interest link statuses are connected
       dut: kg-topology-CloudEosRR2
       expected_output: linkUp
@@ -69,7 +149,6 @@ test_suites:
       show_cmd: show interfaces phy detail
       test_result: null
     - actual_output: null
-      comment: null
       description: Verify the interfaces of interest link statuses are connected
       dut: kg-topology-CloudEOSEdge1
       expected_output: linkUp
@@ -77,7 +156,6 @@ test_suites:
       show_cmd: show interfaces phy detail
       test_result: null
     - actual_output: null
-      comment: null
       description: Verify the interfaces of interest link statuses are connected
       dut: kg-topology-CloudEOSEdge2
       expected_output: linkUp
@@ -87,7 +165,6 @@ test_suites:
     name: test_if_intf_phy_status_connected_on_
   - duts:
     - actual_output: up
-      comment: null
       description: Verify the interfaces of interest protocol statuses are connected
       dut: kg-topology-CloudEosRR1
       expected_output: up
@@ -95,7 +172,6 @@ test_suites:
       show_cmd: show interfaces status
       test_result: true
     - actual_output: up
-      comment: null
       description: Verify the interfaces of interest protocol statuses are connected
       dut: kg-topology-CloudEosRR2
       expected_output: up
@@ -103,7 +179,6 @@ test_suites:
       show_cmd: show interfaces status
       test_result: true
     - actual_output: up
-      comment: null
       description: Verify the interfaces of interest protocol statuses are connected
       dut: kg-topology-CloudEOSEdge1
       expected_output: up
@@ -111,7 +186,6 @@ test_suites:
       show_cmd: show interfaces status
       test_result: true
     - actual_output: up
-      comment: null
       description: Verify the interfaces of interest protocol statuses are connected
       dut: kg-topology-CloudEOSEdge1
       expected_output: up
@@ -119,7 +193,6 @@ test_suites:
       show_cmd: show interfaces status
       test_result: true
     - actual_output: up
-      comment: null
       description: Verify the interfaces of interest protocol statuses are connected
       dut: kg-topology-CloudEOSEdge2
       expected_output: up
@@ -127,7 +200,6 @@ test_suites:
       show_cmd: show interfaces status
       test_result: true
     - actual_output: up
-      comment: null
       description: Verify the interfaces of interest protocol statuses are connected
       dut: kg-topology-CloudEOSEdge2
       expected_output: up
@@ -135,10 +207,54 @@ test_suites:
       show_cmd: show interfaces status
       test_result: true
     name: test_if_intf_protocol_status_is_connected_on_
+  - duts:
+    - actual_output: 0
+      description: Verify the interfaces of interest does not have outut errors
+      dut: kg-topology-CloudEosRR1
+      expected_output: 0
+      name: test_if_intf_counters_has_output_errors_on_
+      show_cmd: show interfaces counters errors
+      test_result: true
+    - actual_output: 0
+      description: Verify the interfaces of interest does not have outut errors
+      dut: kg-topology-CloudEosRR2
+      expected_output: 0
+      name: test_if_intf_counters_has_output_errors_on_
+      show_cmd: show interfaces counters errors
+      test_result: true
+    - actual_output: 0
+      description: Verify the interfaces of interest does not have outut errors
+      dut: kg-topology-CloudEOSEdge1
+      expected_output: 0
+      name: test_if_intf_counters_has_output_errors_on_
+      show_cmd: show interfaces counters errors
+      test_result: true
+    - actual_output: 0
+      description: Verify the interfaces of interest does not have outut errors
+      dut: kg-topology-CloudEOSEdge1
+      expected_output: 0
+      name: test_if_intf_counters_has_output_errors_on_
+      show_cmd: show interfaces counters errors
+      test_result: true
+    - actual_output: 0
+      description: Verify the interfaces of interest does not have outut errors
+      dut: kg-topology-CloudEOSEdge2
+      expected_output: 0
+      name: test_if_intf_counters_has_output_errors_on_
+      show_cmd: show interfaces counters errors
+      test_result: true
+    - actual_output: 0
+      description: Verify the interfaces of interest does not have outut errors
+      dut: kg-topology-CloudEOSEdge2
+      expected_output: 0
+      name: test_if_intf_counters_has_output_errors_on_
+      show_cmd: show interfaces counters errors
+      test_result: true
+    name: test_if_intf_counters_has_output_errors_on_
 - name: test_memory.py
   test_cases:
   - duts:
-    - actual_output: 38.28823489394686
+    - actual_output: 38.749595433396486
       comment: null
       description: Verify memory is not exceeding high utlization
       dut: kg-topology-CloudEosRR1
@@ -147,7 +263,7 @@ test_suites:
       result: true
       show_cmd: show version
       test_result: true
-    - actual_output: 38.58219538298774
+    - actual_output: 38.111633389335566
       comment: null
       description: Verify memory is not exceeding high utlization
       dut: kg-topology-CloudEosRR2
@@ -156,7 +272,7 @@ test_suites:
       result: true
       show_cmd: show version
       test_result: true
-    - actual_output: 35.86600187037905
+    - actual_output: 36.407982057457886
       comment: null
       description: Verify memory is not exceeding high utlization
       dut: kg-topology-CloudEOSEdge1
@@ -165,7 +281,7 @@ test_suites:
       result: true
       show_cmd: show version
       test_result: true
-    - actual_output: 36.805150416317076
+    - actual_output: 37.59748251344604
       comment: null
       description: Verify memory is not exceeding high utlization
       dut: kg-topology-CloudEOSEdge2
