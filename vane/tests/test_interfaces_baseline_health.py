@@ -716,30 +716,6 @@ negotiation detail Rx auto-negotiation status is set to: \
                 assert phy_state == 'Success'
 
 
-@pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-def test_show_interfaces_counters_errors_frame_too_longs(dut):
-    """ Verify the interfaces of interest have no frameTooLongs errors
-
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
-    """
-
-    show_cmd = "show interfaces counters errors"
-    interfaces_list = dut["output"]["interface_list"]
-
-    print(f"\nOn router |{dut['name']}|:")
-
-    for interface in interfaces_list:
-        interface_name = interface['interface_name'].replace(" ", "")
-        int_errors = \
-            dut["output"][show_cmd]['json']['interfaceErrorCounters\
-'][interface_name]['frameTooLongs']
-
-        print(f"  - On interface |{interface_name}|: interface counter errors has \
-|{int_errors}| frameTooLongs, correct state is |0|")
-
-        assert int(int_errors) == 0
-
 
 @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
 def test_show_interfaces_counters_errors_fcs_errors(dut):

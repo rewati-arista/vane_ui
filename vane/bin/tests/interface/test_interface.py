@@ -150,6 +150,7 @@ class InterfaceStatusTests():
 
             assert actual_output == expected_output
 
+
 @pytest.mark.nrfu
 @pytest.mark.interface_baseline_health
 @pytest.mark.interface
@@ -223,6 +224,7 @@ class InterfacePhyTests():
             tests_tools.write_results(test_parameters,
                                       dut_name,
                                       TEST_SUITE)
+
 
 @pytest.mark.nrfu
 @pytest.mark.interface_baseline_health
@@ -366,11 +368,64 @@ class InterfaceCountersTests():
                          f' has frameTooShorts errors on |{dut_name}|')
             logging.info('GIVEN interface frameTooShorts errors of '
                          f'|{expected_output}|')
-            logging.info('WHEN interface frameTooShorts errors is |{actual_output}|')
+            logging.info('WHEN interface frameTooShorts errors is '
+                         f'|{actual_output}|')
 
             print(f"  - On interface |{interface['interface_name']}|: "
-                  f"interface counter errors has |{actual_output}| frameTooShorts, "
-                  f"correct state is |{expected_output}|")
+                  f"interface counter errors has |{actual_output}| "
+                  f"frameTooShorts, correct state is |{expected_output}|")
+
+            test_result = actual_output <= expected_output
+            logging.info('THEN test case result is |{test_result}|')
+            logging.info(f'OUTPUT of |{show_cmd}| is:\n\n{show_cmd_txt}')
+
+            tests_tools.write_results(test_parameters,
+                                      dut_name,
+                                      TEST_SUITE,
+                                      actual_output,
+                                      test_result)
+
+            assert actual_output == expected_output
+
+    def test_if_intf_counters_has_frame_too_long_errors_on_(self,
+                                                            dut,
+                                                            tests_definitions):
+        """  Verify the interfaces of interest have no frameLongShorts errors
+
+            Args:
+                dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_case = inspect.currentframe().f_code.co_name
+        test_parameters = tests_tools.get_parameters(tests_definitions,
+                                                     TEST_SUITE,
+                                                     test_case)
+
+        expected_output = test_parameters["expected_output"]
+        dut_name = dut['name']
+        interfaces_list = dut["output"]["interface_list"]
+
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+
+        print(f"\nOn router |{dut_name}|:")
+
+        for interface in interfaces_list:
+            interface_name = interface['interface_name'].replace(" ", "")
+            int_ptr = dut["output"][show_cmd]['json']['interfaceErrorCounters']
+            actual_output = int_ptr[interface_name]['frameTooLongs']
+
+            logging.info(f'TEST if interface |{interface_name}| counters '
+                         f' has frameTooLongs errors on |{dut_name}|')
+            logging.info('GIVEN interface frameTooLongs errors of '
+                         f'|{expected_output}|')
+            logging.info('WHEN interface frameTooLongs errors is '
+                         f'|{actual_output}|')
+
+            print(f"  - On interface |{interface['interface_name']}|: "
+                  f"interface counter errors has |{actual_output}| "
+                  f"frameTooLongs, correct state is |{expected_output}|")
 
             test_result = actual_output <= expected_output
             logging.info('THEN test case result is |{test_result}|')

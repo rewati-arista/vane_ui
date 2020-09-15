@@ -30,3 +30,8 @@ testcases:
     # Number of tolerable frameTooShorts errors
     expected_output: 0
     show_cmd: show interfaces counters errors
+  - name: test_if_intf_counters_has_frame_too_long_errors_on_
+    description: Verify the interfaces of interest have no frameTooLong errors
+    # Number of tolerable frameTooShorts errors
+    expected_output: 0
+    show_cmd: show interfaces counters errors

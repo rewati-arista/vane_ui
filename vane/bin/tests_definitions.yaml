@@ -25,6 +25,10 @@ test_suites:
     expected_output: 0
     name: test_if_intf_counters_has_frame_too_short_errors_on_
     show_cmd: show interfaces counters errors
+  - description: Verify the interfaces of interest have no frameTooLong errors
+    expected_output: 0
+    name: test_if_intf_counters_has_frame_too_long_errors_on_
+    show_cmd: show interfaces counters errors
 - name: test_host.py
   testcases:
   - comment: null

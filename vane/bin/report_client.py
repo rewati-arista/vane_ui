@@ -31,23 +31,17 @@
 
 """Utilities for using PyTest in network testing"""
 
-import concurrent.futures
-import time
-import fcntl
 import sys
 import logging
-import os
-import yaml
-import docx
 import datetime
 import json
 import re
-from docx.enum.text import WD_ALIGN_PARAGRAPH
+import yaml
+import docx
 
 
 logging.basicConfig(level=logging.INFO, filename='vane.log', filemode='w',
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
 
 
 class ReportClient:
@@ -65,7 +59,7 @@ class ReportClient:
         self.data_model = self._import_yaml(test_definition)
         logging.info('Internal test data-model initialized with value: '
                      f'{self.data_model}')
-        
+
         _results_file = self.data_model['parameters']['results_file']
         self._results_data = self._import_yaml(_results_file)
         logging.info(f'Results file data is {self._results_data}')
@@ -127,7 +121,7 @@ class ReportClient:
         format_date = self._return_date()
         self._document.add_heading('Test Report', 0)
         p = self._document.add_paragraph(f'{format_date}')
-        p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+        p.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.RIGHT
         self._document.add_page_break()
 
     def _write_summary_report(self):
@@ -180,7 +174,8 @@ class ReportClient:
         """
 
         logging.info("Create DUT summary results table")
-        self._document.add_heading(f'{self._major_section }.2 Summary Totals for Devices Under Tests', 2)
+        self._document.add_heading(f'{self._major_section }.2 Summary Totals '
+                                   'for Devices Under Tests', 2)
 
         table = self._document.add_table(rows=1, cols=6)
         table.style = 'Table Grid'
@@ -215,9 +210,32 @@ class ReportClient:
         """ Write summary test suite result section
         """
 
-        # TODO: Use conftest get_closest_marker() to find markers
-        logging.info("Create Mark summary results table")
-        self._document.add_heading(f'{self._major_section }.3 Summary Totals for Test Suites', 2)
+        logging.info("Create Suite summary results table")
+        self._document.add_heading(f'{self._major_section }.3 Summary Totals '
+                                   'for Test Suites', 2)
+        suite_results = self._compile_suite_results()
+
+        table = self._document.add_table(rows=1, cols=4)
+        table.style = 'Table Grid'
+
+        hdr_cells = table.rows[0].cells
+        hdr_cells[0].text = 'Suite'
+        hdr_cells[1].text = 'Total Tests'
+        hdr_cells[2].text = 'Total Passed'
+        hdr_cells[3].text = 'Total Failed'
+
+        for suite_result in suite_results:
+            ts_name = suite_result['name']
+            logging.info(f'Test suite name is {ts_name}')
+            ts_name = ts_name.split('.')[0]
+            ts_name = ts_name.split('_')[1].upper()
+            logging.info(f'Formatted test suite name is {ts_name}')
+
+            row_cells = table.add_row().cells
+            row_cells[0].text = ts_name
+            row_cells[1].text = str(suite_result['total_tests'])
+            row_cells[2].text = str(suite_result['total_pass'])
+            row_cells[3].text = str(suite_result['total_fail'])
 
     def _compile_test_results(self):
         """ Parse PyTest JSON results and compile:
@@ -231,11 +249,14 @@ class ReportClient:
         with open(json_report, 'r') as json_file:
             logging.info(f'Raw json report is {json_file}')
             test_data = json.load(json_file)
+            tests = test_data["report"]["tests"]
             logging.info(f'Structured json report is {test_data}')
-            test_results["summaryResults"] = test_data["report"]["summary"]
-            logging.info(f'Summary for test cases are {test_results["summaryResults"]}')
-            test_results["duts"] = self._parse_testcases(test_data["report"]["tests"])
-        
+
+            summary = test_data["report"]["summary"]
+            test_results["summaryResults"] = summary
+            logging.info(f'Summary for test cases are {summary}')
+            test_results["duts"] = self._parse_testcases(tests)
+
         return test_results
 
     def _parse_testcases(self, testcases):
@@ -282,13 +303,18 @@ class ReportClient:
         Args:
             ptr (dict): dictionary to check
             ptr_key (str): key to test if in dict
+
+        Retrun:
+            total (str): Value in dictionary
         """
 
+        total = "0"
+
         if ptr_key in ptr:
-            return str(ptr[ptr_key])
-        else:
-            return "0"
-    
+            total = str(ptr[ptr_key])
+
+        return total
+
     def _write_detail_report(self):
         """ Write summary reports
         """
@@ -304,7 +330,9 @@ class ReportClient:
                 dut_section = 1
 
                 for dut in test_case['duts']:
-                    self._write_dut_minor_section(dut, minor_section, dut_section)
+                    self._write_dut_minor_section(dut,
+                                                  minor_section,
+                                                  dut_section)
                     dut_section += 1
 
                 minor_section += 1
@@ -326,7 +354,7 @@ class ReportClient:
         logging.info(f'Formatted test suite name is {ts_name}')
         self._document.add_heading(f'{self._major_section}. Detailed Test '
                                    f'Suite Results: {ts_name}', 1)
-    
+
     def _write_detail_minor_section(self, test_case, minor_section):
         """[summary]
 
@@ -340,7 +368,8 @@ class ReportClient:
         logging.info(f'Test case name is {tc_name}')
         tc_name = ' '.join(tc_name.split('_'))[:-3].upper()
         logging.info(f'Formattted test case name is {tc_name}')
-        self._document.add_heading(f'{self._major_section}.{minor_section} Test Case: {tc_name}', 2)
+        self._document.add_heading(f'{self._major_section}.{minor_section} '
+                                   f'Test Case: {tc_name}', 2)
         description = test_case['duts'][0]['description']
         p = self._document.add_paragraph(f'Description: {description}')
 
@@ -356,257 +385,41 @@ class ReportClient:
         dut_name = dut['dut']
         dut_name = dut_name.upper()
         logging.info(f'DUT name is {dut_name}')
-        self._document.add_heading(f'{self._major_section}.{minor_section}.{dut_section} DUT: {dut_name}', 3)
+        self._document.add_heading(f'{self._major_section}.{minor_section}.'
+                                   f'{dut_section} DUT: {dut_name}', 3)
 
+    def _compile_suite_results(self):
+        """ Compile test suite results and return them
 
-def write_result_doc():
-    """ Create MSFT docx with results
-    """
+            Return:
+                suite_results (list): List of compiled test suite data
+        """
 
-    # TODO: remove hard code
-    yaml_file = 'result.yml'
-    yaml_data = yaml_io(yaml_file, 'read')
+        test_suites = self._results_data['test_suites']
+        suite_results = []
 
-    date_obj = datetime.datetime.now()
-    format_date = date_obj.strftime("%B %d, %Y %I:%M:%S%p")
+        for test_suite in test_suites:
+            suite_result = {}
+            suite_result['total_tests'] = 0
+            suite_result['total_pass'] = 0
+            suite_result['total_fail'] = 0
+            suite_result['name'] = test_suite['name']
 
-    logging.info('Create MSFT docx with results')
-    document = docx.Document()
+            suite_name = suite_result['name']
+            logging.info('Zeroing test_suite results for test suite: '
+                         f'{suite_name} and data: {suite_result}')
 
-    logging.info('Create report title page')
-    document.add_heading('Test Report', 0)
-    p = document.add_paragraph(f'{format_date}')
-    p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-    document.add_page_break()
+            for test_case in test_suite['test_cases']:
+                for dut in test_case['duts']:
+                    suite_result['total_tests'] += 1
 
-    document.add_heading(f'1. Test Results Summary', 1)
-    summary_results = compile_test_results()
-    logging.info(f"Test Results: {summary_results}")
+                    if dut['test_result']:
+                        suite_result['total_pass'] += 1
+                    else:
+                        suite_result['total_fail'] += 1
 
-    logging.info("Create summary results table")
-    document.add_heading(f'1.1 Summary Results', 2)
-    table = document.add_table(rows=1, cols=6)
-    table.style = 'Table Grid'
+            logging.info(f'Compiled test suite data: {suite_result}')
+            suite_results.append(suite_result)
 
-    hdr_cells = table.rows[0].cells
-    hdr_cells[0].text = 'Total Tests'
-    hdr_cells[1].text = 'Total Passed'
-    hdr_cells[2].text = 'Total Failed'
-    hdr_cells[3].text = 'Total Skipped'
-    hdr_cells[4].text = 'Total Errored'
-    hdr_cells[5].text = 'Total Duration'
-
-    ptr = summary_results['summaryResults']
-    total_tests = totals(ptr, 'num_tests')
-    total_pass = totals(ptr, 'passed')
-    total_fail = totals(ptr, 'failed')
-    total_skip = totals(ptr, 'skipped')
-    total_err = totals(ptr, 'error')
-    total_time = totals(ptr, 'duration')
-
-    row_cells = table.add_row().cells
-    row_cells[0].text = total_tests
-    row_cells[1].text = total_pass
-    row_cells[2].text = total_fail
-    row_cells[3].text = total_skip
-    row_cells[4].text = total_err
-    row_cells[5].text = total_time
-
-    document.add_heading(f'1.2 Summary Totals Devices Under Tests', 2)
-
-    document.add_page_break()
-
-    major_section = 2
-    for test_suite in yaml_data['test_suites']:
-        logging.info(f'Raw test suite data is {test_suite}')
-
-        ts_name = test_suite['name']
-        logging.info(f'Test suite name is {ts_name}')
-
-        ts_name = ts_name.split('.')[0]
-        ts_name = ts_name.split('_')[1].upper()
-        logging.info(f'Formatted test suite name is {ts_name}')
-        document.add_heading(f'{major_section}. Test Suite: {ts_name}', 1)
-
-        minor_section = 1
-
-        for test_case in test_suite['test_cases']:
-            logging.info(f'Raw test case data is {test_case}')
-            tc_name = test_case['name']
-            logging.info(f'Test case name is {tc_name}')
-            tc_name = ' '.join(tc_name.split('_'))[:-3].upper()
-            logging.info(f'Formattted test case name is {tc_name}')
-            document.add_heading(f'{major_section}.{minor_section} Test Case: {tc_name}', 2)
-
-            description = test_case['duts'][0]['description']
-            p = document.add_paragraph(f'DESCRIPTION: {description}')
-
-            maintenance_section = 1
-
-            for dut in test_case['duts']:
-                logging.info(f'Raw DUT data is {dut}')
-                dut_name = dut['dut']
-                dut_name = dut_name.upper()
-                logging.info(f'DUT name is {dut_name}')
-                document.add_heading(f'{major_section}.{minor_section}.{maintenance_section} DUT: {dut_name}', 3)
-
-                maintenance_section += 1
-
-            minor_section += 1
-
-        major_section += 1
-
-
-    """
-    p = document.add_paragraph('A plain paragraph having some ')
-    p.add_run('bold').bold = True
-    p.add_run(' and some ')
-    p.add_run('italic.').italic = True
-
-    document.add_heading('Heading, level 1', level=1)
-    document.add_paragraph('Intense quote', style='Intense Quote')
-
-    document.add_paragraph(
-        'first item in unordered list', style='List Bullet'
-    )
-    document.add_paragraph(
-        'first item in ordered list', style='List Number'
-    )
-
-    document.add_picture('monty-truth.png', width=Inches(1.25))
-
-    records = (
-        (3, '101', 'Spam'),
-        (7, '422', 'Eggs'),
-        (4, '631', 'Spam, spam, eggs, and spam')
-    )
-
-    table = document.add_table(rows=1, cols=3)
-    hdr_cells = table.rows[0].cells
-    hdr_cells[0].text = 'Qty'
-    hdr_cells[1].text = 'Id'
-    hdr_cells[2].text = 'Desc'
-    for qty, id, desc in records:
-        row_cells = table.add_row().cells
-        row_cells[0].text = str(qty)
-        row_cells[1].text = id
-        row_cells[2].text = desc
-
-    document.add_page_break()
-    """
-
-    document.save('../reports/report.docx')
-
-
-def yaml_io(yaml_file, io_type, yaml_data=None):
-    """ Write test results to YAML file for post-processing
-
-        Args:
-            yaml_file (str): Name of YAML file
-            io (str): Read or write to YAML file
-    """
-
-    while True:
-        try:
-            if io_type == 'read':
-                with open(yaml_file, 'r') as yaml_in:
-                    fcntl.flock(yaml_in, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                    yaml_data = yaml.safe_load(yaml_in)
-                    fcntl.flock(yaml_in, fcntl.LOCK_UN)
-                    break
-            else:
-                with open(yaml_file, 'w') as yaml_out:
-                    fcntl.flock(yaml_out, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                    yaml.dump(yaml_data, yaml_out, default_flow_style=False)
-                    fcntl.flock(yaml_out, fcntl.LOCK_UN)
-                    break
-        except:
-            time.sleep(0.05)
-
-    return yaml_data
-
-
-def totals(ptr, ptr_key):
-    """ Test for a key in dictionary.  If key exists return key and if key is
-        missing return 0
-
-    Args:
-        ptr (dict): dictionary to check
-        ptr_key (str): key to test if in dict
-    """
-
-    if ptr_key in ptr:
-        return str(ptr[ptr_key])
-    else:
-        return "0"
-
-
-def compile_test_results():
-    """ Parse NRFU results and compile:
-        test_results: <Pass/Fail>
-        Pass: <number passed>
-        Fail: <number failed>
-        Duts:
-          - test_results: <Pass/Fail>
-            Pass: <number passed>
-            FAil: <number failed>
-    """
-
-    # TODO: Remove hard code
-    json_report = "../reports/report.json"
-    test_results = {}
-
-    while True:
-        try:
-            with open(json_report, 'r') as json_file:
-                fcntl.flock(json_file, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                test_data = json.load(json_file)
-                fcntl.flock(json_file, fcntl.LOCK_UN)
-
-                test_results["summaryResults"] = test_data["report"]["summary"]
-                logging.info(f'Summary for test cases are {test_results["summaryResults"]}')
-                test_results["duts"] = parse_testcases(test_data["report"]["tests"])
-                break
-
-        except:
-            time.sleep(0.05)
-
-    return test_results
-
-
-def parse_testcases(testcases):
-    """ Parse Test cases and return compilation per DUT
-    """
-
-    testcases_results = []
-    dut_list = []
-
-    for testcase in testcases:
-        if re.search('\[.*\]', testcase["name"]):
-            dut_name = re.findall('\[.*\]', testcase["name"])[0][1:-1]
-            test_result = testcase["outcome"]
-
-            if dut_name not in dut_list:
-                dut_list.append(dut_name)
-                testcases_results.append({})
-                testcases_results[-1]["PASS"] = 0
-                testcases_results[-1]["FAIL"] = 0
-                testcases_results[-1]["SKIP"] = 0
-                testcases_results[-1]["ERROR"] = 0
-                testcases_results[-1]["TOTAL"] = 0
-
-            dut_index = dut_list.index(dut_name)
-            testcases_results[dut_index]["name"] = dut_name
-
-            if test_result == "passed":
-                testcases_results[dut_index]["PASS"] += 1
-            elif test_result == "failed":
-                testcases_results[dut_index]["FAIL"] += 1
-            elif test_result == "skipped":
-                testcases_results[dut_index]["SKIP"] += 1
-            elif test_result == "error":
-                testcases_results[dut_index]["ERROR"] += 1
-            
-            testcases_results[dut_index]["TOTAL"] += 1
-
-    return testcases_results
+        logging.info(f'Compiled suite results: {suite_results}')
+        return suite_results
