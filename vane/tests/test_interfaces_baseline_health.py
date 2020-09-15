@@ -717,48 +717,6 @@ negotiation detail Rx auto-negotiation status is set to: \
 
 
 @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-def test_show_interfaces_counters_errors(dut):
-    """ Verify the interfaces of interest have on inErrors
-
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
-    """
-
-    test_show_interfaces_counters_errors_in_errors(dut)
-    test_show_interfaces_counters_errors_frame_too_longs(dut)
-    test_show_interfaces_counters_errors_out_errors(dut)
-    test_show_interfaces_counters_errors_frame_too_shorts(dut)
-    test_show_interfaces_counters_errors_fcs_errors(dut)
-    test_show_interfaces_counters_errors_alignment_errors(dut)
-    test_show_interfaces_counters_errors_symbol_errors(dut)
-
-
-@pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-def test_show_interfaces_counters_errors_in_errors(dut):
-    """ Verify the interfaces of interest have on inErrors
-
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
-    """
-
-    show_cmd = "show interfaces counters errors"
-    interfaces_list = dut["output"]["interface_list"]
-
-    print(f"\nOn router |{dut['name']}|:")
-
-    for interface in interfaces_list:
-        interface_name = interface['interface_name'].replace(" ", "")
-        int_errors = \
-            dut["output"][show_cmd]['json']['interfaceErrorCounters\
-'][interface_name]['inErrors']
-
-        print(f"  - On interface |{interface['interface_name']}|: interface counter \
-errors has |{int_errors}| inErrors, correct state is |0|")
-
-        assert int(int_errors) == 0
-
-
-@pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
 def test_show_interfaces_counters_errors_frame_too_longs(dut):
     """ Verify the interfaces of interest have no frameTooLongs errors
 
@@ -779,56 +737,6 @@ def test_show_interfaces_counters_errors_frame_too_longs(dut):
 
         print(f"  - On interface |{interface_name}|: interface counter errors has \
 |{int_errors}| frameTooLongs, correct state is |0|")
-
-        assert int(int_errors) == 0
-
-
-@pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-def test_show_interfaces_counters_errors_out_errors(dut):
-    """ Verify the interfaces of interest have no outErrors errors
-
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
-    """
-
-    show_cmd = "show interfaces counters errors"
-    interfaces_list = dut["output"]["interface_list"]
-
-    print(f"\nOn router |{dut['name']}|:")
-
-    for interface in interfaces_list:
-        interface_name = interface['interface_name'].replace(" ", "")
-        int_errors = \
-            dut["output"][show_cmd]['json']['interfaceErrorCounters\
-'][interface_name]['outErrors']
-
-        print(f"  - On interface |{interface_name}|: interface counter errors has \
-|{int_errors}| outErrors, correct state is |0|")
-
-        assert int(int_errors) == 0
-
-
-@pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-def test_show_interfaces_counters_errors_frame_too_shorts(dut):
-    """ Verify the interfaces of interest have no frameTooShorts errors
-
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
-    """
-
-    show_cmd = "show interfaces counters errors"
-    interfaces_list = dut["output"]["interface_list"]
-
-    print(f"\nOn router |{dut['name']}|:")
-
-    for interface in interfaces_list:
-        interface_name = interface['interface_name'].replace(" ", "")
-        int_errors = \
-            dut["output"][show_cmd]['json']['interfaceErrorCounters\
-'][interface_name]['frameTooShorts']
-
-        print(f"  - On interface |{interface_name}|: interface counter errors has \
-            |{int_errors}| frameTooShorts, correct state is |0|")
 
         assert int(int_errors) == 0
 

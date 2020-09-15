@@ -97,7 +97,7 @@ def return_duts_names():
     return duts_names
 
 
-@pytest.fixture(params=return_duts(), ids=return_duts_names(), scope='session')
+@pytest.fixture(params=return_duts(), ids=return_duts_names(), scope='session', autouse=True)
 def dut(request):
     """ Parameterize each dut for a test case
 
@@ -109,7 +109,7 @@ def dut(request):
     """
 
     dut = request.param
-    return dut
+    yield dut
 
 
 @pytest.fixture
@@ -123,6 +123,7 @@ def tests_definitions(scope='session'):
         [dict]: Return test definitions to test case
     """
 
+    # TODO: Don't hard code yaml_file
     yaml_file = "definitions.yaml"
     test_parameters = tests_tools.import_yaml(yaml_file)
     yield tests_tools.return_test_defs(test_parameters)
@@ -185,3 +186,4 @@ def pytest_runtest_makereport(item, call):
         report.description = str(item.function.__doc__)
     else:
         report.description = "No Description"
+    

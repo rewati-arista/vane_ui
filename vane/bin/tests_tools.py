@@ -39,6 +39,11 @@ import logging
 import os
 import pyeapi
 import yaml
+import docx
+import datetime
+import json
+import re
+from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 
 logging.basicConfig(level=logging.INFO, filename='vane.log', filemode='w',
@@ -560,7 +565,6 @@ def return_test_defs(test_parameters):
         def_file (test_parameters): Name of definitions file
     """
 
-
     test_defs = {'test_suites': []}
     test_dir = test_parameters['parameters']['tests_dir']
     test_file = test_parameters['parameters']['test_definitions']
@@ -580,7 +584,7 @@ def return_test_defs(test_parameters):
             else:
                 logging.info(f'File {file_name} in not yaml')
 
-    export_yaml('test_definitions.yaml', test_defs)
+    export_yaml('tests_definitions.yaml', test_defs)
     logging.info('Return the following test definitions data strcuture '
                  f'{test_defs}')
 

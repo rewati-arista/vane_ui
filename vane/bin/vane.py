@@ -36,6 +36,7 @@ network's readiness for production based on validation tests. """
 import argparse
 import logging
 import tests_client
+import report_client
 
 
 logging.basicConfig(level=logging.INFO, filename='vane.log', filemode='w',
@@ -77,107 +78,20 @@ def run_tests(definitions_file):
     vane_tests_client.test_runner()
 
 
-# def error_check(input_data, DEFINITIONS_FILE):
-#     """ Error check input
-#
-#         Args:
-#             input_data (dict): Input VPC specific data from ADO in JSON
-#                                format
-#             DEFINITIONS_FILE (str): Path and name of definition file
-#
-#         return:
-#             raw_input_data (dict): combined definitions, input data, and aws
-#                                    data
-#     """
-#
-#     logging.info('Creating cas_input_client object')
-#     cas_input_client = input_client.InputClient(DEFINITIONS_FILE, input_data)
-#     logging.info('Querying AWS for addiitonal VPC data')
-#     cas_input_client.query_aws()
-#     logging.info('Checking data for errors')
-#     raw_input_data = cas_input_client.error_check()
-#
-#     return raw_input_data
-#
-#
-# def render_data(raw_input_data):
-#     """ Model data and then render templates
-#
-#         Args:
-#             raw_input_data (dict): combined definitions, input data, and aws
-#                                    data
-#     """
-#     logging.info('Creating cas_render_client object')
-#     cas_render_client = render_client.RenderClient(raw_input_data)
-#     logging.info('Creating common data-model using raw_input_data')
-#     cas_render_client.create_data_model()
-#     logging.info('Use common data-model to render configlets and TerraForm '
-#                  'templates')
-#     cas_render_client.render_client(terraform=True, ipsec=False, bgp=False)
-#
-#
-# def cvaas_export(cas_cvaas_client, DEFINITIONS_FILE):
-#     """ Export configlets to CVaaS
-#
-#         Args:
-#             cas_cvaas_client (obj): cvaas object
-#             DEFINITIONS_FILE (str): name / path to definitions file
-#     """
-#
-#     logging.info('Import definitions')
-#     input_data = import_definitions(DEFINITIONS_FILE)
-#
-#     logging.info('Creating cas_render_client object')
-#     cas_render_client = render_client.RenderClient(input_data)
-#     logging.info('Use common data-model to render configlets and TerraForm '
-#                  'templates')
-#     cas_render_client.render_client(terraform=False, ipsec=True, bgp=True)
-#
-#     logging.info('Login into CVaaS')
-#     cas_cvaas_client.cvaas_login()
-#     cas_cvaas_client.apply_configlets('ipsec')
-#     cas_cvaas_client.apply_configlets('bgp_prefix_list')
-#     cas_cvaas_client.apply_configlets('bgp')
-#     cas_cvaas_client.apply_configlets('ops')
-#
-#
-# def cvp_import(cas_cvaas_client):
-#     """ Export configlets to CVaaS
-#
-#         Args:
-#             cas_cvaas_client (obj): cvaas object
-#     """
-#
-#     logging.info('Logging into CVP')
-#     cas_cvaas_client.cvp_login()
-#
-#     logging.info('Importing standalone CVP configlets')
-#     cas_cvaas_client.cvp_import()
-#
-#
-# def import_definitions(definition_file):
-#     """ Import YAML definitions file
-#
-#         Args:
-#             defintion_file (str): Name of defintions file
-#     """
-#
-#     logging.info(f'Opening {definition_file} for read')
-#     try:
-#         with open(definition_file, 'r') as input_yaml:
-#             try:
-#                 definitions_data = yaml.safe_load(input_yaml)
-#                 logging.info(f'Inputed the following definitions: '
-#                              f'{definitions_data}')
-#                 input_data = {"definitions": definitions_data}
-#                 return input_data
-#             except yaml.YAMLError as e:
-#                 logging.error(f'Error in YAML file. {e}')
-#                 sys.exit(1)
-#     except OSError as e:
-#         logging.error(f'Defintions file: {definition_file} not '
-#                       f'found. {e}')
-#         sys.exit(1)
+def write_results(definitions_file):
+    """ Write results document
+
+        Args:
+             definitions_file (str): Path and name of definition file
+    """
+
+    logging.info('Using class ReportClient to create vane_report_client '
+                 'object')
+    vane_report_client = report_client.ReportClient(definitions_file)
+    vane_report_client.write_result_doc()
+    
+    report_client.write_result_doc()
+    logging.info('\n\n!VANE has completed without errors!\n\n')
 
 
 def main():
@@ -193,6 +107,7 @@ def main():
         DEFINITIONS_FILE = args.definitions_file
 
     run_tests(DEFINITIONS_FILE)
+    write_results(DEFINITIONS_FILE)
 
 
 if __name__ == "__main__":

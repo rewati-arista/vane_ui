@@ -59,15 +59,14 @@ logging.basicConfig(level=logging.INFO, filename='vane.log', filemode='w',
 
 
 class TestsClient:
-    """ Creates an instance of the rendering engine.
+    """ Creates an instance of the Test Client.
     """
 
     def __init__(self, test_definition):
-        """ Initializes the rendering engine
+        """ Initializes the Test Client
 
             Args:
                 test_definition (str): YAML representation of NRFU tests
-
         """
 
         logging.info('Convert yaml data-model to a python data structure')
@@ -198,88 +197,6 @@ class TestsClient:
         logging.info('Setting the following PyTest parmaters: '
                      f'{test_parameters}')
         return test_parameters
-
-    def evaluate_nrfu_reports(self,
-                              report_name,
-                              report_dir,
-                              file_extension,
-                              error_sub_code):
-        """ Evaluate output and verify correctness
-
-            Args:
-                report_name (str):    NRFU report name
-                report_dir (str):     NRFU report directory
-                file_extension (str): NRFU file extension
-                error_sub_code (str): Error sub code
-        """
-
-        nrfu_report = f'{report_dir}{report_name}.{file_extension}'
-        file_object = pathlib.Path(nrfu_report)
-        error_entry = {}
-
-        if not file_object.exists():
-            error_entry = {"error_field": nrfu_report,
-                           "worksheet": None,
-                           "row_index": None,
-                           "error_condition": "043",
-                           "error_sub_code": error_sub_code}
-
-        return error_entry
-
-    def _compile_test_results(self, nrfu_results):
-        """ Parse NRFU results and compile:
-
-            test_results: <Pass/Fail>
-            Pass: <number passed>
-            Fail: <number failed>
-            Duts:
-              - test_results: <Pass/Fail>
-                Pass: <number passed>
-                FAil: <number failed>
-        """
-
-        json_report = f"../nrfu_logs/{definitions.JSON_REPORT_NAME}.json"
-        test_results = {}
-        test_results["overallResults"] = nrfu_results
-
-        # Open JSON report
-        with open(json_report, 'r') as json_file:
-            test_data = json.load(json_file)
-            test_results["summaryResults"] = test_data["report"]["summary"]
-            test_results["duts"] = \
-                self._parse_testcases(test_data["report"]["tests"])
-
-        kafka_payload = {"messageType": "003", "messageSubType": "001",
-                         "payload": test_results}
-
-        return kafka_payload
-
-    def _parse_testcases(self, testcases):
-        """ Parse Test cases and return compilation per DUT
-        """
-        testcases_results = []
-        dut_list = []
-
-        for testcase in testcases:
-            if re.search('\[.*\]', testcase["name"]):
-                dut_name = re.findall('\[.*\]', testcase["name"])[0][1:-1]
-                test_result = testcase["outcome"]
-
-                if dut_name not in dut_list:
-                    dut_list.append(dut_name)
-                    testcases_results.append({})
-                    testcases_results[-1]["PASS"] = 0
-                    testcases_results[-1]["FAIL"] = 0
-
-                dut_index = dut_list.index(dut_name)
-                testcases_results[dut_index]["name"] = dut_name
-
-                if test_result == "passed":
-                    testcases_results[dut_index]["PASS"] += 1
-                elif test_result == "failed":
-                    testcases_results[dut_index]["FAIL"] += 1
-
-        return testcases_results
 
     def _render_eapi_cfg(self):
         """ Render .eapi.conf file so pytests can log into devices

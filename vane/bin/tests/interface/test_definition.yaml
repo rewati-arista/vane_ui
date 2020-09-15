@@ -5,16 +5,28 @@ testcases:
     # interface protocol status
     expected_output: up
     show_cmd: show interfaces status
-    comment: null
   - name: test_if_intf_link_status_is_connected_on_
     description: Verify the interfaces of interest link statuses are connected
     # interface link status
     expected_output: connected
     show_cmd: show interfaces status
-    comment: null
   - name: test_if_intf_phy_status_connected_on_
     description: Verify the interfaces of interest link statuses are connected
     # interface physical status
     expected_output: linkUp
     show_cmd: show interfaces phy detail
-    comment: null
+  - name: test_if_intf_counters_has_input_errors_on_
+    description: Verify the interfaces of interest does not have input errors
+    # Number of tolerable input errors
+    expected_output: 0
+    show_cmd: show interfaces counters errors
+  - name: test_if_intf_counters_has_output_errors_on_
+    description: Verify the interfaces of interest does not have outut errors
+    # Number of tolerable output errors
+    expected_output: 0
+    show_cmd: show interfaces counters errors
+  - name: test_if_intf_counters_has_frame_too_short_errors_on_
+    description: Verify the interfaces of interest have no frameTooShorts errors
+    # Number of tolerable frameTooShorts errors
+    expected_output: 0
+    show_cmd: show interfaces counters errors
