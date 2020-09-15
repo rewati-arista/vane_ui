@@ -427,7 +427,7 @@ def generate_interface_list(dut_name, test_definition):
 
     return interface_list
 
-def write_results(test_parameters, dut_name, test_suite, actual_output=None, test_result=None):
+def write_results(test_parameters, dut_name, test_suite, actual_output=None, test_result=True):
     """ Write test results to YAML file for post-processing
 
         Args:

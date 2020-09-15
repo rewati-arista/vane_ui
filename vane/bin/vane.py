@@ -69,7 +69,7 @@ def run_tests(definitions_file):
     """ Make request to test client to run tests
 
         Args:
-             definitions_file (str): Path and name of definition file
+            definitions_file (str): Path and name of definition file
     """
 
     logging.info('Using class TestsClient to create vane_tests_client '
@@ -82,7 +82,7 @@ def write_results(definitions_file):
     """ Write results document
 
         Args:
-             definitions_file (str): Path and name of definition file
+            definitions_file (str): Path and name of definition file
     """
 
     logging.info('Using class ReportClient to create vane_report_client '
@@ -90,8 +90,7 @@ def write_results(definitions_file):
     vane_report_client = report_client.ReportClient(definitions_file)
     vane_report_client.write_result_doc()
     
-    report_client.write_result_doc()
-    logging.info('\n\n!VANE has completed without errors!\n\n')
+    #report_client.write_result_doc()
 
 
 def main():
@@ -108,6 +107,8 @@ def main():
 
     run_tests(DEFINITIONS_FILE)
     write_results(DEFINITIONS_FILE)
+
+    logging.info('\n\n!VANE has completed without errors!\n\n')
 
 
 if __name__ == "__main__":
