@@ -39,10 +39,6 @@ import logging
 import os
 import pyeapi
 import yaml
-import docx
-import datetime
-import json
-import re
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 
@@ -427,7 +423,7 @@ def generate_interface_list(dut_name, test_definition):
 
     return interface_list
 
-def write_results(test_parameters, dut_name, test_suite, actual_output=None, test_result=True):
+def write_results(test_parameters, dut_name, test_suite, actual_output=None, test_result=True, fail_reason=""):
     """ Write test results to YAML file for post-processing
 
         Args:
@@ -451,12 +447,21 @@ def write_results(test_parameters, dut_name, test_suite, actual_output=None, tes
     test_parameters['actual_output'] = actual_output
     test_parameters['test_result'] = test_result
     test_parameters['dut'] = dut_name
+    test_parameters['fail_reason'] = fail_reason
 
     test_case = test_parameters['name']
 
     #TODO: remove hard code
     yaml_file = 'result.yml'
-    yaml_data = yaml_io(yaml_file, 'read')
+
+    while True:
+        try:
+            yaml_in = open(yaml_file, 'r+')
+            fcntl.flock(yaml_in, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            yaml_data = yaml.safe_load(yaml_in)
+            break
+        except:
+            time.sleep(0.05)
 
     if not yaml_data:
         yaml_data = {'test_suites':
@@ -470,9 +475,14 @@ def write_results(test_parameters, dut_name, test_suite, actual_output=None, tes
                             }
                         ]
                     }
+    else:
+        yaml_in.seek(0)
+        yaml_in.truncate()
 
-    logging.info(f'Find Index for test suite: {test_suite} on dut {dut_name}')
+    logging.info(f'\n\n\rFind the Index for test suite: {test_suite} on dut {dut_name}\n\n\r')
+    logging.info(yaml_data['test_suites'])
     test_suites = [param['name'] for param in yaml_data['test_suites']]
+
     if test_suite in test_suites:
         suite_index = test_suites.index(test_suite)
         logging.info(f'Test suite {test_suite} exists in results file at index {suite_index}')
@@ -484,6 +494,7 @@ def write_results(test_parameters, dut_name, test_suite, actual_output=None, tes
 
     logging.info(f'Find Index for test case: {test_case} on dut {dut_name}')
     test_cases = [param['name'] for param in yaml_data['test_suites'][suite_index]['test_cases']]
+
     if test_case in test_cases:
         test_index = test_cases.index(test_case)
         logging.info(f'Test case {test_case} exists in results file at index {test_index}')
@@ -493,11 +504,17 @@ def write_results(test_parameters, dut_name, test_suite, actual_output=None, tes
         yaml_data['test_suites'][suite_index]['test_cases'].append(test_stub)
         test_index = (len(yaml_data['test_suites'][suite_index]['test_cases']) - 1)
 
-    logging.info(f'Add DUT {dut_name} to test case {test_case} with parameters {test_parameters}')
-    yaml_data['test_suites'][suite_index]['test_cases'][test_index]['duts'].append(test_parameters)
+    logging.info(f'Find Index for dut {dut_name}')
+    duts = [param['dut'] for param in yaml_data['test_suites'][suite_index]['test_cases'][test_index]['duts']]
 
-    _ = yaml_io(yaml_file, 'write', yaml_data)
+    if dut_name not in duts:
+        logging.info(f'Add DUT {dut_name} to test case {test_case} with parameters {test_parameters}')
+        yaml_data['test_suites'][suite_index]['test_cases'][test_index]['duts'].append(test_parameters)
 
+    yaml.dump(yaml_data, yaml_in, default_flow_style=False)
+    fcntl.flock(yaml_in, fcntl.LOCK_UN)
+
+    yaml_in.close()
 
 def yaml_io(yaml_file, io_type, yaml_data=None):
     """ Write test results to YAML file for post-processing
@@ -513,11 +530,11 @@ def yaml_io(yaml_file, io_type, yaml_data=None):
                 with open(yaml_file, 'r') as yaml_in:
                     fcntl.flock(yaml_in, fcntl.LOCK_EX | fcntl.LOCK_NB)
                     yaml_data = yaml.safe_load(yaml_in)
-                    fcntl.flock(yaml_in, fcntl.LOCK_UN)
+                    #fcntl.flock(yaml_in, fcntl.LOCK_UN)
                     break
             else:
                 with open(yaml_file, 'w') as yaml_out:
-                    fcntl.flock(yaml_out, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    #fcntl.flock(yaml_out, fcntl.LOCK_EX | fcntl.LOCK_NB)
                     yaml.dump(yaml_data, yaml_out, default_flow_style=False)
                     fcntl.flock(yaml_out, fcntl.LOCK_UN)
                     break
@@ -571,18 +588,12 @@ def return_test_defs(test_parameters):
 
     tests_info = os.walk(test_dir)
  
-    for dir_path, dir_names, file_names in tests_info:
-        logging.info(f'dir_path is f{dir_path}')
-        logging.info(f'dir_names is f{dir_names}')
+    for dir_path, _, file_names in tests_info:
         for file_name in file_names:
             if 'test_definition.yaml' == file_name:
                 file_path = f'{dir_path}/{file_name}'
-                logging.info(f'YAML file is {file_path}')
                 test_def = import_yaml(file_path)
-                logging.info(f'Test Definition is {test_def}')
                 test_defs['test_suites'].append(test_def)
-            else:
-                logging.info(f'File {file_name} in not yaml')
 
     export_yaml('tests_definitions.yaml', test_defs)
     logging.info('Return the following test definitions data strcuture '

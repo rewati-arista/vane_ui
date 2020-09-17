@@ -59,14 +59,14 @@ class ReportClient:
         self.data_model = self._import_yaml(test_definition)
         logging.info('Internal test data-model initialized with value: '
                      f'{self.data_model}')
+        self._summary_results = self._compile_test_results()
+        logging.info(f"Test Results: {self._summary_results}")
 
         _results_file = self.data_model['parameters']['results_file']
         self._results_data = self._import_yaml(_results_file)
         logging.info(f'Results file data is {self._results_data}')
 
         self._document = docx.Document()
-        self._summary_results = self._compile_test_results()
-        logging.info(f"Test Results: {self._summary_results}")
         self._major_section = 1
 
     def _import_yaml(self, yaml_file):
@@ -99,6 +99,7 @@ class ReportClient:
         logging.info('Create MSFT docx with results')
         self._write_title_page()
         self._write_summary_report()
+        self._write_tests_case_report()
         self._write_detail_report()
         self._document.save('../reports/report-class.docx')
 
@@ -128,7 +129,8 @@ class ReportClient:
         """ Write summary reports
         """
 
-        self._document.add_heading(f'{self._major_section}. Test Results Summary', 1)
+        self._document.add_heading(f'{self._major_section}. Test Results '
+                                   'Summary', 1)
         self._write_summary_results()
         self._write_dut_summary_results()
         self._write_suite_summary_results()
@@ -141,7 +143,8 @@ class ReportClient:
         """
 
         logging.info("Create summary results table")
-        self._document.add_heading(f'{self._major_section}.1 Summary Results', 2)
+        self._document.add_heading(f'{self._major_section}.1 Summary '
+                                   'Results', 2)
         table = self._document.add_table(rows=1, cols=6)
         table.style = 'Table Grid'
 
@@ -225,11 +228,7 @@ class ReportClient:
         hdr_cells[3].text = 'Total Failed'
 
         for suite_result in suite_results:
-            ts_name = suite_result['name']
-            logging.info(f'Test suite name is {ts_name}')
-            ts_name = ts_name.split('.')[0]
-            ts_name = ts_name.split('_')[1].upper()
-            logging.info(f'Formatted test suite name is {ts_name}')
+            ts_name = self._format_ts_name(suite_result['name'])
 
             row_cells = table.add_row().cells
             row_cells[0].text = ts_name
@@ -244,7 +243,8 @@ class ReportClient:
         json_report = self.data_model['parameters']['json_report']
         json_report = f"{json_report}.json"
         test_results = {}
-        logging.info(f'Opening JSON file {json_report} to parse for summary results')
+        logging.info(f'Opening JSON file {json_report} to parse for summary '
+                     'results')
 
         with open(json_report, 'r') as json_file:
             logging.info(f'Raw json report is {json_file}')
@@ -315,8 +315,43 @@ class ReportClient:
 
         return total
 
+    def _write_tests_case_report(self):
+        """ Write summary test case report
+        """
+
+        self._document.add_heading(f'{self._major_section}. '
+                                   'Test Case Results Summary', 1)
+        self._major_section += 1
+
+        testcase_results = self._compile_testcase_results()
+
+        table = self._document.add_table(rows=1, cols=6)
+        table.style = 'Table Grid'
+        test_num = 1
+
+        hdr_cells = table.rows[0].cells
+        hdr_cells[0].text = 'Id'
+        hdr_cells[1].text = 'Test Suite'
+        hdr_cells[2].text = 'Test Case'
+        hdr_cells[3].text = 'DUT'
+        hdr_cells[4].text = 'Result'
+        hdr_cells[5].text = 'Reason for Failure'
+
+        for testcase_result in testcase_results:
+            row_cells = table.add_row().cells
+            row_cells[0].text = str(test_num)
+            row_cells[1].text = str(testcase_result['test_suite'])
+            row_cells[2].text = str(testcase_result['test_case'])
+            row_cells[3].text = str(testcase_result['dut'])
+            row_cells[4].text = str(testcase_result['results'])
+            row_cells[5].text = str(testcase_result['fail_reason'])
+
+            test_num += 1
+
+        self._document.add_page_break()
+
     def _write_detail_report(self):
-        """ Write summary reports
+        """ Write detailed test case report
         """
 
         test_suites = self._results_data['test_suites']
@@ -346,12 +381,7 @@ class ReportClient:
                 test_suite (dict): test_suite result data
         """
 
-        logging.info(f'Raw test suite data is {test_suite}')
-        ts_name = test_suite['name']
-        logging.info(f'Test suite name is {ts_name}')
-        ts_name = ts_name.split('.')[0]
-        ts_name = ts_name.split('_')[1].upper()
-        logging.info(f'Formatted test suite name is {ts_name}')
+        ts_name = self._format_ts_name(test_suite['name'])
         self._document.add_heading(f'{self._major_section}. Detailed Test '
                                    f'Suite Results: {ts_name}', 1)
 
@@ -363,11 +393,8 @@ class ReportClient:
             minor_section (int): minor section number
         """
 
-        logging.info(f'Raw test case data is {test_case}')
-        tc_name = test_case['name']
-        logging.info(f'Test case name is {tc_name}')
-        tc_name = ' '.join(tc_name.split('_'))[:-3].upper()
-        logging.info(f'Formattted test case name is {tc_name}')
+        tc_name = self._format_tc_name(test_case['name'])
+
         self._document.add_heading(f'{self._major_section}.{minor_section} '
                                    f'Test Case: {tc_name}', 2)
         description = test_case['duts'][0]['description']
@@ -423,3 +450,86 @@ class ReportClient:
 
         logging.info(f'Compiled suite results: {suite_results}')
         return suite_results
+
+    def _compile_testcase_results(self):
+        """ Compile test case results and return them
+        """
+
+        test_suites = self._results_data['test_suites']
+        testcase_results = []
+
+        for test_suite in test_suites:
+            test_cases = test_suite['test_cases']
+            ts_name = self._format_ts_name(test_suite['name'])
+            logging.info(f'Compiling results for test suite {ts_name}')
+
+            for test_case in test_cases:
+                tc_name = self._format_tc_name(test_case['name'])
+                logging.info(f'Compiling results for test case {tc_name}')
+                duts = test_case['duts']
+
+                for dut in duts:
+                    testcase_result = {}
+
+                    dut_name = dut['dut']
+                    fail_reason = dut['fail_reason']
+                    logging.info(f'Compiling results for DUT {dut_name}')
+
+                    if dut['test_result']:
+                        test_result = "PASS"
+                    else:
+                        test_result = "False"
+
+                    testcase_result['test_suite'] = ts_name
+                    testcase_result['test_case'] = tc_name
+                    testcase_result['dut'] = dut_name
+                    testcase_result['results'] = test_result
+                    testcase_result['fail_reason'] = fail_reason
+                    logging.info(f'Compiled results: {testcase_result}')
+
+                    testcase_results.append(testcase_result)
+                    logging.info('After testcase results struct appended: '
+                                 f'{testcase_results}')
+
+                logging.info('Interim dut -- testcase results struct '
+                             f'{testcase_results}')
+
+        logging.info(f'Returning testcase result {testcase_results}')
+        return testcase_results
+
+    def _format_ts_name(self, ts_name):
+        """ Input a test suite program name and return a formatted name for
+            test suite
+
+        Args:
+            ts_name (str): Name of test suite program
+
+        Return:
+            ts_name (str): Formatted test suite name
+        """
+
+        logging.info(f'Test suite name is {ts_name}')
+        ts_name = ts_name.split('.')[0]
+        ts_name = ts_name.split('_')[1].upper()
+        logging.info(f'Formatted test suite name is {ts_name}')
+
+        return ts_name
+
+    def _format_tc_name(self, tc_name):
+        """ Input a PyTest test case  name and return a formatted name for
+            test case
+
+        Args:
+            tc_name (str): Name of PyTest test case
+
+        Return:
+            tc_name (str): Formatted test case name
+        """
+
+        logging.info(f'Test case name is {tc_name}')
+        tc_name = ' '.join(tc_name.split('_'))[:-3]
+        tc_name = tc_name.replace('intf', 'interface')
+        tc_name = tc_name.capitalize()
+        logging.info(f'Formattted test case name is {tc_name}')
+
+        return tc_name

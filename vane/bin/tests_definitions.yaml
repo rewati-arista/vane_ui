@@ -29,6 +29,22 @@ test_suites:
     expected_output: 0
     name: test_if_intf_counters_has_frame_too_long_errors_on_
     show_cmd: show interfaces counters errors
+  - description: Verify the interfaces of interest have no fcsErrors errors
+    expected_output: 0
+    name: test_if_intf_counters_has_fcs_errors_on_
+    show_cmd: show interfaces counters errors
+  - description: Verify the interfaces of interest have no fcsErrors errors
+    expected_output: 0
+    name: test_if_intf_counters_has_fcs_errors_on_
+    show_cmd: show interfaces counters errors
+  - description: Verify the interfaces of interest have no alignmentErrors errors
+    expected_output: 0
+    name: test_if_intf_counters_has_alignment_errors_on_
+    show_cmd: show interfaces counters errors
+  - description: Verify the interfaces of interest have no symbolErrors errors
+    expected_output: 0
+    name: test_if_intf_counters_has_symbol_errors_on_
+    show_cmd: show interfaces counters errors
 - name: test_host.py
   testcases:
   - comment: null
