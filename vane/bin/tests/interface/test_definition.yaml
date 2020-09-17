@@ -32,6 +32,26 @@ testcases:
     show_cmd: show interfaces counters errors
   - name: test_if_intf_counters_has_frame_too_long_errors_on_
     description: Verify the interfaces of interest have no frameTooLong errors
-    # Number of tolerable frameTooShorts errors
+    # Number of tolerable frameLongShorts errors
+    expected_output: 0
+    show_cmd: show interfaces counters errors
+  - name: test_if_intf_counters_has_fcs_errors_on_
+    description: Verify the interfaces of interest have no fcsErrors errors
+    # Number of tolerable fcsErrors errors
+    expected_output: 0
+    show_cmd: show interfaces counters errors
+  - name: test_if_intf_counters_has_fcs_errors_on_
+    description: Verify the interfaces of interest have no fcsErrors errors
+    # Number of tolerable fcsErrors errors
+    expected_output: 0
+    show_cmd: show interfaces counters errors
+  - name: test_if_intf_counters_has_alignment_errors_on_
+    description: Verify the interfaces of interest have no alignmentErrors errors
+    # Number of tolerable alignmentErrors errors
+    expected_output: 0
+    show_cmd: show interfaces counters errors
+  - name: test_if_intf_counters_has_symbol_errors_on_
+    description: Verify the interfaces of interest have no symbolErrors errors
+    # Number of tolerable symbolErrors errors
     expected_output: 0
     show_cmd: show interfaces counters errors
