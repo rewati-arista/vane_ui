@@ -37,6 +37,40 @@ test_suites:
     name: test_if_intf_link_status_is_connected_on_
   - duts:
     - actual_output: 0
+      description: Verify the interfaces of interest does not have input errors
+      dut: kg-topology-CloudEosRR1
+      expected_output: 0
+      fail_reason: ''
+      name: test_if_intf_counters_has_input_errors_on_
+      show_cmd: show interfaces counters errors
+      test_result: true
+    - actual_output: 0
+      description: Verify the interfaces of interest does not have input errors
+      dut: kg-topology-CloudEosRR2
+      expected_output: 0
+      fail_reason: ''
+      name: test_if_intf_counters_has_input_errors_on_
+      show_cmd: show interfaces counters errors
+      test_result: true
+    - actual_output: 0
+      description: Verify the interfaces of interest does not have input errors
+      dut: kg-topology-CloudEOSEdge1
+      expected_output: 0
+      fail_reason: ''
+      name: test_if_intf_counters_has_input_errors_on_
+      show_cmd: show interfaces counters errors
+      test_result: true
+    - actual_output: 0
+      description: Verify the interfaces of interest does not have input errors
+      dut: kg-topology-CloudEOSEdge2
+      expected_output: 0
+      fail_reason: ''
+      name: test_if_intf_counters_has_input_errors_on_
+      show_cmd: show interfaces counters errors
+      test_result: true
+    name: test_if_intf_counters_has_input_errors_on_
+  - duts:
+    - actual_output: 0
       description: Verify the interfaces of interest have no frameTooShorts errors
       dut: kg-topology-CloudEosRR1
       expected_output: 0
@@ -71,38 +105,38 @@ test_suites:
     name: test_if_intf_counters_has_frame_too_short_errors_on_
   - duts:
     - actual_output: 0
-      description: Verify the interfaces of interest does not have input errors
+      description: Verify the interfaces of interest have no fcsErrors errors
       dut: kg-topology-CloudEosRR1
       expected_output: 0
       fail_reason: ''
-      name: test_if_intf_counters_has_input_errors_on_
+      name: test_if_intf_counters_has_fcs_errors_on_
       show_cmd: show interfaces counters errors
       test_result: true
     - actual_output: 0
-      description: Verify the interfaces of interest does not have input errors
+      description: Verify the interfaces of interest have no fcsErrors errors
       dut: kg-topology-CloudEosRR2
       expected_output: 0
       fail_reason: ''
-      name: test_if_intf_counters_has_input_errors_on_
+      name: test_if_intf_counters_has_fcs_errors_on_
       show_cmd: show interfaces counters errors
       test_result: true
     - actual_output: 0
-      description: Verify the interfaces of interest does not have input errors
+      description: Verify the interfaces of interest have no fcsErrors errors
       dut: kg-topology-CloudEOSEdge1
       expected_output: 0
       fail_reason: ''
-      name: test_if_intf_counters_has_input_errors_on_
+      name: test_if_intf_counters_has_fcs_errors_on_
       show_cmd: show interfaces counters errors
       test_result: true
     - actual_output: 0
-      description: Verify the interfaces of interest does not have input errors
+      description: Verify the interfaces of interest have no fcsErrors errors
       dut: kg-topology-CloudEOSEdge2
       expected_output: 0
       fail_reason: ''
-      name: test_if_intf_counters_has_input_errors_on_
+      name: test_if_intf_counters_has_fcs_errors_on_
       show_cmd: show interfaces counters errors
       test_result: true
-    name: test_if_intf_counters_has_input_errors_on_
+    name: test_if_intf_counters_has_fcs_errors_on_
   - duts:
     - actual_output: 0
       description: Verify the interfaces of interest have no symbolErrors errors
@@ -139,38 +173,70 @@ test_suites:
     name: test_if_intf_counters_has_symbol_errors_on_
   - duts:
     - actual_output: 0
-      description: Verify the interfaces of interest have no fcsErrors errors
+      comment: "TEST if interface |Ethernet1| counters has outbound discards on |kg-topology-CloudEosRR1|.\n\
+        GIVEN interface outbound discards of |0|.\nWHEN interface outbound discards\
+        \ are |0|.\nTHEN test case result is |True|.\nOUTPUT of |show interfaces counters\
+        \ discards| is:\n\nPort               InDiscards    OutDiscards \n---------------\
+        \ ---------------- ----------- \nEt1                         0           \
+        \   0 \nEt100                       0              0 \n---------         \
+        \  ---------      --------- \nTotals                      0              0\
+        \ \n\n"
+      description: Verify the interfaces of interest have no inDiscards
       dut: kg-topology-CloudEosRR1
       expected_output: 0
       fail_reason: ''
-      name: test_if_intf_counters_has_fcs_errors_on_
-      show_cmd: show interfaces counters errors
+      name: test_if_intf_in_counters_are_discarding_on_
+      show_cmd: show interfaces counters discards
       test_result: true
     - actual_output: 0
-      description: Verify the interfaces of interest have no fcsErrors errors
+      comment: "TEST if interface |Ethernet1| counters has outbound discards on |kg-topology-CloudEosRR2|.\n\
+        GIVEN interface outbound discards of |0|.\nWHEN interface outbound discards\
+        \ are |0|.\nTHEN test case result is |True|.\nOUTPUT of |show interfaces counters\
+        \ discards| is:\n\nPort               InDiscards    OutDiscards \n---------------\
+        \ ---------------- ----------- \nEt1                         0           \
+        \   0 \nEt100                       0              0 \n---------         \
+        \  ---------      --------- \nTotals                      0              0\
+        \ \n\n"
+      description: Verify the interfaces of interest have no inDiscards
       dut: kg-topology-CloudEosRR2
       expected_output: 0
       fail_reason: ''
-      name: test_if_intf_counters_has_fcs_errors_on_
-      show_cmd: show interfaces counters errors
+      name: test_if_intf_in_counters_are_discarding_on_
+      show_cmd: show interfaces counters discards
       test_result: true
     - actual_output: 0
-      description: Verify the interfaces of interest have no fcsErrors errors
+      comment: "TEST if interface |Ethernet1| counters has outbound discards on |kg-topology-CloudEOSEdge1|.\n\
+        GIVEN interface outbound discards of |0|.\nWHEN interface outbound discards\
+        \ are |0|.\nTHEN test case result is |True|.\nOUTPUT of |show interfaces counters\
+        \ discards| is:\n\nPort               InDiscards    OutDiscards \n---------------\
+        \ ---------------- ----------- \nEt1                         0           \
+        \   0 \nEt2                         0              0 \nEt100             \
+        \          0              0 \n---------           ---------      ---------\
+        \ \nTotals                      0              0 \n\n"
+      description: Verify the interfaces of interest have no inDiscards
       dut: kg-topology-CloudEOSEdge1
       expected_output: 0
       fail_reason: ''
-      name: test_if_intf_counters_has_fcs_errors_on_
-      show_cmd: show interfaces counters errors
+      name: test_if_intf_in_counters_are_discarding_on_
+      show_cmd: show interfaces counters discards
       test_result: true
     - actual_output: 0
-      description: Verify the interfaces of interest have no fcsErrors errors
+      comment: "TEST if interface |Ethernet1| counters has outbound discards on |kg-topology-CloudEOSEdge2|.\n\
+        GIVEN interface outbound discards of |0|.\nWHEN interface outbound discards\
+        \ are |0|.\nTHEN test case result is |True|.\nOUTPUT of |show interfaces counters\
+        \ discards| is:\n\nPort               InDiscards    OutDiscards \n---------------\
+        \ ---------------- ----------- \nEt1                         0           \
+        \   0 \nEt2                         0              0 \nEt100             \
+        \          0              0 \n---------           ---------      ---------\
+        \ \nTotals                      0              0 \n\n"
+      description: Verify the interfaces of interest have no inDiscards
       dut: kg-topology-CloudEOSEdge2
       expected_output: 0
       fail_reason: ''
-      name: test_if_intf_counters_has_fcs_errors_on_
-      show_cmd: show interfaces counters errors
+      name: test_if_intf_in_counters_are_discarding_on_
+      show_cmd: show interfaces counters discards
       test_result: true
-    name: test_if_intf_counters_has_fcs_errors_on_
+    name: test_if_intf_in_counters_are_discarding_on_
   - duts:
     - actual_output: null
       description: Verify the interfaces of interest link statuses are connected
@@ -275,6 +341,40 @@ test_suites:
     name: test_if_intf_protocol_status_is_connected_on_
   - duts:
     - actual_output: 0
+      description: Verify the interfaces of interest have no outDiscards
+      dut: kg-topology-CloudEosRR1
+      expected_output: 0
+      fail_reason: ''
+      name: test_if_intf_out_counters_are_discarding_on_
+      show_cmd: show interfaces counters discards
+      test_result: true
+    - actual_output: 0
+      description: Verify the interfaces of interest have no outDiscards
+      dut: kg-topology-CloudEosRR2
+      expected_output: 0
+      fail_reason: ''
+      name: test_if_intf_out_counters_are_discarding_on_
+      show_cmd: show interfaces counters discards
+      test_result: true
+    - actual_output: 0
+      description: Verify the interfaces of interest have no outDiscards
+      dut: kg-topology-CloudEOSEdge1
+      expected_output: 0
+      fail_reason: ''
+      name: test_if_intf_out_counters_are_discarding_on_
+      show_cmd: show interfaces counters discards
+      test_result: true
+    - actual_output: 0
+      description: Verify the interfaces of interest have no outDiscards
+      dut: kg-topology-CloudEOSEdge2
+      expected_output: 0
+      fail_reason: ''
+      name: test_if_intf_out_counters_are_discarding_on_
+      show_cmd: show interfaces counters discards
+      test_result: true
+    name: test_if_intf_out_counters_are_discarding_on_
+  - duts:
+    - actual_output: 0
       description: Verify the interfaces of interest does not have outut errors
       dut: kg-topology-CloudEosRR1
       expected_output: 0
@@ -341,10 +441,252 @@ test_suites:
       show_cmd: show interfaces counters errors
       test_result: true
     name: test_if_intf_counters_has_alignment_errors_on_
+  - duts:
+    - actual_output: 1500
+      comment: "TEST if interface |Ethernet1| MTU is correct on |kg-topology-CloudEosRR1|.\n\
+        GIVEN MTU of |10178|.\nWHEN interface MTU is |1500|.\nTHEN test case result\
+        \ is |False|.\nOUTPUT of |show interfaces| is:\n\nEthernet1 is up, line protocol\
+        \ is up (connected)\n  Hardware is Ethernet, address is 0246.bbe9.20d4 (bia\
+        \ 0246.bbe9.20d4)\n  Internet address is 11.201.12.101/24\n  Broadcast address\
+        \ is 255.255.255.255\n  Address determined by DHCP\n  IP MTU 1500 bytes (default)\n\
+        \  Full-duplex, Unconfigured, auto negotiation: off, uni-link: n/a\n  Up 36\
+        \ days, 15 hours, 58 minutes, 58 seconds\n  Loopback Mode : None\n  3 link\
+        \ status changes since last clear\n  Last clearing of \"show interface\" counters\
+        \ never\n  5 minutes input rate 28.2 kbps (- with framing overhead), 27 packets/sec\n\
+        \  5 minutes output rate 50.6 kbps (- with framing overhead), 30 packets/sec\n\
+        \     70991357 packets input, 8866267671 bytes\n     Received 0 broadcasts,\
+        \ 0 multicast\n     0 runts, 0 giants\n     0 input errors, 0 CRC, 0 alignment,\
+        \ 0 symbol, 0 input discards\n     0 PAUSE input\n     79207233 packets output,\
+        \ 15115021169 bytes\n     Sent 0 broadcasts, 0 multicast\n     0 output errors,\
+        \ 0 collisions\n     0 late collision, 0 deferred, 0 output discards\n   \
+        \  0 PAUSE output\nEthernet100 is up, line protocol is up (connected)\n  Hardware\
+        \ is Ethernet, address is 0246.bb59.d5ae (bia 0246.bb59.d5ae)\n  Internet\
+        \ address is 11.201.8.1/22\n  Broadcast address is 255.255.255.255\n  IP MTU\
+        \ 1400 bytes , BW 10000000 kbit\n  Full-duplex, 10Gb/s, auto negotiation:\
+        \ off, uni-link: n/a\n  Up 36 days, 15 hours, 58 minutes, 56 seconds\n  Loopback\
+        \ Mode : None\n  3 link status changes since last clear\n  Last clearing of\
+        \ \"show interface\" counters never\n  5 minutes input rate 0 bps (0.0% with\
+        \ framing overhead), 0 packets/sec\n  5 minutes output rate 0 bps (0.0% with\
+        \ framing overhead), 0 packets/sec\n     0 packets input, 0 bytes\n     Received\
+        \ 0 broadcasts, 0 multicast\n     0 runts, 0 giants\n     0 input errors,\
+        \ 0 CRC, 0 alignment, 0 symbol, 0 input discards\n     0 PAUSE input\n   \
+        \  0 packets output, 0 bytes\n     Sent 0 broadcasts, 0 multicast\n     0\
+        \ output errors, 0 collisions\n     0 late collision, 0 deferred, 0 output\
+        \ discards\n     0 PAUSE output\nLoopback0 is up, line protocol is up (connected)\n\
+        \  Hardware is Loopback\n  Internet address is 11.201.0.2/32\n  Broadcast\
+        \ address is 255.255.255.255\n  IP MTU 65535 bytes (default)\n  Up 36 days,\
+        \ 15 hours, 56 minutes, 17 seconds\nLoopback10 is up, line protocol is up\
+        \ (connected)\n  Hardware is Loopback\n  Internet address is 198.18.0.36/24\n\
+        \  Broadcast address is 255.255.255.255\n  IP MTU 65535 bytes (default)\n\
+        \  Up 36 days, 15 hours, 59 minutes, 21 seconds\n"
+      description: Verify the interfaces of interest MTU
+      dut: kg-topology-CloudEosRR1
+      expected_output: 10178
+      fail_reason: 'On interface |Ethernet1|: interface MTU is |1500|, correct MTU
+        is |10178|'
+      name: test_if_intf_mtu_is_correct_on_
+      show_cmd: show interfaces
+      test_result: false
+    - actual_output: 1500
+      comment: "TEST if interface |Ethernet1| MTU is correct on |kg-topology-CloudEosRR2|.\n\
+        GIVEN MTU of |10178|.\nWHEN interface MTU is |1500|.\nTHEN test case result\
+        \ is |False|.\nOUTPUT of |show interfaces| is:\n\nEthernet1 is up, line protocol\
+        \ is up (connected)\n  Hardware is Ethernet, address is 0654.9ba1.1756 (bia\
+        \ 0654.9ba1.1756)\n  Internet address is 11.201.13.101/24\n  Broadcast address\
+        \ is 255.255.255.255\n  Address determined by DHCP\n  IP MTU 1500 bytes (default)\n\
+        \  Full-duplex, Unconfigured, auto negotiation: off, uni-link: n/a\n  Up 36\
+        \ days, 15 hours, 59 minutes, 3 seconds\n  Loopback Mode : None\n  3 link\
+        \ status changes since last clear\n  Last clearing of \"show interface\" counters\
+        \ never\n  5 minutes input rate 29.1 kbps (- with framing overhead), 28 packets/sec\n\
+        \  5 minutes output rate 52.2 kbps (- with framing overhead), 31 packets/sec\n\
+        \     72053959 packets input, 8989490394 bytes\n     Received 0 broadcasts,\
+        \ 0 multicast\n     0 runts, 0 giants\n     0 input errors, 0 CRC, 0 alignment,\
+        \ 0 symbol, 0 input discards\n     0 PAUSE input\n     80748895 packets output,\
+        \ 15246095148 bytes\n     Sent 0 broadcasts, 0 multicast\n     0 output errors,\
+        \ 0 collisions\n     0 late collision, 0 deferred, 0 output discards\n   \
+        \  0 PAUSE output\nEthernet100 is up, line protocol is up (connected)\n  Hardware\
+        \ is Ethernet, address is 0654.9b7c.b00f (bia 0654.9b7c.b00f)\n  Internet\
+        \ address is 11.201.8.1/22\n  Broadcast address is 255.255.255.255\n  IP MTU\
+        \ 1400 bytes , BW 10000000 kbit\n  Full-duplex, 10Gb/s, auto negotiation:\
+        \ off, uni-link: n/a\n  Up 36 days, 15 hours, 59 minutes, 1 second\n  Loopback\
+        \ Mode : None\n  3 link status changes since last clear\n  Last clearing of\
+        \ \"show interface\" counters never\n  5 minutes input rate 0 bps (0.0% with\
+        \ framing overhead), 0 packets/sec\n  5 minutes output rate 0 bps (0.0% with\
+        \ framing overhead), 0 packets/sec\n     0 packets input, 0 bytes\n     Received\
+        \ 0 broadcasts, 0 multicast\n     0 runts, 0 giants\n     0 input errors,\
+        \ 0 CRC, 0 alignment, 0 symbol, 0 input discards\n     0 PAUSE input\n   \
+        \  0 packets output, 0 bytes\n     Sent 0 broadcasts, 0 multicast\n     0\
+        \ output errors, 0 collisions\n     0 late collision, 0 deferred, 0 output\
+        \ discards\n     0 PAUSE output\nLoopback0 is up, line protocol is up (connected)\n\
+        \  Hardware is Loopback\n  Internet address is 11.201.0.4/32\n  Broadcast\
+        \ address is 255.255.255.255\n  IP MTU 65535 bytes (default)\n  Up 36 days,\
+        \ 15 hours, 56 minutes, 30 seconds\nLoopback10 is up, line protocol is up\
+        \ (connected)\n  Hardware is Loopback\n  Internet address is 198.18.0.38/24\n\
+        \  Broadcast address is 255.255.255.255\n  IP MTU 65535 bytes (default)\n\
+        \  Up 36 days, 15 hours, 59 minutes, 24 seconds\n"
+      description: Verify the interfaces of interest MTU
+      dut: kg-topology-CloudEosRR2
+      expected_output: 10178
+      fail_reason: 'On interface |Ethernet1|: interface MTU is |1500|, correct MTU
+        is |10178|'
+      name: test_if_intf_mtu_is_correct_on_
+      show_cmd: show interfaces
+      test_result: false
+    - actual_output: 1500
+      comment: "TEST if interface |Ethernet1| MTU is correct on |kg-topology-CloudEOSEdge1|.\n\
+        GIVEN MTU of |10178|.\nWHEN interface MTU is |1500|.\nTHEN test case result\
+        \ is |False|.\nOUTPUT of |show interfaces| is:\n\nEthernet1 is up, line protocol\
+        \ is up (connected)\n  Hardware is Ethernet, address is 029e.d288.21f6 (bia\
+        \ 029e.d288.21f6)\n  Internet address is 11.201.14.101/25\n  Broadcast address\
+        \ is 255.255.255.255\n  Address determined by DHCP\n  IP MTU 1500 bytes (default)\n\
+        \  Full-duplex, Unconfigured, auto negotiation: off, uni-link: n/a\n  Up 36\
+        \ days, 15 hours, 59 minutes, 16 seconds\n  Loopback Mode : None\n  3 link\
+        \ status changes since last clear\n  Last clearing of \"show interface\" counters\
+        \ never\n  5 minutes input rate 36.4 kbps (- with framing overhead), 36 packets/sec\n\
+        \  5 minutes output rate 75.4 kbps (- with framing overhead), 41 packets/sec\n\
+        \     142372983 packets input, 16704049845 bytes\n     Received 0 broadcasts,\
+        \ 0 multicast\n     0 runts, 0 giants\n     0 input errors, 0 CRC, 0 alignment,\
+        \ 0 symbol, 0 input discards\n     0 PAUSE input\n     169440803 packets output,\
+        \ 36196207269 bytes\n     Sent 0 broadcasts, 0 multicast\n     0 output errors,\
+        \ 0 collisions\n     0 late collision, 0 deferred, 0 output discards\n   \
+        \  0 PAUSE output\nEthernet2 is up, line protocol is up (connected)\n  Hardware\
+        \ is Ethernet, address is 023d.7650.e316 (bia 023d.7650.e316)\n  Internet\
+        \ address is 11.201.14.201/25\n  Broadcast address is 255.255.255.255\n  IP\
+        \ MTU 9000 bytes\n  Full-duplex, Unconfigured, auto negotiation: off, uni-link:\
+        \ n/a\n  Up 36 days, 15 hours, 59 minutes, 16 seconds\n  Loopback Mode : None\n\
+        \  3 link status changes since last clear\n  Last clearing of \"show interface\"\
+        \ counters never\n  5 minutes input rate 40.5 kbps (- with framing overhead),\
+        \ 35 packets/sec\n  5 minutes output rate 27.4 kbps (- with framing overhead),\
+        \ 32 packets/sec\n     160820429 packets input, 29266524683 bytes\n     Received\
+        \ 0 broadcasts, 0 multicast\n     0 runts, 0 giants\n     0 input errors,\
+        \ 0 CRC, 0 alignment, 0 symbol, 0 input discards\n     0 PAUSE input\n   \
+        \  142184931 packets output, 16792422526 bytes\n     Sent 0 broadcasts, 0\
+        \ multicast\n     0 output errors, 0 collisions\n     0 late collision, 0\
+        \ deferred, 0 output discards\n     0 PAUSE output\nEthernet2.102 is up, line\
+        \ protocol is up (connected)\n  Hardware is Subinterface, address is 023d.7650.e316\n\
+        \  Internet address is 11.201.14.201/25\n  Broadcast address is 255.255.255.255\n\
+        \  IP MTU 9000 bytes (default)\n  Up 36 days, 15 hours, 52 minutes, 55 seconds\n\
+        Ethernet100 is up, line protocol is up (connected)\n  Hardware is Ethernet,\
+        \ address is 029e.d20a.bbfc (bia 029e.d20a.bbfc)\n  Internet address is 11.201.8.1/22\n\
+        \  Broadcast address is 255.255.255.255\n  IP MTU 1400 bytes , BW 10000000\
+        \ kbit\n  Full-duplex, 10Gb/s, auto negotiation: off, uni-link: n/a\n  Up\
+        \ 36 days, 15 hours, 59 minutes, 14 seconds\n  Loopback Mode : None\n  3 link\
+        \ status changes since last clear\n  Last clearing of \"show interface\" counters\
+        \ never\n  5 minutes input rate 0 bps (0.0% with framing overhead), 0 packets/sec\n\
+        \  5 minutes output rate 0 bps (0.0% with framing overhead), 0 packets/sec\n\
+        \     0 packets input, 0 bytes\n     Received 0 broadcasts, 0 multicast\n\
+        \     0 runts, 0 giants\n     0 input errors, 0 CRC, 0 alignment, 0 symbol,\
+        \ 0 input discards\n     0 PAUSE input\n     0 packets output, 0 bytes\n \
+        \    Sent 0 broadcasts, 0 multicast\n     0 output errors, 0 collisions\n\
+        \     0 late collision, 0 deferred, 0 output discards\n     0 PAUSE output\n\
+        Loopback0 is up, line protocol is up (connected)\n  Hardware is Loopback\n\
+        \  Internet address is 11.201.0.1/32\n  Broadcast address is 255.255.255.255\n\
+        \  IP MTU 65535 bytes (default)\n  Up 36 days, 15 hours, 56 minutes, 40 seconds\n\
+        Loopback10 is up, line protocol is up (connected)\n  Hardware is Loopback\n\
+        \  Internet address is 198.18.0.35/24\n  Broadcast address is 255.255.255.255\n\
+        \  IP MTU 65535 bytes (default)\n  Up 36 days, 15 hours, 59 minutes, 31 seconds\n\
+        Vlan4093 is down, line protocol is lowerlayerdown (notconnect)\n  Hardware\
+        \ is Vlan, address is 0000.0000.0000 (bia 0000.0000.0000)\n  IP MTU 9164 bytes\
+        \ (default)\n  Down 36 days, 15 hours, 52 minutes, 55 seconds\nVlan4094 is\
+        \ down, line protocol is lowerlayerdown (notconnect)\n  Hardware is Vlan,\
+        \ address is 0000.0000.0000 (bia 0000.0000.0000)\n  IP MTU 9164 bytes (default)\n\
+        \  Down 36 days, 15 hours, 56 minutes, 38 seconds\nVxlan1 is up, line protocol\
+        \ is up (connected)\n  Hardware is Vxlan\n  Source interface is Loopback0\
+        \ and is active with 11.201.0.1\n  Replication/Flood Mode is headend with\
+        \ Flood List Source: CLI\n  Remote MAC learning is disabled\n  VNI mapping\
+        \ to VLANs\n  Static VLAN to VNI mapping is \n  Dynamic VLAN to VNI mapping\
+        \ for 'evpn' is\n    [4093, 102]       [4094, 101]      \n  Note: All Dynamic\
+        \ VLANs used by VCS are internal VLANs.\n        Use 'show vxlan vni' for\
+        \ details.\n  Static VRF to VNI mapping is \n   [default, 101]\n   [prod,\
+        \ 102]\n  MLAG Shared Router MAC is 0000.0000.0000\n"
+      description: Verify the interfaces of interest MTU
+      dut: kg-topology-CloudEOSEdge1
+      expected_output: 10178
+      fail_reason: 'On interface |Ethernet1|: interface MTU is |1500|, correct MTU
+        is |10178|'
+      name: test_if_intf_mtu_is_correct_on_
+      show_cmd: show interfaces
+      test_result: false
+    - actual_output: 1500
+      comment: "TEST if interface |Ethernet1| MTU is correct on |kg-topology-CloudEOSEdge2|.\n\
+        GIVEN MTU of |10178|.\nWHEN interface MTU is |1500|.\nTHEN test case result\
+        \ is |False|.\nOUTPUT of |show interfaces| is:\n\nEthernet1 is up, line protocol\
+        \ is up (connected)\n  Hardware is Ethernet, address is 0635.0247.e530 (bia\
+        \ 0635.0247.e530)\n  Internet address is 11.201.15.101/25\n  Broadcast address\
+        \ is 255.255.255.255\n  Address determined by DHCP\n  IP MTU 1500 bytes (default)\n\
+        \  Full-duplex, Unconfigured, auto negotiation: off, uni-link: n/a\n  Up 36\
+        \ days, 15 hours, 58 minutes, 53 seconds\n  Loopback Mode : None\n  3 link\
+        \ status changes since last clear\n  Last clearing of \"show interface\" counters\
+        \ never\n  5 minutes input rate 53.3 kbps (- with framing overhead), 56 packets/sec\n\
+        \  5 minutes output rate 120 kbps (- with framing overhead), 66 packets/sec\n\
+        \     118849266 packets input, 14091322662 bytes\n     Received 0 broadcasts,\
+        \ 0 multicast\n     0 runts, 0 giants\n     0 input errors, 0 CRC, 0 alignment,\
+        \ 0 symbol, 0 input discards\n     0 PAUSE input\n     139886724 packets output,\
+        \ 29642849346 bytes\n     Sent 0 broadcasts, 0 multicast\n     0 output errors,\
+        \ 0 collisions\n     0 late collision, 0 deferred, 0 output discards\n   \
+        \  0 PAUSE output\nEthernet2 is up, line protocol is up (connected)\n  Hardware\
+        \ is Ethernet, address is 0667.8522.a780 (bia 0667.8522.a780)\n  Internet\
+        \ address is 11.201.15.201/25\n  Broadcast address is 255.255.255.255\n  IP\
+        \ MTU 9000 bytes\n  Full-duplex, Unconfigured, auto negotiation: off, uni-link:\
+        \ n/a\n  Up 36 days, 15 hours, 58 minutes, 53 seconds\n  Loopback Mode : None\n\
+        \  3 link status changes since last clear\n  Last clearing of \"show interface\"\
+        \ counters never\n  5 minutes input rate 88.4 kbps (- with framing overhead),\
+        \ 58 packets/sec\n  5 minutes output rate 49.3 kbps (- with framing overhead),\
+        \ 51 packets/sec\n     129532288 packets input, 21152547469 bytes\n     Received\
+        \ 0 broadcasts, 0 multicast\n     0 runts, 0 giants\n     0 input errors,\
+        \ 0 CRC, 0 alignment, 0 symbol, 0 input discards\n     0 PAUSE input\n   \
+        \  117381498 packets output, 13175205931 bytes\n     Sent 0 broadcasts, 0\
+        \ multicast\n     0 output errors, 0 collisions\n     0 late collision, 0\
+        \ deferred, 0 output discards\n     0 PAUSE output\nEthernet2.102 is up, line\
+        \ protocol is up (connected)\n  Hardware is Subinterface, address is 0667.8522.a780\n\
+        \  Internet address is 11.201.15.201/25\n  Broadcast address is 255.255.255.255\n\
+        \  IP MTU 9000 bytes (default)\n  Up 36 days, 15 hours, 52 minutes, 51 seconds\n\
+        Ethernet100 is up, line protocol is up (connected)\n  Hardware is Ethernet,\
+        \ address is 0635.02ca.8297 (bia 0635.02ca.8297)\n  Internet address is 11.201.8.1/22\n\
+        \  Broadcast address is 255.255.255.255\n  IP MTU 1400 bytes , BW 10000000\
+        \ kbit\n  Full-duplex, 10Gb/s, auto negotiation: off, uni-link: n/a\n  Up\
+        \ 36 days, 15 hours, 58 minutes, 51 seconds\n  Loopback Mode : None\n  3 link\
+        \ status changes since last clear\n  Last clearing of \"show interface\" counters\
+        \ never\n  5 minutes input rate 0 bps (0.0% with framing overhead), 0 packets/sec\n\
+        \  5 minutes output rate 0 bps (0.0% with framing overhead), 0 packets/sec\n\
+        \     0 packets input, 0 bytes\n     Received 0 broadcasts, 0 multicast\n\
+        \     0 runts, 0 giants\n     0 input errors, 0 CRC, 0 alignment, 0 symbol,\
+        \ 0 input discards\n     0 PAUSE input\n     0 packets output, 0 bytes\n \
+        \    Sent 0 broadcasts, 0 multicast\n     0 output errors, 0 collisions\n\
+        \     0 late collision, 0 deferred, 0 output discards\n     0 PAUSE output\n\
+        Loopback0 is up, line protocol is up (connected)\n  Hardware is Loopback\n\
+        \  Internet address is 11.201.0.3/32\n  Broadcast address is 255.255.255.255\n\
+        \  IP MTU 65535 bytes (default)\n  Up 36 days, 15 hours, 56 minutes, 11 seconds\n\
+        Loopback10 is up, line protocol is up (connected)\n  Hardware is Loopback\n\
+        \  Internet address is 198.18.0.37/24\n  Broadcast address is 255.255.255.255\n\
+        \  IP MTU 65535 bytes (default)\n  Up 36 days, 15 hours, 59 minutes, 15 seconds\n\
+        Vlan4093 is down, line protocol is lowerlayerdown (notconnect)\n  Hardware\
+        \ is Vlan, address is 0000.0000.0000 (bia 0000.0000.0000)\n  IP MTU 9164 bytes\
+        \ (default)\n  Down 36 days, 15 hours, 52 minutes, 52 seconds\nVlan4094 is\
+        \ down, line protocol is lowerlayerdown (notconnect)\n  Hardware is Vlan,\
+        \ address is 0000.0000.0000 (bia 0000.0000.0000)\n  IP MTU 9164 bytes (default)\n\
+        \  Down 36 days, 15 hours, 56 minutes, 6 seconds\nVxlan1 is up, line protocol\
+        \ is up (connected)\n  Hardware is Vxlan\n  Source interface is Loopback0\
+        \ and is active with 11.201.0.3\n  Replication/Flood Mode is headend with\
+        \ Flood List Source: CLI\n  Remote MAC learning is disabled\n  VNI mapping\
+        \ to VLANs\n  Static VLAN to VNI mapping is \n  Dynamic VLAN to VNI mapping\
+        \ for 'evpn' is\n    [4093, 102]       [4094, 101]      \n  Note: All Dynamic\
+        \ VLANs used by VCS are internal VLANs.\n        Use 'show vxlan vni' for\
+        \ details.\n  Static VRF to VNI mapping is \n   [default, 101]\n   [prod,\
+        \ 102]\n  MLAG Shared Router MAC is 0000.0000.0000\n"
+      description: Verify the interfaces of interest MTU
+      dut: kg-topology-CloudEOSEdge2
+      expected_output: 10178
+      fail_reason: 'On interface |Ethernet1|: interface MTU is |1500|, correct MTU
+        is |10178|'
+      name: test_if_intf_mtu_is_correct_on_
+      show_cmd: show interfaces
+      test_result: false
+    name: test_if_intf_mtu_is_correct_on_
 - name: test_memory.py
   test_cases:
   - duts:
-    - actual_output: 39.37654482597967
+    - actual_output: 38.14125095086036
       comment: null
       description: Verify memory is not exceeding high utlization
       dut: kg-topology-CloudEosRR1
@@ -354,7 +696,7 @@ test_suites:
       result: true
       show_cmd: show version
       test_result: true
-    - actual_output: 39.610903859652
+    - actual_output: 38.41961155869696
       comment: null
       description: Verify memory is not exceeding high utlization
       dut: kg-topology-CloudEosRR2
@@ -364,7 +706,7 @@ test_suites:
       result: true
       show_cmd: show version
       test_result: true
-    - actual_output: 35.26370502853658
+    - actual_output: 36.36700356681693
       comment: null
       description: Verify memory is not exceeding high utlization
       dut: kg-topology-CloudEOSEdge1
@@ -374,7 +716,7 @@ test_suites:
       result: true
       show_cmd: show version
       test_result: true
-    - actual_output: 36.24282860600264
+    - actual_output: 37.3127913137231
       comment: null
       description: Verify memory is not exceeding high utlization
       dut: kg-topology-CloudEOSEdge2

@@ -45,6 +45,22 @@ test_suites:
     expected_output: 0
     name: test_if_intf_counters_has_symbol_errors_on_
     show_cmd: show interfaces counters errors
+  - description: Verify the interfaces of interest have no outDiscards
+    expected_output: 0
+    name: test_if_intf_out_counters_are_discarding_on_
+    show_cmd: show interfaces counters discards
+  - description: Verify the interfaces of interest have no inDiscards
+    expected_output: 0
+    name: test_if_intf_in_counters_are_discarding_on_
+    show_cmd: show interfaces counters discards
+  - description: Verify the interfaces of interest have no inDiscards
+    expected_output: 0
+    name: test_if_intf_in_counters_are_discarding_on_
+    show_cmd: show interfaces counters discards
+  - description: Verify the interfaces of interest MTU
+    expected_output: 10178
+    name: test_if_intf_mtu_is_correct_on_
+    show_cmd: show interfaces
 - name: test_host.py
   testcases:
   - comment: null

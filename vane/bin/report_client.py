@@ -222,7 +222,7 @@ class ReportClient:
         table.style = 'Table Grid'
 
         hdr_cells = table.rows[0].cells
-        hdr_cells[0].text = 'Suite'
+        hdr_cells[0].text = 'Test Suite'
         hdr_cells[1].text = 'Total Tests'
         hdr_cells[2].text = 'Total Passed'
         hdr_cells[3].text = 'Total Failed'
@@ -330,12 +330,12 @@ class ReportClient:
         test_num = 1
 
         hdr_cells = table.rows[0].cells
-        hdr_cells[0].text = 'Id'
+        hdr_cells[0].text = 'Test Id'
         hdr_cells[1].text = 'Test Suite'
         hdr_cells[2].text = 'Test Case'
         hdr_cells[3].text = 'DUT'
         hdr_cells[4].text = 'Result'
-        hdr_cells[5].text = 'Reason for Failure'
+        hdr_cells[5].text = 'Failure Reason'
 
         for testcase_result in testcase_results:
             row_cells = table.add_row().cells
@@ -365,7 +365,7 @@ class ReportClient:
                 dut_section = 1
 
                 for dut in test_case['duts']:
-                    self._write_dut_minor_section(dut,
+                    self._write_detail_dut_section(dut,
                                                   minor_section,
                                                   dut_section)
                     dut_section += 1
@@ -397,10 +397,8 @@ class ReportClient:
 
         self._document.add_heading(f'{self._major_section}.{minor_section} '
                                    f'Test Case: {tc_name}', 2)
-        description = test_case['duts'][0]['description']
-        p = self._document.add_paragraph(f'Description: {description}')
 
-    def _write_dut_minor_section(self, dut, minor_section, dut_section):
+    def _write_detail_dut_section(self, dut, minor_section, dut_section):
         """[summary]
         Args:
             dut ([type]): [description]
@@ -414,6 +412,40 @@ class ReportClient:
         logging.info(f'DUT name is {dut_name}')
         self._document.add_heading(f'{self._major_section}.{minor_section}.'
                                    f'{dut_section} DUT: {dut_name}', 3)
+
+        table = self._document.add_table(rows=1, cols=2)
+        table.style = 'Table Grid'
+
+        hdr_cells = table.rows[0].cells
+        hdr_cells[0].text = 'Test Parameter'
+        hdr_cells[1].text = 'Description'
+
+        self._add_dut_table_row('name', dut, table)
+        self._add_dut_table_row('description', dut, table)
+        self._add_dut_table_row('dut', dut, table)
+        self._add_dut_table_row('show_cmd', dut, table)
+        self._add_dut_table_row('expected_output', dut, table)
+        self._add_dut_table_row('actual_output', dut, table)
+        self._add_dut_table_row('test_result', dut, table)
+        self._add_dut_table_row('fail_reason', dut, table)
+        self._add_dut_table_row('comment', dut, table)
+
+    def _add_dut_table_row(self, test_field, dut, table):
+        """ Create a row in the DUT result table
+
+        Args:
+            test_field (str): test parameter to add to table
+            dut (dict): dictionary of test parameters
+            table (obj): word doc table obj
+        """
+
+        if test_field in dut:
+            test_value = dut[test_field]
+            test_field = self._format_test_field(test_field)
+
+            row_cells = table.add_row().cells
+            row_cells[0].text = test_field
+            row_cells[1].text = str(test_value)
 
     def _compile_suite_results(self):
         """ Compile test suite results and return them
@@ -478,7 +510,7 @@ class ReportClient:
                     if dut['test_result']:
                         test_result = "PASS"
                     else:
-                        test_result = "False"
+                        test_result = "FAIL"
 
                     testcase_result['test_suite'] = ts_name
                     testcase_result['test_case'] = tc_name
@@ -510,7 +542,7 @@ class ReportClient:
 
         logging.info(f'Test suite name is {ts_name}')
         ts_name = ts_name.split('.')[0]
-        ts_name = ts_name.split('_')[1].upper()
+        ts_name = ts_name.split('_')[1].capitalize()
         logging.info(f'Formatted test suite name is {ts_name}')
 
         return ts_name
@@ -533,3 +565,24 @@ class ReportClient:
         logging.info(f'Formattted test case name is {tc_name}')
 
         return tc_name
+
+    def _format_test_field(self, test_field):
+        """ Input a test field  name and return a formatted name for
+            test field
+
+        Args:
+            test_field (str): Name of test field
+
+        Return:
+            test_field (str): Formatted test field
+        """
+
+        logging.info(f'Test case name is {test_field}')
+        test_field = str(test_field)
+        test_field = ' '.join(test_field.split('_'))
+        test_field = test_field.replace('cmd', 'command')
+        test_field = test_field.replace('dut', 'device under Test')
+        test_field = test_field.capitalize()
+        logging.info(f'Formattted test field is {test_field}')
+
+        return test_field
