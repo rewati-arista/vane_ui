@@ -1,0 +1,7 @@
+name: test_lldp.py
+testcases:
+  - name: test_if_lldp_rx_is_enabled_on_
+    description: Verify LLDP receive is enabled on interesting interfaces
+    # LLDP RX state
+    expected_output: true
+    show_cmd: show lldp

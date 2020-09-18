@@ -59,52 +59,6 @@ else:
     DUTS = common_nrfu_infra.return_dut_info_threaded(EOS_SHOW_CMDS, TEST_SUITE)
 
 
-@pytest.mark.xpass
-def test_assert_true():
-    """ Prior to running any tests this test Validates that PyTest is working
-        correct by verifying PyTest can assert True.
-    """
-
-    assert True
-
-
-@pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-def test_show_lldp(dut):
-    """ Verify show lldp output is correct
-
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
-    """
-
-    test_show_lldp_rx_enabled(dut)
-    test_show_lldp_tx_enabled(dut)
-
-
-@pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-def test_show_lldp_rx_enabled(dut):
-    """ Verify show lldp output is correct
-
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
-    """
-
-    show_cmd = "show lldp"
-    interfaces_list = dut["output"]["interface_list"]
-
-    print(f"\nOn router |{dut['name']}|:")
-
-    for interface in interfaces_list:
-        interface_name = interface['interface_name'].replace(" ", "")
-        sh_lldp = \
-            dut["output"][show_cmd]['json']['lldpInterfaces\
-'][interface_name]['rxEnabled']
-
-        print(f"  - On interface |{interface['interface_name']}|: interface LLDP \
-rxEnabled is in state |{sh_lldp}|, correct state is |True|")
-
-        assert sh_lldp is True
-
-
 @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
 def test_show_lldp_tx_enabled(dut):
     """ Verify show lldp output is correct
