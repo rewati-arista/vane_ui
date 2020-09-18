@@ -55,3 +55,23 @@ testcases:
     # Number of tolerable symbolErrors errors
     expected_output: 0
     show_cmd: show interfaces counters errors
+  - name: test_if_intf_out_counters_are_discarding_on_
+    description: Verify the interfaces of interest have no outDiscards
+    # Number of tolerable outDiscards errors
+    expected_output: 0
+    show_cmd: show interfaces counters discards
+  - name: test_if_intf_in_counters_are_discarding_on_
+    description: Verify the interfaces of interest have no inDiscards
+    # Number of tolerable inDiscards errors
+    expected_output: 0
+    show_cmd: show interfaces counters discards
+  - name: test_if_intf_in_counters_are_discarding_on_
+    description: Verify the interfaces of interest have no inDiscards
+    # Number of tolerable inDiscards errors
+    expected_output: 0
+    show_cmd: show interfaces counters discards
+  - name: test_if_intf_mtu_is_correct_on_
+    description: Verify the interfaces of interest MTU
+    # Interface MTU size
+    expected_output: 10178
+    show_cmd: show interfaces

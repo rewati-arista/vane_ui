@@ -31,7 +31,6 @@
 
 """ Tests to validate base feature status."""
 
-import inspect
 import logging
 import pytest
 import tests_tools
@@ -58,10 +57,8 @@ class InterfaceStatusTests():
                 tests_definitions (dict): Test parameters
         """
 
-        test_case = inspect.currentframe().f_code.co_name
         test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+                                                     TEST_SUITE)
 
         expected_output = test_parameters["expected_output"]
         dut_name = dut['name']
@@ -109,10 +106,8 @@ class InterfaceStatusTests():
                 tests_definitions (dict): Test parameters
         """
 
-        test_case = inspect.currentframe().f_code.co_name
         test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+                                                     TEST_SUITE)
 
         expected_output = test_parameters["expected_output"]
         dut_name = dut['name']
@@ -167,10 +162,8 @@ class InterfacePhyTests():
               dut (dict): Encapsulates dut details including name, connection
         """
 
-        test_case = inspect.currentframe().f_code.co_name
         test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+                                                     TEST_SUITE)
 
         expected_output = test_parameters["expected_output"]
         dut_name = dut['name']
@@ -242,10 +235,8 @@ class InterfaceCountersTests():
                 dut (dict): Encapsulates dut details including name, connection
         """
 
-        test_case = inspect.currentframe().f_code.co_name
         test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+                                                     TEST_SUITE)
 
         expected_output = test_parameters["expected_output"]
         dut_name = dut['name']
@@ -293,10 +284,8 @@ class InterfaceCountersTests():
                 dut (dict): Encapsulates dut details including name, connection
         """
 
-        test_case = inspect.currentframe().f_code.co_name
         test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+                                                     TEST_SUITE)
 
         expected_output = test_parameters["expected_output"]
         dut_name = dut['name']
@@ -344,10 +333,8 @@ class InterfaceCountersTests():
                 dut (dict): Encapsulates dut details including name, connection
         """
 
-        test_case = inspect.currentframe().f_code.co_name
         test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+                                                     TEST_SUITE)
 
         expected_output = test_parameters["expected_output"]
         dut_name = dut['name']
@@ -396,10 +383,8 @@ class InterfaceCountersTests():
                 dut (dict): Encapsulates dut details including name, connection
         """
 
-        test_case = inspect.currentframe().f_code.co_name
         test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+                                                     TEST_SUITE)
 
         expected_output = test_parameters["expected_output"]
         dut_name = dut['name']
@@ -448,10 +433,8 @@ class InterfaceCountersTests():
                 dut (dict): Encapsulates dut details including name, connection
         """
 
-        test_case = inspect.currentframe().f_code.co_name
         test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+                                                     TEST_SUITE)
 
         expected_output = test_parameters["expected_output"]
         dut_name = dut['name']
@@ -500,10 +483,8 @@ class InterfaceCountersTests():
                 dut (dict): Encapsulates dut details including name, connection
         """
 
-        test_case = inspect.currentframe().f_code.co_name
         test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+                                                     TEST_SUITE)
 
         expected_output = test_parameters["expected_output"]
         dut_name = dut['name']
@@ -552,10 +533,8 @@ class InterfaceCountersTests():
                 dut (dict): Encapsulates dut details including name, connection
         """
 
-        test_case = inspect.currentframe().f_code.co_name
         test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+                                                     TEST_SUITE)
 
         expected_output = test_parameters["expected_output"]
         dut_name = dut['name']
@@ -581,8 +560,8 @@ class InterfaceCountersTests():
 
             output_msg = (f"On interface |{interface['interface_name']}|: "
                           f"interface counter errors has |{actual_output}| "
-                          f"symbolErrors, correct state is |{expected_output}|")
-
+                          "symbolErrors, correct state is "
+                          f"|{expected_output}|")
             print(f"  - {output_msg}")
 
             test_result = actual_output <= expected_output
@@ -601,3 +580,182 @@ class InterfaceCountersTests():
                                       fail_reason)
 
             assert actual_output <= expected_output
+
+
+@pytest.mark.nrfu
+@pytest.mark.interface_baseline_health
+@pytest.mark.interface
+class InterfaceDiscardTests():
+    """ Interface Discard Test Suite
+    """
+
+    def test_if_intf_out_counters_are_discarding_on_(self,
+                                                     dut,
+                                                     tests_definitions):
+        """  Verify the interfaces of interest have no outDiscards
+
+            Args:
+                dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_parameters = tests_tools.get_parameters(tests_definitions,
+                                                     TEST_SUITE)
+
+        expected_output = test_parameters["expected_output"]
+        dut_name = dut['name']
+        interfaces_list = dut["output"]["interface_list"]
+
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+
+        print(f"\nOn router |{dut_name}|:")
+
+        for interface in interfaces_list:
+            interface_name = interface['interface_name'].replace(" ", "")
+            int_ptr = dut["output"][show_cmd]['json']['interfaces']
+            actual_output = int_ptr[interface_name]['outDiscards']
+
+            logging.info(f'TEST if interface |{interface_name}| counters '
+                         f' has outbound discards on |{dut_name}|')
+            logging.info('GIVEN interface outbound discards of '
+                         f'|{expected_output}|')
+            logging.info('WHEN interface outbound discards are '
+                         f'|{actual_output}|')
+
+            output_msg = (f"  - On interface |{interface_name}|: interface "
+                          f"counter discards has |{actual_output}| "
+                          f"outDiscards, correct state is |{expected_output}|")
+            print(f"  - {output_msg}")
+
+            test_result = actual_output <= expected_output
+            logging.info('THEN test case result is |{test_result}|')
+            logging.info(f'OUTPUT of |{show_cmd}| is:\n\n{show_cmd_txt}')
+
+            fail_reason = ''
+            if not test_result:
+                fail_reason = output_msg
+
+            tests_tools.write_results(test_parameters,
+                                      dut_name,
+                                      TEST_SUITE,
+                                      actual_output,
+                                      test_result,
+                                      fail_reason)
+
+            assert actual_output <= expected_output
+
+    def test_if_intf_in_counters_are_discarding_on_(self,
+                                                    dut,
+                                                    tests_definitions):
+        """  Verify the interfaces of interest have no inDiscards
+
+            Args:
+                dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_parameters = tests_tools.get_parameters(tests_definitions,
+                                                     TEST_SUITE)
+
+        expected_output = test_parameters["expected_output"]
+        dut_name = dut['name']
+        interfaces_list = dut["output"]["interface_list"]
+
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+
+        print(f"\nOn router |{dut_name}|:")
+
+        for interface in interfaces_list:
+            interface_name = interface['interface_name'].replace(" ", "")
+            int_ptr = dut["output"][show_cmd]['json']['interfaces']
+            actual_output = int_ptr[interface_name]['inDiscards']
+
+            output_msg = (f"On interface |{interface_name}|: interface "
+                          f"counter discards has |{actual_output}| "
+                          f"inDiscards, correct state is |{expected_output}|")
+
+            test_result = actual_output <= expected_output
+            comment = (f'TEST if interface |{interface_name}| counters has '
+                       f'outbound discards on |{dut_name}|.\nGIVEN interface '
+                       f'outbound discards of |{expected_output}|.\nWHEN '
+                       f'interface outbound discards are |{actual_output}|.\n'
+                       f'THEN test case result is |{test_result}|.\nOUTPUT of '
+                       f'|{show_cmd}| is:\n\n{show_cmd_txt}')
+            test_parameters['comment'] = comment
+
+            print(f"  - {output_msg}\n{comment}")
+
+            test_parameters["fail_reason"] = ""
+            if not test_result:
+                test_parameters["fail_reason"] = output_msg
+
+            tests_tools.write_results(test_parameters,
+                                      dut_name,
+                                      TEST_SUITE,
+                                      actual_output,
+                                      test_result,
+                                      test_parameters["fail_reason"])
+
+            assert actual_output <= expected_output
+
+
+@pytest.mark.nrfu
+@pytest.mark.interface_baseline_health
+@pytest.mark.interface
+class InterfaceMtuTests():
+    """ Interface MTU Test Suite
+    """
+
+    def test_if_intf_mtu_is_correct_on_(self, dut, tests_definitions):
+        """  Verify the interfaces of interest have no inDiscards
+
+            Args:
+                dut (dict): Encapsulates dut details including name, connection
+        """
+
+        test_parameters = tests_tools.get_parameters(tests_definitions,
+                                                     TEST_SUITE)
+
+        expected_output = test_parameters["expected_output"]
+        dut_name = dut['name']
+        interfaces_list = dut["output"]["interface_list"]
+
+        show_cmd = test_parameters["show_cmd"]
+        tests_tools.verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+
+        print(f"\nOn router |{dut_name}|:")
+
+        for interface in interfaces_list:
+            interface_name = interface['interface_name'].replace(" ", "")
+            int_ptr = dut["output"][show_cmd]['json']['interfaces']
+            actual_output = int_ptr[interface_name]['mtu']
+
+            output_msg = (f"On interface |{interface_name}|: interface "
+                          f"MTU is |{actual_output}|, correct MTU is "
+                          f"|{expected_output}|")
+
+            test_result = actual_output == expected_output
+            comment = (f'TEST if interface |{interface_name}| MTU is correct '
+                       f'on |{dut_name}|.\nGIVEN MTU of |{expected_output}|.\n'
+                       f'WHEN interface MTU is |{actual_output}|.\nTHEN test '
+                       f'case result is |{test_result}|.\nOUTPUT of '
+                       f'|{show_cmd}| is:\n\n{show_cmd_txt}')
+            test_parameters['comment'] = comment
+
+            print(f"  - {output_msg}\n{comment}")
+
+            test_parameters["fail_reason"] = ""
+            if not test_result:
+                test_parameters["fail_reason"] = output_msg
+
+            tests_tools.write_results(test_parameters,
+                                      dut_name,
+                                      TEST_SUITE,
+                                      actual_output,
+                                      test_result,
+                                      test_parameters["fail_reason"])
+
+            assert actual_output == expected_output

@@ -37,9 +37,9 @@ import fcntl
 import sys
 import logging
 import os
+import inspect
 import pyeapi
 import yaml
-from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 
 logging.basicConfig(level=logging.INFO, filename='vane.log', filemode='w',
@@ -153,9 +153,9 @@ def init_duts(show_cmds, test_parameters):
     """
 
 
-    logging.info('Finding DUTs and then execute inputted show commands on '
-                 'each dut.  Return structured data of DUTs output data, '
-                 'hostname, and connection.')
+    logging.info('Finding DUTs and then execute inputted show commands '
+                 'on each dut.  Return structured data of DUTs output '
+                 'data, hostname, and connection.')
     duts = login_duts(test_parameters)
     workers = len(duts)
     logging.info(f'Duts login info: {duts} and create {workers} workers')
@@ -214,11 +214,16 @@ def dut_worker(dut, show_cmds, test_parameters):
     for show_cmd in show_cmds:
         logging.info(f'In for looop and iterating on {show_cmd}')
         function_def = f'test_{("_").join(show_cmd.split())}'
-        logging.info(f'Executing show command: {show_cmd} for test {function_def}')
+        logging.info(f'Executing show command: {show_cmd} for test '
+                     f'{function_def}')
 
-        dut["output"]["interface_list"] = return_interfaces(name, test_parameters)
+        dut["output"]["interface_list"] = return_interfaces(name,
+                                                            test_parameters)
 
-        json_output, text_output = return_show_cmd(show_cmd, dut, function_def, test_parameters)
+        json_output, text_output = return_show_cmd(show_cmd,
+                                                   dut,
+                                                   function_def,
+                                                   test_parameters)
         logging.info(f'Returned JSON output {json_output}')
         logging.info(f'Returned text output {text_output}')
 
@@ -229,6 +234,7 @@ def dut_worker(dut, show_cmds, test_parameters):
         dut["output"][show_cmd]["text"] = text_output[0]["output"]
 
     logging.info(f'{name} updated with show output')
+
 
 def return_show_cmd(show_cmd, dut, test_name, test_parameters):
     """ Return model data and text output from show commands and log text output.
@@ -255,7 +261,8 @@ def return_show_cmd(show_cmd, dut, test_name, test_parameters):
     logging.info(f'Raw json output of {show_cmd} on dut {name}: {show_output}')
 
     show_output_text = conn.run_commands(show_cmd, encoding='text')
-    logging.info(f'Raw text output of {show_cmd} on dut {name}: {show_output_text}')
+    logging.info(f'Raw text output of {show_cmd} on dut {name}: '
+                 f'{show_output_text}')
     raw_text = show_output_text[0]['output']
 
     export_logs(test_name, name, raw_text, test_parameters)
@@ -289,7 +296,8 @@ def return_interfaces(hostname, test_parameters):
 
             for neighbor in neighbors:
                 interface = {}
-                logging.info(f'Adding interface parameters: {neighbor} neighbor for: {dut_name}')
+                logging.info(f'Adding interface parameters: {neighbor} '
+                             f'neighbor for: {dut_name}')
 
                 interface['hostname'] = dut_name
                 interface['interface_name'] = neighbor['port']
@@ -313,7 +321,8 @@ def export_logs(test_name, hostname, output, test_parameters):
     show_log = test_parameters["parameters"]["show_log"]
 
     try:
-        logging.info(f'Opening file {show_log} and append show output: {output}')
+        logging.info(f'Opening file {show_log} and append show output: '
+                     f'{output}')
         with open(show_log, 'a') as log_file:
             log_file.write(f"\ntest_suite::{test_name}[{hostname}]:\n{output}")
     except BaseException as error:
@@ -323,12 +332,16 @@ def export_logs(test_name, hostname, output, test_parameters):
         sys.exit(1)
 
 
-def get_parameters(tests_parameters, test_suite, test_case):
+def get_parameters(tests_parameters, test_suite, test_case=""):
     """ Return test parameters for a test case
 
         Args:
             tests_parameter
     """
+
+    if not test_case:
+        test_case = inspect.stack()[1][3]
+        logging.info(f'Setting testcase name to {test_case}')
 
     logging.info('Identify test case and return parameters')
     test_suite = test_suite.split('/')[-1]
@@ -354,14 +367,17 @@ def verify_show_cmd(show_cmd, dut):
     """
 
     dut_name = dut["name"]
-    logging.info(f'Verify if show command |{show_cmd}| was successfully executed '
-                 f'on {dut_name} dut')
+    logging.info(f'Verify if show command |{show_cmd}| was successfully '
+                 f'executed on {dut_name} dut')
 
     if show_cmd in dut["output"]:
-        logging.info(f'Verified output for show command |{show_cmd}| on {dut_name}')
+        logging.info(f'Verified output for show command |{show_cmd}| on '
+                     f'{dut_name}')
     else:
-        logging.critical(f'Show command |{show_cmd}| not executed on {dut_name}')
+        logging.critical(f'Show command |{show_cmd}| not executed on '
+                         f'{dut_name}')
         assert False
+
 
 def verify_tacacs(dut):
     """ Verify if tacacs servers are configured
@@ -381,7 +397,8 @@ def verify_tacacs(dut):
     if tacacs_servers == 0:
         tacacs_bool = False
 
-    logging.info(f'{tacacs_servers} tacacs serverws are configured so returning {tacacs_bool}')
+    logging.info(f'{tacacs_servers} tacacs serverws are configured so '
+                 f'returning {tacacs_bool}')
 
     return tacacs_bool
 
@@ -404,7 +421,8 @@ def verify_veos(dut):
         logging.info(f'{dut_name} is a VEOS instance so returning {veos_bool}')
         print(f'{dut_name} is a VEOS instance so test NOT valid')
     else:
-        logging.info(f'{dut_name} is not a VEOS instance so returning {veos_bool}')
+        logging.info(f'{dut_name} is not a VEOS instance so returning '
+                     f'{veos_bool}')
 
     return veos_bool
 
@@ -423,7 +441,9 @@ def generate_interface_list(dut_name, test_definition):
 
     return interface_list
 
-def write_results(test_parameters, dut_name, test_suite, actual_output=None, test_result=True, fail_reason=""):
+
+def write_results(test_parameters, dut_name, test_suite, actual_output=None,
+                  test_result=True, fail_reason=""):
     """ Write test results to YAML file for post-processing
 
         Args:
@@ -451,7 +471,7 @@ def write_results(test_parameters, dut_name, test_suite, actual_output=None, tes
 
     test_case = test_parameters['name']
 
-    #TODO: remove hard code
+    # TODO: remove hard code
     yaml_file = 'result.yml'
 
     while True:
@@ -465,12 +485,12 @@ def write_results(test_parameters, dut_name, test_suite, actual_output=None, tes
 
     if not yaml_data:
         yaml_data = {'test_suites':
-                        [ 
+                        [
                             {'name': test_suite,
                             'test_cases': [
-                                {'name': test_case,
-                                 'duts': []
-                                }
+                                    {'name': test_case,
+                                     'duts': []
+                                    }
                                 ]
                             }
                         ]
@@ -479,13 +499,15 @@ def write_results(test_parameters, dut_name, test_suite, actual_output=None, tes
         yaml_in.seek(0)
         yaml_in.truncate()
 
-    logging.info(f'\n\n\rFind the Index for test suite: {test_suite} on dut {dut_name}\n\n\r')
+    logging.info(f'\n\n\rFind the Index for test suite: {test_suite} on dut '
+                 f'{dut_name}\n\n\r')
     logging.info(yaml_data['test_suites'])
     test_suites = [param['name'] for param in yaml_data['test_suites']]
 
     if test_suite in test_suites:
         suite_index = test_suites.index(test_suite)
-        logging.info(f'Test suite {test_suite} exists in results file at index {suite_index}')
+        logging.info(f'Test suite {test_suite} exists in results file at '
+                     f'index {suite_index}')
     else:
         logging.info(f'Create test suite {test_suite} in results file')
         suite_stub = {'name': test_suite, 'test_cases': []}
@@ -497,7 +519,8 @@ def write_results(test_parameters, dut_name, test_suite, actual_output=None, tes
 
     if test_case in test_cases:
         test_index = test_cases.index(test_case)
-        logging.info(f'Test case {test_case} exists in results file at index {test_index}')
+        logging.info(f'Test case {test_case} exists in results file at index '
+                     f'{test_index}')
     else:
         logging.info(f'Create test case {test_case} in results file')
         test_stub = {'name': test_case, 'duts': []}
@@ -508,13 +531,15 @@ def write_results(test_parameters, dut_name, test_suite, actual_output=None, tes
     duts = [param['dut'] for param in yaml_data['test_suites'][suite_index]['test_cases'][test_index]['duts']]
 
     if dut_name not in duts:
-        logging.info(f'Add DUT {dut_name} to test case {test_case} with parameters {test_parameters}')
+        logging.info(f'Add DUT {dut_name} to test case {test_case} with '
+                     f'parameters {test_parameters}')
         yaml_data['test_suites'][suite_index]['test_cases'][test_index]['duts'].append(test_parameters)
 
     yaml.dump(yaml_data, yaml_in, default_flow_style=False)
     fcntl.flock(yaml_in, fcntl.LOCK_UN)
 
     yaml_in.close()
+
 
 def yaml_io(yaml_file, io_type, yaml_data=None):
     """ Write test results to YAML file for post-processing
@@ -530,11 +555,9 @@ def yaml_io(yaml_file, io_type, yaml_data=None):
                 with open(yaml_file, 'r') as yaml_in:
                     fcntl.flock(yaml_in, fcntl.LOCK_EX | fcntl.LOCK_NB)
                     yaml_data = yaml.safe_load(yaml_in)
-                    #fcntl.flock(yaml_in, fcntl.LOCK_UN)
                     break
             else:
                 with open(yaml_file, 'w') as yaml_out:
-                    #fcntl.flock(yaml_out, fcntl.LOCK_EX | fcntl.LOCK_NB)
                     yaml.dump(yaml_data, yaml_out, default_flow_style=False)
                     fcntl.flock(yaml_out, fcntl.LOCK_UN)
                     break
@@ -584,10 +607,8 @@ def return_test_defs(test_parameters):
 
     test_defs = {'test_suites': []}
     test_dir = test_parameters['parameters']['tests_dir']
-    test_file = test_parameters['parameters']['test_definitions']
-
     tests_info = os.walk(test_dir)
- 
+
     for dir_path, _, file_names in tests_info:
         for file_name in file_names:
             if 'test_definition.yaml' == file_name:
@@ -600,6 +621,7 @@ def return_test_defs(test_parameters):
                  f'{test_defs}')
 
     return test_defs
+
 
 def export_yaml(yaml_file, yaml_data):
     """ Export python data structure as a YAML file
