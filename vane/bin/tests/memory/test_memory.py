@@ -31,8 +31,6 @@
 
 """ Tests to validate base feature status."""
 
-import inspect
-import logging
 import pytest
 import tests_tools
 
@@ -56,10 +54,8 @@ class MemoryTests():
                 tests_definitions (dict): Test parameters
         """
 
-        test_case = inspect.currentframe().f_code.co_name
         test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+                                                     TEST_SUITE)
 
         expected_output = test_parameters["expected_output"]
         dut_name = dut['name']
@@ -68,27 +64,26 @@ class MemoryTests():
         tests_tools.verify_show_cmd(show_cmd, dut)
         show_cmd_txt = dut["output"][show_cmd]['text']
 
-        logging.info('TEST if memory utilization is less than specified '
-                     f'value on |{dut_name}|')
-        logging.info(f'GIVEN memory utilization is less than '
-                     f'|{expected_output}%|')
-
         memory_total = dut["output"][show_cmd]["json"]['memTotal']
         memory_free = dut["output"][show_cmd]["json"]['memFree']
         memory_percent = 0.00
         actual_output = (float(memory_free) / float(memory_total)) * 100
-        logging.info(f'WHEN memory utilization is |{actual_output}|')
+
+        output_msg = (f"On router |{dut_name}| memory utilization percent is "
+                      f"|{actual_output}%| and should be under "
+                      f"|{expected_output}%|")
 
         test_result = actual_output < expected_output
-        logging.info(f'THEN test case result is |{test_result}%|')
-        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
-        print(f"\nOn router |dut_name| memory utilization percent is "
-              f"|{actual_output}%| and should be under 70%")
+        comment = (f'TEST if memory utilization is less than specified '
+                   f'value on  |{dut_name}|.\nGIVEN memory utilization is '
+                   f'less than |{expected_output}|.\nWHEN  memory utilization '
+                   f'is |{actual_output}|.\nTHEN test case result is '
+                   f'|{test_result}|.\nOUTPUT of |{show_cmd}| is:'
+                   f'\n\n{show_cmd_txt}')
 
-        tests_tools.write_results(test_parameters,
-                                  dut_name,
-                                  TEST_SUITE,
-                                  actual_output,
-                                  test_result)
+        print(f"  - {output_msg}\n{comment}")
+
+        tests_tools.post_testcase(test_parameters, comment, test_result,
+                                  output_msg, actual_output, dut_name)
 
         assert actual_output < expected_output

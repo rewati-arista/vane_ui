@@ -152,7 +152,6 @@ def init_duts(show_cmds, test_parameters):
                        connection
     """
 
-
     logging.info('Finding DUTs and then execute inputted show commands '
                  'on each dut.  Return structured data of DUTs output '
                  'data, hostname, and connection.')
@@ -356,6 +355,8 @@ def get_parameters(tests_parameters, test_suite, test_case=""):
                        if param['name'] == test_case]
     logging.info(f'Case_parameters: {case_parameters[0]}')
 
+    case_parameters[0]['test_suite'] = test_suite
+
     return case_parameters[0]
 
 
@@ -442,16 +443,37 @@ def generate_interface_list(dut_name, test_definition):
     return interface_list
 
 
-def write_results(test_parameters, dut_name, test_suite, actual_output=None,
-                  test_result=True, fail_reason=""):
+def post_testcase(test_parameters, comment, test_result, output_msg,
+                  actual_output, dut_name):
+    """ Do post processing for test case
+
+        Args:
+            test_parameters (dict): Input DUT test definitions
+            comment (str): description on test operations
+            test_result (bool): test result
+            output_msg (str): failure reason
+            actual_output (?): output of test operations
+            dut_name (str): name of dut
+    """
+
+    test_parameters['comment'] = comment
+    test_parameters["test_result"] = test_result
+    test_parameters["output_msg"] = output_msg
+    test_parameters["actual_output"] = actual_output
+    test_parameters["dut"] = dut_name
+
+    test_parameters["fail_reason"] = ""
+    if not test_parameters["test_result"]:
+        test_parameters["fail_reason"] = test_parameters["output_msg"]
+
+    write_results(test_parameters)
+
+
+def write_results(test_parameters):
     """ Write test results to YAML file for post-processing
 
         Args:
             test_parameters (dict): Input DUT test definitions
-            actual_output (?): Output of test case
-            test_result (bool): Pass / Fail condition
-            dut_name (str): Name of Device Under Test
-            test_suite (str): Name of Test Suite
 
         YAML Data structure:
             testsuites:
@@ -463,12 +485,9 @@ def write_results(test_parameters, dut_name, test_suite, actual_output=None,
                        description:
     """
 
+    test_suite = test_parameters['test_suite']
     test_suite = test_suite.split('/')[-1]
-    test_parameters['actual_output'] = actual_output
-    test_parameters['test_result'] = test_result
-    test_parameters['dut'] = dut_name
-    test_parameters['fail_reason'] = fail_reason
-
+    dut_name = test_parameters['dut']
     test_case = test_parameters['name']
 
     # TODO: remove hard code
