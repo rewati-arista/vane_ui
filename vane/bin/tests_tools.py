@@ -331,6 +331,35 @@ def export_logs(test_name, hostname, output, test_parameters):
         sys.exit(1)
 
 
+def pre_testcase(tests_definitions, test_suite, dut):
+    """ Do pre processing for test case
+
+        Args:
+            test_definitions (dict):
+            test_suite (str):
+            dut (dict):
+
+        return:
+            test_parameters (dict):
+
+    """
+
+    test_case = inspect.stack()[1][3]
+    logging.info(f'Setting testcase name to {test_case}')
+    test_parameters = get_parameters(tests_definitions, test_suite, test_case)
+
+    expected_output = test_parameters["expected_output"]
+    interfaces_list = dut["output"]["interface_list"]
+    dut_name = dut['name']
+
+    show_cmd = test_parameters["show_cmd"]
+    verify_show_cmd(show_cmd, dut)
+    show_cmd_txt = dut["output"][show_cmd]['text']
+
+    return (test_parameters, expected_output, interfaces_list, dut_name,
+            show_cmd_txt, show_cmd)
+
+
 def get_parameters(tests_parameters, test_suite, test_case=""):
     """ Return test parameters for a test case
 
@@ -547,12 +576,14 @@ def write_results(test_parameters):
         test_index = (len(yaml_data['test_suites'][suite_index]['test_cases']) - 1)
 
     logging.info(f'Find Index for dut {dut_name}')
-    duts = [param['dut'] for param in yaml_data['test_suites'][suite_index]['test_cases'][test_index]['duts']]
+    duts = [param['dut'] for param 
+            in yaml_data['test_suites'][suite_index]['test_cases'][test_index]['duts']]
 
     if dut_name not in duts:
         logging.info(f'Add DUT {dut_name} to test case {test_case} with '
                      f'parameters {test_parameters}')
-        yaml_data['test_suites'][suite_index]['test_cases'][test_index]['duts'].append(test_parameters)
+        yaml_ptr = yaml_data['test_suites'][suite_index]
+        yaml_ptr['test_cases'][test_index]['duts'].append(test_parameters)
 
     yaml.dump(yaml_data, yaml_in, default_flow_style=False)
     fcntl.flock(yaml_in, fcntl.LOCK_UN)
@@ -630,7 +661,7 @@ def return_test_defs(test_parameters):
 
     for dir_path, _, file_names in tests_info:
         for file_name in file_names:
-            if 'test_definition.yaml' == file_name:
+            if file_name == 'test_definition.yaml':
                 file_path = f'{dir_path}/{file_name}'
                 test_def = import_yaml(file_path)
                 test_defs['test_suites'].append(test_def)

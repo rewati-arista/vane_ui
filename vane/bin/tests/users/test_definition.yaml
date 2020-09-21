@@ -1,16 +1,12 @@
-name: test_ztp.py
+name: test_users.py
 testcases:
-  - name: test_if_zerotouch_is_disabled_on_
-    description: Verify local log messages
-    show_cmd: show zerotouch
-    # ztp state 
-    expected_output: disabled
-    comment: null
-    result: True
-  - name: test_for_zerotouch_config_file_on_
-    description: Verify zerotoucn-config file is on flash
-    show_cmd: dir flash:zerotouch-config
-    # if ztp file is on flash
+  - name: test_if_usernames_are_configured_on_
+    description: Verify username is set correctly
+    # List usernames to check on DUT
+    usernames:
+      - ec2-user
+      - kgrozis
+    show_cmd: show running-config section username
     expected_output: True
     comment: null
     result: True

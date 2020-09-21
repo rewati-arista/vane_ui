@@ -60,31 +60,6 @@ else:
 
 
 @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-def test_show_lldp_tx_enabled(dut):
-    """ Verify show lldp output is correct
-
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
-    """
-
-    show_cmd = "show lldp"
-    interfaces_list = dut["output"]["interface_list"]
-
-    print(f"\nOn router |{dut['name']}|:")
-
-    for interface in interfaces_list:
-        interface_name = interface['interface_name'].replace(" ", "")
-        sh_lldp = \
-            dut["output"][show_cmd]['json']['lldpInterfaces\
-'][interface_name]['txEnabled']
-
-        print(f"  - On interface |{interface['interface_name']}|: interface LLDP \
-rxEnabled is in state |{sh_lldp}|, correct state is |True|")
-
-        assert sh_lldp is True
-
-
-@pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
 def test_show_lldp_local_info(dut):
     """ Verify show lldp local-info interfaceDescription is correct
 
