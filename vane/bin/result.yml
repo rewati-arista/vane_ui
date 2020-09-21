@@ -1,4 +1,116 @@
 test_suites:
+- name: test_host.py
+  test_cases:
+  - duts:
+    - actual_output: kg-topology-CloudEosRR1
+      comment: 'TEST is hostname correct.
+
+        GIVEN hostname |kg-topology-CloudEosRR1|.
+
+        WHEN hostname is |kg-topology-CloudEosRR1|.
+
+        THEN test case result is |True|.
+
+        OUTPUT of |show hostname| is :
+
+
+        Hostname: kg-topology-CloudEosRR1
+
+        FQDN:     kg-topology-CloudEosRR1
+
+        '
+      description: Verify hostname is set on device is correct
+      dut: kg-topology-CloudEosRR1
+      expected_output: null
+      fail_reason: ''
+      name: test_if_hostname_is_correcet_on_
+      output_msg: On router |kg-topology-CloudEosRR1| the configured hostname is |kg-topology-CloudEosRR1|
+        and the correct hostname is |kg-topology-CloudEosRR1|
+      show_cmd: show hostname
+      test_result: true
+      test_suite: test_host.py
+    - actual_output: kg-topology-CloudEosRR2
+      comment: 'TEST is hostname correct.
+
+        GIVEN hostname |kg-topology-CloudEosRR2|.
+
+        WHEN hostname is |kg-topology-CloudEosRR2|.
+
+        THEN test case result is |True|.
+
+        OUTPUT of |show hostname| is :
+
+
+        Hostname: kg-topology-CloudEosRR2
+
+        FQDN:     kg-topology-CloudEosRR2
+
+        '
+      description: Verify hostname is set on device is correct
+      dut: kg-topology-CloudEosRR2
+      expected_output: null
+      fail_reason: ''
+      name: test_if_hostname_is_correcet_on_
+      output_msg: On router |kg-topology-CloudEosRR2| the configured hostname is |kg-topology-CloudEosRR2|
+        and the correct hostname is |kg-topology-CloudEosRR2|
+      show_cmd: show hostname
+      test_result: true
+      test_suite: test_host.py
+    - actual_output: kg-topology-CloudEOSEdge1
+      comment: 'TEST is hostname correct.
+
+        GIVEN hostname |kg-topology-CloudEOSEdge1|.
+
+        WHEN hostname is |kg-topology-CloudEOSEdge1|.
+
+        THEN test case result is |True|.
+
+        OUTPUT of |show hostname| is :
+
+
+        Hostname: kg-topology-CloudEOSEdge1
+
+        FQDN:     kg-topology-CloudEOSEdge1
+
+        '
+      description: Verify hostname is set on device is correct
+      dut: kg-topology-CloudEOSEdge1
+      expected_output: null
+      fail_reason: ''
+      name: test_if_hostname_is_correcet_on_
+      output_msg: On router |kg-topology-CloudEOSEdge1| the configured hostname is
+        |kg-topology-CloudEOSEdge1| and the correct hostname is |kg-topology-CloudEOSEdge1|
+      show_cmd: show hostname
+      test_result: true
+      test_suite: test_host.py
+    - actual_output: kg-topology-CloudEOSEdge2
+      comment: 'TEST is hostname correct.
+
+        GIVEN hostname |kg-topology-CloudEOSEdge2|.
+
+        WHEN hostname is |kg-topology-CloudEOSEdge2|.
+
+        THEN test case result is |True|.
+
+        OUTPUT of |show hostname| is :
+
+
+        Hostname: kg-topology-CloudEOSEdge2
+
+        FQDN:     kg-topology-CloudEOSEdge2
+
+        '
+      description: Verify hostname is set on device is correct
+      dut: kg-topology-CloudEOSEdge2
+      expected_output: null
+      fail_reason: ''
+      name: test_if_hostname_is_correcet_on_
+      output_msg: On router |kg-topology-CloudEOSEdge2| the configured hostname is
+        |kg-topology-CloudEOSEdge2| and the correct hostname is |kg-topology-CloudEOSEdge2|
+      show_cmd: show hostname
+      test_result: true
+      test_suite: test_host.py
+    name: test_if_hostname_is_correcet_on_
 - name: test_interface.py
   test_cases:
   - duts:
@@ -81,6 +193,128 @@ test_suites:
       test_result: true
       test_suite: test_interface.py
     name: test_if_intf_link_status_is_connected_on_
+  - duts:
+    - actual_output: 0
+      comment: 'TEST if interface |Ethernet1| counters have input errors on |kg-topology-CloudEosRR1|.
+
+        GIVEN interface input errors is |0|.
+
+        WHEN interface inputerrors is |0|.
+
+        THEN test case result is |True|.
+
+        OUTPUT of |show interfaces counters errors| is:
+
+
+        Port               FCS    Align   Symbol       Rx    Runts   Giants       Tx
+
+        Et1                  0        0        0        0        0        0        0
+
+        Et100                0        0        0        0        0        0        0
+
+        '
+      description: Verify the interfaces of interest does not have input errors
+      dut: kg-topology-CloudEosRR1
+      expected_output: 0
+      fail_reason: ''
+      name: test_if_intf_counters_has_input_errors_on_
+      output_msg: 'On interface |Ethernet1|: interface counter errors has |0| inErrors,
+        correct state is |0|'
+      show_cmd: show interfaces counters errors
+      test_result: true
+      test_suite: test_interface.py
+    - actual_output: 0
+      comment: 'TEST if interface |Ethernet1| counters have input errors on |kg-topology-CloudEosRR2|.
+
+        GIVEN interface input errors is |0|.
+
+        WHEN interface inputerrors is |0|.
+
+        THEN test case result is |True|.
+
+        OUTPUT of |show interfaces counters errors| is:
+
+
+        Port               FCS    Align   Symbol       Rx    Runts   Giants       Tx
+
+        Et1                  0        0        0        0        0        0        0
+
+        Et100                0        0        0        0        0        0        0
+
+        '
+      description: Verify the interfaces of interest does not have input errors
+      dut: kg-topology-CloudEosRR2
+      expected_output: 0
+      fail_reason: ''
+      name: test_if_intf_counters_has_input_errors_on_
+      output_msg: 'On interface |Ethernet1|: interface counter errors has |0| inErrors,
+        correct state is |0|'
+      show_cmd: show interfaces counters errors
+      test_result: true
+      test_suite: test_interface.py
+    - actual_output: 0
+      comment: 'TEST if interface |Ethernet1| counters have input errors on |kg-topology-CloudEOSEdge1|.
+
+        GIVEN interface input errors is |0|.
+
+        WHEN interface inputerrors is |0|.
+
+        THEN test case result is |True|.
+
+        OUTPUT of |show interfaces counters errors| is:
+
+
+        Port               FCS    Align   Symbol       Rx    Runts   Giants       Tx
+
+        Et1                  0        0        0        0        0        0        0
+
+        Et2                  0        0        0        0        0        0        0
+
+        Et100                0        0        0        0        0        0        0
+
+        '
+      description: Verify the interfaces of interest does not have input errors
+      dut: kg-topology-CloudEOSEdge1
+      expected_output: 0
+      fail_reason: ''
+      name: test_if_intf_counters_has_input_errors_on_
+      output_msg: 'On interface |Ethernet1|: interface counter errors has |0| inErrors,
+        correct state is |0|'
+      show_cmd: show interfaces counters errors
+      test_result: true
+      test_suite: test_interface.py
+    - actual_output: 0
+      comment: 'TEST if interface |Ethernet1| counters have input errors on |kg-topology-CloudEOSEdge2|.
+
+        GIVEN interface input errors is |0|.
+
+        WHEN interface inputerrors is |0|.
+
+        THEN test case result is |True|.
+
+        OUTPUT of |show interfaces counters errors| is:
+
+
+        Port               FCS    Align   Symbol       Rx    Runts   Giants       Tx
+
+        Et1                  0        0        0        0        0        0        0
+
+        Et2                  0        0        0        0        0        0        0
+
+        Et100                0        0        0        0        0        0        0
+
+        '
+      description: Verify the interfaces of interest does not have input errors
+      dut: kg-topology-CloudEOSEdge2
+      expected_output: 0
+      fail_reason: ''
+      name: test_if_intf_counters_has_input_errors_on_
+      output_msg: 'On interface |Ethernet1|: interface counter errors has |0| inErrors,
+        correct state is |0|'
+      show_cmd: show interfaces counters errors
+      test_result: true
+      test_suite: test_interface.py
+    name: test_if_intf_counters_has_input_errors_on_
   - duts:
     - actual_output: 0
       comment: 'TEST if interface |Ethernet1| counters have frameTooShorts errors
@@ -207,254 +441,6 @@ test_suites:
       test_result: true
       test_suite: test_interface.py
     name: test_if_intf_counters_has_frame_too_short_errors_on_
-  - duts:
-    - actual_output: 0
-      comment: 'TEST if interface |Ethernet1| counters have input errors on |kg-topology-CloudEosRR1|.
-
-        GIVEN interface input errors is |0|.
-
-        WHEN interface inputerrors is |0|.
-
-        THEN test case result is |True|.
-
-        OUTPUT of |show interfaces counters errors| is:
-
-
-        Port               FCS    Align   Symbol       Rx    Runts   Giants       Tx
-
-        Et1                  0        0        0        0        0        0        0
-
-        Et100                0        0        0        0        0        0        0
-
-        '
-      description: Verify the interfaces of interest does not have input errors
-      dut: kg-topology-CloudEosRR1
-      expected_output: 0
-      fail_reason: ''
-      name: test_if_intf_counters_has_input_errors_on_
-      output_msg: 'On interface |Ethernet1|: interface counter errors has |0| inErrors,
-        correct state is |0|'
-      show_cmd: show interfaces counters errors
-      test_result: true
-      test_suite: test_interface.py
-    - actual_output: 0
-      comment: 'TEST if interface |Ethernet1| counters have input errors on |kg-topology-CloudEosRR2|.
-
-        GIVEN interface input errors is |0|.
-
-        WHEN interface inputerrors is |0|.
-
-        THEN test case result is |True|.
-
-        OUTPUT of |show interfaces counters errors| is:
-
-
-        Port               FCS    Align   Symbol       Rx    Runts   Giants       Tx
-
-        Et1                  0        0        0        0        0        0        0
-
-        Et100                0        0        0        0        0        0        0
-
-        '
-      description: Verify the interfaces of interest does not have input errors
-      dut: kg-topology-CloudEosRR2
-      expected_output: 0
-      fail_reason: ''
-      name: test_if_intf_counters_has_input_errors_on_
-      output_msg: 'On interface |Ethernet1|: interface counter errors has |0| inErrors,
-        correct state is |0|'
-      show_cmd: show interfaces counters errors
-      test_result: true
-      test_suite: test_interface.py
-    - actual_output: 0
-      comment: 'TEST if interface |Ethernet1| counters have input errors on |kg-topology-CloudEOSEdge1|.
-
-        GIVEN interface input errors is |0|.
-
-        WHEN interface inputerrors is |0|.
-
-        THEN test case result is |True|.
-
-        OUTPUT of |show interfaces counters errors| is:
-
-
-        Port               FCS    Align   Symbol       Rx    Runts   Giants       Tx
-
-        Et1                  0        0        0        0        0        0        0
-
-        Et2                  0        0        0        0        0        0        0
-
-        Et100                0        0        0        0        0        0        0
-
-        '
-      description: Verify the interfaces of interest does not have input errors
-      dut: kg-topology-CloudEOSEdge1
-      expected_output: 0
-      fail_reason: ''
-      name: test_if_intf_counters_has_input_errors_on_
-      output_msg: 'On interface |Ethernet1|: interface counter errors has |0| inErrors,
-        correct state is |0|'
-      show_cmd: show interfaces counters errors
-      test_result: true
-      test_suite: test_interface.py
-    - actual_output: 0
-      comment: 'TEST if interface |Ethernet1| counters have input errors on |kg-topology-CloudEOSEdge2|.
-
-        GIVEN interface input errors is |0|.
-
-        WHEN interface inputerrors is |0|.
-
-        THEN test case result is |True|.
-
-        OUTPUT of |show interfaces counters errors| is:
-
-
-        Port               FCS    Align   Symbol       Rx    Runts   Giants       Tx
-
-        Et1                  0        0        0        0        0        0        0
-
-        Et2                  0        0        0        0        0        0        0
-
-        Et100                0        0        0        0        0        0        0
-
-        '
-      description: Verify the interfaces of interest does not have input errors
-      dut: kg-topology-CloudEOSEdge2
-      expected_output: 0
-      fail_reason: ''
-      name: test_if_intf_counters_has_input_errors_on_
-      output_msg: 'On interface |Ethernet1|: interface counter errors has |0| inErrors,
-        correct state is |0|'
-      show_cmd: show interfaces counters errors
-      test_result: true
-      test_suite: test_interface.py
-    name: test_if_intf_counters_has_input_errors_on_
-  - duts:
-    - actual_output: 0
-      comment: 'TEST if interface |Ethernet1| counters have symbolErrors errors on
-        |kg-topology-CloudEosRR1|.
-
-        GIVEN interface symbolErrors errors is |0|.
-
-        WHEN interface symbolErrorserrors is |0|.
-
-        THEN test case result is |True|.
-
-        OUTPUT of |show interfaces counters errors| is:
-
-
-        Port               FCS    Align   Symbol       Rx    Runts   Giants       Tx
-
-        Et1                  0        0        0        0        0        0        0
-
-        Et100                0        0        0        0        0        0        0
-
-        '
-      description: Verify the interfaces of interest have no symbolErrors errors
-      dut: kg-topology-CloudEosRR1
-      expected_output: 0
-      fail_reason: ''
-      name: test_if_intf_counters_has_symbol_errors_on_
-      output_msg: 'On interface |Ethernet1|: interface counter errors has |0| symbolErrors,
-        correct state is |0|'
-      show_cmd: show interfaces counters errors
-      test_result: true
-      test_suite: test_interface.py
-    - actual_output: 0
-      comment: 'TEST if interface |Ethernet1| counters have symbolErrors errors on
-        |kg-topology-CloudEosRR2|.
-
-        GIVEN interface symbolErrors errors is |0|.
-
-        WHEN interface symbolErrorserrors is |0|.
-
-        THEN test case result is |True|.
-
-        OUTPUT of |show interfaces counters errors| is:
-
-
-        Port               FCS    Align   Symbol       Rx    Runts   Giants       Tx
-
-        Et1                  0        0        0        0        0        0        0
-
-        Et100                0        0        0        0        0        0        0
-
-        '
-      description: Verify the interfaces of interest have no symbolErrors errors
-      dut: kg-topology-CloudEosRR2
-      expected_output: 0
-      fail_reason: ''
-      name: test_if_intf_counters_has_symbol_errors_on_
-      output_msg: 'On interface |Ethernet1|: interface counter errors has |0| symbolErrors,
-        correct state is |0|'
-      show_cmd: show interfaces counters errors
-      test_result: true
-      test_suite: test_interface.py
-    - actual_output: 0
-      comment: 'TEST if interface |Ethernet1| counters have symbolErrors errors on
-        |kg-topology-CloudEOSEdge1|.
-
-        GIVEN interface symbolErrors errors is |0|.
-
-        WHEN interface symbolErrorserrors is |0|.
-
-        THEN test case result is |True|.
-
-        OUTPUT of |show interfaces counters errors| is:
-
-
-        Port               FCS    Align   Symbol       Rx    Runts   Giants       Tx
-
-        Et1                  0        0        0        0        0        0        0
-
-        Et2                  0        0        0        0        0        0        0
-
-        Et100                0        0        0        0        0        0        0
-
-        '
-      description: Verify the interfaces of interest have no symbolErrors errors
-      dut: kg-topology-CloudEOSEdge1
-      expected_output: 0
-      fail_reason: ''
-      name: test_if_intf_counters_has_symbol_errors_on_
-      output_msg: 'On interface |Ethernet1|: interface counter errors has |0| symbolErrors,
-        correct state is |0|'
-      show_cmd: show interfaces counters errors
-      test_result: true
-      test_suite: test_interface.py
-    - actual_output: 0
-      comment: 'TEST if interface |Ethernet1| counters have symbolErrors errors on
-        |kg-topology-CloudEOSEdge2|.
-
-        GIVEN interface symbolErrors errors is |0|.
-
-        WHEN interface symbolErrorserrors is |0|.
-
-        THEN test case result is |True|.
-
-        OUTPUT of |show interfaces counters errors| is:
-
-
-        Port               FCS    Align   Symbol       Rx    Runts   Giants       Tx
-
-        Et1                  0        0        0        0        0        0        0
-
-        Et2                  0        0        0        0        0        0        0
-
-        Et100                0        0        0        0        0        0        0
-
-        '
-      description: Verify the interfaces of interest have no symbolErrors errors
-      dut: kg-topology-CloudEOSEdge2
-      expected_output: 0
-      fail_reason: ''
-      name: test_if_intf_counters_has_symbol_errors_on_
-      output_msg: 'On interface |Ethernet1|: interface counter errors has |0| symbolErrors,
-        correct state is |0|'
-      show_cmd: show interfaces counters errors
-      test_result: true
-      test_suite: test_interface.py
-    name: test_if_intf_counters_has_symbol_errors_on_
   - duts:
     - actual_output: null
       comment: kg-topology-CloudEosRR1 is vEOS instance.  Test is not valid.
@@ -623,6 +609,132 @@ test_suites:
       test_result: true
       test_suite: test_interface.py
     name: test_if_intf_counters_has_fcs_errors_on_
+  - duts:
+    - actual_output: 0
+      comment: 'TEST if interface |Ethernet1| counters have symbolErrors errors on
+        |kg-topology-CloudEosRR1|.
+
+        GIVEN interface symbolErrors errors is |0|.
+
+        WHEN interface symbolErrorserrors is |0|.
+
+        THEN test case result is |True|.
+
+        OUTPUT of |show interfaces counters errors| is:
+
+
+        Port               FCS    Align   Symbol       Rx    Runts   Giants       Tx
+
+        Et1                  0        0        0        0        0        0        0
+
+        Et100                0        0        0        0        0        0        0
+
+        '
+      description: Verify the interfaces of interest have no symbolErrors errors
+      dut: kg-topology-CloudEosRR1
+      expected_output: 0
+      fail_reason: ''
+      name: test_if_intf_counters_has_symbol_errors_on_
+      output_msg: 'On interface |Ethernet1|: interface counter errors has |0| symbolErrors,
+        correct state is |0|'
+      show_cmd: show interfaces counters errors
+      test_result: true
+      test_suite: test_interface.py
+    - actual_output: 0
+      comment: 'TEST if interface |Ethernet1| counters have symbolErrors errors on
+        |kg-topology-CloudEosRR2|.
+
+        GIVEN interface symbolErrors errors is |0|.
+
+        WHEN interface symbolErrorserrors is |0|.
+
+        THEN test case result is |True|.
+
+        OUTPUT of |show interfaces counters errors| is:
+
+
+        Port               FCS    Align   Symbol       Rx    Runts   Giants       Tx
+
+        Et1                  0        0        0        0        0        0        0
+
+        Et100                0        0        0        0        0        0        0
+
+        '
+      description: Verify the interfaces of interest have no symbolErrors errors
+      dut: kg-topology-CloudEosRR2
+      expected_output: 0
+      fail_reason: ''
+      name: test_if_intf_counters_has_symbol_errors_on_
+      output_msg: 'On interface |Ethernet1|: interface counter errors has |0| symbolErrors,
+        correct state is |0|'
+      show_cmd: show interfaces counters errors
+      test_result: true
+      test_suite: test_interface.py
+    - actual_output: 0
+      comment: 'TEST if interface |Ethernet1| counters have symbolErrors errors on
+        |kg-topology-CloudEOSEdge1|.
+
+        GIVEN interface symbolErrors errors is |0|.
+
+        WHEN interface symbolErrorserrors is |0|.
+
+        THEN test case result is |True|.
+
+        OUTPUT of |show interfaces counters errors| is:
+
+
+        Port               FCS    Align   Symbol       Rx    Runts   Giants       Tx
+
+        Et1                  0        0        0        0        0        0        0
+
+        Et2                  0        0        0        0        0        0        0
+
+        Et100                0        0        0        0        0        0        0
+
+        '
+      description: Verify the interfaces of interest have no symbolErrors errors
+      dut: kg-topology-CloudEOSEdge1
+      expected_output: 0
+      fail_reason: ''
+      name: test_if_intf_counters_has_symbol_errors_on_
+      output_msg: 'On interface |Ethernet1|: interface counter errors has |0| symbolErrors,
+        correct state is |0|'
+      show_cmd: show interfaces counters errors
+      test_result: true
+      test_suite: test_interface.py
+    - actual_output: 0
+      comment: 'TEST if interface |Ethernet1| counters have symbolErrors errors on
+        |kg-topology-CloudEOSEdge2|.
+
+        GIVEN interface symbolErrors errors is |0|.
+
+        WHEN interface symbolErrorserrors is |0|.
+
+        THEN test case result is |True|.
+
+        OUTPUT of |show interfaces counters errors| is:
+
+
+        Port               FCS    Align   Symbol       Rx    Runts   Giants       Tx
+
+        Et1                  0        0        0        0        0        0        0
+
+        Et2                  0        0        0        0        0        0        0
+
+        Et100                0        0        0        0        0        0        0
+
+        '
+      description: Verify the interfaces of interest have no symbolErrors errors
+      dut: kg-topology-CloudEOSEdge2
+      expected_output: 0
+      fail_reason: ''
+      name: test_if_intf_counters_has_symbol_errors_on_
+      output_msg: 'On interface |Ethernet1|: interface counter errors has |0| symbolErrors,
+        correct state is |0|'
+      show_cmd: show interfaces counters errors
+      test_result: true
+      test_suite: test_interface.py
+    name: test_if_intf_counters_has_symbol_errors_on_
   - duts:
     - actual_output: 0
       comment: 'TEST if interface |Ethernet1| counters have frameTooLongs errors on
@@ -828,6 +940,84 @@ test_suites:
       test_suite: test_interface.py
     name: test_if_intf_in_counters_are_discarding_on_
   - duts:
+    - actual_output: 0
+      comment: "TEST if interface |Ethernet1| counters has outbound discards on |kg-topology-CloudEosRR1|\
+        \ \nGIVEN interface outbound discards are |0|\nWHEN interface outbound discards\
+        \ are |0|\nTHEN test case result is |True|.\nOUTPUT of |show interfaces counters\
+        \ discards| is:\n\nPort               InDiscards    OutDiscards \n---------------\
+        \ ---------------- ----------- \nEt1                         0           \
+        \   0 \nEt100                       0              0 \n---------         \
+        \  ---------      --------- \nTotals                      0              0\
+        \ \n\n"
+      description: Verify the interfaces of interest have no outDiscards
+      dut: kg-topology-CloudEosRR1
+      expected_output: 0
+      fail_reason: ''
+      name: test_if_intf_out_counters_are_discarding_on_
+      output_msg: 'On interface |Ethernet1|: interface counter discards has |0| outDiscards,
+        correct state is |0|'
+      show_cmd: show interfaces counters discards
+      test_result: true
+      test_suite: test_interface.py
+    - actual_output: 0
+      comment: "TEST if interface |Ethernet1| counters has outbound discards on |kg-topology-CloudEosRR2|\
+        \ \nGIVEN interface outbound discards are |0|\nWHEN interface outbound discards\
+        \ are |0|\nTHEN test case result is |True|.\nOUTPUT of |show interfaces counters\
+        \ discards| is:\n\nPort               InDiscards    OutDiscards \n---------------\
+        \ ---------------- ----------- \nEt1                         0           \
+        \   0 \nEt100                       0              0 \n---------         \
+        \  ---------      --------- \nTotals                      0              0\
+        \ \n\n"
+      description: Verify the interfaces of interest have no outDiscards
+      dut: kg-topology-CloudEosRR2
+      expected_output: 0
+      fail_reason: ''
+      name: test_if_intf_out_counters_are_discarding_on_
+      output_msg: 'On interface |Ethernet1|: interface counter discards has |0| outDiscards,
+        correct state is |0|'
+      show_cmd: show interfaces counters discards
+      test_result: true
+      test_suite: test_interface.py
+    - actual_output: 0
+      comment: "TEST if interface |Ethernet1| counters has outbound discards on |kg-topology-CloudEOSEdge1|\
+        \ \nGIVEN interface outbound discards are |0|\nWHEN interface outbound discards\
+        \ are |0|\nTHEN test case result is |True|.\nOUTPUT of |show interfaces counters\
+        \ discards| is:\n\nPort               InDiscards    OutDiscards \n---------------\
+        \ ---------------- ----------- \nEt1                         0           \
+        \   0 \nEt2                         0              0 \nEt100             \
+        \          0              0 \n---------           ---------      ---------\
+        \ \nTotals                      0              0 \n\n"
+      description: Verify the interfaces of interest have no outDiscards
+      dut: kg-topology-CloudEOSEdge1
+      expected_output: 0
+      fail_reason: ''
+      name: test_if_intf_out_counters_are_discarding_on_
+      output_msg: 'On interface |Ethernet1|: interface counter discards has |0| outDiscards,
+        correct state is |0|'
+      show_cmd: show interfaces counters discards
+      test_result: true
+      test_suite: test_interface.py
+    - actual_output: 0
+      comment: "TEST if interface |Ethernet1| counters has outbound discards on |kg-topology-CloudEOSEdge2|\
+        \ \nGIVEN interface outbound discards are |0|\nWHEN interface outbound discards\
+        \ are |0|\nTHEN test case result is |True|.\nOUTPUT of |show interfaces counters\
+        \ discards| is:\n\nPort               InDiscards    OutDiscards \n---------------\
+        \ ---------------- ----------- \nEt1                         0           \
+        \   0 \nEt2                         0              0 \nEt100             \
+        \          0              0 \n---------           ---------      ---------\
+        \ \nTotals                      0              0 \n\n"
+      description: Verify the interfaces of interest have no outDiscards
+      dut: kg-topology-CloudEOSEdge2
+      expected_output: 0
+      fail_reason: ''
+      name: test_if_intf_out_counters_are_discarding_on_
+      output_msg: 'On interface |Ethernet1|: interface counter discards has |0| outDiscards,
+        correct state is |0|'
+      show_cmd: show interfaces counters discards
+      test_result: true
+      test_suite: test_interface.py
+    name: test_if_intf_out_counters_are_discarding_on_
+  - duts:
     - actual_output: up
       comment: "TEST if interface |Ethernet1| link prootocol statuses on |kg-topology-CloudEosRR1|.\n\
         GIVEN interface status is |up|.\nWHEN interface status is |up|.\nTHEN test\
@@ -907,84 +1097,6 @@ test_suites:
       test_result: true
       test_suite: test_interface.py
     name: test_if_intf_protocol_status_is_connected_on_
-  - duts:
-    - actual_output: 0
-      comment: "TEST if interface |Ethernet1| counters has outbound discards on |kg-topology-CloudEosRR1|\
-        \ \nGIVEN interface outbound discards are |0|\nWHEN interface outbound discards\
-        \ are |0|\nTHEN test case result is |True|.\nOUTPUT of |show interfaces counters\
-        \ discards| is:\n\nPort               InDiscards    OutDiscards \n---------------\
-        \ ---------------- ----------- \nEt1                         0           \
-        \   0 \nEt100                       0              0 \n---------         \
-        \  ---------      --------- \nTotals                      0              0\
-        \ \n\n"
-      description: Verify the interfaces of interest have no outDiscards
-      dut: kg-topology-CloudEosRR1
-      expected_output: 0
-      fail_reason: ''
-      name: test_if_intf_out_counters_are_discarding_on_
-      output_msg: 'On interface |Ethernet1|: interface counter discards has |0| outDiscards,
-        correct state is |0|'
-      show_cmd: show interfaces counters discards
-      test_result: true
-      test_suite: test_interface.py
-    - actual_output: 0
-      comment: "TEST if interface |Ethernet1| counters has outbound discards on |kg-topology-CloudEosRR2|\
-        \ \nGIVEN interface outbound discards are |0|\nWHEN interface outbound discards\
-        \ are |0|\nTHEN test case result is |True|.\nOUTPUT of |show interfaces counters\
-        \ discards| is:\n\nPort               InDiscards    OutDiscards \n---------------\
-        \ ---------------- ----------- \nEt1                         0           \
-        \   0 \nEt100                       0              0 \n---------         \
-        \  ---------      --------- \nTotals                      0              0\
-        \ \n\n"
-      description: Verify the interfaces of interest have no outDiscards
-      dut: kg-topology-CloudEosRR2
-      expected_output: 0
-      fail_reason: ''
-      name: test_if_intf_out_counters_are_discarding_on_
-      output_msg: 'On interface |Ethernet1|: interface counter discards has |0| outDiscards,
-        correct state is |0|'
-      show_cmd: show interfaces counters discards
-      test_result: true
-      test_suite: test_interface.py
-    - actual_output: 0
-      comment: "TEST if interface |Ethernet1| counters has outbound discards on |kg-topology-CloudEOSEdge1|\
-        \ \nGIVEN interface outbound discards are |0|\nWHEN interface outbound discards\
-        \ are |0|\nTHEN test case result is |True|.\nOUTPUT of |show interfaces counters\
-        \ discards| is:\n\nPort               InDiscards    OutDiscards \n---------------\
-        \ ---------------- ----------- \nEt1                         0           \
-        \   0 \nEt2                         0              0 \nEt100             \
-        \          0              0 \n---------           ---------      ---------\
-        \ \nTotals                      0              0 \n\n"
-      description: Verify the interfaces of interest have no outDiscards
-      dut: kg-topology-CloudEOSEdge1
-      expected_output: 0
-      fail_reason: ''
-      name: test_if_intf_out_counters_are_discarding_on_
-      output_msg: 'On interface |Ethernet1|: interface counter discards has |0| outDiscards,
-        correct state is |0|'
-      show_cmd: show interfaces counters discards
-      test_result: true
-      test_suite: test_interface.py
-    - actual_output: 0
-      comment: "TEST if interface |Ethernet1| counters has outbound discards on |kg-topology-CloudEOSEdge2|\
-        \ \nGIVEN interface outbound discards are |0|\nWHEN interface outbound discards\
-        \ are |0|\nTHEN test case result is |True|.\nOUTPUT of |show interfaces counters\
-        \ discards| is:\n\nPort               InDiscards    OutDiscards \n---------------\
-        \ ---------------- ----------- \nEt1                         0           \
-        \   0 \nEt2                         0              0 \nEt100             \
-        \          0              0 \n---------           ---------      ---------\
-        \ \nTotals                      0              0 \n\n"
-      description: Verify the interfaces of interest have no outDiscards
-      dut: kg-topology-CloudEOSEdge2
-      expected_output: 0
-      fail_reason: ''
-      name: test_if_intf_out_counters_are_discarding_on_
-      output_msg: 'On interface |Ethernet1|: interface counter discards has |0| outDiscards,
-        correct state is |0|'
-      show_cmd: show interfaces counters discards
-      test_result: true
-      test_suite: test_interface.py
-    name: test_if_intf_out_counters_are_discarding_on_
   - duts:
     - actual_output: 0
       comment: 'TEST if interface |Ethernet1| has output errors on |kg-topology-CloudEosRR1|.
@@ -1241,21 +1353,21 @@ test_suites:
         \ is up (connected)\n  Hardware is Ethernet, address is 0246.bbe9.20d4 (bia\
         \ 0246.bbe9.20d4)\n  Internet address is 11.201.12.101/24\n  Broadcast address\
         \ is 255.255.255.255\n  Address determined by DHCP\n  IP MTU 1500 bytes (default)\n\
-        \  Full-duplex, Unconfigured, auto negotiation: off, uni-link: n/a\n  Up 36\
-        \ days, 19 hours, 44 minutes, 11 seconds\n  Loopback Mode : None\n  3 link\
+        \  Full-duplex, Unconfigured, auto negotiation: off, uni-link: n/a\n  Up 39\
+        \ days, 19 hours, 40 minutes, 19 seconds\n  Loopback Mode : None\n  3 link\
         \ status changes since last clear\n  Last clearing of \"show interface\" counters\
-        \ never\n  5 minutes input rate 34.3 kbps (- with framing overhead), 31 packets/sec\n\
-        \  5 minutes output rate 64.7 kbps (- with framing overhead), 34 packets/sec\n\
-        \     71411973 packets input, 8923307841 bytes\n     Received 0 broadcasts,\
+        \ never\n  5 minutes input rate 48.8 kbps (- with framing overhead), 44 packets/sec\n\
+        \  5 minutes output rate 94.0 kbps (- with framing overhead), 47 packets/sec\n\
+        \     77259719 packets input, 9655327290 bytes\n     Received 0 broadcasts,\
         \ 0 multicast\n     0 runts, 0 giants\n     0 input errors, 0 CRC, 0 alignment,\
-        \ 0 symbol, 0 input discards\n     0 PAUSE input\n     79662041 packets output,\
-        \ 15222720871 bytes\n     Sent 0 broadcasts, 0 multicast\n     0 output errors,\
+        \ 0 symbol, 0 input discards\n     0 PAUSE input\n     86176971 packets output,\
+        \ 16471228302 bytes\n     Sent 0 broadcasts, 0 multicast\n     0 output errors,\
         \ 0 collisions\n     0 late collision, 0 deferred, 0 output discards\n   \
         \  0 PAUSE output\nEthernet100 is up, line protocol is up (connected)\n  Hardware\
         \ is Ethernet, address is 0246.bb59.d5ae (bia 0246.bb59.d5ae)\n  Internet\
         \ address is 11.201.8.1/22\n  Broadcast address is 255.255.255.255\n  IP MTU\
         \ 1400 bytes , BW 10000000 kbit\n  Full-duplex, 10Gb/s, auto negotiation:\
-        \ off, uni-link: n/a\n  Up 36 days, 19 hours, 44 minutes, 9 seconds\n  Loopback\
+        \ off, uni-link: n/a\n  Up 39 days, 19 hours, 40 minutes, 17 seconds\n  Loopback\
         \ Mode : None\n  3 link status changes since last clear\n  Last clearing of\
         \ \"show interface\" counters never\n  5 minutes input rate 0 bps (0.0% with\
         \ framing overhead), 0 packets/sec\n  5 minutes output rate 0 bps (0.0% with\
@@ -1266,11 +1378,11 @@ test_suites:
         \ output errors, 0 collisions\n     0 late collision, 0 deferred, 0 output\
         \ discards\n     0 PAUSE output\nLoopback0 is up, line protocol is up (connected)\n\
         \  Hardware is Loopback\n  Internet address is 11.201.0.2/32\n  Broadcast\
-        \ address is 255.255.255.255\n  IP MTU 65535 bytes (default)\n  Up 36 days,\
-        \ 19 hours, 41 minutes, 30 seconds\nLoopback10 is up, line protocol is up\
+        \ address is 255.255.255.255\n  IP MTU 65535 bytes (default)\n  Up 39 days,\
+        \ 19 hours, 37 minutes, 38 seconds\nLoopback10 is up, line protocol is up\
         \ (connected)\n  Hardware is Loopback\n  Internet address is 198.18.0.36/24\n\
         \  Broadcast address is 255.255.255.255\n  IP MTU 65535 bytes (default)\n\
-        \  Up 36 days, 19 hours, 44 minutes, 34 seconds\n"
+        \  Up 39 days, 19 hours, 40 minutes, 42 seconds\n"
       description: Verify the interfaces of interest MTU
       dut: kg-topology-CloudEosRR1
       expected_output: 10178
@@ -1289,21 +1401,21 @@ test_suites:
         \ is up (connected)\n  Hardware is Ethernet, address is 0654.9ba1.1756 (bia\
         \ 0654.9ba1.1756)\n  Internet address is 11.201.13.101/24\n  Broadcast address\
         \ is 255.255.255.255\n  Address determined by DHCP\n  IP MTU 1500 bytes (default)\n\
-        \  Full-duplex, Unconfigured, auto negotiation: off, uni-link: n/a\n  Up 36\
-        \ days, 19 hours, 44 minutes, 17 seconds\n  Loopback Mode : None\n  3 link\
+        \  Full-duplex, Unconfigured, auto negotiation: off, uni-link: n/a\n  Up 39\
+        \ days, 19 hours, 40 minutes, 25 seconds\n  Loopback Mode : None\n  3 link\
         \ status changes since last clear\n  Last clearing of \"show interface\" counters\
-        \ never\n  5 minutes input rate 34.4 kbps (- with framing overhead), 32 packets/sec\n\
-        \  5 minutes output rate 65.0 kbps (- with framing overhead), 35 packets/sec\n\
-        \     72480938 packets input, 9047178758 bytes\n     Received 0 broadcasts,\
+        \ never\n  5 minutes input rate 46.8 kbps (- with framing overhead), 41 packets/sec\n\
+        \  5 minutes output rate 90.4 kbps (- with framing overhead), 43 packets/sec\n\
+        \     78378489 packets input, 9784753822 bytes\n     Received 0 broadcasts,\
         \ 0 multicast\n     0 runts, 0 giants\n     0 input errors, 0 CRC, 0 alignment,\
-        \ 0 symbol, 0 input discards\n     0 PAUSE input\n     81218701 packets output,\
-        \ 15355078697 bytes\n     Sent 0 broadcasts, 0 multicast\n     0 output errors,\
+        \ 0 symbol, 0 input discards\n     0 PAUSE input\n     87876947 packets output,\
+        \ 16614496941 bytes\n     Sent 0 broadcasts, 0 multicast\n     0 output errors,\
         \ 0 collisions\n     0 late collision, 0 deferred, 0 output discards\n   \
         \  0 PAUSE output\nEthernet100 is up, line protocol is up (connected)\n  Hardware\
         \ is Ethernet, address is 0654.9b7c.b00f (bia 0654.9b7c.b00f)\n  Internet\
         \ address is 11.201.8.1/22\n  Broadcast address is 255.255.255.255\n  IP MTU\
         \ 1400 bytes , BW 10000000 kbit\n  Full-duplex, 10Gb/s, auto negotiation:\
-        \ off, uni-link: n/a\n  Up 36 days, 19 hours, 44 minutes, 15 seconds\n  Loopback\
+        \ off, uni-link: n/a\n  Up 39 days, 19 hours, 40 minutes, 23 seconds\n  Loopback\
         \ Mode : None\n  3 link status changes since last clear\n  Last clearing of\
         \ \"show interface\" counters never\n  5 minutes input rate 0 bps (0.0% with\
         \ framing overhead), 0 packets/sec\n  5 minutes output rate 0 bps (0.0% with\
@@ -1314,11 +1426,11 @@ test_suites:
         \ output errors, 0 collisions\n     0 late collision, 0 deferred, 0 output\
         \ discards\n     0 PAUSE output\nLoopback0 is up, line protocol is up (connected)\n\
         \  Hardware is Loopback\n  Internet address is 11.201.0.4/32\n  Broadcast\
-        \ address is 255.255.255.255\n  IP MTU 65535 bytes (default)\n  Up 36 days,\
-        \ 19 hours, 41 minutes, 43 seconds\nLoopback10 is up, line protocol is up\
+        \ address is 255.255.255.255\n  IP MTU 65535 bytes (default)\n  Up 39 days,\
+        \ 19 hours, 37 minutes, 52 seconds\nLoopback10 is up, line protocol is up\
         \ (connected)\n  Hardware is Loopback\n  Internet address is 198.18.0.38/24\n\
         \  Broadcast address is 255.255.255.255\n  IP MTU 65535 bytes (default)\n\
-        \  Up 36 days, 19 hours, 44 minutes, 37 seconds\n"
+        \  Up 39 days, 19 hours, 40 minutes, 46 seconds\n"
       description: Verify the interfaces of interest MTU
       dut: kg-topology-CloudEosRR2
       expected_output: 10178
@@ -1337,38 +1449,38 @@ test_suites:
         \ is up (connected)\n  Hardware is Ethernet, address is 029e.d288.21f6 (bia\
         \ 029e.d288.21f6)\n  Internet address is 11.201.14.101/25\n  Broadcast address\
         \ is 255.255.255.255\n  Address determined by DHCP\n  IP MTU 1500 bytes (default)\n\
-        \  Full-duplex, Unconfigured, auto negotiation: off, uni-link: n/a\n  Up 36\
-        \ days, 19 hours, 44 minutes, 28 seconds\n  Loopback Mode : None\n  3 link\
+        \  Full-duplex, Unconfigured, auto negotiation: off, uni-link: n/a\n  Up 39\
+        \ days, 19 hours, 40 minutes, 37 seconds\n  Loopback Mode : None\n  3 link\
         \ status changes since last clear\n  Last clearing of \"show interface\" counters\
-        \ never\n  5 minutes input rate 43.7 kbps (- with framing overhead), 42 packets/sec\n\
-        \  5 minutes output rate 92.4 kbps (- with framing overhead), 47 packets/sec\n\
-        \     142915339 packets input, 16774522127 bytes\n     Received 0 broadcasts,\
+        \ never\n  5 minutes input rate 55.1 kbps (- with framing overhead), 51 packets/sec\n\
+        \  5 minutes output rate 119 kbps (- with framing overhead), 56 packets/sec\n\
+        \     151211386 packets input, 17776325222 bytes\n     Received 0 broadcasts,\
         \ 0 multicast\n     0 runts, 0 giants\n     0 input errors, 0 CRC, 0 alignment,\
-        \ 0 symbol, 0 input discards\n     0 PAUSE input\n     170050138 packets output,\
-        \ 36345827611 bytes\n     Sent 0 broadcasts, 0 multicast\n     0 output errors,\
+        \ 0 symbol, 0 input discards\n     0 PAUSE input\n     179673215 packets output,\
+        \ 38396533157 bytes\n     Sent 0 broadcasts, 0 multicast\n     0 output errors,\
         \ 0 collisions\n     0 late collision, 0 deferred, 0 output discards\n   \
         \  0 PAUSE output\nEthernet2 is up, line protocol is up (connected)\n  Hardware\
         \ is Ethernet, address is 023d.7650.e316 (bia 023d.7650.e316)\n  Internet\
         \ address is 11.201.14.201/25\n  Broadcast address is 255.255.255.255\n  IP\
         \ MTU 9000 bytes\n  Full-duplex, Unconfigured, auto negotiation: off, uni-link:\
-        \ n/a\n  Up 36 days, 19 hours, 44 minutes, 28 seconds\n  Loopback Mode : None\n\
+        \ n/a\n  Up 39 days, 19 hours, 40 minutes, 37 seconds\n  Loopback Mode : None\n\
         \  3 link status changes since last clear\n  Last clearing of \"show interface\"\
-        \ counters never\n  5 minutes input rate 40.9 kbps (- with framing overhead),\
-        \ 35 packets/sec\n  5 minutes output rate 27.7 kbps (- with framing overhead),\
-        \ 32 packets/sec\n     161292245 packets input, 29335401047 bytes\n     Received\
+        \ counters never\n  5 minutes input rate 41.5 kbps (- with framing overhead),\
+        \ 35 packets/sec\n  5 minutes output rate 28.1 kbps (- with framing overhead),\
+        \ 33 packets/sec\n     170343351 packets input, 30660889789 bytes\n     Received\
         \ 0 broadcasts, 0 multicast\n     0 runts, 0 giants\n     0 input errors,\
         \ 0 CRC, 0 alignment, 0 symbol, 0 input discards\n     0 PAUSE input\n   \
-        \  142623412 packets output, 16839145488 bytes\n     Sent 0 broadcasts, 0\
+        \  151031136 packets output, 17735462816 bytes\n     Sent 0 broadcasts, 0\
         \ multicast\n     0 output errors, 0 collisions\n     0 late collision, 0\
         \ deferred, 0 output discards\n     0 PAUSE output\nEthernet2.102 is up, line\
         \ protocol is up (connected)\n  Hardware is Subinterface, address is 023d.7650.e316\n\
         \  Internet address is 11.201.14.201/25\n  Broadcast address is 255.255.255.255\n\
-        \  IP MTU 9000 bytes (default)\n  Up 36 days, 19 hours, 38 minutes, 8 seconds\n\
+        \  IP MTU 9000 bytes (default)\n  Up 39 days, 19 hours, 34 minutes, 17 seconds\n\
         Ethernet100 is up, line protocol is up (connected)\n  Hardware is Ethernet,\
         \ address is 029e.d20a.bbfc (bia 029e.d20a.bbfc)\n  Internet address is 11.201.8.1/22\n\
         \  Broadcast address is 255.255.255.255\n  IP MTU 1400 bytes , BW 10000000\
         \ kbit\n  Full-duplex, 10Gb/s, auto negotiation: off, uni-link: n/a\n  Up\
-        \ 36 days, 19 hours, 44 minutes, 26 seconds\n  Loopback Mode : None\n  3 link\
+        \ 39 days, 19 hours, 40 minutes, 35 seconds\n  Loopback Mode : None\n  3 link\
         \ status changes since last clear\n  Last clearing of \"show interface\" counters\
         \ never\n  5 minutes input rate 0 bps (0.0% with framing overhead), 0 packets/sec\n\
         \  5 minutes output rate 0 bps (0.0% with framing overhead), 0 packets/sec\n\
@@ -1379,16 +1491,16 @@ test_suites:
         \     0 late collision, 0 deferred, 0 output discards\n     0 PAUSE output\n\
         Loopback0 is up, line protocol is up (connected)\n  Hardware is Loopback\n\
         \  Internet address is 11.201.0.1/32\n  Broadcast address is 255.255.255.255\n\
-        \  IP MTU 65535 bytes (default)\n  Up 36 days, 19 hours, 41 minutes, 53 seconds\n\
+        \  IP MTU 65535 bytes (default)\n  Up 39 days, 19 hours, 38 minutes, 1 second\n\
         Loopback10 is up, line protocol is up (connected)\n  Hardware is Loopback\n\
         \  Internet address is 198.18.0.35/24\n  Broadcast address is 255.255.255.255\n\
-        \  IP MTU 65535 bytes (default)\n  Up 36 days, 19 hours, 44 minutes, 43 seconds\n\
+        \  IP MTU 65535 bytes (default)\n  Up 39 days, 19 hours, 40 minutes, 52 seconds\n\
         Vlan4093 is down, line protocol is lowerlayerdown (notconnect)\n  Hardware\
         \ is Vlan, address is 0000.0000.0000 (bia 0000.0000.0000)\n  IP MTU 9164 bytes\
-        \ (default)\n  Down 36 days, 19 hours, 38 minutes, 8 seconds\nVlan4094 is\
+        \ (default)\n  Down 39 days, 19 hours, 34 minutes, 17 seconds\nVlan4094 is\
         \ down, line protocol is lowerlayerdown (notconnect)\n  Hardware is Vlan,\
         \ address is 0000.0000.0000 (bia 0000.0000.0000)\n  IP MTU 9164 bytes (default)\n\
-        \  Down 36 days, 19 hours, 41 minutes, 51 seconds\nVxlan1 is up, line protocol\
+        \  Down 39 days, 19 hours, 37 minutes, 59 seconds\nVxlan1 is up, line protocol\
         \ is up (connected)\n  Hardware is Vxlan\n  Source interface is Loopback0\
         \ and is active with 11.201.0.1\n  Replication/Flood Mode is headend with\
         \ Flood List Source: CLI\n  Remote MAC learning is disabled\n  VNI mapping\
@@ -1415,38 +1527,38 @@ test_suites:
         \ is up (connected)\n  Hardware is Ethernet, address is 0635.0247.e530 (bia\
         \ 0635.0247.e530)\n  Internet address is 11.201.15.101/25\n  Broadcast address\
         \ is 255.255.255.255\n  Address determined by DHCP\n  IP MTU 1500 bytes (default)\n\
-        \  Full-duplex, Unconfigured, auto negotiation: off, uni-link: n/a\n  Up 36\
-        \ days, 19 hours, 44 minutes, 6 seconds\n  Loopback Mode : None\n  3 link\
+        \  Full-duplex, Unconfigured, auto negotiation: off, uni-link: n/a\n  Up 39\
+        \ days, 19 hours, 40 minutes, 14 seconds\n  Loopback Mode : None\n  3 link\
         \ status changes since last clear\n  Last clearing of \"show interface\" counters\
-        \ never\n  5 minutes input rate 63.2 kbps (- with framing overhead), 64 packets/sec\n\
-        \  5 minutes output rate 143 kbps (- with framing overhead), 76 packets/sec\n\
-        \     119690374 packets input, 14194433394 bytes\n     Received 0 broadcasts,\
+        \ never\n  5 minutes input rate 70.9 kbps (- with framing overhead), 69 packets/sec\n\
+        \  5 minutes output rate 161 kbps (- with framing overhead), 79 packets/sec\n\
+        \     133016979 packets input, 15745660042 bytes\n     Received 0 broadcasts,\
         \ 0 multicast\n     0 runts, 0 giants\n     0 input errors, 0 CRC, 0 alignment,\
-        \ 0 symbol, 0 input discards\n     0 PAUSE input\n     140872710 packets output,\
-        \ 29875711696 bytes\n     Sent 0 broadcasts, 0 multicast\n     0 output errors,\
+        \ 0 symbol, 0 input discards\n     0 PAUSE input\n     156846101 packets output,\
+        \ 33327736546 bytes\n     Sent 0 broadcasts, 0 multicast\n     0 output errors,\
         \ 0 collisions\n     0 late collision, 0 deferred, 0 output discards\n   \
         \  0 PAUSE output\nEthernet2 is up, line protocol is up (connected)\n  Hardware\
         \ is Ethernet, address is 0667.8522.a780 (bia 0667.8522.a780)\n  Internet\
         \ address is 11.201.15.201/25\n  Broadcast address is 255.255.255.255\n  IP\
         \ MTU 9000 bytes\n  Full-duplex, Unconfigured, auto negotiation: off, uni-link:\
-        \ n/a\n  Up 36 days, 19 hours, 44 minutes, 6 seconds\n  Loopback Mode : None\n\
+        \ n/a\n  Up 39 days, 19 hours, 40 minutes, 15 seconds\n  Loopback Mode : None\n\
         \  3 link status changes since last clear\n  Last clearing of \"show interface\"\
-        \ counters never\n  5 minutes input rate 94.4 kbps (- with framing overhead),\
-        \ 61 packets/sec\n  5 minutes output rate 51.7 kbps (- with framing overhead),\
-        \ 53 packets/sec\n     130337624 packets input, 21305235270 bytes\n     Received\
+        \ counters never\n  5 minutes input rate 88.3 kbps (- with framing overhead),\
+        \ 58 packets/sec\n  5 minutes output rate 49.2 kbps (- with framing overhead),\
+        \ 51 packets/sec\n     145589398 packets input, 24205041233 bytes\n     Received\
         \ 0 broadcasts, 0 multicast\n     0 runts, 0 giants\n     0 input errors,\
         \ 0 CRC, 0 alignment, 0 symbol, 0 input discards\n     0 PAUSE input\n   \
-        \  118083820 packets output, 13260372096 bytes\n     Sent 0 broadcasts, 0\
+        \  131398020 packets output, 14871167273 bytes\n     Sent 0 broadcasts, 0\
         \ multicast\n     0 output errors, 0 collisions\n     0 late collision, 0\
         \ deferred, 0 output discards\n     0 PAUSE output\nEthernet2.102 is up, line\
         \ protocol is up (connected)\n  Hardware is Subinterface, address is 0667.8522.a780\n\
         \  Internet address is 11.201.15.201/25\n  Broadcast address is 255.255.255.255\n\
-        \  IP MTU 9000 bytes (default)\n  Up 36 days, 19 hours, 38 minutes, 3 seconds\n\
+        \  IP MTU 9000 bytes (default)\n  Up 39 days, 19 hours, 34 minutes, 12 seconds\n\
         Ethernet100 is up, line protocol is up (connected)\n  Hardware is Ethernet,\
         \ address is 0635.02ca.8297 (bia 0635.02ca.8297)\n  Internet address is 11.201.8.1/22\n\
         \  Broadcast address is 255.255.255.255\n  IP MTU 1400 bytes , BW 10000000\
         \ kbit\n  Full-duplex, 10Gb/s, auto negotiation: off, uni-link: n/a\n  Up\
-        \ 36 days, 19 hours, 44 minutes, 4 seconds\n  Loopback Mode : None\n  3 link\
+        \ 39 days, 19 hours, 40 minutes, 12 seconds\n  Loopback Mode : None\n  3 link\
         \ status changes since last clear\n  Last clearing of \"show interface\" counters\
         \ never\n  5 minutes input rate 0 bps (0.0% with framing overhead), 0 packets/sec\n\
         \  5 minutes output rate 0 bps (0.0% with framing overhead), 0 packets/sec\n\
@@ -1457,16 +1569,16 @@ test_suites:
         \     0 late collision, 0 deferred, 0 output discards\n     0 PAUSE output\n\
         Loopback0 is up, line protocol is up (connected)\n  Hardware is Loopback\n\
         \  Internet address is 11.201.0.3/32\n  Broadcast address is 255.255.255.255\n\
-        \  IP MTU 65535 bytes (default)\n  Up 36 days, 19 hours, 41 minutes, 23 seconds\n\
+        \  IP MTU 65535 bytes (default)\n  Up 39 days, 19 hours, 37 minutes, 32 seconds\n\
         Loopback10 is up, line protocol is up (connected)\n  Hardware is Loopback\n\
         \  Internet address is 198.18.0.37/24\n  Broadcast address is 255.255.255.255\n\
-        \  IP MTU 65535 bytes (default)\n  Up 36 days, 19 hours, 44 minutes, 27 seconds\n\
+        \  IP MTU 65535 bytes (default)\n  Up 39 days, 19 hours, 40 minutes, 36 seconds\n\
         Vlan4093 is down, line protocol is lowerlayerdown (notconnect)\n  Hardware\
         \ is Vlan, address is 0000.0000.0000 (bia 0000.0000.0000)\n  IP MTU 9164 bytes\
-        \ (default)\n  Down 36 days, 19 hours, 38 minutes, 5 seconds\nVlan4094 is\
+        \ (default)\n  Down 39 days, 19 hours, 34 minutes, 13 seconds\nVlan4094 is\
         \ down, line protocol is lowerlayerdown (notconnect)\n  Hardware is Vlan,\
         \ address is 0000.0000.0000 (bia 0000.0000.0000)\n  IP MTU 9164 bytes (default)\n\
-        \  Down 36 days, 19 hours, 41 minutes, 19 seconds\nVxlan1 is up, line protocol\
+        \  Down 39 days, 19 hours, 37 minutes, 28 seconds\nVxlan1 is up, line protocol\
         \ is up (connected)\n  Hardware is Vxlan\n  Source interface is Loopback0\
         \ and is active with 11.201.0.3\n  Replication/Flood Mode is headend with\
         \ Flood List Source: CLI\n  Remote MAC learning is disabled\n  VNI mapping\
@@ -1583,89 +1695,183 @@ test_suites:
       test_result: true
       test_suite: test_lldp.py
     name: test_if_lldp_rx_is_enabled_on_
+  - duts:
+    - actual_output: true
+      comment: "TEST if interface |Ethernet1| LLDP transmit is enabled on |kg-topology-CloudEosRR1|.\n\
+        GIVEN LLDP transmit state is |True|.\nWHEN LLDP receive state is |True|.\n\
+        THEN test case result is |True|.\nOUTPUT of |show lldp| is:\n\nLLDP transmit\
+        \ interval      : 30 seconds\nLLDP transmit holdtime      : 120 seconds\n\
+        LLDP reinitialization delay : 2 seconds\nLLDP Management Address VRF : default\n\
+        \nEnabled optional TLVs:\n  Port Description\n  System Name\n  System Description\n\
+        \  System Capabilities\n  Management Address (best)\n  IEEE802.1 Port VLAN\
+        \ ID\n  IEEE802.3 Link Aggregation\n  IEEE802.3 Maximum Frame Size\n  IEEE802.3\
+        \ Power Via MDI\n  LLDP-MED Capabilities\n  LLDP-MED Network Policy\n\nPort\
+        \           Tx Enabled    Rx Enabled \n----------- ---------------- ----------\
+        \ \nEt1            Yes           Yes        \nEt100          Yes         \
+        \  Yes        \n\n"
+      description: Verify LLDP transmit is enabled on interesting interfaces
+      dut: kg-topology-CloudEosRR1
+      expected_output: true
+      fail_reason: ''
+      name: test_if_lldp_tx_is_enabled_on_
+      output_msg: 'On interface |Ethernet1|: interface LLDPrxEnabled is in state |True|,
+        correct LLDP txEnabled state is |True|'
+      show_cmd: show lldp
+      test_result: true
+      test_suite: test_lldp.py
+    - actual_output: true
+      comment: "TEST if interface |Ethernet1| LLDP transmit is enabled on |kg-topology-CloudEosRR2|.\n\
+        GIVEN LLDP transmit state is |True|.\nWHEN LLDP receive state is |True|.\n\
+        THEN test case result is |True|.\nOUTPUT of |show lldp| is:\n\nLLDP transmit\
+        \ interval      : 30 seconds\nLLDP transmit holdtime      : 120 seconds\n\
+        LLDP reinitialization delay : 2 seconds\nLLDP Management Address VRF : default\n\
+        \nEnabled optional TLVs:\n  Port Description\n  System Name\n  System Description\n\
+        \  System Capabilities\n  Management Address (best)\n  IEEE802.1 Port VLAN\
+        \ ID\n  IEEE802.3 Link Aggregation\n  IEEE802.3 Maximum Frame Size\n  IEEE802.3\
+        \ Power Via MDI\n  LLDP-MED Capabilities\n  LLDP-MED Network Policy\n\nPort\
+        \           Tx Enabled    Rx Enabled \n----------- ---------------- ----------\
+        \ \nEt1            Yes           Yes        \nEt100          Yes         \
+        \  Yes        \n\n"
+      description: Verify LLDP transmit is enabled on interesting interfaces
+      dut: kg-topology-CloudEosRR2
+      expected_output: true
+      fail_reason: ''
+      name: test_if_lldp_tx_is_enabled_on_
+      output_msg: 'On interface |Ethernet1|: interface LLDPrxEnabled is in state |True|,
+        correct LLDP txEnabled state is |True|'
+      show_cmd: show lldp
+      test_result: true
+      test_suite: test_lldp.py
+    - actual_output: true
+      comment: "TEST if interface |Ethernet1| LLDP transmit is enabled on |kg-topology-CloudEOSEdge1|.\n\
+        GIVEN LLDP transmit state is |True|.\nWHEN LLDP receive state is |True|.\n\
+        THEN test case result is |True|.\nOUTPUT of |show lldp| is:\n\nLLDP transmit\
+        \ interval      : 30 seconds\nLLDP transmit holdtime      : 120 seconds\n\
+        LLDP reinitialization delay : 2 seconds\nLLDP Management Address VRF : default\n\
+        \nEnabled optional TLVs:\n  Port Description\n  System Name\n  System Description\n\
+        \  System Capabilities\n  Management Address (best)\n  IEEE802.1 Port VLAN\
+        \ ID\n  IEEE802.3 Link Aggregation\n  IEEE802.3 Maximum Frame Size\n  IEEE802.3\
+        \ Power Via MDI\n  LLDP-MED Capabilities\n  LLDP-MED Network Policy\n\nPort\
+        \           Tx Enabled    Rx Enabled \n----------- ---------------- ----------\
+        \ \nEt1            Yes           Yes        \nEt2            Yes         \
+        \  Yes        \nEt100          Yes           Yes        \n\n"
+      description: Verify LLDP transmit is enabled on interesting interfaces
+      dut: kg-topology-CloudEOSEdge1
+      expected_output: true
+      fail_reason: ''
+      name: test_if_lldp_tx_is_enabled_on_
+      output_msg: 'On interface |Ethernet1|: interface LLDPrxEnabled is in state |True|,
+        correct LLDP txEnabled state is |True|'
+      show_cmd: show lldp
+      test_result: true
+      test_suite: test_lldp.py
+    - actual_output: true
+      comment: "TEST if interface |Ethernet1| LLDP transmit is enabled on |kg-topology-CloudEOSEdge2|.\n\
+        GIVEN LLDP transmit state is |True|.\nWHEN LLDP receive state is |True|.\n\
+        THEN test case result is |True|.\nOUTPUT of |show lldp| is:\n\nLLDP transmit\
+        \ interval      : 30 seconds\nLLDP transmit holdtime      : 120 seconds\n\
+        LLDP reinitialization delay : 2 seconds\nLLDP Management Address VRF : default\n\
+        \nEnabled optional TLVs:\n  Port Description\n  System Name\n  System Description\n\
+        \  System Capabilities\n  Management Address (best)\n  IEEE802.1 Port VLAN\
+        \ ID\n  IEEE802.3 Link Aggregation\n  IEEE802.3 Maximum Frame Size\n  IEEE802.3\
+        \ Power Via MDI\n  LLDP-MED Capabilities\n  LLDP-MED Network Policy\n\nPort\
+        \           Tx Enabled    Rx Enabled \n----------- ---------------- ----------\
+        \ \nEt1            Yes           Yes        \nEt2            Yes         \
+        \  Yes        \nEt100          Yes           Yes        \n\n"
+      description: Verify LLDP transmit is enabled on interesting interfaces
+      dut: kg-topology-CloudEOSEdge2
+      expected_output: true
+      fail_reason: ''
+      name: test_if_lldp_tx_is_enabled_on_
+      output_msg: 'On interface |Ethernet1|: interface LLDPrxEnabled is in state |True|,
+        correct LLDP txEnabled state is |True|'
+      show_cmd: show lldp
+      test_result: true
+      test_suite: test_lldp.py
+    name: test_if_lldp_tx_is_enabled_on_
 - name: test_memory.py
   test_cases:
   - duts:
-    - actual_output: 38.13084044717752
+    - actual_output: 37.88877046797791
       comment: "TEST if memory utilization is less than specified value on  |kg-topology-CloudEosRR1|.\n\
-        GIVEN memory utilization is less than |70|.\nWHEN  memory utilization is |38.13084044717752|.\n\
+        GIVEN memory utilization is less than |70|.\nWHEN  memory utilization is |37.88877046797791|.\n\
         THEN test case result is |True|.\nOUTPUT of |show version| is:\n\nArista vEOS\n\
         Hardware version:    \nSerial number:       9B112703F293F47ADC3EE25318457B64\n\
         System MAC address:  0246.bb59.d5ae\n\nSoftware image version: 4.23.1F-cloud-16179785.jakartarel\
         \ (engineering build)\nArchitecture:           x86_64\nInternal build version:\
         \ 4.23.1F-cloud-16179785.jakartarel\nInternal build ID:      6bc96200-86c1-4e86-bed7-8280a6802809\n\
-        \nUptime:                 5 weeks, 1 days, 19 hours and 45 minutes\nTotal\
-        \ memory:           7761392 kB\nFree memory:            2959492 kB\n\n"
+        \nUptime:                 5 weeks, 4 days, 19 hours and 41 minutes\nTotal\
+        \ memory:           7761392 kB\nFree memory:            2940696 kB\n\n"
       description: Verify memory is not exceeding high utlization
       dut: kg-topology-CloudEosRR1
       expected_output: 70
       fail_reason: ''
       name: test_memory_utilization_on_
       output_msg: On router |kg-topology-CloudEosRR1| memory utilization percent is
-        |38.13084044717752%| and should be under |70%|
+        |37.88877046797791%| and should be under |70%|
       result: true
       show_cmd: show version
       test_result: true
       test_suite: test_memory.py
-    - actual_output: 38.402166283655056
+    - actual_output: 37.96644368092234
       comment: "TEST if memory utilization is less than specified value on  |kg-topology-CloudEosRR2|.\n\
-        GIVEN memory utilization is less than |70|.\nWHEN  memory utilization is |38.402166283655056|.\n\
+        GIVEN memory utilization is less than |70|.\nWHEN  memory utilization is |37.96644368092234|.\n\
         THEN test case result is |True|.\nOUTPUT of |show version| is:\n\nArista vEOS\n\
         Hardware version:    \nSerial number:       93F97AD3A1044C742872BA1CFA684D63\n\
         System MAC address:  0654.9b7c.b00f\n\nSoftware image version: 4.23.1F-cloud-16179785.jakartarel\
         \ (engineering build)\nArchitecture:           x86_64\nInternal build version:\
         \ 4.23.1F-cloud-16179785.jakartarel\nInternal build ID:      6bc96200-86c1-4e86-bed7-8280a6802809\n\
-        \nUptime:                 5 weeks, 1 days, 19 hours and 45 minutes\nTotal\
-        \ memory:           7818736 kB\nFree memory:            2996156 kB\n\n"
+        \nUptime:                 5 weeks, 4 days, 19 hours and 41 minutes\nTotal\
+        \ memory:           7818736 kB\nFree memory:            2953212 kB\n\n"
       description: Verify memory is not exceeding high utlization
       dut: kg-topology-CloudEosRR2
       expected_output: 70
       fail_reason: ''
       name: test_memory_utilization_on_
       output_msg: On router |kg-topology-CloudEosRR2| memory utilization percent is
-        |38.402166283655056%| and should be under |70%|
+        |37.96644368092234%| and should be under |70%|
       result: true
       show_cmd: show version
       test_result: true
       test_suite: test_memory.py
-    - actual_output: 35.177399518285306
+    - actual_output: 35.38045024157358
       comment: "TEST if memory utilization is less than specified value on  |kg-topology-CloudEOSEdge1|.\n\
-        GIVEN memory utilization is less than |70|.\nWHEN  memory utilization is |35.177399518285306|.\n\
+        GIVEN memory utilization is less than |70|.\nWHEN  memory utilization is |35.38045024157358|.\n\
         THEN test case result is |True|.\nOUTPUT of |show version| is:\n\nArista vEOS\n\
         Hardware version:    \nSerial number:       DB3968957436BF7623C810C9F13FC97E\n\
         System MAC address:  029e.d20a.bbfc\n\nSoftware image version: 4.23.1F-cloud-16179785.jakartarel\
         \ (engineering build)\nArchitecture:           x86_64\nInternal build version:\
         \ 4.23.1F-cloud-16179785.jakartarel\nInternal build ID:      6bc96200-86c1-4e86-bed7-8280a6802809\n\
-        \nUptime:                 5 weeks, 1 days, 19 hours and 45 minutes\nTotal\
-        \ memory:           7818736 kB\nFree memory:            2740844 kB\n\n"
+        \nUptime:                 5 weeks, 4 days, 19 hours and 42 minutes\nTotal\
+        \ memory:           7818736 kB\nFree memory:            2751468 kB\n\n"
       description: Verify memory is not exceeding high utlization
       dut: kg-topology-CloudEOSEdge1
       expected_output: 70
       fail_reason: ''
       name: test_memory_utilization_on_
       output_msg: On router |kg-topology-CloudEOSEdge1| memory utilization percent
-        is |35.177399518285306%| and should be under |70%|
+        is |35.38045024157358%| and should be under |70%|
       result: true
       show_cmd: show version
       test_result: true
       test_suite: test_memory.py
-    - actual_output: 36.05554261400532
+    - actual_output: 36.19196144196814
       comment: "TEST if memory utilization is less than specified value on  |kg-topology-CloudEOSEdge2|.\n\
-        GIVEN memory utilization is less than |70|.\nWHEN  memory utilization is |36.05554261400532|.\n\
+        GIVEN memory utilization is less than |70|.\nWHEN  memory utilization is |36.19196144196814|.\n\
         THEN test case result is |True|.\nOUTPUT of |show version| is:\n\nArista vEOS\n\
         Hardware version:    \nSerial number:       DE52F26D16E91F22BB1B507175C8C765\n\
         System MAC address:  0635.02ca.8297\n\nSoftware image version: 4.23.1F-cloud-16179785.jakartarel\
         \ (engineering build)\nArchitecture:           x86_64\nInternal build version:\
         \ 4.23.1F-cloud-16179785.jakartarel\nInternal build ID:      6bc96200-86c1-4e86-bed7-8280a6802809\n\
-        \nUptime:                 5 weeks, 1 days, 19 hours and 45 minutes\nTotal\
-        \ memory:           7761392 kB\nFree memory:            2797264 kB\n\n"
+        \nUptime:                 5 weeks, 4 days, 19 hours and 41 minutes\nTotal\
+        \ memory:           7761392 kB\nFree memory:            2796104 kB\n\n"
       description: Verify memory is not exceeding high utlization
       dut: kg-topology-CloudEOSEdge2
       expected_output: 70
       fail_reason: ''
       name: test_memory_utilization_on_
       output_msg: On router |kg-topology-CloudEOSEdge2| memory utilization percent
-        is |36.05554261400532%| and should be under |70%|
+        is |36.19196144196814%| and should be under |70%|
       result: true
       show_cmd: show version
       test_result: true

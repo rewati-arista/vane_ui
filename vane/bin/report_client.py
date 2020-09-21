@@ -101,7 +101,10 @@ class ReportClient:
         self._write_summary_report()
         self._write_tests_case_report()
         self._write_detail_report()
-        self._document.save('../reports/report-class.docx')
+
+        _, file_date = self._return_date()
+        file_name = f'../reports/report_{file_date}.docx'
+        self._document.save(file_name)
 
     def _return_date(self):
         """ Genreate a formatted date and return to calling
@@ -110,16 +113,17 @@ class ReportClient:
 
         date_obj = datetime.datetime.now()
         format_date = date_obj.strftime("%B %d, %Y %I:%M:%S%p")
+        file_date = date_obj.strftime("%y%m%d%H%M")
 
         logging.info(f'Returning formatted date: {format_date}')
-        return format_date
+        return format_date, file_date
 
     def _write_title_page(self):
         """ Write report title page
         """
 
         logging.info('Create report title page')
-        format_date = self._return_date()
+        format_date, _ = self._return_date()
         self._document.add_heading('Test Report', 0)
         p = self._document.add_paragraph(f'{format_date}')
         p.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.RIGHT
@@ -454,6 +458,8 @@ class ReportClient:
                 suite_results (list): List of compiled test suite data
         """
 
+        logging.info('The following test suites have been collected '
+                     f'{self._results_data}')
         test_suites = self._results_data['test_suites']
         suite_results = []
 

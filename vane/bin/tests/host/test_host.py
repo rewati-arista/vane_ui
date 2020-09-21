@@ -31,8 +31,6 @@
 
 """ Tests to validate base feature status."""
 
-import inspect
-import logging
 import pytest
 import tests_tools
 
@@ -56,29 +54,28 @@ class HostTests():
               tests_definitions (dict): Test parameters
         """
 
-        test_case = inspect.currentframe().f_code.co_name
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
-
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
-
-        expected_output = dut['name']
-        dut_name = dut['name']
+        (test_parameters,
+         _, _, dut_name,
+         show_cmd_txt,
+         show_cmd) = tests_tools.pre_testcase(tests_definitions,
+                                              TEST_SUITE,
+                                              dut)
+        expected_output = dut_name
         actual_output = dut["output"][show_cmd]["json"]["hostname"]
 
-        logging.info(f'TEST is hostname {dut_name} correct')
-        logging.info(f'GIVEN hostname {dut_name}')
-        logging.info(f'WHEN hostname is {actual_output}')
+        output_msg = (f"On router |{dut_name}| the configured hostname is "
+                      f"|{actual_output}| and the correct hostname is "
+                      f"|{expected_output}|")
 
-        print(f"\nOn router |{dut_name}| the configured hostname is "
-              f"|{actual_output}| and the correct hostname is "
-              f"|{expected_output}|")
+        test_result = actual_output == expected_output
+        comment = ('TEST is hostname correct.\nGIVEN hostname '
+                   f'|{expected_output}|.\nWHEN hostname is |{actual_output}|'
+                   f'.\nTHEN test case result is |{test_result}|.\nOUTPUT of '
+                   f'|{show_cmd}| is :\n\n{show_cmd_txt}')
 
-        test_result = actual_output is expected_output
-        logging.info(f'THEN test case result is |{test_result}|')
-        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+        print(f"{output_msg}\n{comment}")
+
+        tests_tools.post_testcase(test_parameters, comment, test_result,
+                                  output_msg, actual_output, dut_name)
 
         assert actual_output == expected_output

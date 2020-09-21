@@ -63,11 +63,9 @@ test_suites:
     show_cmd: show interfaces
 - name: test_host.py
   testcases:
-  - comment: null
-    description: Verify hostname is set on device is correct
+  - description: Verify hostname is set on device is correct
     expected_output: null
     name: test_if_hostname_is_correcet_on_
-    result: true
     show_cmd: show hostname
 - name: test_extension.py
   testcases:
@@ -117,22 +115,29 @@ test_suites:
     name: test_5_min_cpu_utlization_on_
     result: true
     show_cmd: show processes
-- name: test_users.py
+- name: test_ztp.py
   testcases:
   - comment: null
-    description: Verify username is set correctly
-    expected_output: true
-    name: test_if_usernames_are_configured_on_
+    description: Verify local log messages
+    expected_output: disabled
+    name: test_if_zerotouch_is_disabled_on_
     result: true
-    show_cmd: show running-config section username
-    usernames:
-    - ec2-user
-    - kgrozis
+    show_cmd: show zerotouch
+  - comment: null
+    description: Verify zerotoucn-config file is on flash
+    expected_output: true
+    name: test_for_zerotouch_config_file_on_
+    result: true
+    show_cmd: dir flash:zerotouch-config
 - name: test_lldp.py
   testcases:
   - description: Verify LLDP receive is enabled on interesting interfaces
     expected_output: true
     name: test_if_lldp_rx_is_enabled_on_
+    show_cmd: show lldp
+  - description: Verify LLDP transmit is enabled on interesting interfaces
+    expected_output: true
+    name: test_if_lldp_tx_is_enabled_on_
     show_cmd: show lldp
 - name: test_filesystem.py
   testcases:
@@ -279,20 +284,17 @@ test_suites:
     name: test_if_daemons_are_enabled_on_
     result: true
     show_cmd: show daemon
-- name: test_ztp.py
+- name: test_users.py
   testcases:
   - comment: null
-    description: Verify local log messages
-    expected_output: disabled
-    name: test_if_zerotouch_is_disabled_on_
-    result: true
-    show_cmd: show zerotouch
-  - comment: null
-    description: Verify zerotoucn-config file is on flash
+    description: Verify username is set correctly
     expected_output: true
-    name: test_for_zerotouch_config_file_on_
+    name: test_if_usernames_are_configured_on_
     result: true
-    show_cmd: dir flash:zerotouch-config
+    show_cmd: show running-config section username
+    usernames:
+    - ec2-user
+    - kgrozis
 - name: test_environment.py
   testcases:
   - comment: null

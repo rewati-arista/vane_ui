@@ -53,16 +53,14 @@ class LldpTests():
                 dut (dict): Encapsulates dut details including name, connection
         """
 
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE)
-
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
-        interfaces_list = dut["output"]["interface_list"]
-
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
+        (test_parameters,
+         expected_output,
+         interfaces_list,
+         dut_name,
+         show_cmd_txt,
+         show_cmd) = tests_tools.pre_testcase(tests_definitions,
+                                              TEST_SUITE,
+                                              dut)
 
         print(f"\nOn router |{dut_name}|:")
 
@@ -82,6 +80,49 @@ class LldpTests():
                        f'is |{expected_output}|.\nWHEN LLDP receive state is '
                        f'|{actual_output}|.\nTHEN test case result is '
                        f'|{test_result}|.\nOUTPUT of |{show_cmd}| is:\n\n'
+                       f'{show_cmd_txt}')
+
+            print(f"  - {output_msg}\n{comment}")
+
+            tests_tools.post_testcase(test_parameters, comment, test_result,
+                                      output_msg, actual_output, dut_name)
+
+            assert actual_output == expected_output
+
+    def test_if_lldp_tx_is_enabled_on_(self, dut, tests_definitions):
+        """  Verify LLDP transmit is enabled on interesting interfaces
+
+            Args:
+                dut (dict): Encapsulates dut details including name, connection
+        """
+
+        (test_parameters,
+         expected_output,
+         interfaces_list,
+         dut_name,
+         show_cmd_txt,
+         show_cmd) = tests_tools.pre_testcase(tests_definitions,
+                                              TEST_SUITE,
+                                              dut)
+
+        print(f"\nOn router |{dut_name}|:")
+
+        for interface in interfaces_list:
+            interface_name = interface['interface_name'].replace(" ", "")
+            int_ptr = dut["output"][show_cmd]['json']['lldpInterfaces']
+            actual_output = int_ptr[interface_name]['rxEnabled']
+
+            output_msg = (f"On interface |{interface_name}|: interface LLDP"
+                          f"rxEnabled is in state |{actual_output}|, correct "
+                          f"LLDP txEnabled state is |{expected_output}|")
+
+            test_result = actual_output == expected_output
+
+            comment = (f'TEST if interface |{interface_name}| LLDP transmit '
+                       f'is enabled on |{dut_name}|.\nGIVEN LLDP transmit '
+                       f'state is |{expected_output}|.\nWHEN LLDP receive '
+                       f'state is |{actual_output}|.\nTHEN test case result '
+                       f'is |{test_result}|.\nOUTPUT of |{show_cmd}| is:\n\n'
                        f'{show_cmd_txt}')
 
             print(f"  - {output_msg}\n{comment}")
