@@ -32,7 +32,6 @@
 """ Tests to validate base feature status."""
 
 import inspect
-import logging
 import pytest
 import tests_tools
 
@@ -56,34 +55,46 @@ class FileSystemTests():
               tests_definitions (dict): Test parameters
         """
 
+        # Initialize values
         test_case = inspect.currentframe().f_code.co_name
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+        comment, output_msg, actual_result, expected_result = "", "", [], []
+
+        (test_parameters,
+         expected_output,
+         _, dut_name, _, _) = tests_tools.pre_testcase(tests_definitions,
+                                                       TEST_SUITE,
+                                                       dut)
 
         files = test_parameters["files"]
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
 
         for file_name in files:
             show_cmd = f"show file information {file_name}"
-            logging.info(f'TEST is {file_name} file present on |{dut_name}|')
-            logging.info(f'GIVEN expected {file_name} isDir state: '
-                         f'|{expected_output}|')
-
             show_output, show_cmd_txt = tests_tools.return_show_cmd(show_cmd,
                                                                     dut,
                                                                     test_case,
                                                                     LOG_FILE)
             actual_output = show_output[0]["result"]['isDir']
 
-            logging.info(f'WHEN {file_name} file isDir state is '
-                         f'|{actual_output}|')
+            output_msg += (f"\nOn router |{dut_name}|: {file_name} file isDir "
+                           f"state is |{actual_output}|, correct state is "
+                           f"|{expected_output}|.\n")
 
             test_result = actual_output is expected_output
-            logging.info(f'THEN test case result is |{test_result}|')
-            logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+            comment += (f'TEST is {file_name} file present on |{dut_name}|.\n'
+                        f'GIVEN {file_name} file isDir state is: '
+                        f'|{expected_output}|.\n'
+                        f'WHEN {file_name} file isDir state is '
+                        f'|{actual_output}|.\n'
+                        f'THEN test case result is |{test_result}|.\n'
+                        f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}.\n')
 
-            print(f"\nOn router |{dut_name}|: {file_name} file isDir state is "
-                  f"|{actual_output}|")
-            assert expected_output is actual_output
+            actual_result.append(actual_output)
+            expected_result.append(expected_output)
+
+        print(f"{output_msg}\n{comment}")
+
+        test_parameters['expected_output'] = expected_result
+        tests_tools.post_testcase(test_parameters, comment, test_result,
+                                  output_msg, actual_result, dut_name)
+
+        assert actual_result == expected_result

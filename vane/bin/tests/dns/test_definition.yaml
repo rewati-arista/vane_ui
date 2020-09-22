@@ -8,6 +8,6 @@ testcases:
       - google.com
       - cnn.com
       - arista.com
-    expected_output: null
+    expected_output: True
     comment: null
     result: True
