@@ -38,7 +38,8 @@ import json
 import re
 import yaml
 import docx
-
+from docx.oxml.ns import qn
+from docx.oxml import OxmlElement
 
 logging.basicConfig(level=logging.INFO, filename='vane.log', filemode='w',
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -68,6 +69,7 @@ class ReportClient:
 
         self._document = docx.Document()
         self._major_section = 1
+        self._test_id = 1
 
     def _import_yaml(self, yaml_file):
         """ Import YAML file as python data structure
@@ -98,6 +100,7 @@ class ReportClient:
 
         logging.info('Create MSFT docx with results')
         self._write_title_page()
+        self._write_toc_page()
         self._write_summary_report()
         self._write_tests_case_report()
         self._write_detail_report()
@@ -125,8 +128,37 @@ class ReportClient:
         logging.info('Create report title page')
         format_date, _ = self._return_date()
         self._document.add_heading('Test Report', 0)
-        p = self._document.add_paragraph(f'{format_date}')
-        p.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.RIGHT
+        paragraph = self._document.add_paragraph(f'{format_date}')
+        paragraph.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.RIGHT
+        self._document.add_page_break()
+
+    def _write_toc_page(self):
+        """ Write table of contents page
+        """
+        paragraph = self._document.add_paragraph()
+        run = paragraph.add_run()
+        fld_char = OxmlElement('w:fldChar')
+        fld_char.set(qn('w:fldCharType'), 'begin')
+        instr_text = OxmlElement('w:instrText')
+        instr_text.set(qn('xml:space'), 'preserve')
+        instr_text.text = 'TOC \\o "1-3" \\h \\z \\u'
+
+        fld_char2 = OxmlElement('w:fldChar')
+        fld_char2.set(qn('w:fldCharType'), 'separate')
+        fld_char3 = OxmlElement('w:t')
+        fld_char3.text = "Right-click to update field."
+        fld_char2.append(fld_char3)
+
+        fld_char4 = OxmlElement('w:fldChar')
+        fld_char4.set(qn('w:fldCharType'), 'end')
+
+        r_element = run._r
+        r_element.append(fld_char)
+        r_element.append(instr_text)
+        r_element.append(fld_char2)
+        r_element.append(fld_char4)
+        p_element = paragraph._p
+
         self._document.add_page_break()
 
     def _write_summary_report(self):
@@ -370,8 +402,8 @@ class ReportClient:
 
                 for dut in test_case['duts']:
                     self._write_detail_dut_section(dut,
-                                                  minor_section,
-                                                  dut_section)
+                                                   minor_section,
+                                                   dut_section)
                     dut_section += 1
 
                 minor_section += 1
@@ -424,6 +456,7 @@ class ReportClient:
         hdr_cells[0].text = 'Test Parameter'
         hdr_cells[1].text = 'Description'
 
+        self._add_dut_table_row('test_id', dut, table)
         self._add_dut_table_row('name', dut, table)
         self._add_dut_table_row('description', dut, table)
         self._add_dut_table_row('dut', dut, table)
@@ -450,6 +483,15 @@ class ReportClient:
             row_cells = table.add_row().cells
             row_cells[0].text = test_field
             row_cells[1].text = str(test_value)
+        elif test_field == 'test_id':
+            test_value = self._test_id
+            test_field = self._format_test_field(test_field)
+
+            row_cells = table.add_row().cells
+            row_cells[0].text = test_field
+            row_cells[1].text = str(test_value)
+
+            self._test_id += 1
 
     def _compile_suite_results(self):
         """ Compile test suite results and return them

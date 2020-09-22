@@ -60,38 +60,6 @@ else:
 
 
 @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-def test_show_lldp_local_info(dut):
-    """ Verify show lldp local-info interfaceDescription is correct
-
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
-    """
-
-    test_show_lldp_local_info_system_name(dut)
-    test_show_lldp_local_info_interface_description(dut)
-    test_show_lldp_local_info_max_frame_size(dut)
-    test_show_lldp_local_info_interface_id_type(dut)
-    test_show_lldp_local_info_interface_id(dut)
-
-
-@pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-def test_show_lldp_local_info_system_name(dut):
-    """ Verify show lldp local-info hostname is the system's name
-
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
-    """
-
-    show_cmd = "show lldp local-info"
-    sh_lldp = dut["output"][show_cmd]["json"]['systemName']
-
-    print(f"\nOn router |{dut['name']}|: the LLDP the local-info hostname is \
-set to |{sh_lldp}|, correct name is |{dut['name']}|")
-
-    assert sh_lldp == dut['name']
-
-
-@pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
 def test_show_lldp_local_info_interface_description(dut):
     """ Verify show lldp local-info interfaceDescription is correct
 

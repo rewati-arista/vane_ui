@@ -31,8 +31,6 @@
 
 """ Tests to validate base feature status."""
 
-import inspect
-import logging
 import pytest
 import tests_tools
 
@@ -55,38 +53,43 @@ class DNSTests():
               dut (dict): Encapsulates dut details including name, connection
         """
 
-        test_case = inspect.currentframe().f_code.co_name
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+        comment, output_msg, actual_result, expected_result = "", "", [], []
+
+        (test_parameters,
+         expected_output,
+         _, dut_name, _, _) = tests_tools.pre_testcase(tests_definitions,
+                                                       TEST_SUITE,
+                                                       dut)
 
         urls = test_parameters["urls"]
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
         dut_conn = dut['connection']
 
         for url in urls:
             show_cmd = f"ping {url}"
-            logging.info(f'TEST can |{dut_name}| resolve {url}')
-            logging.info(f'GIVEN URL is |{url}|')
-            logging.info('WHEN exception is |Name or service not known| '
-                         'string')
 
             show_cmd_txt = dut_conn.run_commands(show_cmd, encoding='text')
             show_cmd_txt = show_cmd_txt[0]['output']
-            actual_output = show_cmd_txt
 
-            if 'Name or service not known' in show_cmd_txt:
-                print(f"\nOn router |{dut_name}| DNS resolution |Failed| for "
-                      f"{url}")
-                logging.info('THEN test case result is |Failed|')
-                logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+            actual_output = 'Name or service not known' not in show_cmd_txt
+            test_result = actual_output is expected_output
 
-                assert False
-            else:
-                print(f"\nOn router |{dut_name}| DNS resolution |Passed| for "
-                      f"{url}")
-                logging.info('THEN test case result is |Passed|')
-                logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+            output_msg += (f"\nOn router |{dut_name}|, DNS resolution is"
+                           f"|{test_result}| for {url}.\n")
 
-                assert True
+            comment += (f'TEST can |{dut_name}| resolve |{url}|.\n'
+                        f'GIVEN URL is |{url}|.\n'
+                        'WHEN exception is |Name or service not known| '
+                        'string.\n'
+                        f'THEN test case result is |{test_result}|.\n'
+                        f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}.\n')
+
+            actual_result.append(actual_output)
+            expected_result.append(expected_output)
+
+        print(f"{output_msg}\n{comment}")
+
+        test_parameters['expected_output'] = expected_result
+        tests_tools.post_testcase(test_parameters, comment, test_result,
+                                  output_msg, actual_result, dut_name)
+
+        assert actual_result == expected_result

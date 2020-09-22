@@ -74,7 +74,6 @@ class LldpTests():
                           f"LLDP rxEnabled state is |{expected_output}|")
 
             test_result = actual_output == expected_output
-
             comment = (f'TEST if interface |{interface_name}| LLDP receive is '
                        f'enabled on |{dut_name}|.\nGIVEN LLDP receive state '
                        f'is |{expected_output}|.\nWHEN LLDP receive state is '
@@ -131,3 +130,39 @@ class LldpTests():
                                       output_msg, actual_output, dut_name)
 
             assert actual_output == expected_output
+
+    def test_if_lldp_system_name_is_correct_on_(self, dut, tests_definitions):
+        """  Verify show lldp local-info hostname is the system's name
+
+            Args:
+                dut (dict): Encapsulates dut details including name, connection
+        """
+
+        (test_parameters,
+         expected_output,
+         _, dut_name,
+         show_cmd_txt,
+         show_cmd) = tests_tools.pre_testcase(tests_definitions,
+                                              TEST_SUITE,
+                                              dut)
+
+        test_parameters['expected_output'] = expected_output = dut_name
+        actual_output = dut["output"][show_cmd]["json"]['systemName']
+
+        output_msg = (f"On router |{dut_name}|: the LLDP local-info system "
+                      f"name is |{actual_output}|, correct name is "
+                      f"|{expected_output}|")
+        test_result = actual_output == expected_output
+
+        comment = ('TEST if lldp system name matches hostname on dut '
+                   f'{dut_name}.\n'
+                   f'GIVEN hostname is |{expected_output}|.\n'
+                   f'WHEN LLDP system name is |{actual_output}|.\n'
+                   f'THEN test case result is |{test_result}|.\n'
+                   f'OUTPUT of |{show_cmd}| is:\n\n{show_cmd_txt}')
+
+        print(f"{output_msg}\n{comment}")
+
+        tests_tools.post_testcase(test_parameters, comment, test_result,
+                                  output_msg, actual_output, dut_name)
+        assert actual_output == expected_output

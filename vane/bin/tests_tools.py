@@ -353,8 +353,11 @@ def pre_testcase(tests_definitions, test_suite, dut):
     dut_name = dut['name']
 
     show_cmd = test_parameters["show_cmd"]
-    verify_show_cmd(show_cmd, dut)
-    show_cmd_txt = dut["output"][show_cmd]['text']
+    if show_cmd:
+        verify_show_cmd(show_cmd, dut)
+        show_cmd_txt = dut["output"][show_cmd]['text']
+    else:
+        show_cmd_txt = ""
 
     return (test_parameters, expected_output, interfaces_list, dut_name,
             show_cmd_txt, show_cmd)
@@ -467,7 +470,8 @@ def generate_interface_list(dut_name, test_definition):
 
     dut_hostnames = [dut['name'] for dut in test_definition['duts']]
     dut_index = dut_hostnames.index(dut_name)
-    interface_list = test_definition['duts'][dut_index]['test_criteria'][0]['criteria']
+    int_ptr = test_definition['duts'][dut_index]
+    interface_list = int_ptr['test_criteria'][0]['criteria']
 
     return interface_list
 
@@ -576,7 +580,7 @@ def write_results(test_parameters):
         test_index = (len(yaml_data['test_suites'][suite_index]['test_cases']) - 1)
 
     logging.info(f'Find Index for dut {dut_name}')
-    duts = [param['dut'] for param 
+    duts = [param['dut'] for param
             in yaml_data['test_suites'][suite_index]['test_cases'][test_index]['duts']]
 
     if dut_name not in duts:
@@ -666,7 +670,7 @@ def return_test_defs(test_parameters):
                 test_def = import_yaml(file_path)
                 test_defs['test_suites'].append(test_def)
 
-    export_yaml('tests_definitions.yaml', test_defs)
+    export_yaml('../reports/tests_definitions.yaml', test_defs)
     logging.info('Return the following test definitions data strcuture '
                  f'{test_defs}')
 

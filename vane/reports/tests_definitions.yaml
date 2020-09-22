@@ -139,17 +139,19 @@ test_suites:
     expected_output: true
     name: test_if_lldp_tx_is_enabled_on_
     show_cmd: show lldp
+  - description: Verify show lldp local-info hostname is the system's name
+    expected_output: null
+    name: test_if_lldp_system_name_is_correct_on_
+    show_cmd: show lldp local-info
 - name: test_filesystem.py
   testcases:
-  - comment: null
-    description: Verify filesystem is correct and expected files are present
+  - description: Verify filesystem is correct and expected files are present
     expected_output: false
     files:
     - flash:startup-config
     - flash:veos-config
     - flash:zerotouch-config
     name: test_if_files_on_
-    result: true
     show_cmd: null
 - name: test_aaa.py
   testcases:
@@ -354,7 +356,7 @@ test_suites:
   testcases:
   - comment: null
     description: Verify DNS is running by performing pings and verifying name resolution
-    expected_output: null
+    expected_output: true
     name: test_if_dns_resolves_on_
     result: true
     show_cmd: show management api http-commands

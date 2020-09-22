@@ -10,3 +10,8 @@ testcases:
     # LLDP TX state
     expected_output: true
     show_cmd: show lldp
+  - name: test_if_lldp_system_name_is_correct_on_
+    description: Verify show lldp local-info hostname is the system's name
+    # Use dut name
+    expected_output: null
+    show_cmd: show lldp local-info
