@@ -8,8 +8,6 @@ testcases:
       - awsha.rpm
     show_cmd: show extensions
     expected_output: installed
-    comment: null
-    result: True
   - name: test_if_extensions_are_erroring_on_
     description: Verify a list of extension are not erroring on a DUT
     # List extensions to check on DUT
@@ -18,5 +16,3 @@ testcases:
       - awsha.rpm
     show_cmd: show extensions
     expected_output: False
-    comment: null
-    result: True

@@ -87,56 +87,6 @@ description is |{sh_lldp}|, correct description is |{interface_description}|")
 
 
 @pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-def test_show_lldp_local_info_max_frame_size(dut):
-    """ Verify show lldp local-info maxFrameSize is 10200
-
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
-    """
-
-    show_cmd = "show lldp local-info"
-    interfaces_list = dut["output"]["interface_list"]
-
-    print(f"\nOn router |{dut['name']}|:")
-
-    for interface in interfaces_list:
-        interface_name = interface['interface_name'].replace(" ", "")
-        sh_lldp = \
-            dut["output"][show_cmd]["json"]['localInterfaceInfo\
-'][interface_name]['maxFrameSize']
-
-        print(f"  - On interface |{interface['interface_name']}|: LLDP local-info \
-            maxFrameSize is |{sh_lldp}|, correct maxFrameSize is |10200|")
-
-        assert int(sh_lldp) == 10200
-
-
-@pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
-def test_show_lldp_local_info_interface_id_type(dut):
-    """ Verify show lldp local-info interfaceIdType is interfaceName
-
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
-    """
-
-    show_cmd = "show lldp local-info"
-    interfaces_list = dut["output"]["interface_list"]
-
-    print(f"\nOn router |{dut['name']}|:")
-
-    for interface in interfaces_list:
-        interface_name = interface['interface_name'].replace(" ", "")
-        sh_lldp = \
-            dut["output"][show_cmd]["json"]['localInterfaceInfo\
-'][interface_name]['interfaceIdType']
-
-        print(f"  - On interface |{interface['interface_name']}|: LLDP local-info \
-interfaceIdType is |{sh_lldp}|, correct interfaceIdType is |interfaceName|")
-
-        assert sh_lldp == 'interfaceName'
-
-
-@pytest.mark.parametrize("dut", DUTS, ids=CONNECTION_LIST)
 def test_show_lldp_local_info_interface_id(dut):
     """ Verify show lldp local-info interfaceId is interface name
 

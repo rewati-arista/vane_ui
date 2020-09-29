@@ -1,0 +1,54 @@
+actual_output:
+- 0
+- 0
+comment: 'TEST if interface |Ethernet1| counters have alignmentErrors errors on |kg-topology-CloudEOSEdge2|.
+
+  GIVEN interface alignmentErrors errors is 0|.
+
+  WHEN interface alignmentErrors errors is |0|.
+
+  THEN test case result is |True|.
+
+
+  TEST if interface |Ethernet2| counters have alignmentErrors errors on |kg-topology-CloudEOSEdge2|.
+
+  GIVEN interface alignmentErrors errors is 0|.
+
+  WHEN interface alignmentErrors errors is |0|.
+
+  THEN test case result is |True|.
+
+
+  OUTPUT of |show interfaces counters errors| is :
+
+
+  Port               FCS    Align   Symbol       Rx    Runts   Giants       Tx
+
+  Et1                  0        0        0        0        0        0        0
+
+  Et2                  0        0        0        0        0        0        0
+
+  Et100                0        0        0        0        0        0        0
+
+  .
+
+  '
+description: Verify the interfaces of interest have no alignmentErrors errors
+dut: kg-topology-CloudEOSEdge2
+expected_output:
+- 0
+- 0
+fail_reason: ''
+name: test_if_intf_counters_has_alignment_errors_on_
+output_msg: 'On interface |Ethernet1|: interface counter errors has |0| alignmentErrors,
+  correct state is |0|.
+
+
+  On interface |Ethernet2|: interface counter errors has |0| alignmentErrors, correct
+  state is |0|.
+
+
+  '
+show_cmd: show interfaces counters errors
+test_result: true
+test_suite: test_interface.py

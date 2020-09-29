@@ -51,6 +51,7 @@ parameters:
   processes: 4
   report_dir: ../reports
   results_file: result.yml
+  results_dir: ../reports/results
   setup_show: false
   show_log: show_output.log
   stdout: false

@@ -54,28 +54,24 @@ class HostTests():
               tests_definitions (dict): Test parameters
         """
 
-        (test_parameters,
-         _, _, dut_name,
-         show_cmd_txt,
-         show_cmd) = tests_tools.pre_testcase(tests_definitions,
-                                              TEST_SUITE,
-                                              dut)
-        expected_output = dut_name
-        actual_output = dut["output"][show_cmd]["json"]["hostname"]
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        output_msg = (f"On router |{dut_name}| the configured hostname is "
-                      f"|{actual_output}| and the correct hostname is "
-                      f"|{expected_output}|")
+        tops.expected_output = tops.dut_name
+        tops.actual_output = dut["output"][tops.show_cmd]["json"]["hostname"]
 
-        test_result = actual_output == expected_output
-        comment = ('TEST is hostname correct.\nGIVEN hostname '
-                   f'|{expected_output}|.\nWHEN hostname is |{actual_output}|'
-                   f'.\nTHEN test case result is |{test_result}|.\nOUTPUT of '
-                   f'|{show_cmd}| is :\n\n{show_cmd_txt}')
+        tops.output_msg = (f"On router |{tops.dut_name}| the configured hostname is "
+                           f"|{tops.actual_output}| and the correct hostname is "
+                           f"|{tops.expected_output}|")
 
-        print(f"{output_msg}\n{comment}")
+        tops.test_result = tops.actual_output == tops.expected_output
+        tops.comment = ('TEST is hostname correct.\n'
+                        f'GIVEN hostname |{tops.expected_output}|.\n'
+                        f'WHEN hostname is |{tops.actual_output}|.\n'
+                        f'THEN test case result is |{tops.test_result}|.\n'
+                        f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}')
 
-        tests_tools.post_testcase(test_parameters, comment, test_result,
-                                  output_msg, actual_output, dut_name)
+        print(f"{tops.output_msg}\n{tops.comment}")
 
-        assert actual_output == expected_output
+        tops.post_testcase()
+
+        assert tops.actual_output == tops.expected_output

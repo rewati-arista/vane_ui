@@ -1,0 +1,130 @@
+actual_output:
+- true
+- true
+- true
+comment: 'TEST can |kg-topology-CloudEosRR2| resolve |google.com|.
+
+  GIVEN URL is |google.com|.
+
+  WHEN exception is |Name or service not known| string.
+
+  THEN test case result is |True|.
+
+  OUTPUT of |ping google.com| is :
+
+
+  PING google.com (172.217.5.14) 72(100) bytes of data.
+
+  76 bytes from ord38s19-in-f14.1e100.net (172.217.5.14): icmp_seq=1 ttl=100 (truncated)
+
+  76 bytes from ord38s19-in-f14.1e100.net (172.217.5.14): icmp_seq=2 ttl=100 (truncated)
+
+  76 bytes from ord38s19-in-f14.1e100.net (172.217.5.14): icmp_seq=3 ttl=100 (truncated)
+
+  76 bytes from ord38s19-in-f14.1e100.net (172.217.5.14): icmp_seq=4 ttl=100 (truncated)
+
+  76 bytes from ord38s19-in-f14.1e100.net (172.217.5.14): icmp_seq=5 ttl=100 (truncated)
+
+
+  --- google.com ping statistics ---
+
+  5 packets transmitted, 5 received, 0% packet loss, time 61ms
+
+  rtt min/avg/max/mdev = 16.597/16.614/16.636/0.012 ms, pipe 2, ipg/ewma 15.289/16.624
+  ms
+
+  .
+
+  TEST can |kg-topology-CloudEosRR2| resolve |cnn.com|.
+
+  GIVEN URL is |cnn.com|.
+
+  WHEN exception is |Name or service not known| string.
+
+  THEN test case result is |True|.
+
+  OUTPUT of |ping cnn.com| is :
+
+
+  PING cnn.com (151.101.1.67) 72(100) bytes of data.
+
+  80 bytes from 151.101.1.67 (151.101.1.67): icmp_seq=1 ttl=39 time=10.4 ms
+
+  80 bytes from 151.101.1.67 (151.101.1.67): icmp_seq=2 ttl=39 time=10.4 ms
+
+  80 bytes from 151.101.1.67 (151.101.1.67): icmp_seq=3 ttl=39 time=10.4 ms
+
+  80 bytes from 151.101.1.67 (151.101.1.67): icmp_seq=4 ttl=39 time=10.4 ms
+
+  80 bytes from 151.101.1.67 (151.101.1.67): icmp_seq=5 ttl=39 time=10.4 ms
+
+
+  --- cnn.com ping statistics ---
+
+  5 packets transmitted, 5 received, 0% packet loss, time 41ms
+
+  rtt min/avg/max/mdev = 10.453/10.464/10.476/0.112 ms, pipe 2, ipg/ewma 10.307/10.470
+  ms
+
+  .
+
+  TEST can |kg-topology-CloudEosRR2| resolve |arista.com|.
+
+  GIVEN URL is |arista.com|.
+
+  WHEN exception is |Name or service not known| string.
+
+  THEN test case result is |True|.
+
+  OUTPUT of |ping arista.com| is :
+
+
+  PING arista.com (64.68.200.46) 72(100) bytes of data.
+
+  80 bytes from url-fwd.easydns.com (64.68.200.46): icmp_seq=1 ttl=39 time=23.0 ms
+
+  80 bytes from url-fwd.easydns.com (64.68.200.46): icmp_seq=2 ttl=39 time=22.9 ms
+
+  80 bytes from url-fwd.easydns.com (64.68.200.46): icmp_seq=3 ttl=39 time=22.9 ms
+
+  80 bytes from url-fwd.easydns.com (64.68.200.46): icmp_seq=4 ttl=39 time=22.9 ms
+
+  80 bytes from url-fwd.easydns.com (64.68.200.46): icmp_seq=5 ttl=39 time=22.9 ms
+
+
+  --- arista.com ping statistics ---
+
+  5 packets transmitted, 5 received, 0% packet loss, time 66ms
+
+  rtt min/avg/max/mdev = 22.957/22.989/23.005/0.166 ms, pipe 3, ipg/ewma 16.571/22.997
+  ms
+
+  .
+
+  '
+description: Verify DNS is running by performing pings and verifying name resolution
+dut: kg-topology-CloudEosRR2
+expected_output:
+- true
+- true
+- true
+fail_reason: ''
+name: test_if_dns_resolves_on_
+output_msg: '
+
+  On router |kg-topology-CloudEosRR2|, DNS resolution is|True| for google.com.
+
+
+  On router |kg-topology-CloudEosRR2|, DNS resolution is|True| for cnn.com.
+
+
+  On router |kg-topology-CloudEosRR2|, DNS resolution is|True| for arista.com.
+
+  '
+show_cmd: show management api http-commands
+test_result: true
+test_suite: test_dns.py
+urls:
+- google.com
+- cnn.com
+- arista.com

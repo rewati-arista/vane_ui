@@ -56,42 +56,35 @@ class InterfaceStatusTests():
                 tests_definitions (dict): Test parameters
         """
 
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
-        interfaces_list = dut["output"]["interface_list"]
+        print(f"\nOn router |{tops.dut_name}|:")
 
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
-
-        print(f"\nOn router |{dut_name}|:")
-
-        for interface in interfaces_list:
+        for interface in tops.interface_list:
             interface_name = interface['interface_name'].replace(" ", "")
-            int_ptr = dut["output"][show_cmd]['json']['interfaceStatuses']
-            actual_output = int_ptr[interface_name]['lineProtocolStatus']
+            int_ptr = dut["output"][tops.show_cmd]['json']['interfaceStatuses']
+            tops.actual_output = int_ptr[interface_name]['lineProtocolStatus']
+            tops.test_result = tops.actual_output == tops.expected_output
 
-            output_msg = (f"On interface |{interface_name}|: interface link "
-                          f"line protocol status is set to: |{actual_output}|"
-                          f", correct state is |{expected_output}|")
+            tops.output_msg += (f"On interface |{interface_name}|: interface link "
+                               f"line protocol status is set to: |{tops.actual_output}|"
+                               f", correct state is |{tops.expected_output}|.\n\n")
+            tops.comment += (f'TEST if interface |{interface_name}| link prootocol '
+                            f'statuses on |{tops.dut_name}|.\n'
+                            f'GIVEN interface status is |{tops.expected_output}|.\n'
+                            f'WHEN interface status is |{tops.actual_output}|.\n'
+                            f'THEN test case result is |{tops.test_result}|.\n\n')
 
-            test_result = actual_output == expected_output
-            comment = (f'TEST if interface |{interface_name}| link prootocol '
-                       f'statuses on |{dut_name}|.\nGIVEN interface '
-                       f'status is |{expected_output}|.\nWHEN interface '
-                       f'status is |{actual_output}|.\nTHEN test case result '
-                       f'is |{test_result}|.\nOUTPUT of |{show_cmd}| is:'
-                       f'\n\n{show_cmd_txt}')
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
 
-            print(f"  - {output_msg}\n{comment}")
+        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        print(f"{tops.output_msg}\n{tops.comment}")
 
-            tests_tools.post_testcase(test_parameters, comment, test_result,
-                                      output_msg, actual_output, dut_name)
+        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.post_testcase()
 
-            assert actual_output == expected_output
+        assert tops.actual_results == tops.expected_results
 
     def test_if_intf_link_status_is_connected_on_(self,
                                                   dut,
@@ -103,47 +96,35 @@ class InterfaceStatusTests():
                 tests_definitions (dict): Test parameters
         """
 
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
-        interfaces_list = dut["output"]["interface_list"]
+        print(f"\nOn router |{tops.dut_name}|:")
 
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
-
-        print(f"\nOn router |{dut_name}|:")
-
-        for interface in interfaces_list:
-
+        for interface in tops.interface_list:
             interface_name = interface['interface_name'].replace(" ", "")
-            int_ptr = dut["output"][show_cmd]['json']['interfaceStatuses']
-            actual_output = int_ptr[interface_name]['linkStatus']
+            int_ptr = dut["output"][tops.show_cmd]['json']['interfaceStatuses']
+            tops.actual_output = int_ptr[interface_name]['linkStatus']
+            tops.test_result = tops.actual_output == tops.expected_output
 
-            print(f"  - On interface |{interface_name}|: interface link line "
-                  f"protocol status is set to: |{actual_output}|, correct "
-                  f"state is |{expected_output}|")
+            tops.output_msg += (f"On interface |{interface_name}|: interface link "
+                               f" status is set to: |{tops.actual_output}|"
+                               f", correct state is |{tops.expected_output}|.\n\n")
+            tops.comment += (f'TEST if interface |{interface_name}| link '
+                             f'status on |{tops.dut_name}|.'
+                             f'\nGIVEN interface status is |{tops.expected_output}|.\n'
+                             f'WHEN interface status is |{tops.actual_output}|.\n'
+                             f'THEN test case result is |{tops.test_result}|.\n\n')
 
-            output_msg = (f"On interface |{interface_name}|: interface link "
-                          f" status is set to: |{actual_output}|"
-                          f", correct state is |{expected_output}|")
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
 
-            test_result = actual_output == expected_output
-            comment = (f'TEST if interface |{interface_name}| link '
-                       f'status on |{dut_name}|.\nGIVEN interface '
-                       f'status is |{expected_output}|.\nWHEN interface '
-                       f'status is |{actual_output}|.\nTHEN test case result '
-                       f'is |{test_result}|.\nOUTPUT of |{show_cmd}| is:'
-                       f'\n\n{show_cmd_txt}')
+        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        print(f"{tops.output_msg}\n{tops.comment}")
 
-            print(f"  - {output_msg}\n{comment}")
+        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.post_testcase()
 
-            tests_tools.post_testcase(test_parameters, comment, test_result,
-                                      output_msg, actual_output, dut_name)
-
-            assert actual_output == expected_output
+        assert tops.actual_results == tops.expected_results
 
 
 @pytest.mark.nrfu
@@ -163,61 +144,48 @@ class InterfacePhyTests():
                 tests_definitions (dict): Test parameters
         """
 
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE)
-
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
-        interfaces_list = dut["output"]["interface_list"]
-
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
-
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
         veos_bool = tests_tools.verify_veos(dut)
 
         if not veos_bool:
-            print(f"\nOn router |{dut_name}|:")
+            print(f"\nOn router |{tops.dut_name}|:")
 
-            for interface in interfaces_list:
+            for interface in tops.interface_list:
                 interface_name = interface['interface_name'].replace(" ", "")
                 int_ptr = dut["output"][show_cmd]['json']['interfacePhyStatuses']
                 raw_output = int_ptr[interface_name]['phyStatuses'][0]['text']
-
                 split_output = raw_output.split('\n')
 
                 for line_output in split_output:
                     if "PHY state" in line_output:
-                        actual_output = line_output.split()[2]
+                        tops.actual_output = line_output.split()[2]
+                        tops.test_result = tops.actual_output == tops.expected_output
 
-                        output_msg = (f"On interface |{interface_name}|: "
-                                      f"physical detail PHY state is set to: "
-                                      f"|{actual_output}|, correct state is "
-                                      f"|{expected_output}|")
+                        tops.output_msg += (f"On interface |{interface_name}|: "
+                                            f"physical detail PHY state is set to: "
+                                            f"|{tops.actual_output}|, correct state is "
+                                            f"|{tops.expected_output}|.\n\n")
+                        tops.comment += (f'TEST if interface |{interface_name}| '
+                                        f'physical status on |{tops.dut_name}|.\n'
+                                        f'GIVEN interface status is |{tops.expected_output}|.\n'
+                                        f'WHEN interface status is |{tops.actual_output}|.\n'
+                                        f'THEN test case result is |{tops.test_result}|.\n\n')
 
-                        test_result = actual_output == expected_output
+                        tops.actual_results.append(tops.actual_output)
+                        tops.expected_results.append(tops.expected_output)
 
-                        comment = (f'TEST if interface |{interface_name}| '
-                                   f'physical status on |{dut_name}|.\nGIVEN '
-                                   f'interface status is |{expected_output}|.'
-                                   '\nWHEN interface status is '
-                                   f'|{actual_output}|.\nTHEN test case '
-                                   f'result is |{test_result}|.\nOUTPUT of '
-                                   f'|{show_cmd}| is:\n\n{show_cmd_txt}')
+            tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+            print(f"{tops.output_msg}\n{tops.comment}")
 
-                        print(f"  - {output_msg}\n{comment}")
+            tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+            tops.post_testcase()
 
-                        tests_tools.post_testcase(test_parameters, comment,
-                                                  test_result, output_msg,
-                                                  actual_output, dut_name)
-
-                        assert actual_output == expected_output
+            assert tops.actual_results == tops.expected_results
         else:
-            comment = f"{dut_name} is vEOS instance.  Test is not valid."
-            test_result, output_msg, actual_output = True, None, None
-            tests_tools.post_testcase(test_parameters, comment, test_result,
-                                      output_msg, actual_output, dut_name)
+            tops.comment = f"|{tops.dut_name}| is vEOS instance.  Test is invalid."
+            tops.test_result, tops.output_msg, tops.actual_output = True, None, None
 
+            tops.post_testcase()
 
 @pytest.mark.nrfu
 @pytest.mark.interface_baseline_health
@@ -235,42 +203,35 @@ class InterfaceCountersTests():
                 dut (dict): Encapsulates dut details including name, connection
         """
 
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
-        interfaces_list = dut["output"]["interface_list"]
+        print(f"\nOn router |{tops.dut_name}|:")
 
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
-
-        print(f"\nOn router |{dut_name}|:")
-
-        for interface in interfaces_list:
+        for interface in tops.interface_list:
             interface_name = interface['interface_name'].replace(" ", "")
-            int_ptr = dut["output"][show_cmd]['json']['interfaceErrorCounters']
-            actual_output = int_ptr[interface_name]['inErrors']
+            int_ptr = dut["output"][tops.show_cmd]['json']['interfaceErrorCounters']
+            tops.actual_output = int_ptr[interface_name]['inErrors']
+            tops.test_result = tops.actual_output <= tops.expected_output
 
-            output_msg = (f"On interface |{interface_name}|: interface "
-                          f"counter errors has |{actual_output}| inErrors"
-                          f", correct state is |{expected_output}|")
+            tops.output_msg += (f"On interface |{interface_name}|: interface "
+                                f"counter errors has |{tops.actual_output}| inErrors"
+                                f", correct state is |{tops.expected_output}|.\n\n")
+            tops.comment += (f'TEST if interface |{interface_name}| counters have '
+                             f'input errors on |{tops.dut_name}|.\n'
+                             f'GIVEN interface input errors is |{tops.expected_output}|.\n'
+                             f'WHEN interface input errors is |{tops.actual_output}|.\n'
+                             f'THEN test case result is |{tops.test_result}|.\n\n')
 
-            test_result = actual_output == expected_output
-            comment = (f'TEST if interface |{interface_name}| counters have '
-                       f'input errors on |{dut_name}|.\nGIVEN interface input '
-                       f'errors is |{expected_output}|.\nWHEN interface input'
-                       f'errors is |{actual_output}|.\nTHEN test case result '
-                       f'is |{test_result}|.\nOUTPUT of |{show_cmd}| is:'
-                       f'\n\n{show_cmd_txt}')
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
 
-            print(f"  - {output_msg}\n{comment}")
+        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        print(f"{tops.output_msg}\n{tops.comment}")
 
-            tests_tools.post_testcase(test_parameters, comment, test_result,
-                                      output_msg, actual_output, dut_name)
+        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.post_testcase()
 
-            assert actual_output <= expected_output
+        assert tops.actual_results == tops.expected_results
 
     def test_if_intf_counters_has_output_errors_on_(self,
                                                     dut,
@@ -281,42 +242,35 @@ class InterfaceCountersTests():
                 dut (dict): Encapsulates dut details including name, connection
         """
 
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
-        interfaces_list = dut["output"]["interface_list"]
+        print(f"\nOn router |{tops.dut_name}|:")
 
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
-
-        print(f"\nOn router |{dut_name}|:")
-
-        for interface in interfaces_list:
+        for interface in tops.interface_list:
             interface_name = interface['interface_name'].replace(" ", "")
-            int_ptr = dut["output"][show_cmd]['json']['interfaceErrorCounters']
-            actual_output = int_ptr[interface_name]['outErrors']
+            int_ptr = dut["output"][tops.show_cmd]['json']['interfaceErrorCounters']
+            tops.actual_output = int_ptr[interface_name]['outErrors']
+            tops.test_result = tops.actual_output <= tops.expected_output
 
-            output_msg = (f"On interface |{interface_name}|: interface "
-                          f"counter errors has |{actual_output}| outErrors"
-                          f", correct state is |{expected_output}|")
+            tops.output_msg += (f"On interface |{interface_name}|: interface "
+                               f"counter errors has |{tops.actual_output}| outErrors"
+                               f", correct state is |{tops.expected_output}|.\n\n")
+            tops.comment += (f'TEST if interface |{interface_name}| has output '
+                             f'errors on |{tops.dut_name}|.\n'
+                             f'GIVEN interface output errors is |{tops.expected_output}|.\n'
+                             f'WHEN interface output errors is |{tops.actual_output}|.\n'
+                             f'THEN test case result is |{tops.test_result}|.\n\n')
 
-            test_result = actual_output == expected_output
-            comment = (f'TEST if interface |{interface_name}| has output '
-                       f'errors on |{dut_name}|.\nGIVEN interface output '
-                       f'errors is |{expected_output}|.\nWHEN interface output'
-                       f'errors is |{actual_output}|.\nTHEN test case result '
-                       f'is |{test_result}|.\nOUTPUT of |{show_cmd}| is:'
-                       f'\n\n{show_cmd_txt}')
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
 
-            print(f"  - {output_msg}\n{comment}")
+        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        print(f"{tops.output_msg}\n{tops.comment}")
 
-            tests_tools.post_testcase(test_parameters, comment, test_result,
-                                      output_msg, actual_output, dut_name)
+        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.post_testcase()
 
-            assert actual_output <= expected_output
+        assert tops.actual_results == tops.expected_results
 
     def test_if_intf_counters_has_frame_too_short_errors_on_(self,
                                                              dut,
@@ -327,44 +281,36 @@ class InterfaceCountersTests():
                 dut (dict): Encapsulates dut details including name, connection
         """
 
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
-        interfaces_list = dut["output"]["interface_list"]
+        print(f"\nOn router |{tops.dut_name}|:")
 
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
-
-        print(f"\nOn router |{dut_name}|:")
-
-        for interface in interfaces_list:
+        for interface in tops.interface_list:
             interface_name = interface['interface_name'].replace(" ", "")
-            int_ptr = dut["output"][show_cmd]['json']['interfaceErrorCounters']
-            actual_output = int_ptr[interface_name]['frameTooShorts']
+            int_ptr = dut["output"][tops.show_cmd]['json']['interfaceErrorCounters']
+            tops.actual_output = int_ptr[interface_name]['frameTooShorts']
+            tops.test_result = tops.actual_output <= tops.expected_output
 
-            output_msg = (f"On interface |{interface_name}|: interface "
-                          f"counter errors has |{actual_output}| "
-                          "frameTooShorts, correct state is "
-                          f"|{expected_output}|")
+            tops.output_msg += (f"On interface |{interface_name}|: interface "
+                                f"counter errors has |{tops.actual_output}| "
+                                "frameTooShorts, correct state is "
+                                f"|{tops.expected_output}|.\n\n")
+            tops.comment += (f'TEST if interface |{interface_name}| counters have '
+                             f'frameTooShorts errors on |{tops.dut_name}|.\n'
+                             f'GIVEN interface frameTooShorts errors is |{tops.expected_output}|.\n'
+                             f'WHEN interface frameTooShorts errors is |{tops.actual_output}|.\n'
+                             f'THEN test case result is |{tops.test_result}|.\n\n')
 
-            test_result = actual_output == expected_output
-            comment = (f'TEST if interface |{interface_name}| counters have '
-                       f'frameTooShorts errors on |{dut_name}|.\nGIVEN '
-                       'interface frameTooShorts errors is '
-                       f'|{expected_output}|.\nWHEN interface frameTooShorts'
-                       f'errors is |{actual_output}|.\nTHEN test case result '
-                       f'is |{test_result}|.\nOUTPUT of |{show_cmd}| is:'
-                       f'\n\n{show_cmd_txt}')
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
 
-            print(f"  - {output_msg}\n{comment}")
+        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        print(f"{tops.output_msg}\n{tops.comment}")
 
-            tests_tools.post_testcase(test_parameters, comment, test_result,
-                                      output_msg, actual_output, dut_name)
+        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.post_testcase()
 
-            assert actual_output <= expected_output
+        assert tops.actual_results == tops.expected_results
 
     def test_if_intf_counters_has_frame_too_long_errors_on_(self,
                                                             dut,
@@ -375,44 +321,36 @@ class InterfaceCountersTests():
                 dut (dict): Encapsulates dut details including name, connection
         """
 
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
-        interfaces_list = dut["output"]["interface_list"]
+        print(f"\nOn router |{tops.dut_name}|:")
 
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
-
-        print(f"\nOn router |{dut_name}|:")
-
-        for interface in interfaces_list:
+        for interface in tops.interface_list:
             interface_name = interface['interface_name'].replace(" ", "")
-            int_ptr = dut["output"][show_cmd]['json']['interfaceErrorCounters']
-            actual_output = int_ptr[interface_name]['frameTooLongs']
+            int_ptr = dut["output"][tops.show_cmd]['json']['interfaceErrorCounters']
+            tops.actual_output = int_ptr[interface_name]['frameTooLongs']
+            tops.test_result = tops.actual_output <= tops.expected_output
 
-            output_msg = (f"On interface |{interface_name}|: interface "
-                          f"counter errors has |{actual_output}| "
-                          "frameTooLongs, correct state is "
-                          f"|{expected_output}|")
+            tops.output_msg += (f"On interface |{interface_name}|: interface "
+                                f"counter errors has |{tops.actual_output}| "
+                                "frameTooLongs, correct state is "
+                                f"|{tops.expected_output}|.\n\n")
+            tops.comment += (f'TEST if interface |{interface_name}| counters have '
+                             f'frameTooLongs errors on |{tops.dut_name}|.\n'
+                             f'GIVEN interface frameTooLongs errors is |{tops.expected_output}|.\n'
+                             f'WHEN interface frameTooLongs errors is |{tops.actual_output}|.\n'
+                             f'THEN test case result is |{tops.test_result}|.\n\n')
 
-            test_result = actual_output == expected_output
-            comment = (f'TEST if interface |{interface_name}| counters have '
-                       f'frameTooLongs errors on |{dut_name}|.\nGIVEN '
-                       'interface frameTooLongs errors is '
-                       f'|{expected_output}|.\nWHEN interface frameTooLongs'
-                       f'errors is |{actual_output}|.\nTHEN test case result '
-                       f'is |{test_result}|.\nOUTPUT of |{show_cmd}| is:'
-                       f'\n\n{show_cmd_txt}')
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
 
-            print(f"  - {output_msg}\n{comment}")
+        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        print(f"{tops.output_msg}\n{tops.comment}")
 
-            tests_tools.post_testcase(test_parameters, comment, test_result,
-                                      output_msg, actual_output, dut_name)
+        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.post_testcase()
 
-            assert actual_output <= expected_output
+        assert tops.actual_results == tops.expected_results
 
     def test_if_intf_counters_has_fcs_errors_on_(self,
                                                  dut,
@@ -423,44 +361,36 @@ class InterfaceCountersTests():
                 dut (dict): Encapsulates dut details including name, connection
         """
 
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
-        interfaces_list = dut["output"]["interface_list"]
+        print(f"\nOn router |{tops.dut_name}|:")
 
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
-
-        print(f"\nOn router |{dut_name}|:")
-
-        for interface in interfaces_list:
+        for interface in tops.interface_list:
             interface_name = interface['interface_name'].replace(" ", "")
-            int_ptr = dut["output"][show_cmd]['json']['interfaceErrorCounters']
-            actual_output = int_ptr[interface_name]['fcsErrors']
+            int_ptr = dut["output"][tops.show_cmd]['json']['interfaceErrorCounters']
+            tops.actual_output = int_ptr[interface_name]['fcsErrors']
+            tops.test_result = tops.actual_output <= tops.expected_output
 
-            output_msg = (f"On interface |{interface_name}|: interface "
-                          f"counter errors has |{actual_output}| "
-                          "fcsErrors, correct state is "
-                          f"|{expected_output}|")
+            tops.output_msg += (f"On interface |{interface_name}|: interface "
+                                f"counter errors has |{tops.actual_output}| "
+                                "fcsErrors, correct state is "
+                                f"|{tops.expected_output}|.\n\n")
+            tops.comment += (f'TEST if interface |{interface_name}| counters have '
+                             f'fcsErrors errors on |{tops.dut_name}|.\n'
+                             f'GIVEN interface fcsErrors errors is |{tops.expected_output}|.\n'
+                             f'WHEN interface fcsErrors errors is |{tops.actual_output}|.\n'
+                             f'THEN test case result is |{tops.test_result}|.\n\n')
 
-            test_result = actual_output == expected_output
-            comment = (f'TEST if interface |{interface_name}| counters have '
-                       f'fcsErrors errors on |{dut_name}|.\nGIVEN '
-                       'interface fcsErrors errors is '
-                       f'|{expected_output}|.\nWHEN interface fcsErrors'
-                       f'errors is |{actual_output}|.\nTHEN test case result '
-                       f'is |{test_result}|.\nOUTPUT of |{show_cmd}| is:'
-                       f'\n\n{show_cmd_txt}')
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
 
-            print(f"  - {output_msg}\n{comment}")
+        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        print(f"{tops.output_msg}\n{tops.comment}")
 
-            tests_tools.post_testcase(test_parameters, comment, test_result,
-                                      output_msg, actual_output, dut_name)
+        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.post_testcase()
 
-            assert actual_output <= expected_output
+        assert tops.actual_results == tops.expected_results
 
     def test_if_intf_counters_has_alignment_errors_on_(self,
                                                        dut,
@@ -471,44 +401,36 @@ class InterfaceCountersTests():
                 dut (dict): Encapsulates dut details including name, connection
         """
 
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
-        interfaces_list = dut["output"]["interface_list"]
+        print(f"\nOn router |{tops.dut_name}|:")
 
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
-
-        print(f"\nOn router |{dut_name}|:")
-
-        for interface in interfaces_list:
+        for interface in tops.interface_list:
             interface_name = interface['interface_name'].replace(" ", "")
-            int_ptr = dut["output"][show_cmd]['json']['interfaceErrorCounters']
-            actual_output = int_ptr[interface_name]['alignmentErrors']
+            int_ptr = dut["output"][tops.show_cmd]['json']['interfaceErrorCounters']
+            tops.actual_output = int_ptr[interface_name]['alignmentErrors']
+            tops.test_result = tops.actual_output <= tops.expected_output
 
-            output_msg = (f"On interface |{interface_name}|: interface "
-                          f"counter errors has |{actual_output}| "
-                          "alignmentErrors, correct state is "
-                          f"|{expected_output}|")
+            tops.output_msg += (f"On interface |{interface_name}|: interface "
+                                f"counter errors has |{tops.actual_output}| "
+                                "alignmentErrors, correct state is "
+                                f"|{tops.expected_output}|.\n\n")
+            tops.comment += (f'TEST if interface |{interface_name}| counters have '
+                             f'alignmentErrors errors on |{tops.dut_name}|.\n'
+                             f'GIVEN interface alignmentErrors errors is {tops.expected_output}|.\n'
+                             f'WHEN interface alignmentErrors errors is |{tops.actual_output}|.\n'
+                             f'THEN test case result is |{tops.test_result}|.\n\n')
 
-            test_result = actual_output == expected_output
-            comment = (f'TEST if interface |{interface_name}| counters have '
-                       f'alignmentErrors errors on |{dut_name}|.\nGIVEN '
-                       'interface alignmentErrors errors is '
-                       f'|{expected_output}|.\nWHEN interface alignmentErrors'
-                       f'errors is |{actual_output}|.\nTHEN test case result '
-                       f'is |{test_result}|.\nOUTPUT of |{show_cmd}| is:'
-                       f'\n\n{show_cmd_txt}')
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
 
-            print(f"  - {output_msg}\n{comment}")
+        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        print(f"{tops.output_msg}\n{tops.comment}")
 
-            tests_tools.post_testcase(test_parameters, comment, test_result,
-                                      output_msg, actual_output, dut_name)
+        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.post_testcase()
 
-            assert actual_output <= expected_output
+        assert tops.actual_results == tops.expected_results
 
     def test_if_intf_counters_has_symbol_errors_on_(self,
                                                     dut,
@@ -519,44 +441,36 @@ class InterfaceCountersTests():
                 dut (dict): Encapsulates dut details including name, connection
         """
 
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
-        interfaces_list = dut["output"]["interface_list"]
+        print(f"\nOn router |{tops.dut_name}|:")
 
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
-
-        print(f"\nOn router |{dut_name}|:")
-
-        for interface in interfaces_list:
+        for interface in tops.interface_list:
             interface_name = interface['interface_name'].replace(" ", "")
-            int_ptr = dut["output"][show_cmd]['json']['interfaceErrorCounters']
-            actual_output = int_ptr[interface_name]['symbolErrors']
+            int_ptr = dut["output"][tops.show_cmd]['json']['interfaceErrorCounters']
+            tops.actual_output = int_ptr[interface_name]['symbolErrors']
+            tops.test_result = tops.actual_output <= tops.expected_output
 
-            output_msg = (f"On interface |{interface['interface_name']}|: "
-                          f"interface counter errors has |{actual_output}| "
-                          "symbolErrors, correct state is "
-                          f"|{expected_output}|")
+            tops.output_msg += (f"On interface |{interface['interface_name']}|: "
+                                f"interface counter errors has |{tops.actual_output}| "
+                                "symbolErrors, correct state is "
+                                f"|{tops.expected_output}|.\n\n")
+            tops.comment += (f'TEST if interface |{interface_name}| counters have '
+                             f'symbolErrors errors on |{tops.dut_name}|.\n'
+                             f'GIVEN interface symbolErrors errors is |{tops.expected_output}|.\n'
+                             f'WHEN interface symbolErrors errors is |{tops.actual_output}|.\n'
+                             f'THEN test case result is |{tops.test_result}|.\n\n')
 
-            test_result = actual_output == expected_output
-            comment = (f'TEST if interface |{interface_name}| counters have '
-                       f'symbolErrors errors on |{dut_name}|.\nGIVEN '
-                       'interface symbolErrors errors is '
-                       f'|{expected_output}|.\nWHEN interface symbolErrors'
-                       f'errors is |{actual_output}|.\nTHEN test case result '
-                       f'is |{test_result}|.\nOUTPUT of |{show_cmd}| is:'
-                       f'\n\n{show_cmd_txt}')
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
 
-            print(f"  - {output_msg}\n{comment}")
+        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        print(f"{tops.output_msg}\n{tops.comment}")
 
-            tests_tools.post_testcase(test_parameters, comment, test_result,
-                                      output_msg, actual_output, dut_name)
+        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.post_testcase()
 
-            assert actual_output <= expected_output
+        assert tops.actual_results == tops.expected_results
 
 
 @pytest.mark.nrfu
@@ -575,44 +489,36 @@ class InterfaceDiscardTests():
                 dut (dict): Encapsulates dut details including name, connection
         """
 
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
-        interfaces_list = dut["output"]["interface_list"]
+        print(f"\nOn router |{tops.dut_name}|:")
 
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
-
-        print(f"\nOn router |{dut_name}|:")
-
-        for interface in interfaces_list:
+        for interface in tops.interface_list:
             interface_name = interface['interface_name'].replace(" ", "")
-            int_ptr = dut["output"][show_cmd]['json']['interfaces']
-            actual_output = int_ptr[interface_name]['outDiscards']
+            int_ptr = dut["output"][tops.show_cmd]['json']['interfaces']
+            tops.actual_output = int_ptr[interface_name]['outDiscards']
+            tops.test_result = tops.actual_output <= tops.expected_output
 
-            output_msg = (f"On interface |{interface_name}|: interface "
-                          f"counter discards has |{actual_output}| "
-                          f"outDiscards, correct state is |{expected_output}|")
+            tops.output_msg += (f"On interface |{interface_name}|: interface "
+                                f"counter discards has |{tops.actual_output}| "
+                                f"outDiscards, correct state is |{tops.expected_output}|.\n\n")
+            tops.comment += (f'TEST if interface |{interface_name}| counters has'
+                             f' outbound discards on |{tops.dut_name}|.\n'
+                             f'GIVEN interface outbound discards are |{tops.expected_output}|\n'
+                             'WHEN interface outbound discards are '
+                             f'|{tops.actual_output}|.\n'
+                             f'THEN test case result is |{tops.test_result}|.\n\n')
 
-            test_result = actual_output <= expected_output
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
 
-            comment = (f'TEST if interface |{interface_name}| counters has'
-                       f' outbound discards on |{dut_name}| \nGIVEN '
-                       f'interface outbound discards are |{expected_output}|\n'
-                       'WHEN interface outbound discards are '
-                       f'|{actual_output}|\nTHEN test case result is '
-                       f'|{test_result}|.\nOUTPUT of |{show_cmd}| is:'
-                       f'\n\n{show_cmd_txt}')
+        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        print(f"{tops.output_msg}\n{tops.comment}")
 
-            print(f"  - {output_msg}\n{comment}")
+        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.post_testcase()
 
-            tests_tools.post_testcase(test_parameters, comment, test_result,
-                                      output_msg, actual_output, dut_name)
-
-            assert actual_output <= expected_output
+        assert tops.actual_results == tops.expected_results
 
     def test_if_intf_in_counters_are_discarding_on_(self,
                                                     dut,
@@ -623,42 +529,35 @@ class InterfaceDiscardTests():
                 dut (dict): Encapsulates dut details including name, connection
         """
 
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
-        interfaces_list = dut["output"]["interface_list"]
+        print(f"\nOn router |{tops.dut_name}|:")
 
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
-
-        print(f"\nOn router |{dut_name}|:")
-
-        for interface in interfaces_list:
+        for interface in tops.interface_list:
             interface_name = interface['interface_name'].replace(" ", "")
-            int_ptr = dut["output"][show_cmd]['json']['interfaces']
-            actual_output = int_ptr[interface_name]['inDiscards']
+            int_ptr = dut["output"][tops.show_cmd]['json']['interfaces']
+            tops.actual_output = int_ptr[interface_name]['inDiscards']
+            tops.test_result = tops.actual_output <= tops.expected_output
 
-            output_msg = (f"On interface |{interface_name}|: interface "
-                          f"counter discards has |{actual_output}| "
-                          f"inDiscards, correct state is |{expected_output}|")
+            tops.output_msg += (f"On interface |{interface_name}|: interface "
+                                f"counter discards has |{tops.actual_output}| "
+                                f"inDiscards, correct state is |{tops.expected_output}|.\n\n")
+            tops.comment += (f'TEST if interface |{interface_name}| counters has '
+                             f'inbound discards on |{tops.dut_name}|.\n'
+                             f'GIVEN interface inbound discards are |{tops.expected_output}|.\n'
+                             f'WHEN interface inbound discards are |{tops.actual_output}|.\n'
+                             f'THEN test case result is |{tops.test_result}|.\n\n')                       
 
-            test_result = actual_output <= expected_output
-            comment = (f'TEST if interface |{interface_name}| counters has '
-                       f'inbound discards on |{dut_name}|.\nGIVEN interface '
-                       f'inbound discards are |{expected_output}|.\nWHEN '
-                       f'interface inbound discards are |{actual_output}|.\n'
-                       f'THEN test case result is |{test_result}|.\nOUTPUT of '
-                       f'|{show_cmd}| is:\n\n{show_cmd_txt}')
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
 
-            print(f"  - {output_msg}\n{comment}")
+        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        print(f"{tops.output_msg}\n{tops.comment}")
 
-            tests_tools.post_testcase(test_parameters, comment, test_result,
-                                      output_msg, actual_output, dut_name)
+        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.post_testcase()
 
-            assert actual_output <= expected_output
+        assert tops.actual_results == tops.expected_results
 
 
 @pytest.mark.nrfu
@@ -675,38 +574,32 @@ class InterfaceMtuTests():
                 dut (dict): Encapsulates dut details including name, connection
         """
 
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
-        interfaces_list = dut["output"]["interface_list"]
+        print(f"\nOn router |{tops.dut_name}|:")
 
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
-
-        print(f"\nOn router |{dut_name}|:")
-
-        for interface in interfaces_list:
+        for interface in tops.interface_list:
             interface_name = interface['interface_name'].replace(" ", "")
-            int_ptr = dut["output"][show_cmd]['json']['interfaces']
-            actual_output = int_ptr[interface_name]['mtu']
+            int_ptr = dut["output"][tops.show_cmd]['json']['interfaces']
+            tops.actual_output = int_ptr[interface_name]['mtu']
+            tops.test_result = tops.actual_output == tops.expected_output
 
-            output_msg = (f"On interface |{interface_name}|: interface "
-                          f"MTU is |{actual_output}|, correct MTU is "
-                          f"|{expected_output}|")
+            tops.output_msg += (f"On interface |{interface_name}|: interface "
+                                f"MTU is |{tops.actual_output}|, correct MTU is "
+                                f"|{tops.expected_output}|.\n\n")
+            tops.comment += (f'TEST if interface |{interface_name}| MTU is correct '
+                             f'on |{tops.dut_name}|.\n'
+                             f'GIVEN MTU of |{tops.expected_output}|.\n'
+                             f'WHEN interface MTU is |{tops.actual_output}|.\n'
+                             f'THEN test case result is |{tops.test_result}|.\n\n')
 
-            test_result = actual_output == expected_output
-            comment = (f'TEST if interface |{interface_name}| MTU is correct '
-                       f'on |{dut_name}|.\nGIVEN MTU of |{expected_output}|.\n'
-                       f'WHEN interface MTU is |{actual_output}|.\nTHEN test '
-                       f'case result is |{test_result}|.\nOUTPUT of '
-                       f'|{show_cmd}| is:\n\n{show_cmd_txt}')
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
 
-            print(f"  - {output_msg}\n{comment}")
+        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        print(f"{tops.output_msg}\n{tops.comment}")
 
-            tests_tools.post_testcase(test_parameters, comment, test_result,
-                                      output_msg, actual_output, dut_name)
+        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.post_testcase()
 
-            assert actual_output == expected_output
+        assert tops.actual_results == tops.expected_results

@@ -69,23 +69,19 @@ test_suites:
     show_cmd: show hostname
 - name: test_extension.py
   testcases:
-  - comment: null
-    description: Verify a list of extension are installed on a DUT
+  - description: Verify a list of extension are installed on a DUT
     expected_output: installed
     extensions:
     - awslogs.swix
     - awsha.rpm
     name: test_if_extensions_are_installed_on_
-    result: true
     show_cmd: show extensions
-  - comment: null
-    description: Verify a list of extension are not erroring on a DUT
+  - description: Verify a list of extension are not erroring on a DUT
     expected_output: false
     extensions:
     - awslogs.swix
     - awsha.rpm
     name: test_if_extensions_are_erroring_on_
-    result: true
     show_cmd: show extensions
 - name: test_memory.py
   testcases:
@@ -97,23 +93,17 @@ test_suites:
     show_cmd: show version
 - name: test_cpu.py
   testcases:
-  - comment: null
-    description: Verify 1 second CPU % is under specificied value
+  - description: Verify 1 second CPU % is under specificied value
     expected_output: 10
     name: test_1_sec_cpu_utlization_on_
-    result: true
     show_cmd: show processes
-  - comment: null
-    description: Verify 1 minute CPU % is under specificied value
+  - description: Verify 1 minute CPU % is under specificied value
     expected_output: 10
     name: test_1_min_cpu_utlization_on_
-    result: true
     show_cmd: show processes
-  - comment: null
-    description: Verify 5 minute CPU % is under specificied value
+  - description: Verify 5 minute CPU % is under specificied value
     expected_output: 10
     name: test_5_min_cpu_utlization_on_
-    result: true
     show_cmd: show processes
 - name: test_ztp.py
   testcases:
@@ -142,6 +132,14 @@ test_suites:
   - description: Verify show lldp local-info hostname is the system's name
     expected_output: null
     name: test_if_lldp_system_name_is_correct_on_
+    show_cmd: show lldp local-info
+  - description: Verify show lldp local-info maxFrameSize is correct
+    expected_output: 10200
+    name: test_if_lldp_max_frame_size_is_correct_on_
+    show_cmd: show lldp local-info
+  - description: Verify show lldp local-info interfaceIdType is correct
+    expected_output: interfaceName
+    name: test_if_lldp_interface_id_is_correct_on_
     show_cmd: show lldp local-info
 - name: test_filesystem.py
   testcases:
@@ -248,25 +246,19 @@ test_suites:
     show_cmd: show aaa methods all
 - name: test_ntp.py
   testcases:
-  - comment: null
-    description: Verify ntp is setup and working correctly
+  - description: Verify ntp is setup and working correctly
     expected_output: true
     name: test_if_ntp_is_synchronized_on_
-    result: true
     show_cmd: show ntp status
-  - comment: null
-    description: Verify ntp peers are correct
+  - description: Verify ntp peers are correct
     expected_output: 1
     name: test_if_ntp_associated_with_peers_on_
-    result: true
     show_cmd: show ntp associations
-  - comment: null
-    description: Verify processes are running
+  - description: Verify processes are running
     expected_output: 1
     name: test_if_process_is_running_on_
     processes:
     - ntpd
-    result: true
     show_cmd: show processes
 - name: test_daemon.py
   testcases:
@@ -352,13 +344,25 @@ test_suites:
     name: test_if_management_local_http_api_server_is_running_on_
     result: true
     show_cmd: show management api http-commands
-- name: test_dns.py
+- name: test_logging.py
   testcases:
   - comment: null
-    description: Verify DNS is running by performing pings and verifying name resolution
+    description: Verify local log messages
+    expected_output: false
+    name: test_if_log_messages_appear_on_
+    result: true
+    show_cmd: show logging
+    sys_msgs:
+    - critical
+    - warning
+    - ECC
+    - servers errors
+    - parity
+- name: test_dns.py
+  testcases:
+  - description: Verify DNS is running by performing pings and verifying name resolution
     expected_output: true
     name: test_if_dns_resolves_on_
-    result: true
     show_cmd: show management api http-commands
     urls:
     - google.com
@@ -378,17 +382,3 @@ test_suites:
     name: test_if_tacacs_is_receiving_messages_on_
     result: true
     show_cmd: show tacacs
-- name: test_logging.py
-  testcases:
-  - comment: null
-    description: Verify local log messages
-    expected_output: null
-    name: test_if_log_messages_appear_on_
-    result: true
-    show_cmd: show logging
-    sys_msgs:
-    - critical
-    - warning
-    - ECC
-    - servers errors
-    - parity

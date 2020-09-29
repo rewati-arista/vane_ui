@@ -35,6 +35,7 @@ import sys
 import logging
 import datetime
 import json
+import os
 import re
 import yaml
 import docx
@@ -64,12 +65,103 @@ class ReportClient:
         logging.info(f"Test Results: {self._summary_results}")
 
         _results_file = self.data_model['parameters']['results_file']
-        self._results_data = self._import_yaml(_results_file)
-        logging.info(f'Results file data is {self._results_data}')
+        self._results_datamodel = None
+        #self._results_data = None
+        self._compile_yaml_data('../reports/results/', _results_file)
+        #self._results_data = self._import_yaml(_results_file)
+        logging.info(f'Results file data is {self._results_datamodel}')
 
         self._document = docx.Document()
         self._major_section = 1
         self._test_id = 1
+
+    def _compile_yaml_data(self, yaml_dir, yaml_file):
+        """[summary]
+
+        Args:
+            yaml_dir ([type]): [description]
+            yaml_file ([type]): [description]
+        """
+
+        logging.info(f'yaml directory is {yaml_dir}\n'
+                     f'yaml output file is {yaml_file}')
+        yaml_files = os.listdir(yaml_dir)
+        logging.info(f'yaml input files are {yaml_files}')
+
+        for name in yaml_files:
+            if 'result-' in name:
+                yaml_file = f'{yaml_dir}{name}'
+                yaml_data = self._import_yaml(yaml_file)
+
+                self._reconcile_results(yaml_data)
+            else:
+                logging.error(f'Incorrect filename: {name}')
+        
+        logging.info(f'Updated results_data to {self._results_datamodel}')
+    
+    def _reconcile_results(self, test_parameters):
+        """[summary]
+
+        Args:
+            yaml_data ([type]): [description]
+        """
+
+        test_suite = test_parameters['test_suite']
+        test_suite = test_suite.split('/')[-1]
+        dut_name = test_parameters['dut']
+        test_case = test_parameters['name']
+        yaml_data = self._results_datamodel
+
+        if not self._results_datamodel:
+            self._results_datamodel = {'test_suites':
+                            [
+                                {'name': test_suite,
+                                'test_cases': [
+                                        {'name': test_case,
+                                         'duts': []
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+
+        logging.info(f'\n\n\rFind the Index for test suite: {test_suite} on dut '
+                     f'{dut_name}\n\n\r')
+        logging.info(self._results_datamodel['test_suites'])
+        test_suites = [param['name'] for param in self._results_datamodel['test_suites']]
+
+        if test_suite in test_suites:
+            suite_index = test_suites.index(test_suite)
+            logging.info(f'Test suite {test_suite} exists in results file at '
+                         f'index {suite_index}')
+        else:
+            logging.info(f'Create test suite {test_suite} in results file')
+            suite_stub = {'name': test_suite, 'test_cases': []}
+            self._results_datamodel['test_suites'].append(suite_stub)
+            suite_index = (len(self._results_datamodel['test_suites']) - 1)
+
+        logging.info(f'Find Index for test case: {test_case} on dut {dut_name}')
+        test_cases = [param['name'] for param in self._results_datamodel['test_suites'][suite_index]['test_cases']]
+
+        if test_case in test_cases:
+            test_index = test_cases.index(test_case)
+            logging.info(f'Test case {test_case} exists in results file at index '
+                         f'{test_index}')
+        else:
+            logging.info(f'Create test case {test_case} in results file')
+            test_stub = {'name': test_case, 'duts': []}
+            self._results_datamodel['test_suites'][suite_index]['test_cases'].append(test_stub)
+            test_index = (len(self._results_datamodel['test_suites'][suite_index]['test_cases']) - 1)
+
+        logging.info(f'Find Index for dut {dut_name}')
+        duts = [param['dut'] for param
+                in self._results_datamodel['test_suites'][suite_index]['test_cases'][test_index]['duts']]
+
+        if dut_name not in duts:
+            logging.info(f'Add DUT {dut_name} to test case {test_case} with '
+                         f'parameters {test_parameters}')
+            yaml_ptr = self._results_datamodel['test_suites'][suite_index]
+            yaml_ptr['test_cases'][test_index]['duts'].append(test_parameters)
 
     def _import_yaml(self, yaml_file):
         """ Import YAML file as python data structure
@@ -390,7 +482,7 @@ class ReportClient:
         """ Write detailed test case report
         """
 
-        test_suites = self._results_data['test_suites']
+        test_suites = self._results_datamodel['test_suites']
 
         for test_suite in test_suites:
             self._write_detail_major_section(test_suite)
@@ -501,8 +593,8 @@ class ReportClient:
         """
 
         logging.info('The following test suites have been collected '
-                     f'{self._results_data}')
-        test_suites = self._results_data['test_suites']
+                     f'{self._results_datamodel}')
+        test_suites = self._results_datamodel['test_suites']
         suite_results = []
 
         for test_suite in test_suites:
@@ -535,7 +627,7 @@ class ReportClient:
         """ Compile test case results and return them
         """
 
-        test_suites = self._results_data['test_suites']
+        test_suites = self._results_datamodel['test_suites']
         testcase_results = []
 
         for test_suite in test_suites:

@@ -10,6 +10,7 @@ testcases:
       - ECC
       - servers errors
       - parity
-    expected_output: null
+    # log messages should not be in log
+    expected_output: False
     comment: null
     result: True

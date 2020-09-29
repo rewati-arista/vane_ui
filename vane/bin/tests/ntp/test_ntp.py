@@ -55,32 +55,28 @@ class NTPTests():
               dut (dict): Encapsulates dut details including name, connection
         """
 
-        test_case = inspect.currentframe().f_code.co_name
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops.actual_output = ("synchronised" in tops.show_cmd_txt)
 
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
+        tops.output_msg = (f"\nOn router |{tops.dut_name}| NTP "
+                           f"synchronised status is |{tops.actual_output}| "
+                           f" correct status is |{tops.expected_output}|.\n")
 
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
+        tops.test_result = tops.actual_output == tops.expected_output
 
-        logging.info(f'TEST is NTP synchronized on |{dut_name}| ')
-        logging.info(f'GIVEN NTP synchronized is |{expected_output}|')
+        tops.comment = (f'TEST is NTP synchronized on |{tops.dut_name}|.\n'
+                        f'GIVEN NTP synchronized is |{tops.expected_output}|'
+                        '.\n'
+                        f'WHEN NTP synchronized is |{tops.actual_output}|.\n'
+                        f'THEN test case result is |{tops.test_result}|.\n'
+                        f'OUTPUT of |{tops.show_cmd}| is:\n{tops.show_cmd_txt}'
+                        '.\n')
 
-        actual_output = ("synchronised" in show_cmd_txt)
+        print(f"{tops.output_msg}\n{tops.comment}")
 
-        print(f"\nOn router |{dut['name']}| NTP synchronized status is: "
-              f"|{actual_output}|")
-        logging.info(f'WHEN NTP configuration file is |{actual_output}|')
+        tops.post_testcase()
 
-        test_result = actual_output == expected_output
-        logging.info(f'THEN test case result is |{test_result}|')
-        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
-
-        assert actual_output == expected_output
+        assert tops.actual_output == tops.expected_output
 
     def test_if_ntp_associated_with_peers_on_(self, dut, tests_definitions):
         """ Verify ntp peers are correct
@@ -89,35 +85,32 @@ class NTPTests():
               dut (dict): Encapsulates dut details including name, connection
         """
 
-        test_case = inspect.currentframe().f_code.co_name
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops.actual_output = dut["output"][tops.show_cmd]['json']['peers']
+        tops.actual_output = len(tops.actual_output)
 
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
+        tops.output_msg = (f"\nOn router |{tops.dut_name}| has "
+                           f"|{tops.actual_output}| NTP peer associations, "
+                           f"correct associations is |{tops.expected_output}|")
 
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
+        tops.test_result = tops.actual_output >= tops.expected_output
 
-        logging.info(f'TEST is NTP associations with peers on |{dut_name}| ')
-        logging.info('GIVEN NTP associated are greater than or equal to '
-                     f'|{expected_output}|')
+        tops.comment = ('TEST is NTP associations with peers on '
+                        f'|{tops.dut_name}|.\n'
+                        'GIVEN associated are greater than or equal to '
+                        f'|{tops.expected_output}|.\n'
+                        f'WHEN NTP associated peers are |{tops.actual_output}|'
+                        '.\n'
+                        f'THEN test case result is |{tops.test_result}|.\n'
+                        f'OUTPUT of |{tops.show_cmd}| is:\n{tops.show_cmd_txt}'
+                        '.\n')
 
-        actual_output = dut["output"][show_cmd]['json']['peers']
+        print(f"{tops.output_msg}\n{tops.comment}")
 
-        print(f"\nOn router |{dut_name}| has |{len(actual_output)}| NTP peer "
-              "associations")
-        logging.info(f'WHEN NTP associated peers fare |{len(actual_output)}|')
+        tops.post_testcase()
 
-        test_result = len(actual_output) >= expected_output
-        logging.info(f'THEN test case result is |{test_result}|')
-        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+        assert tops.actual_output == tops.expected_output
 
-        assert len(actual_output) >= expected_output
-
-    @pytest.mark.ntp
     def test_if_process_is_running_on_(self, dut, tests_definitions):
         """ Verify ntp processes are running
 
@@ -125,37 +118,38 @@ class NTPTests():
               dut (dict): Encapsulates dut details including name, connection
         """
 
-        test_case = inspect.currentframe().f_code.co_name
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
-
-        expected_output = test_parameters["expected_output"]
-        processes = test_parameters["processes"]
-        dut_name = dut['name']
-
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
-
-        actual_output = dut["output"][show_cmd]['json']['processes']
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        processes = tops.test_parameters["processes"]
+        process_nums = dut["output"][tops.show_cmd]['json']['processes']
 
         process_list = []
-        for process_num in actual_output:
-            process_list.append(actual_output[process_num]["cmd"])
+
+        for process_num in process_nums:
+            process_list.append(process_nums[process_num]["cmd"])
 
         for process in processes:
-            logging.info(f'TEST is {process} running on |{dut_name}| ')
-            logging.info(f'GIVEN {process} state is |{expected_output}|')
-
             results = [i for i in process_list if process in i]
+            tops.actual_output = len(results)
 
-            print(f"\nOn router |{dut_name}| has |{len(results)}| process "
-                  f"for {process}")
-            logging.info(f'WHEN {process} number is |{len(results)}|')
+            tops.output_msg = (f"\nOn router |{tops.dut_name}| has "
+                               f"{tops.actual_output} NTP processes, "
+                               " correct processes is equal to or greater "
+                               f"|{tops.expected_output}|.\n")
 
-            test_result = len(results) >= expected_output
-            logging.info(f'THEN test case result is |{test_result}|')
-            logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+            tops.test_result = tops.actual_output >= tops.expected_output
 
-            assert len(results) >= expected_output
+            tops.comment = (f'TEST is {process} running on |{tops.dut_name}|'
+                            '.\n'
+                            f'GIVEN {process} number is '
+                            f'|{tops.expected_output}|.\n'
+                            f'WHEN {process} number is '
+                            f'|{tops.actual_output}|.\n'
+                            f'THEN test case result is |{tops.test_result}|.\n'
+                            f'OUTPUT of |{tops.show_cmd}| is:\n'
+                            f'{tops.show_cmd_txt}.\n')
+    
+            print(f"{tops.output_msg}\n{tops.comment}")
+    
+            tops.post_testcase()
+
+            assert tops.actual_output == tops.expected_output

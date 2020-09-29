@@ -53,43 +53,39 @@ class DNSTests():
               dut (dict): Encapsulates dut details including name, connection
         """
 
-        comment, output_msg, actual_result, expected_result = "", "", [], []
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        show_cmds = []
 
-        (test_parameters,
-         expected_output,
-         _, dut_name, _, _) = tests_tools.pre_testcase(tests_definitions,
-                                                       TEST_SUITE,
-                                                       dut)
-
-        urls = test_parameters["urls"]
+        urls = tops.test_parameters["urls"]
         dut_conn = dut['connection']
 
         for url in urls:
             show_cmd = f"ping {url}"
+            show_cmds.append(show_cmd)
 
             show_cmd_txt = dut_conn.run_commands(show_cmd, encoding='text')
             show_cmd_txt = show_cmd_txt[0]['output']
 
-            actual_output = 'Name or service not known' not in show_cmd_txt
-            test_result = actual_output is expected_output
+            tops.actual_output = 'Name or service not known' not in show_cmd_txt
+            tops.test_result = tops.actual_output is tops.expected_output
 
-            output_msg += (f"\nOn router |{dut_name}|, DNS resolution is"
-                           f"|{test_result}| for {url}.\n")
+            tops.output_msg += (f"\nOn router |{tops.dut_name}|, DNS resolution is"
+                                f"|{tops.test_result}| for {url}.\n")
 
-            comment += (f'TEST can |{dut_name}| resolve |{url}|.\n'
-                        f'GIVEN URL is |{url}|.\n'
-                        'WHEN exception is |Name or service not known| '
-                        'string.\n'
-                        f'THEN test case result is |{test_result}|.\n'
-                        f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}.\n')
+            tops.comment += (f'TEST can |{tops.dut_name}| resolve |{url}|.\n'
+                             f'GIVEN URL is |{url}|.\n'
+                             'WHEN exception is |Name or service not known| '
+                             'string.\n'
+                             f'THEN test case result is |{tops.test_result}|.\n'
+                             f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}.\n')
 
-            actual_result.append(actual_output)
-            expected_result.append(expected_output)
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
 
-        print(f"{output_msg}\n{comment}")
+        print(f"{tops.output_msg}\n{tops.comment}")
 
-        test_parameters['expected_output'] = expected_result
-        tests_tools.post_testcase(test_parameters, comment, test_result,
-                                  output_msg, actual_result, dut_name)
+        tops.show_cmd = show_cmds
+        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.post_testcase()
 
-        assert actual_result == expected_result
+        assert tops.actual_results == tops.expected_results
