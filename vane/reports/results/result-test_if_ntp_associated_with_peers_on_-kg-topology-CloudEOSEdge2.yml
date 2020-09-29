@@ -1,0 +1,19 @@
+actual_output: 1
+comment: "TEST is NTP associations with peers on |kg-topology-CloudEOSEdge2|.\nGIVEN\
+  \ associated are greater than or equal to |1|.\nWHEN NTP associated peers are |1|.\n\
+  THEN test case result is |True|.\nOUTPUT of |show ntp associations| is:\n     remote\
+  \          refid      st t when  poll reach   delay   offset  jitter\n==============================================================================\n\
+  *169.254.169.123 169.254.169.12  3 l  103  1024  377    0.147    0.253   0.096\n\
+  .\n"
+description: Verify ntp peers are correct
+dut: kg-topology-CloudEOSEdge2
+expected_output: 1
+fail_reason: ''
+name: test_if_ntp_associated_with_peers_on_
+output_msg: '
+
+  On router |kg-topology-CloudEOSEdge2| has |1| NTP peer associations, correct associations
+  is |1|'
+show_cmd: show ntp associations
+test_result: true
+test_suite: test_ntp.py

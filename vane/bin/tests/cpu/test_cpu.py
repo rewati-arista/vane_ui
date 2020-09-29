@@ -31,8 +31,6 @@
 
 """ Tests to validate base feature status."""
 
-import inspect
-import logging
 import pytest
 import tests_tools
 
@@ -55,33 +53,30 @@ class CPUTests():
                 dut (dict): Encapsulates dut details including name, connection
         """
 
-        test_case = inspect.currentframe().f_code.co_name
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
+        dut_ptr = dut["output"][tops.show_cmd]["json"]
+        tops.actual_output = dut_ptr["timeInfo"]["loadAvg"][0]
 
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
+        tops.output_msg = (f"\nOn router |{tops.dut_name}| 1 second CPU load average is "
+                           f"|{tops.actual_output}%| and should be under "
+                           f"|{tops.expected_output}%|")
 
-        logging.info('TEST if 1 second CPU utilization is less than '
-                     f'specified value on |{dut_name}|')
-        logging.info(f'GIVEN CPU utilization is less than |{expected_output}|')
+        tops.test_result = tops.actual_output < tops.expected_output
 
-        dut_ptr = dut["output"][show_cmd]["json"]
-        actual_output = dut_ptr["timeInfo"]["loadAvg"][0]
-        logging.info(f'WHEN CPU utilization is |{actual_output}|')
+        tops.comment = ('TEST if 1 second CPU utilization is less than '
+                        f'specified value on |{tops.dut_name}|.\n'
+                        'GIVEN CPU utilization is less than '
+                        f'|{tops.expected_output}|.\n'
+                        f'WHEN CPU utilization is |{tops.actual_output}|.\n'
+                        f'THEN test case result is |{tops.test_result}|.\n'
+                        f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
 
-        test_result = actual_output < expected_output
-        logging.info(f'THEN test case result is |{test_result}|')
-        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
-        print(f"\nOn router |{dut['name']}| 1 second CPU load average is "
-              f"|{actual_output}%| and should be under |{expected_output}%|")
+        print(f"{tops.output_msg}\n{tops.comment}")
 
-        assert actual_output < expected_output
+        tops.post_testcase()
+
+        assert tops.actual_output < tops.expected_output
 
     def test_1_min_cpu_utlization_on_(self, dut, tests_definitions):
         """ Verify 1 minute CPU % is under specificied value
@@ -90,33 +85,30 @@ class CPUTests():
                 dut (dict): Encapsulates dut details including name, connection
         """
 
-        test_case = inspect.currentframe().f_code.co_name
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
+        dut_ptr = dut["output"][tops.show_cmd]["json"]
+        tops.actual_output = dut_ptr["timeInfo"]["loadAvg"][1]
 
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
+        tops.output_msg = (f"\nOn router |{tops.dut_name}| 1 minute CPU load average is "
+                           f"|{tops.actual_output}%| and should be under "
+                           f"|{tops.expected_output}%|")
 
-        logging.info('TEST if 1 minute CPU utilization is less than '
-                     f'specified value on |{dut_name}|')
-        logging.info(f'GIVEN CPU utilization is less than |{expected_output}|')
+        tops.test_result = tops.actual_output < tops.expected_output
 
-        dut_ptr = dut["output"][show_cmd]["json"]
-        actual_output = dut_ptr["timeInfo"]["loadAvg"][1]
-        logging.info(f'WHEN CPU utilization is |{actual_output}|')
+        tops.comment = ('TEST if 1 minute CPU utilization is less than '
+                        f'specified value on |{tops.dut_name}|.\n'
+                        'GIVEN CPU utilization is less than '
+                        f'|{tops.expected_output}|.\n'
+                        f'WHEN CPU utilization is |{tops.actual_output}|.\n'
+                        f'THEN test case result is |{tops.test_result}|.\n'
+                        f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
 
-        test_result = actual_output < expected_output
-        logging.info(f'THEN test case result is |{test_result}|')
-        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
-        print(f"\nOn router |{dut['name']}| 1 minute CPU load average is "
-              f"|{actual_output}%| and should be under |{expected_output}%|")
+        print(f"{tops.output_msg}\n{tops.comment}")
 
-        assert actual_output < expected_output
+        tops.post_testcase()
+
+        assert tops.actual_output < tops.expected_output
 
     def test_5_min_cpu_utlization_on_(self, dut, tests_definitions):
         """ Verify 5 minute CPU % is under specificied value
@@ -125,30 +117,27 @@ class CPUTests():
                 dut (dict): Encapsulates dut details including name, connection
         """
 
-        test_case = inspect.currentframe().f_code.co_name
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
+        dut_ptr = dut["output"][tops.show_cmd]["json"]
+        tops.actual_output = dut_ptr["timeInfo"]["loadAvg"][2]
 
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
+        tops.output_msg = (f"\nOn router |{tops.dut_name}| 5 minute CPU load average is "
+                           f"|{tops.actual_output}%| and should be under "
+                           f"|{tops.expected_output}%|")
 
-        logging.info('TEST if 5 minute CPU utilization is less than '
-                     f'specified value on |{dut_name}|')
-        logging.info(f'GIVEN CPU utilization is less than |{expected_output}|')
+        tops.test_result = tops.actual_output < tops.expected_output
 
-        dut_ptr = dut["output"][show_cmd]["json"]
-        actual_output = dut_ptr["timeInfo"]["loadAvg"][2]
-        logging.info(f'WHEN CPU utilization is |{actual_output}|')
+        tops.comment = ('TEST if 5 minute CPU utilization is less than '
+                        f'specified value on |{tops.dut_name}|.\n'
+                        'GIVEN CPU utilization is less than '
+                        f'|{tops.expected_output}|.\n'
+                        f'WHEN CPU utilization is |{tops.actual_output}|.\n'
+                        f'THEN test case result is |{tops.test_result}|.\n'
+                        f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
 
-        test_result = actual_output < expected_output
-        logging.info(f'THEN test case result is |{test_result}|')
-        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
-        print(f"\nOn router |{dut['name']}| 5 minute CPU load average is "
-              f"|{actual_output}%| and should be under |{expected_output}%|")
+        print(f"{tops.output_msg}\n{tops.comment}")
 
-        assert actual_output < expected_output
+        tops.post_testcase()
+
+        assert tops.actual_output < tops.expected_output

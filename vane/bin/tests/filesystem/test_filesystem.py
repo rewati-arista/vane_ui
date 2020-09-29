@@ -55,46 +55,37 @@ class FileSystemTests():
               tests_definitions (dict): Test parameters
         """
 
-        # Initialize values
-        test_case = inspect.currentframe().f_code.co_name
-        comment, output_msg, actual_result, expected_result = "", "", [], []
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        (test_parameters,
-         expected_output,
-         _, dut_name, _, _) = tests_tools.pre_testcase(tests_definitions,
-                                                       TEST_SUITE,
-                                                       dut)
-
-        files = test_parameters["files"]
+        files = tops.test_parameters["files"]
 
         for file_name in files:
             show_cmd = f"show file information {file_name}"
             show_output, show_cmd_txt = tests_tools.return_show_cmd(show_cmd,
                                                                     dut,
-                                                                    test_case,
+                                                                    tops.test_case,
                                                                     LOG_FILE)
-            actual_output = show_output[0]["result"]['isDir']
+            tops.actual_output = show_output[0]["result"]['isDir']
 
-            output_msg += (f"\nOn router |{dut_name}|: {file_name} file isDir "
-                           f"state is |{actual_output}|, correct state is "
-                           f"|{expected_output}|.\n")
+            tops.output_msg += (f"\nOn router |{tops.dut_name}|: {file_name} file isDir "
+                                f"state is |{tops.actual_output}|, correct state is "
+                                f"|{tops.expected_output}|.\n")
 
-            test_result = actual_output is expected_output
-            comment += (f'TEST is {file_name} file present on |{dut_name}|.\n'
-                        f'GIVEN {file_name} file isDir state is: '
-                        f'|{expected_output}|.\n'
-                        f'WHEN {file_name} file isDir state is '
-                        f'|{actual_output}|.\n'
-                        f'THEN test case result is |{test_result}|.\n'
-                        f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}.\n')
+            tops.test_result = tops.actual_output is tops.expected_output
+            tops.comment += (f'TEST is {file_name} file present on |{tops.dut_name}|.\n'
+                             f'GIVEN {file_name} file isDir state is: '
+                             f'|{tops.expected_output}|.\n'
+                             f'WHEN {file_name} file isDir state is '
+                             f'|{tops.actual_output}|.\n'
+                             f'THEN test case result is |{tops.test_result}|.\n'
+                             f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}.\n')
 
-            actual_result.append(actual_output)
-            expected_result.append(expected_output)
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
 
-        print(f"{output_msg}\n{comment}")
+        print(f"{tops.output_msg}\n{tops.comment}")
 
-        test_parameters['expected_output'] = expected_result
-        tests_tools.post_testcase(test_parameters, comment, test_result,
-                                  output_msg, actual_result, dut_name)
+        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.post_testcase()
 
-        assert actual_result == expected_result
+        assert tops.actual_results == tops.expected_results

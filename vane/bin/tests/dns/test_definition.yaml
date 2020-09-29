@@ -9,5 +9,3 @@ testcases:
       - cnn.com
       - arista.com
     expected_output: True
-    comment: null
-    result: True

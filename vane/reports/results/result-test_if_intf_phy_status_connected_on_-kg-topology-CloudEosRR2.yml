@@ -1,0 +1,11 @@
+actual_output: null
+comment: '|kg-topology-CloudEosRR2| is vEOS instance.  Test is invalid.'
+description: Verify the interfaces of interest link statuses are connected
+dut: kg-topology-CloudEosRR2
+expected_output: linkUp
+fail_reason: ''
+name: test_if_intf_phy_status_connected_on_
+output_msg: null
+show_cmd: show interfaces phy detail
+test_result: true
+test_suite: test_interface.py

@@ -103,7 +103,7 @@ class TestsClient:
 
         logging.info('Start test setup')
         self._render_eapi_cfg()
-        self._create_results_file()
+        self._remove_result_files()
         test_paramters = self._set_test_parameters()
 
         logging.info('Starting Test')
@@ -129,7 +129,7 @@ class TestsClient:
         stdout = self.data_model['parameters']['stdout']
         mark = self.data_model['parameters']['mark']
 
-        test_parameters.append('--junit-xml=report.xml')
+        test_parameters.append('--junit-xml=../reports/report.xml')
 
         if verbose:
             logging.info('Enable pytest output verbosity')
@@ -235,21 +235,22 @@ class TestsClient:
 
         logging.info(f'Change permissions of {eapi_file} to 777')
         os.chmod(eapi_file, stat.S_IRWXU)
-
-    def _create_results_file(self):
-        """ Create a file for Test Cases to write results to
+    
+    def _remove_result_files(self):
+        """ Remove pre-existing results file
         """
 
-        results_file = self.data_model["parameters"]["results_file"]
-        logging.info(f'Create a file named {results_file} for Test Cases to '
-                     'write results to')
+        results_dir = self.data_model["parameters"]["results_dir"]
+        logging.info('Remove any existing results files in results directory '
+                     f'{results_dir}')
 
-        logging.info(f'Opening {results_file} for write')
-        try:
-            with open(results_file, 'w') as results:
-                logging.info(f'Opened {results_file} for write')
-        except BaseException as error:
-            print(f">>>  ERROR OPENING RESULTS FILE: {error}")
-            logging.error(f"ERROR OPENING RESULTS FILE: {error}")
-            logging.error('EXITING TEST RUNNER')
-            sys.exit(1)
+        results_files = os.listdir(results_dir)
+        logging.info(f'Result files are {results_files}')
+
+        for name in results_files:
+            if 'result-' in name:
+                result_file = f'{results_dir}/{name}'
+                logging.info(f'Remove result file: {result_file}')
+                os.remove(result_file)
+            else:
+                logging.warning(f'Not removing file: {name}')

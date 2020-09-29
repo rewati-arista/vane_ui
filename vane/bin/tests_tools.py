@@ -331,38 +331,6 @@ def export_logs(test_name, hostname, output, test_parameters):
         sys.exit(1)
 
 
-def pre_testcase(tests_definitions, test_suite, dut):
-    """ Do pre processing for test case
-
-        Args:
-            test_definitions (dict):
-            test_suite (str):
-            dut (dict):
-
-        return:
-            test_parameters (dict):
-
-    """
-
-    test_case = inspect.stack()[1][3]
-    logging.info(f'Setting testcase name to {test_case}')
-    test_parameters = get_parameters(tests_definitions, test_suite, test_case)
-
-    expected_output = test_parameters["expected_output"]
-    interfaces_list = dut["output"]["interface_list"]
-    dut_name = dut['name']
-
-    show_cmd = test_parameters["show_cmd"]
-    if show_cmd:
-        verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
-    else:
-        show_cmd_txt = ""
-
-    return (test_parameters, expected_output, interfaces_list, dut_name,
-            show_cmd_txt, show_cmd)
-
-
 def get_parameters(tests_parameters, test_suite, test_case=""):
     """ Return test parameters for a test case
 
@@ -476,125 +444,6 @@ def generate_interface_list(dut_name, test_definition):
     return interface_list
 
 
-def post_testcase(test_parameters, comment, test_result, output_msg,
-                  actual_output, dut_name):
-    """ Do post processing for test case
-
-        Args:
-            test_parameters (dict): Input DUT test definitions
-            comment (str): description on test operations
-            test_result (bool): test result
-            output_msg (str): failure reason
-            actual_output (?): output of test operations
-            dut_name (str): name of dut
-    """
-
-    test_parameters['comment'] = comment
-    test_parameters["test_result"] = test_result
-    test_parameters["output_msg"] = output_msg
-    test_parameters["actual_output"] = actual_output
-    test_parameters["dut"] = dut_name
-
-    test_parameters["fail_reason"] = ""
-    if not test_parameters["test_result"]:
-        test_parameters["fail_reason"] = test_parameters["output_msg"]
-
-    write_results(test_parameters)
-
-
-def write_results(test_parameters):
-    """ Write test results to YAML file for post-processing
-
-        Args:
-            test_parameters (dict): Input DUT test definitions
-
-        YAML Data structure:
-            testsuites:
-             - name: <test suite>
-               testcases:
-                 - name: <test name>
-                   duts:
-                     - dut: <dut name>
-                       description:
-    """
-
-    test_suite = test_parameters['test_suite']
-    test_suite = test_suite.split('/')[-1]
-    dut_name = test_parameters['dut']
-    test_case = test_parameters['name']
-
-    # TODO: remove hard code
-    yaml_file = 'result.yml'
-
-    while True:
-        try:
-            yaml_in = open(yaml_file, 'r+')
-            fcntl.flock(yaml_in, fcntl.LOCK_EX | fcntl.LOCK_NB)
-            yaml_data = yaml.safe_load(yaml_in)
-            break
-        except:
-            time.sleep(0.05)
-
-    if not yaml_data:
-        yaml_data = {'test_suites':
-                        [
-                            {'name': test_suite,
-                            'test_cases': [
-                                    {'name': test_case,
-                                     'duts': []
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-    else:
-        yaml_in.seek(0)
-        yaml_in.truncate()
-
-    logging.info(f'\n\n\rFind the Index for test suite: {test_suite} on dut '
-                 f'{dut_name}\n\n\r')
-    logging.info(yaml_data['test_suites'])
-    test_suites = [param['name'] for param in yaml_data['test_suites']]
-
-    if test_suite in test_suites:
-        suite_index = test_suites.index(test_suite)
-        logging.info(f'Test suite {test_suite} exists in results file at '
-                     f'index {suite_index}')
-    else:
-        logging.info(f'Create test suite {test_suite} in results file')
-        suite_stub = {'name': test_suite, 'test_cases': []}
-        yaml_data['test_suites'].append(suite_stub)
-        suite_index = (len(yaml_data['test_suites']) - 1)
-
-    logging.info(f'Find Index for test case: {test_case} on dut {dut_name}')
-    test_cases = [param['name'] for param in yaml_data['test_suites'][suite_index]['test_cases']]
-
-    if test_case in test_cases:
-        test_index = test_cases.index(test_case)
-        logging.info(f'Test case {test_case} exists in results file at index '
-                     f'{test_index}')
-    else:
-        logging.info(f'Create test case {test_case} in results file')
-        test_stub = {'name': test_case, 'duts': []}
-        yaml_data['test_suites'][suite_index]['test_cases'].append(test_stub)
-        test_index = (len(yaml_data['test_suites'][suite_index]['test_cases']) - 1)
-
-    logging.info(f'Find Index for dut {dut_name}')
-    duts = [param['dut'] for param
-            in yaml_data['test_suites'][suite_index]['test_cases'][test_index]['duts']]
-
-    if dut_name not in duts:
-        logging.info(f'Add DUT {dut_name} to test case {test_case} with '
-                     f'parameters {test_parameters}')
-        yaml_ptr = yaml_data['test_suites'][suite_index]
-        yaml_ptr['test_cases'][test_index]['duts'].append(test_parameters)
-
-    yaml.dump(yaml_data, yaml_in, default_flow_style=False)
-    fcntl.flock(yaml_in, fcntl.LOCK_UN)
-
-    yaml_in.close()
-
-
 def yaml_io(yaml_file, io_type, yaml_data=None):
     """ Write test results to YAML file for post-processing
 
@@ -702,3 +551,116 @@ def export_yaml(yaml_file, yaml_data):
                       f'FOUND. {err}')
         logging.error('EXITING TEST RUNNER')
         sys.exit(1)
+
+class TestOps():
+    """Common testcase operations and variables"""
+
+    def __init__(self, tests_definitions, test_suite, dut):
+        """ Initializes TestOps Object
+
+            Args:
+                test_definition (str): YAML representation of NRFU tests
+        """
+
+        test_case = inspect.stack()[1][3]
+        self.test_case = test_case
+        self.test_parameters = self._get_parameters(tests_definitions,
+                                                    test_suite,
+                                                    self.test_case)
+
+        self.expected_output = self.test_parameters["expected_output"]
+
+        self.interface_list = dut["output"]["interface_list"]
+        self.dut_name = dut['name']
+        self.show_cmd = self.test_parameters["show_cmd"]
+
+        if self.show_cmd:
+            self._verify_show_cmd(self.show_cmd, dut)
+            self.show_cmd_txt = dut["output"][self.show_cmd]['text']
+        else:
+            self.show_cmd_txt = ""
+
+        self.comment = ""
+        self.output_msg = ""
+        self.actual_results = []
+        self.expected_results = []
+
+    def _verify_show_cmd(self, show_cmd, dut):
+        """ Verify if show command was successfully executed on dut
+
+            show_cmd (str): show command
+            dut (dict): data structure of dut parameters
+        """
+
+        dut_name = dut["name"]
+        logging.info(f'Verify if show command |{show_cmd}| was successfully '
+                     f'executed on {dut_name} dut')
+
+        if show_cmd in dut["output"]:
+            logging.info(f'Verified output for show command |{show_cmd}| on '
+                         f'{dut_name}')
+        else:
+            logging.critical(f'Show command |{show_cmd}| not executed on '
+                             f'{dut_name}')
+            assert False
+
+    def post_testcase(self):
+        """ Do post processing for test case
+        """
+
+        self.test_parameters['comment'] = self.comment
+        self.test_parameters["test_result"] = self.test_result
+        self.test_parameters["output_msg"] = self.output_msg
+        self.test_parameters["expected_output"] = self.expected_output
+        self.test_parameters["actual_output"] = self.actual_output
+        self.test_parameters["dut"] = self.dut_name
+
+        self.test_parameters["fail_reason"] = ""
+        if not self.test_parameters["test_result"]:
+            self.test_parameters["fail_reason"] = self.output_msg
+
+        self._write_results()
+
+    def _write_results(self):
+        """
+        """
+
+        logging.info(f'Preparing to write results')
+        test_suite = self.test_parameters['test_suite']
+        test_suite = test_suite.split('/')[-1]
+        dut_name = self.test_parameters['dut']
+        test_case = self.test_parameters['name']
+    
+        yaml_file = f'../reports/results/result-{test_case}-{dut_name}.yml'
+        logging.info(f'Creating results file named {yaml_file}')
+
+        yaml_data = self.test_parameters
+        export_yaml(yaml_file, yaml_data)
+
+    def _get_parameters(self, tests_parameters, test_suite, test_case):
+        """ Return test parameters for a test case
+
+            Args:
+                tests_parameter
+        """
+
+        if not test_case:
+            test_case = inspect.stack()[1][3]
+            logging.info(f'Setting testcase name to {test_case}')
+
+        logging.info('Identify test case and return parameters')
+        test_suite = test_suite.split('/')[-1]
+
+        logging.info(f'Return testcases for Test Suite: {test_suite}')
+        suite_parameters = [param for param in tests_parameters['test_suites']
+                            if param['name'] == test_suite]
+        logging.info(f'Suite_parameters: {suite_parameters}')
+
+        logging.info(f'Return parameters for Test Case: {test_case}')
+        case_parameters = [param for param in suite_parameters[0]['testcases']
+                           if param['name'] == test_case]
+        logging.info(f'Case_parameters: {case_parameters[0]}')
+
+        case_parameters[0]['test_suite'] = test_suite
+
+        return case_parameters[0]

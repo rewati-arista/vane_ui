@@ -15,3 +15,13 @@ testcases:
     # Use dut name
     expected_output: null
     show_cmd: show lldp local-info
+  - name: test_if_lldp_max_frame_size_is_correct_on_
+    description: Verify show lldp local-info maxFrameSize is correct
+    # LLDP Max frame size
+    expected_output: 10200
+    show_cmd: show lldp local-info
+  - name: test_if_lldp_interface_id_is_correct_on_
+    description: Verify show lldp local-info interfaceIdType is correct
+    # LLDP ID type
+    expected_output: interfaceName
+    show_cmd: show lldp local-info

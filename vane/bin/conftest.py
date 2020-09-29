@@ -128,7 +128,6 @@ def tests_definitions(scope='session'):
     test_parameters = tests_tools.import_yaml(yaml_file)
     yield tests_tools.return_test_defs(test_parameters)
 
-
 def find_nodeid(nodeid):
     """ Return device parameter
 

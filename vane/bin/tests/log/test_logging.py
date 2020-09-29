@@ -56,33 +56,30 @@ class LoggingTests():
               dut (dict): Encapsulates dut details including name, connection
         """
 
-        test_case = inspect.currentframe().f_code.co_name
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        sys_msgs = tops.test_parameters["sys_msgs"]
 
-        sys_msgs = test_parameters["sys_msgs"]
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
-
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
-        actual_output = show_cmd_txt
+        print(f"\nOn router |{tops.dut_name}|:")
 
         for sys_msg in sys_msgs:
-            logging.info(f'TEST for local log message {sys_msg} on '
-                         f'|{dut_name}|')
+            tops.actual_output = sys_msg in tops.show_cmd_txt
 
-            if sys_msg in show_cmd_txt:
-                print(f"\nOn router |{dut_name}| message |{sys_msg}| found "
-                      "in local log")
-                logging.info('THEN test case result is |Failed|')
-                logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
-                assert False
-            else:
-                print(f"\nOn router |{dut_name}| message |{sys_msg}| NOT "
-                      "found in local log")
-                logging.info('THEN test case result is |Passed|')
-                logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
-                assert True
+            tops.output_msg += (f'Test for log message {sys_msg}, '
+                                'message should not be present.\n')
+
+            tops.test_result = tops.actual_output is tops.expected_output
+            tops.comment += (f'Test for log message |{sys_msg}| on |{tops.dut_name}|.\n'
+                             f'GIVEN message presence is |{tops.expected_output}|.\n'
+                             f'WHEN message presence is |{tops.actual_output}|.\n'
+                             f'THEN test case result is |{tops.test_result}|.\n\n')
+                        
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
+
+        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        print(f"{tops.output_msg}\n{tops.comment}")
+
+        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.post_testcase()
+
+        assert tops.actual_results == tops.expected_results

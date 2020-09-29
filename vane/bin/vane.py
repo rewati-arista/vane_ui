@@ -37,6 +37,7 @@ import argparse
 import logging
 import tests_client
 import report_client
+import input_client
 
 
 logging.basicConfig(level=logging.INFO, filename='vane.log', filemode='w',
