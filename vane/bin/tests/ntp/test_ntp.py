@@ -56,14 +56,12 @@ class NTPTests():
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
-        tops.actual_output = ("synchronised" in tops.show_cmd_txt)
+        tops.actual_output = dut["output"][tops.show_cmd]['json']['status']
+        tops.test_result = tops.actual_output == tops.expected_output
 
         tops.output_msg = (f"\nOn router |{tops.dut_name}| NTP "
                            f"synchronised status is |{tops.actual_output}| "
                            f" correct status is |{tops.expected_output}|.\n")
-
-        tops.test_result = tops.actual_output == tops.expected_output
-
         tops.comment = (f'TEST is NTP synchronized on |{tops.dut_name}|.\n'
                         f'GIVEN NTP synchronized is |{tops.expected_output}|'
                         '.\n'

@@ -1,0 +1,18 @@
+actual_output: null
+comment: 'INVALID TEST: CloudEOS router |kg-topology-CloudEOSEdge2| doesnt require
+  cooling.
+
+  '
+description: Verify system temperature sensors environmentals are functional within
+  spec
+dut: kg-topology-CloudEOSEdge2
+expected_output: null
+fail_reason: ''
+name: test_if_sensors_temp_is_in_spec_on_
+output_msg: 'INVALID TEST: CloudEOS router |kg-topology-CloudEOSEdge2| doesnt require
+  cooling.
+
+  '
+show_cmd: null
+test_result: true
+test_suite: test_environment.py

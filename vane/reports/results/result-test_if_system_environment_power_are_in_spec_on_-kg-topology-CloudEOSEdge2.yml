@@ -1,0 +1,16 @@
+actual_output: []
+comment: 'INVALID TEST: CloudEOS router |kg-topology-CloudEOSEdge2| doesnt have power-supplies.
+
+  '
+description: Verify system power environmentals are functional within spec
+dut: kg-topology-CloudEOSEdge2
+expected_output: []
+fail_reason: ''
+name: test_if_system_environment_power_are_in_spec_on_
+output_msg: 'INVALID TEST: CloudEOS router |kg-topology-CloudEOSEdge2| doesnt have
+  power-supplies.
+
+  '
+show_cmd: null
+test_result: true
+test_suite: test_environment.py

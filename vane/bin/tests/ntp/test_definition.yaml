@@ -3,8 +3,8 @@ testcases:
   - name: test_if_ntp_is_synchronized_on_
     description: Verify ntp is setup and working correctly
     show_cmd: show ntp status
-    # if ntp synchronization
-    expected_output: True
+    #expected_output: True
+    expected_output: synchronised
   - name: test_if_ntp_associated_with_peers_on_
     description: Verify ntp peers are correct
     show_cmd: show ntp associations

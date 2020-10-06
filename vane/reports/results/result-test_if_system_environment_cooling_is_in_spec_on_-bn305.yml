@@ -1,0 +1,84 @@
+actual_output: coolingOk
+comment: "TEST is |bn305| system cooling environmentals functioning within spec.\n\
+  GIVEN cooling state is |coolingOk|.\nWHEN cooling state is |coolingOk|.\nTHEN test\
+  \ case result is |True|.\nOUTPUT of |show system environment cooling| is:\n\nSystem\
+  \ cooling status is: Ok\nAmbient temperature: 21C\nAirflow: port-side intake\n \
+  \                            Config Actual                   Speed\nFan        \
+  \     Status        Speed  Speed            Uptime Stability\n--------------- ------------\
+  \ ------ ------ ----------------- -----------\n1/1             Ok              65%\
+  \    65% 49 days, 16:47:51 Stable\n1/2             Ok              65%    64% 49\
+  \ days, 16:47:51 Stable\n1/3             Ok              65%    64% 49 days, 16:47:51\
+  \ Stable\n1/4             Ok              65%    65% 49 days, 16:47:51 Stable\n\
+  1/5             Ok              65%    63% 49 days, 16:47:51 Stable\n1/6       \
+  \      Ok              65%    64% 49 days, 16:47:51 Stable\n1/7             Ok \
+  \             65%    65% 49 days, 16:47:51 Stable\n1/8             Ok          \
+  \    65%    65% 49 days, 16:47:51 Stable\n2/1             Ok              65%  \
+  \  65% 49 days, 16:47:51 Stable\n2/2             Ok              65%    65% 49 days,\
+  \ 16:47:51 Stable\n2/3             Ok              65%    65% 49 days, 16:47:51\
+  \ Stable\n2/4             Ok              65%    64% 49 days, 16:47:51 Stable\n\
+  2/5             Ok              65%    65% 49 days, 16:47:51 Stable\n2/6       \
+  \      Ok              65%    65% 49 days, 16:47:51 Stable\n2/7             Ok \
+  \             65%    64% 49 days, 16:47:51 Stable\n2/8             Ok          \
+  \    65%    64% 49 days, 16:47:51 Stable\n3/1             Ok              65%  \
+  \  65% 49 days, 16:47:51 Stable\n3/2             Ok              65%    64% 49 days,\
+  \ 16:47:51 Stable\n3/3             Ok              65%    64% 49 days, 16:47:51\
+  \ Stable\n3/4             Ok              65%    64% 49 days, 16:47:51 Stable\n\
+  3/5             Ok              65%    64% 49 days, 16:47:51 Stable\n3/6       \
+  \      Ok              65%    64% 49 days, 16:47:51 Stable\n3/7             Ok \
+  \             65%    65% 49 days, 16:47:51 Stable\n3/8             Ok          \
+  \    65%    65% 49 days, 16:47:51 Stable\n4/1             Ok              65%  \
+  \  65% 49 days, 16:47:51 Stable\n4/2             Ok              65%    64% 49 days,\
+  \ 16:47:51 Stable\n4/3             Ok              65%    64% 49 days, 16:47:51\
+  \ Stable\n4/4             Ok              65%    65% 49 days, 16:47:51 Stable\n\
+  4/5             Ok              65%    65% 49 days, 16:47:51 Stable\n4/6       \
+  \      Ok              65%    65% 49 days, 16:47:51 Stable\n4/7             Ok \
+  \             65%    64% 49 days, 16:47:51 Stable\n4/8             Ok          \
+  \    65%    65% 49 days, 16:47:51 Stable\n5/1             Ok              65%  \
+  \  65% 49 days, 16:47:51 Stable\n5/2             Ok              65%    64% 49 days,\
+  \ 16:47:51 Stable\n5/3             Ok              65%    64% 49 days, 16:47:51\
+  \ Stable\n5/4             Ok              65%    64% 49 days, 16:47:51 Stable\n\
+  5/5             Ok              65%    64% 49 days, 16:47:51 Stable\n5/6       \
+  \      Ok              65%    64% 49 days, 16:47:51 Stable\n5/7             Ok \
+  \             65%    64% 49 days, 16:47:51 Stable\n5/8             Ok          \
+  \    65%    64% 49 days, 16:47:51 Stable\n6/1             Ok              65%  \
+  \  65% 49 days, 16:47:51 Stable\n6/2             Ok              65%    65% 49 days,\
+  \ 16:47:51 Stable\n6/3             Ok              65%    65% 49 days, 16:47:51\
+  \ Stable\n6/4             Ok              65%    64% 49 days, 16:47:51 Stable\n\
+  6/5             Ok              65%    64% 49 days, 16:47:51 Stable\n6/6       \
+  \      Ok              65%    65% 49 days, 16:47:51 Stable\n6/7             Ok \
+  \             65%    64% 49 days, 16:47:51 Stable\n6/8             Ok          \
+  \    65%    65% 49 days, 16:47:51 Stable\nPowerSupply1/1  Ok              70%  \
+  \  72% 49 days, 16:46:49 FW Override\nPowerSupply2/1  Ok              70%    72%\
+  \ 49 days, 16:46:37 FW Override\nPowerSupply3    Not Inserted    N/A    N/A    \
+  \       Offline N/A\nPowerSupply4    Not Inserted    N/A    N/A           Offline\
+  \ N/A\nPowerSupply5/1  Ok              70%    69% 49 days, 16:46:45 Stable\nPowerSupply6/1\
+  \  Ok              70%    69% 49 days, 16:46:40 Stable\nPowerSupply7/1  Ok     \
+  \         70%    73% 49 days, 16:46:26 FW Override\nPowerSupply8/1  Ok         \
+  \     70%    71% 49 days, 16:46:43 FW Override\nPowerSupply9    Not Inserted   \
+  \ N/A    N/A           Offline N/A\nPowerSupply10   Not Inserted    N/A    N/A \
+  \          Offline N/A\nPowerSupply11/1 Ok              70%    69% 49 days, 16:47:22\
+  \ Stable\nPowerSupply12/1 Ok              70%    69% 49 days, 16:47:20 Stable\n\n\
+  \           Stable\n           Uptime\n-----------------\n49 days, 16:47:36\n49\
+  \ days, 16:47:36\n49 days, 16:47:36\n49 days, 16:47:36\n49 days, 16:47:36\n49 days,\
+  \ 16:47:36\n49 days, 16:47:36\n49 days, 16:47:36\n49 days, 16:47:36\n49 days, 16:47:36\n\
+  49 days, 16:47:36\n49 days, 16:47:36\n49 days, 16:47:36\n49 days, 16:47:36\n49 days,\
+  \ 16:47:36\n49 days, 16:47:36\n49 days, 16:47:36\n49 days, 16:47:36\n49 days, 16:47:36\n\
+  49 days, 16:47:36\n49 days, 16:47:36\n49 days, 16:47:36\n49 days, 16:47:36\n49 days,\
+  \ 16:47:36\n49 days, 16:47:36\n49 days, 16:47:36\n49 days, 16:47:36\n49 days, 16:47:36\n\
+  49 days, 16:47:36\n49 days, 16:47:36\n49 days, 16:47:36\n49 days, 16:47:36\n49 days,\
+  \ 16:47:36\n49 days, 16:47:36\n49 days, 16:47:36\n49 days, 16:47:36\n49 days, 16:47:36\n\
+  49 days, 16:47:36\n49 days, 16:47:36\n49 days, 16:47:36\n49 days, 16:47:35\n49 days,\
+  \ 16:47:35\n49 days, 16:47:35\n49 days, 16:47:35\n49 days, 16:47:35\n49 days, 16:47:35\n\
+  49 days, 16:47:35\n49 days, 16:47:35\n              N/A\n              N/A\n   \
+  \           N/A\n              N/A\n49 days, 16:44:44\n49 days, 16:44:27\n     \
+  \         N/A\n              N/A\n              N/A\n              N/A\n49 days,\
+  \ 16:45:28\n49 days, 16:45:28\n"
+description: Verify system cooling environmentals are functional within spec
+dut: bn305
+expected_output: coolingOk
+fail_reason: ''
+name: test_if_system_environment_cooling_is_in_spec_on_
+output_msg: On router |bn305| system cooling status is |coolingOk| and should be |coolingOk|
+show_cmd: show system environment cooling
+test_result: true
+test_suite: test_environment.py

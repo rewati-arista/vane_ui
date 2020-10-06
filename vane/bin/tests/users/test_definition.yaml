@@ -8,5 +8,3 @@ testcases:
       - kgrozis
     show_cmd: show running-config section username
     expected_output: True
-    comment: null
-    result: True

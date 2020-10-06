@@ -56,35 +56,32 @@ class UsersTests():
               tests_definitions (dict): Test parameters
         """
 
-        test_case = inspect.currentframe().f_code.co_name
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
-
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
-        usernames = test_parameters["usernames"]
-
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
-        actual_output = show_cmd_txt
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        usernames = tops.test_parameters["usernames"]
 
         for username in usernames:
-            logging.info(f'TEST is {username} username configured '
-                         f'|{dut_name}|')
-            logging.info(f'GIVEN {username} username configured status: '
-                         f'|{expected_output}|')
+            tops.actual_output = username in tops.show_cmd_txt
+            tops.test_result = tops.actual_output == tops.expected_output
 
-            if username in actual_output:
-                print(f"\nOn router |{dut['name']}| |{username}| username is "
-                      "|configured|")
-                logging.info(f'WHEN {username} username configured status is '
-                             '|True|')
-                logging.info('THEN test case result is |True|\n')
-                logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
-            else:
-                print(f"\nOn router |{dut['name']}| |{username}| username is "
-                      "|NOT configured|")
+            tops.output_msg += (f"On router |{tops.dut_name}|: |{username}| "
+                                f"username configured is "
+                                f"|{tops.actual_output}|, username configured "
+                                f"should be |{tops.expected_output}|.\n\n")
+            tops.comment += (f'TEST is {username} username configured on '
+                             f' |{tops.dut_name}|.\n'
+                             'GIVEN username configured status: '
+                             f'|{tops.expected_output}|.\n'
+                             'WHEN username configured status: '
+                             f'|{tops.actual_output}|.\n'
+                             f'THEN test case result is |{tops.test_result}|.\n\n')
 
-            assert (username in actual_output) is True
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
+
+        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        print(f"{tops.output_msg}\n{tops.comment}")
+
+        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.post_testcase()
+
+        assert tops.actual_results == tops.expected_results

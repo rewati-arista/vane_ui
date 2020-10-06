@@ -56,32 +56,23 @@ class ZTPTests():
               tests_definitions (dict): Test parameters
         """
 
-        test_case = inspect.currentframe().f_code.co_name
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops.actual_output = dut["output"][tops.show_cmd]['json']['mode']
+        tops.test_result = tops.actual_output == tops.expected_output
 
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
+        tops.output_msg += (f"On router |{tops.dut_name}|: ZTP process is in "
+                            f"mode: |{tops.actual_output}| correct mode is "
+                            f"|{tops.expected_output}|\n")
+        tops.comment += (f'TEST is ZTP disabled on |{tops.dut_name}|.\n'
+                         f'GIVEN ZTP state is |{tops.expected_output}|.\n'
+                         f'WHEN ZTP state is |{tops.actual_output}|.\n'
+                         f'THEN test case result is |{tops.test_result}|.\n'
+                         f'OUTPUT of |{tops.show_cmd}| is :'
+                         f'\n\n{tops.show_cmd_txt}')
 
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
+        tops.post_testcase()
 
-        logging.info(f'TEST is ZTP disabled on |{dut_name}| ')
-        logging.info(f'GIVEN ZTP state is |{expected_output}|')
-
-        actual_output = dut["output"][show_cmd]['json']['mode']
-
-        print(f"\nOn router |{dut['name']}| ZTP process is in mode: "
-              f"|{actual_output}|")
-        logging.info(f'WHEN ZTP state is |{actual_output}|')
-
-        test_result = actual_output == expected_output
-        logging.info(f'THEN test case result is |{test_result}|')
-        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
-
-        assert actual_output == expected_output
+        assert tops.actual_output == tops.expected_output
 
     def test_for_zerotouch_config_file_on_(self, dut, tests_definitions):
         """ Verify zerotoucn-config file is on flash
@@ -91,29 +82,23 @@ class ZTPTests():
               tests_definitions (dict): Test parameters
         """
 
-        test_case = inspect.currentframe().f_code.co_name
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops.actual_output = "zerotouch-config" in tops.show_cmd_txt
+        tops.test_result = tops.actual_output == tops.expected_output
 
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
+        tops.output_msg += (f"On router |{tops.dut_name}|: ZTP configuration "
+                            f"file is on flash: is |{tops.actual_output}|, "
+                            f" correct state is |{tops.expected_output}|\n")
+        tops.comment += ('TEST is ZTP configuration file on '
+                         f'|{tops.dut_name}|.\n'
+                         'GIVEN ZTP configuration file is '
+                         f'|{tops.expected_output}|.\n'
+                         'WHEN ZTP configuration file is '
+                         f'|{tops.actual_output}|.\n'
+                         f'THEN test case result is |{tops.test_result}|.\n'
+                         f'OUTPUT of |{tops.show_cmd}| is :'
+                         f'\n\n{tops.show_cmd_txt}')
 
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
+        tops.post_testcase()
 
-        logging.info(f'TEST is ZTP configuration file is on |{dut_name}| ')
-        logging.info(f'GIVEN ZTP configuration file is |{expected_output}|')
-
-        actual_output = ("zerotouch-config" in show_cmd_txt) is expected_output
-
-        print(f"\nOn router |{dut_name}| ZTP configuration file is on flash: "
-              f"|{actual_output}|")
-        logging.info(f'WHEN ZTP configuration file is |{actual_output}|')
-
-        test_result = actual_output == expected_output
-        logging.info(f'THEN test case result is |{test_result}|')
-        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
-
-        assert actual_output == expected_output
+        assert tops.actual_output == tops.expected_output

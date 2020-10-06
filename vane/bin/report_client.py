@@ -66,9 +66,7 @@ class ReportClient:
 
         _results_file = self.data_model['parameters']['results_file']
         self._results_datamodel = None
-        #self._results_data = None
         self._compile_yaml_data('../reports/results/', _results_file)
-        #self._results_data = self._import_yaml(_results_file)
         logging.info(f'Results file data is {self._results_datamodel}')
 
         self._document = docx.Document()

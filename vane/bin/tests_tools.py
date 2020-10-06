@@ -42,7 +42,7 @@ import pyeapi
 import yaml
 
 
-logging.basicConfig(level=logging.INFO, filename='vane.log', filemode='w',
+logging.basicConfig(level=logging.INFO, filename='test_tools.log', filemode='w',
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
@@ -158,6 +158,7 @@ def init_duts(show_cmds, test_parameters):
     duts = login_duts(test_parameters)
     workers = len(duts)
     logging.info(f'Duts login info: {duts} and create {workers} workers')
+    logging.info(f'Passing the following show commands to workers: {show_cmds}')
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
         {executor.submit(dut_worker, dut, show_cmds, test_parameters):
@@ -210,6 +211,26 @@ def dut_worker(dut, show_cmds, test_parameters):
     logging.info(f'List of show commands {show_cmds}')
     logging.info(f'Number of show commands {len(show_cmds)}')
 
+    try:
+        all_cmds = show_cmds.copy()
+        all_cmds.remove('show logging')
+        all_cmds.remove('show running-config section username')
+        logging.info(f'List of show commands in all_cmds: {all_cmds}')
+
+        conn = dut['connection']
+        show_cmd_list = conn.run_commands(all_cmds)
+        logging.info(f'ran all show cmds: {show_cmd_list}')
+
+    except Exception as e:
+        logging.error(f'error running all cmds: {e}')
+    
+    try:
+        all_txt_cmds = show_cmds.copy()
+        all_txt_cmds.remove('show lldp local-info')
+        show_cmd_txt_list = conn.run_commands(all_txt_cmds, encoding='text')
+    except Exception as e:
+        logging.error(f'error running all show cmds with text: {e}')
+
     for show_cmd in show_cmds:
         logging.info(f'In for looop and iterating on {show_cmd}')
         function_def = f'test_{("_").join(show_cmd.split())}'
@@ -219,18 +240,28 @@ def dut_worker(dut, show_cmds, test_parameters):
         dut["output"]["interface_list"] = return_interfaces(name,
                                                             test_parameters)
 
-        json_output, text_output = return_show_cmd(show_cmd,
-                                                   dut,
-                                                   function_def,
-                                                   test_parameters)
-        logging.info(f'Returned JSON output {json_output}')
-        logging.info(f'Returned text output {text_output}')
-
         logging.info(f'Adding output of {show_cmd} to duts data structure')
-
         dut["output"][show_cmd] = {}
-        dut["output"][show_cmd]["json"] = json_output[0]["result"]
-        dut["output"][show_cmd]["text"] = text_output[0]["output"]
+
+        logging.info(f'check all_cmds: {len(all_cmds)} vs show_cmd_list {len(show_cmd_list)}')
+        if show_cmd in all_cmds:
+            cmd_index = all_cmds.index(show_cmd)
+            logging.info(f'found cmd: {show_cmd} at index {cmd_index} of {all_cmds}')
+            show_output = show_cmd_list[cmd_index]
+            dut["output"][show_cmd]["json"] = show_output
+            logging.info(f'Adding cmd {show_cmd} to dut and data {show_output}')
+        else:
+            dut["output"][show_cmd]["json"] = ""
+            logging.info(f'No json output for {show_cmd}')
+
+        if show_cmd in all_txt_cmds:
+            cmd_index = all_txt_cmds.index(show_cmd)
+            show_output_txt = show_cmd_txt_list[cmd_index]
+            dut["output"][show_cmd]["text"] = show_output_txt['output']
+            logging.warning(f'Adding text cmd {show_cmd} to dut and data {show_output_txt}')
+        else:
+            dut["output"][show_cmd]["text"] = ""
+            logging.warning(f'No text output for {show_cmd}')
 
     logging.info(f'{name} updated with show output')
 
@@ -259,10 +290,19 @@ def return_show_cmd(show_cmd, dut, test_name, test_parameters):
     show_output = conn.enable(show_cmd)
     logging.info(f'Raw json output of {show_cmd} on dut {name}: {show_output}')
 
-    show_output_text = conn.run_commands(show_cmd, encoding='text')
+
+    try:
+        show_output_text = conn.run_commands(show_cmd, encoding='text')
+        raw_text = show_output_text[0]['output']
+    except Exception as e:
+        logging.error(f'Missed on commmand {show_cmd}')
+        logging.error(f'Error msg {e}')
+        time.sleep(1)
+        show_output_text = conn.run_commands(show_cmd, encoding='text')
+        logging.error(f'new value of show_output_text  {show_output_text}')
+        raw_text = show_output_text[0]['output']
     logging.info(f'Raw text output of {show_cmd} on dut {name}: '
                  f'{show_output_text}')
-    raw_text = show_output_text[0]['output']
 
     export_logs(test_name, name, raw_text, test_parameters)
 
@@ -415,12 +455,13 @@ def verify_veos(dut):
 
     veos_bool = False
     veos = dut["output"][show_cmd]['json']['modelName']
-    logging.info(f'Verify if {dut_name} DUT is a VEOS instance')
+    logging.info(f'Verify if {dut_name} DUT is a VEOS instance. '
+          f'Model is {veos}')
 
     if veos == 'vEOS':
         veos_bool = True
         logging.info(f'{dut_name} is a VEOS instance so returning {veos_bool}')
-        print(f'{dut_name} is a VEOS instance so test NOT valid')
+        logging.info(f'{dut_name} is a VEOS instance so test NOT valid')
     else:
         logging.info(f'{dut_name} is not a VEOS instance so returning '
                      f'{veos_bool}')
@@ -573,6 +614,7 @@ class TestOps():
         self.interface_list = dut["output"]["interface_list"]
         self.dut_name = dut['name']
         self.show_cmd = self.test_parameters["show_cmd"]
+        self.dut = dut
 
         if self.show_cmd:
             self._verify_show_cmd(self.show_cmd, dut)
@@ -664,3 +706,48 @@ class TestOps():
         case_parameters[0]['test_suite'] = test_suite
 
         return case_parameters[0]
+    
+    def return_show_cmd(self, show_cmd):
+        """ Return model data and text output from show commands and log text output.
+
+            Args:
+              show_cmd (str): show command
+        """
+
+        self.show_cmd = show_cmd
+        logging.info(f'Raw Input for return_show_cmd \nshow_cmd: {show_cmd}\n')
+        conn = self.dut['connection']
+        name = self.dut["name"]
+        logging.info('Return model data and text output from show commands and '
+                     f'log text output for {show_cmd} with connnection {conn}')
+
+        show_output = conn.enable(show_cmd)
+        self.show_output = show_output[0]['result']
+        logging.info(f'Raw json output of {show_cmd} on dut {name}: {self.show_output}')
+
+        show_output_text = conn.run_commands(show_cmd, encoding='text')
+        logging.info(f'Raw text output of {show_cmd} on dut {name}: '
+                     f'{self.show_cmd_txt}')
+        self.show_cmd_txt = show_output_text[0]['output']
+
+        return self.show_output, self.show_cmd_txt
+
+    def verify_veos(self):
+        """ Verify DUT is a VEOS instance
+        """
+
+        show_cmd = "show version"
+
+        veos_bool = False
+        veos = self.dut["output"][show_cmd]['json']['modelName']
+        logging.info(f'Verify if {self.dut_name} DUT is a VEOS instance. '
+                     f'Model is {veos}')
+
+        if veos == 'vEOS':
+            veos_bool = True
+            logging.info(f'{self.dut_name} is a VEOS instance so returning {veos_bool}')
+        else:
+            logging.info(f'{self.dut_name} is not a VEOS instance so returning '
+                         f'{veos_bool}')
+
+        return veos_bool

@@ -1,0 +1,86 @@
+actual_output:
+- powerLoss
+- ok
+- ok
+- powerLoss
+- ok
+- powerLoss
+- ok
+- powerLoss
+comment: "TEST is power-supply |11| functioning within spec.\nGIVEN power state is\
+  \ |ok|.\nWHEN power state is |powerLoss|.\nTHEN test case result is |False|.\n\n\
+  TEST is power-supply |1| functioning within spec.\nGIVEN power state is |ok|.\n\
+  WHEN power state is |ok|.\nTHEN test case result is |True|.\n\nTEST is power-supply\
+  \ |2| functioning within spec.\nGIVEN power state is |ok|.\nWHEN power state is\
+  \ |ok|.\nTHEN test case result is |True|.\n\nTEST is power-supply |5| functioning\
+  \ within spec.\nGIVEN power state is |ok|.\nWHEN power state is |powerLoss|.\nTHEN\
+  \ test case result is |False|.\n\nTEST is power-supply |7| functioning within spec.\n\
+  GIVEN power state is |ok|.\nWHEN power state is |ok|.\nTHEN test case result is\
+  \ |True|.\n\nTEST is power-supply |6| functioning within spec.\nGIVEN power state\
+  \ is |ok|.\nWHEN power state is |powerLoss|.\nTHEN test case result is |False|.\n\
+  \nTEST is power-supply |8| functioning within spec.\nGIVEN power state is |ok|.\n\
+  WHEN power state is |ok|.\nTHEN test case result is |True|.\n\nTEST is power-supply\
+  \ |12| functioning within spec.\nGIVEN power state is |ok|.\nWHEN power state is\
+  \ |powerLoss|.\nTHEN test case result is |False|.\n\nOUTPUT of |show system environment\
+  \ power| is :\n\nPower                           Input  Output  Output\nSupply Model\
+  \          Capacity Current Current   Power Status\n------ -------------- --------\
+  \ ------- ------- ------- ----------\n1      PWR-3KT-AC-RED    3000W   5.01A  90.38A\
+  \ 1090.0W Ok\n2      PWR-3KT-AC-RED    3000W   5.05A  90.12A 1088.0W Ok\n5     \
+  \ PWR-3KT-AC-RED    3000W   0.00A   0.00A    0.0W Power Loss\n6      PWR-3KT-AC-RED\
+  \    3000W   0.00A   0.00A    0.0W Power Loss\n7      PWR-3KT-AC-RED    3000W  \
+  \ 5.23A  94.38A 1140.0W Ok\n8      PWR-3KT-AC-RED    3000W   4.79A  84.75A 1022.0W\
+  \ Ok\n11     PWR-3KT-AC-RED    3000W   0.00A   0.00A    0.0W Power Loss\n12    \
+  \ PWR-3KT-AC-RED    3000W   0.00A   0.00A    0.0W Power Loss\nTotal  --        \
+  \       12000W      --      -- 4340.0W --\n\n\n           Uptime\n-----------------\n\
+  49 days, 16:47:25\n49 days, 16:47:13\n          Offline\n          Offline\n49 days,\
+  \ 16:47:02\n49 days, 16:47:19\n          Offline\n          Offline\n          \
+  \     --\n.\n"
+description: Verify system power environmentals are functional within spec
+dut: bn305
+expected_output:
+- ok
+- ok
+- ok
+- ok
+- ok
+- ok
+- ok
+- ok
+fail_reason: 'Power-Supply 11 state is |powerLoss|, should be in |ok|.
+
+  Power-Supply 1 state is |ok|, should be in |ok|.
+
+  Power-Supply 2 state is |ok|, should be in |ok|.
+
+  Power-Supply 5 state is |powerLoss|, should be in |ok|.
+
+  Power-Supply 7 state is |ok|, should be in |ok|.
+
+  Power-Supply 6 state is |powerLoss|, should be in |ok|.
+
+  Power-Supply 8 state is |ok|, should be in |ok|.
+
+  Power-Supply 12 state is |powerLoss|, should be in |ok|.
+
+  '
+name: test_if_system_environment_power_are_in_spec_on_
+output_msg: 'Power-Supply 11 state is |powerLoss|, should be in |ok|.
+
+  Power-Supply 1 state is |ok|, should be in |ok|.
+
+  Power-Supply 2 state is |ok|, should be in |ok|.
+
+  Power-Supply 5 state is |powerLoss|, should be in |ok|.
+
+  Power-Supply 7 state is |ok|, should be in |ok|.
+
+  Power-Supply 6 state is |powerLoss|, should be in |ok|.
+
+  Power-Supply 8 state is |ok|, should be in |ok|.
+
+  Power-Supply 12 state is |powerLoss|, should be in |ok|.
+
+  '
+show_cmd: null
+test_result: false
+test_suite: test_environment.py

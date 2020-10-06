@@ -1,0 +1,1244 @@
+actual_output:
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+comment: "TEST is |bn305| PowerSupply sensor |TempSensorP1/1| termperature environmentals\
+  \ functioning within spec.\nGIVEN expected alert status is |False|.\nWHEN actual\
+  \ alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305|\
+  \ PowerSupply sensor |TempSensorP1/2| termperature environmentals functioning within\
+  \ spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status is |False|.\n\
+  THEN test case result is |True|.\n\nTEST is |bn305| PowerSupply sensor |TempSensorP1/3|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| PowerSupply sensor |TempSensorP2/1| termperature environmentals\
+  \ functioning within spec.\nGIVEN expected alert status is |False|.\nWHEN actual\
+  \ alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305|\
+  \ PowerSupply sensor |TempSensorP2/2| termperature environmentals functioning within\
+  \ spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status is |False|.\n\
+  THEN test case result is |True|.\n\nTEST is |bn305| PowerSupply sensor |TempSensorP2/3|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| PowerSupply sensor |TempSensorP5/1| termperature environmentals\
+  \ functioning within spec.\nGIVEN expected alert status is |False|.\nWHEN actual\
+  \ alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305|\
+  \ PowerSupply sensor |TempSensorP5/2| termperature environmentals functioning within\
+  \ spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status is |False|.\n\
+  THEN test case result is |True|.\n\nTEST is |bn305| PowerSupply sensor |TempSensorP5/3|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| PowerSupply sensor |TempSensorP6/1| termperature environmentals\
+  \ functioning within spec.\nGIVEN expected alert status is |False|.\nWHEN actual\
+  \ alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305|\
+  \ PowerSupply sensor |TempSensorP6/2| termperature environmentals functioning within\
+  \ spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status is |False|.\n\
+  THEN test case result is |True|.\n\nTEST is |bn305| PowerSupply sensor |TempSensorP6/3|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| PowerSupply sensor |TempSensorP7/1| termperature environmentals\
+  \ functioning within spec.\nGIVEN expected alert status is |False|.\nWHEN actual\
+  \ alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305|\
+  \ PowerSupply sensor |TempSensorP7/2| termperature environmentals functioning within\
+  \ spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status is |False|.\n\
+  THEN test case result is |True|.\n\nTEST is |bn305| PowerSupply sensor |TempSensorP7/3|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| PowerSupply sensor |TempSensorP8/1| termperature environmentals\
+  \ functioning within spec.\nGIVEN expected alert status is |False|.\nWHEN actual\
+  \ alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305|\
+  \ PowerSupply sensor |TempSensorP8/2| termperature environmentals functioning within\
+  \ spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status is |False|.\n\
+  THEN test case result is |True|.\n\nTEST is |bn305| PowerSupply sensor |TempSensorP8/3|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| PowerSupply sensor |TempSensorP11/1| termperature environmentals\
+  \ functioning within spec.\nGIVEN expected alert status is |False|.\nWHEN actual\
+  \ alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305|\
+  \ PowerSupply sensor |TempSensorP11/2| termperature environmentals functioning within\
+  \ spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status is |False|.\n\
+  THEN test case result is |True|.\n\nTEST is |bn305| PowerSupply sensor |TempSensorP11/3|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| PowerSupply sensor |TempSensorP12/1| termperature environmentals\
+  \ functioning within spec.\nGIVEN expected alert status is |False|.\nWHEN actual\
+  \ alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305|\
+  \ PowerSupply sensor |TempSensorP12/2| termperature environmentals functioning within\
+  \ spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status is |False|.\n\
+  THEN test case result is |True|.\n\nTEST is |bn305| PowerSupply sensor |TempSensorP12/3|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| Supervisor sensor |TempSensor1/1| termperature environmentals\
+  \ functioning within spec.\nGIVEN expected alert status is |False|.\nWHEN actual\
+  \ alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305|\
+  \ Supervisor sensor |TempSensor1/2| termperature environmentals functioning within\
+  \ spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status is |False|.\n\
+  THEN test case result is |True|.\n\nTEST is |bn305| Supervisor sensor |TempSensor1/3|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| Supervisor sensor |TempSensor1/4| termperature environmentals\
+  \ functioning within spec.\nGIVEN expected alert status is |False|.\nWHEN actual\
+  \ alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305|\
+  \ Supervisor sensor |TempSensor1/5| termperature environmentals functioning within\
+  \ spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status is |False|.\n\
+  THEN test case result is |True|.\n\nTEST is |bn305| Supervisor sensor |TempSensor1/6|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| Supervisor sensor |TempSensor1/7| termperature environmentals\
+  \ functioning within spec.\nGIVEN expected alert status is |False|.\nWHEN actual\
+  \ alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305|\
+  \ Supervisor sensor |TempSensor1/8| termperature environmentals functioning within\
+  \ spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status is |False|.\n\
+  THEN test case result is |True|.\n\nTEST is |bn305| Supervisor sensor |TempSensor1/9|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| Supervisor sensor |TempSensor1/10| termperature environmentals\
+  \ functioning within spec.\nGIVEN expected alert status is |False|.\nWHEN actual\
+  \ alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305|\
+  \ Supervisor sensor |TempSensor1/11| termperature environmentals functioning within\
+  \ spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status is |False|.\n\
+  THEN test case result is |True|.\n\nTEST is |bn305| Supervisor sensor |TempSensor1/12|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| Supervisor sensor |TempSensor1/13| termperature environmentals\
+  \ functioning within spec.\nGIVEN expected alert status is |False|.\nWHEN actual\
+  \ alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305|\
+  \ Supervisor sensor |TempSensor1/14| termperature environmentals functioning within\
+  \ spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status is |False|.\n\
+  THEN test case result is |True|.\n\nTEST is |bn305| Supervisor sensor |TempSensor1/15|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| Supervisor sensor |TempSensor1/16| termperature environmentals\
+  \ functioning within spec.\nGIVEN expected alert status is |False|.\nWHEN actual\
+  \ alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305|\
+  \ Supervisor sensor |TempSensor1/17| termperature environmentals functioning within\
+  \ spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status is |False|.\n\
+  THEN test case result is |True|.\n\nTEST is |bn305| Supervisor sensor |TempSensor1/37|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| Supervisor sensor |TempSensor1/38| termperature environmentals\
+  \ functioning within spec.\nGIVEN expected alert status is |False|.\nWHEN actual\
+  \ alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305|\
+  \ Linecard sensor |TempSensor3/1| termperature environmentals functioning within\
+  \ spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status is |False|.\n\
+  THEN test case result is |True|.\n\nTEST is |bn305| Linecard sensor |TempSensor3/2|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| Linecard sensor |TempSensor3/3| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Linecard sensor\
+  \ |TempSensor3/4| termperature environmentals functioning within spec.\nGIVEN expected\
+  \ alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN test case\
+  \ result is |True|.\n\nTEST is |bn305| Linecard sensor |TempSensor3/5| termperature\
+  \ environmentals functioning within spec.\nGIVEN expected alert status is |False|.\n\
+  WHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is\
+  \ |bn305| Linecard sensor |TempSensor3/6| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Linecard sensor\
+  \ |TempSensor3/7| termperature environmentals functioning within spec.\nGIVEN expected\
+  \ alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN test case\
+  \ result is |True|.\n\nTEST is |bn305| Linecard sensor |TempSensor3/8| termperature\
+  \ environmentals functioning within spec.\nGIVEN expected alert status is |False|.\n\
+  WHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is\
+  \ |bn305| Linecard sensor |TempSensor3/9| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Linecard sensor\
+  \ |TempSensor3/10| termperature environmentals functioning within spec.\nGIVEN expected\
+  \ alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN test case\
+  \ result is |True|.\n\nTEST is |bn305| Linecard sensor |TempSensor3/11| termperature\
+  \ environmentals functioning within spec.\nGIVEN expected alert status is |False|.\n\
+  WHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is\
+  \ |bn305| Linecard sensor |TempSensor4/1| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Linecard sensor\
+  \ |TempSensor4/2| termperature environmentals functioning within spec.\nGIVEN expected\
+  \ alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN test case\
+  \ result is |True|.\n\nTEST is |bn305| Linecard sensor |TempSensor4/3| termperature\
+  \ environmentals functioning within spec.\nGIVEN expected alert status is |False|.\n\
+  WHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is\
+  \ |bn305| Linecard sensor |TempSensor4/4| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Linecard sensor\
+  \ |TempSensor4/5| termperature environmentals functioning within spec.\nGIVEN expected\
+  \ alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN test case\
+  \ result is |True|.\n\nTEST is |bn305| Linecard sensor |TempSensor4/6| termperature\
+  \ environmentals functioning within spec.\nGIVEN expected alert status is |False|.\n\
+  WHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is\
+  \ |bn305| Linecard sensor |TempSensor4/7| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Linecard sensor\
+  \ |TempSensor4/8| termperature environmentals functioning within spec.\nGIVEN expected\
+  \ alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN test case\
+  \ result is |True|.\n\nTEST is |bn305| Linecard sensor |TempSensor4/9| termperature\
+  \ environmentals functioning within spec.\nGIVEN expected alert status is |False|.\n\
+  WHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is\
+  \ |bn305| Linecard sensor |TempSensor4/10| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Linecard sensor\
+  \ |TempSensor4/11| termperature environmentals functioning within spec.\nGIVEN expected\
+  \ alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN test case\
+  \ result is |True|.\n\nTEST is |bn305| Linecard sensor |TempSensor5/5| termperature\
+  \ environmentals functioning within spec.\nGIVEN expected alert status is |False|.\n\
+  WHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is\
+  \ |bn305| Linecard sensor |TempSensor5/6| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Linecard sensor\
+  \ |TempSensor5/7| termperature environmentals functioning within spec.\nGIVEN expected\
+  \ alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN test case\
+  \ result is |True|.\n\nTEST is |bn305| Linecard sensor |TempSensor6/1| termperature\
+  \ environmentals functioning within spec.\nGIVEN expected alert status is |False|.\n\
+  WHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is\
+  \ |bn305| Linecard sensor |TempSensor6/2| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Linecard sensor\
+  \ |TempSensor6/3| termperature environmentals functioning within spec.\nGIVEN expected\
+  \ alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN test case\
+  \ result is |True|.\n\nTEST is |bn305| Linecard sensor |TempSensor6/4| termperature\
+  \ environmentals functioning within spec.\nGIVEN expected alert status is |False|.\n\
+  WHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is\
+  \ |bn305| Linecard sensor |TempSensor6/5| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Linecard sensor\
+  \ |TempSensor6/6| termperature environmentals functioning within spec.\nGIVEN expected\
+  \ alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN test case\
+  \ result is |True|.\n\nTEST is |bn305| Linecard sensor |TempSensor6/7| termperature\
+  \ environmentals functioning within spec.\nGIVEN expected alert status is |False|.\n\
+  WHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is\
+  \ |bn305| Linecard sensor |TempSensor6/8| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Linecard sensor\
+  \ |TempSensor6/9| termperature environmentals functioning within spec.\nGIVEN expected\
+  \ alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN test case\
+  \ result is |True|.\n\nTEST is |bn305| Linecard sensor |TempSensor6/10| termperature\
+  \ environmentals functioning within spec.\nGIVEN expected alert status is |False|.\n\
+  WHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is\
+  \ |bn305| Linecard sensor |TempSensor6/11| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Linecard sensor\
+  \ |TempSensor7/1| termperature environmentals functioning within spec.\nGIVEN expected\
+  \ alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN test case\
+  \ result is |True|.\n\nTEST is |bn305| Linecard sensor |TempSensor7/2| termperature\
+  \ environmentals functioning within spec.\nGIVEN expected alert status is |False|.\n\
+  WHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is\
+  \ |bn305| Linecard sensor |TempSensor7/3| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Linecard sensor\
+  \ |TempSensor7/4| termperature environmentals functioning within spec.\nGIVEN expected\
+  \ alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN test case\
+  \ result is |True|.\n\nTEST is |bn305| Linecard sensor |TempSensor7/5| termperature\
+  \ environmentals functioning within spec.\nGIVEN expected alert status is |False|.\n\
+  WHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is\
+  \ |bn305| Linecard sensor |TempSensor7/6| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Linecard sensor\
+  \ |TempSensor7/7| termperature environmentals functioning within spec.\nGIVEN expected\
+  \ alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN test case\
+  \ result is |True|.\n\nTEST is |bn305| Linecard sensor |TempSensor7/8| termperature\
+  \ environmentals functioning within spec.\nGIVEN expected alert status is |False|.\n\
+  WHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is\
+  \ |bn305| Linecard sensor |TempSensor7/9| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Linecard sensor\
+  \ |TempSensor7/10| termperature environmentals functioning within spec.\nGIVEN expected\
+  \ alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN test case\
+  \ result is |True|.\n\nTEST is |bn305| Linecard sensor |TempSensor7/11| termperature\
+  \ environmentals functioning within spec.\nGIVEN expected alert status is |False|.\n\
+  WHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\nTEST is\
+  \ |bn305| Fabric sensor |TempSensor51/20| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Fabric sensor\
+  \ |TempSensor51/21| termperature environmentals functioning within spec.\nGIVEN\
+  \ expected alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN\
+  \ test case result is |True|.\n\nTEST is |bn305| Fabric sensor |TempSensor51/22|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| Fabric sensor |TempSensor51/23| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Fabric sensor\
+  \ |TempSensor51/24| termperature environmentals functioning within spec.\nGIVEN\
+  \ expected alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN\
+  \ test case result is |True|.\n\nTEST is |bn305| Fabric sensor |TempSensor51/25|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| Fabric sensor |TempSensor51/26| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Fabric sensor\
+  \ |TempSensor52/20| termperature environmentals functioning within spec.\nGIVEN\
+  \ expected alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN\
+  \ test case result is |True|.\n\nTEST is |bn305| Fabric sensor |TempSensor52/21|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| Fabric sensor |TempSensor52/22| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Fabric sensor\
+  \ |TempSensor52/23| termperature environmentals functioning within spec.\nGIVEN\
+  \ expected alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN\
+  \ test case result is |True|.\n\nTEST is |bn305| Fabric sensor |TempSensor52/24|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| Fabric sensor |TempSensor52/25| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Fabric sensor\
+  \ |TempSensor52/26| termperature environmentals functioning within spec.\nGIVEN\
+  \ expected alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN\
+  \ test case result is |True|.\n\nTEST is |bn305| Fabric sensor |TempSensor53/20|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| Fabric sensor |TempSensor53/21| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Fabric sensor\
+  \ |TempSensor53/22| termperature environmentals functioning within spec.\nGIVEN\
+  \ expected alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN\
+  \ test case result is |True|.\n\nTEST is |bn305| Fabric sensor |TempSensor53/23|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| Fabric sensor |TempSensor53/24| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Fabric sensor\
+  \ |TempSensor53/25| termperature environmentals functioning within spec.\nGIVEN\
+  \ expected alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN\
+  \ test case result is |True|.\n\nTEST is |bn305| Fabric sensor |TempSensor53/26|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| Fabric sensor |TempSensor54/20| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Fabric sensor\
+  \ |TempSensor54/21| termperature environmentals functioning within spec.\nGIVEN\
+  \ expected alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN\
+  \ test case result is |True|.\n\nTEST is |bn305| Fabric sensor |TempSensor54/22|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| Fabric sensor |TempSensor54/23| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Fabric sensor\
+  \ |TempSensor54/24| termperature environmentals functioning within spec.\nGIVEN\
+  \ expected alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN\
+  \ test case result is |True|.\n\nTEST is |bn305| Fabric sensor |TempSensor54/25|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| Fabric sensor |TempSensor54/26| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Fabric sensor\
+  \ |TempSensor55/20| termperature environmentals functioning within spec.\nGIVEN\
+  \ expected alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN\
+  \ test case result is |True|.\n\nTEST is |bn305| Fabric sensor |TempSensor55/21|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| Fabric sensor |TempSensor55/22| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Fabric sensor\
+  \ |TempSensor55/23| termperature environmentals functioning within spec.\nGIVEN\
+  \ expected alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN\
+  \ test case result is |True|.\n\nTEST is |bn305| Fabric sensor |TempSensor55/24|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| Fabric sensor |TempSensor55/25| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Fabric sensor\
+  \ |TempSensor55/26| termperature environmentals functioning within spec.\nGIVEN\
+  \ expected alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN\
+  \ test case result is |True|.\n\nTEST is |bn305| Fabric sensor |TempSensor56/20|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| Fabric sensor |TempSensor56/21| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Fabric sensor\
+  \ |TempSensor56/22| termperature environmentals functioning within spec.\nGIVEN\
+  \ expected alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN\
+  \ test case result is |True|.\n\nTEST is |bn305| Fabric sensor |TempSensor56/23|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nTEST is |bn305| Fabric sensor |TempSensor56/24| termperature environmentals functioning\
+  \ within spec.\nGIVEN expected alert status is |False|.\nWHEN actual alert status\
+  \ is |False|.\nTHEN test case result is |True|.\n\nTEST is |bn305| Fabric sensor\
+  \ |TempSensor56/25| termperature environmentals functioning within spec.\nGIVEN\
+  \ expected alert status is |False|.\nWHEN actual alert status is |False|.\nTHEN\
+  \ test case result is |True|.\n\nTEST is |bn305| Fabric sensor |TempSensor56/26|\
+  \ termperature environmentals functioning within spec.\nGIVEN expected alert status\
+  \ is |False|.\nWHEN actual alert status is |False|.\nTHEN test case result is |True|.\n\
+  \nOUTPUT of |show system environment temperature| is :\n\nSystem temperature status\
+  \ is: Ok\n\nSupervisor 1:\n                                                    \
+  \             Alert  Critical\n                                               Temp\
+  \    Setpoint  Limit     Limit\nSensor  Description                            \
+  \ (C)         (C)    (C)       (C)\n------- -----------------------------------\
+  \ ------- ----------- ------ ---------\n1       Digital Temperature Sensor on cpu0\
+  \     38.0   (65) 63.4     95       105\n2       Digital Temperature Sensor on cpu1\
+  \     38.0   (65) 63.4     95       105\n3       Digital Temperature Sensor on cpu2\
+  \     38.0   (65) 63.4     95       105\n4       Digital Temperature Sensor on cpu3\
+  \     38.0   (65) 63.4     95       105\n5       Digital Temperature Sensor on cpu4\
+  \     38.0   (65) 63.4     95       105\n6       Digital Temperature Sensor on cpu5\
+  \     38.0   (65) 63.4     95       105\n7       Digital Temperature Sensor on cpu6\
+  \     38.0   (65) 63.4     95       105\n8       Digital Temperature Sensor on cpu7\
+  \     38.0   (65) 63.4     95       105\n9       Digital Temperature Sensor on cpu8\
+  \     38.0   (65) 63.4     95       105\n10      Digital Temperature Sensor on cpu9\
+  \     38.0   (65) 63.4     95       105\n11      Digital Temperature Sensor on cpu10\
+  \    38.0   (65) 63.4     95       105\n12      Digital Temperature Sensor on cpu11\
+  \    38.0   (65) 63.4     95       105\n13      Supervisor temp sensor         \
+  \        26.0   (52) 50.4     75        85\n14      PlxLc sensor               \
+  \            49.9   (80) 78.4     95       110\n15      PlxFc sensor           \
+  \                41.4   (80) 78.4     95       110\n16      Front sensor       \
+  \                    21.0   (43) 41.4     65        75\n17      Rear sensor    \
+  \                        22.8   (43) 41.4     65        75\n37      CPU VRM temp\
+  \ sensor 0                  32.0   (70) 68.4    105       110\n38      CPU VRM temp\
+  \ sensor 1                  28.0   (70) 68.4    105       110\n\nLinecard 3:\n \
+  \                                                                Alert  Critical\n\
+  \                                               Temp    Setpoint  Limit     Limit\n\
+  Sensor  Description                             (C)         (C)    (C)       (C)\n\
+  ------- ----------------------------------- ------- ----------- ------ ---------\n\
+  1       Outlet sensor                          31.5   (80) 78.4     90       100\n\
+  2       Inlet sensor                           24.6   (65) 63.4     70        85\n\
+  3       Board sensor                           33.4   (90) 88.4    100       105\n\
+  4       Board sensor                           33.4   (85) 83.4     95       105\n\
+  5       Jericho0                               44.0   (85) 83.4    105       110\n\
+  6       Jericho1                               43.1   (85) 83.4    105       110\n\
+  7       Stat0                                  46.9   (80) 78.4     95       100\n\
+  8       Board sensor                           34.9   (85) 83.4     95       105\n\
+  9       Jericho2                               45.0   (85) 83.4    105       110\n\
+  10      Jericho3                               45.8   (85) 83.4    105       110\n\
+  11      Stat1                                  47.4   (80) 78.4     95       100\n\
+  \nLinecard 4:\n                                                                \
+  \ Alert  Critical\n                                               Temp    Setpoint\
+  \  Limit     Limit\nSensor  Description                             (C)        \
+  \ (C)    (C)       (C)\n------- ----------------------------------- ------- -----------\
+  \ ------ ---------\n1       Outlet sensor                          31.5   (80) 78.4\
+  \     90       100\n2       Inlet sensor                           25.1   (65) 63.4\
+  \     70        85\n3       Board sensor                           34.8   (90) 88.4\
+  \    100       105\n4       Board sensor                           35.6   (85) 83.4\
+  \     95       105\n5       Jericho0                               49.0   (85) 83.4\
+  \    105       110\n6       Jericho1                               46.2   (85) 83.4\
+  \    105       110\n7       Stat0                                  47.8   (80) 78.4\
+  \     95       100\n8       Board sensor                           35.8   (85) 83.4\
+  \     95       105\n9       Jericho2                               48.4   (85) 83.4\
+  \    105       110\n10      Jericho3                               49.8   (85) 83.4\
+  \    105       110\n11      Stat1                                  47.6   (80) 78.4\
+  \     95       100\n\nLinecard 5:\n                                            \
+  \                     Alert  Critical\n                                        \
+  \       Temp    Setpoint  Limit     Limit\nSensor  Description                 \
+  \            (C)         (C)    (C)       (C)\n------- -----------------------------------\
+  \ ------- ----------- ------ ---------\n5       Outlet sensor                  \
+  \        22.6   (65) 63.4     90       100\n6       Inlet sensor               \
+  \            21.5   (60) 58.4     75        85\n7       Board sensor           \
+  \                22.5   (65) 63.4     95       105\n\nLinecard 6:\n            \
+  \                                                     Alert  Critical\n        \
+  \                                       Temp    Setpoint  Limit     Limit\nSensor\
+  \  Description                             (C)         (C)    (C)       (C)\n-------\
+  \ ----------------------------------- ------- ----------- ------ ---------\n1  \
+  \     Outlet sensor                          33.1   (80) 78.4     90       100\n\
+  2       Inlet sensor                           25.5   (65) 63.4     70        85\n\
+  3       Board sensor                           35.2   (90) 88.4    100       105\n\
+  4       Board sensor                           38.1   (85) 83.4     95       105\n\
+  5       Jericho0                               47.0   (85) 83.4    105       110\n\
+  6       Jericho1                               45.0   (85) 83.4    105       110\n\
+  7       Stat0                                  48.8   (80) 78.4     95       100\n\
+  8       Board sensor                           37.8   (85) 83.4     95       105\n\
+  9       Jericho2                               46.0   (85) 83.4    105       110\n\
+  10      Jericho3                               46.2   (85) 83.4    105       110\n\
+  11      Stat1                                  47.6   (80) 78.4     95       100\n\
+  \nLinecard 7:\n                                                                \
+  \ Alert  Critical\n                                               Temp    Setpoint\
+  \  Limit     Limit\nSensor  Description                             (C)        \
+  \ (C)    (C)       (C)\n------- ----------------------------------- ------- -----------\
+  \ ------ ---------\n1       Outlet sensor                          29.5   (80) 78.4\
+  \     90       100\n2       Inlet sensor                           25.5   (65) 63.4\
+  \     70        85\n3       Board sensor                           35.1   (90) 88.4\
+  \    100       105\n4       Board sensor                           35.0   (85) 83.4\
+  \     95       105\n5       Jericho0                               48.0   (85) 83.4\
+  \    105       110\n6       Jericho1                               45.0   (85) 83.4\
+  \    105       110\n7       Stat0                                  48.8   (80) 78.4\
+  \     95       100\n8       Board sensor                           35.0   (85) 83.4\
+  \     95       105\n9       Jericho2                               45.8   (85) 83.4\
+  \    105       110\n10      Jericho3                               46.9   (85) 83.4\
+  \    105       110\n11      Stat1                                  48.8   (80) 78.4\
+  \     95       100\n\nFabric 1:\n                                              \
+  \                   Alert  Critical\n                                          \
+  \     Temp    Setpoint  Limit     Limit\nSensor  Description                   \
+  \          (C)         (C)    (C)       (C)\n------- -----------------------------------\
+  \ ------- ----------- ------ ---------\n20      ADT (Fan controller) 1         \
+  \        27.0   (85) 83.4     95       105\n21      Fan side sensor            \
+  \            27.8   (85) 83.4     95       105\n22      Midplane side sensor   \
+  \                20.8   (65) 63.4     75        85\n23      ADT (Fan controller)\
+  \ 2                 34.5   (85) 83.4     95       105\n24      FE 0 sensor     \
+  \                       32.2   (85) 83.4     95       105\n25      FE 1 sensor \
+  \                           32.2   (85) 83.4     95       105\n26      FE 2 sensor\
+  \                            32.2   (85) 83.4     95       105\n\nFabric 2:\n  \
+  \                                                               Alert  Critical\n\
+  \                                               Temp    Setpoint  Limit     Limit\n\
+  Sensor  Description                             (C)         (C)    (C)       (C)\n\
+  ------- ----------------------------------- ------- ----------- ------ ---------\n\
+  20      ADT (Fan controller) 1                 27.2   (85) 83.4     95       105\n\
+  21      Fan side sensor                        27.5   (85) 83.4     95       105\n\
+  22      Midplane side sensor                   20.8   (65) 63.4     75        85\n\
+  23      ADT (Fan controller) 2                 36.5   (85) 83.4     95       105\n\
+  24      FE 0 sensor                            33.5   (85) 83.4     95       105\n\
+  25      FE 1 sensor                            34.0   (85) 83.4     95       105\n\
+  26      FE 2 sensor                            33.5   (85) 83.4     95       105\n\
+  \nFabric 3:\n                                                                 Alert\
+  \  Critical\n                                               Temp    Setpoint  Limit\
+  \     Limit\nSensor  Description                             (C)         (C)   \
+  \ (C)       (C)\n------- ----------------------------------- ------- -----------\
+  \ ------ ---------\n20      ADT (Fan controller) 1                 26.5   (85) 83.4\
+  \     95       105\n21      Fan side sensor                        27.0   (85) 83.4\
+  \     95       105\n22      Midplane side sensor                   20.5   (65) 63.4\
+  \     75        85\n23      ADT (Fan controller) 2                 34.8   (85) 83.4\
+  \     95       105\n24      FE 0 sensor                            32.2   (85) 83.4\
+  \     95       105\n25      FE 1 sensor                            33.0   (85) 83.4\
+  \     95       105\n26      FE 2 sensor                            32.2   (85) 83.4\
+  \     95       105\n\nFabric 4:\n                                              \
+  \                   Alert  Critical\n                                          \
+  \     Temp    Setpoint  Limit     Limit\nSensor  Description                   \
+  \          (C)         (C)    (C)       (C)\n------- -----------------------------------\
+  \ ------- ----------- ------ ---------\n20      ADT (Fan controller) 1         \
+  \        27.0   (85) 83.4     95       105\n21      Fan side sensor            \
+  \            27.2   (85) 83.4     95       105\n22      Midplane side sensor   \
+  \                20.8   (65) 63.4     75        85\n23      ADT (Fan controller)\
+  \ 2                 35.0   (85) 83.4     95       105\n24      FE 0 sensor     \
+  \                       32.8   (85) 83.4     95       105\n25      FE 1 sensor \
+  \                           32.8   (85) 83.4     95       105\n26      FE 2 sensor\
+  \                            32.8   (85) 83.4     95       105\n\nFabric 5:\n  \
+  \                                                               Alert  Critical\n\
+  \                                               Temp    Setpoint  Limit     Limit\n\
+  Sensor  Description                             (C)         (C)    (C)       (C)\n\
+  ------- ----------------------------------- ------- ----------- ------ ---------\n\
+  20      ADT (Fan controller) 1                 26.5   (85) 83.4     95       105\n\
+  21      Fan side sensor                        27.2   (85) 83.4     95       105\n\
+  22      Midplane side sensor                   20.8   (65) 63.4     75        85\n\
+  23      ADT (Fan controller) 2                 35.8   (85) 83.4     95       105\n\
+  24      FE 0 sensor                            33.5   (85) 83.4     95       105\n\
+  25      FE 1 sensor                            34.2   (85) 83.4     95       105\n\
+  26      FE 2 sensor                            33.5   (85) 83.4     95       105\n\
+  \nFabric 6:\n                                                                 Alert\
+  \  Critical\n                                               Temp    Setpoint  Limit\
+  \     Limit\nSensor  Description                             (C)         (C)   \
+  \ (C)       (C)\n------- ----------------------------------- ------- -----------\
+  \ ------ ---------\n20      ADT (Fan controller) 1                 27.5   (85) 83.4\
+  \     95       105\n21      Fan side sensor                        27.5   (85) 83.4\
+  \     95       105\n22      Midplane side sensor                   21.5   (65) 63.4\
+  \     75        85\n23      ADT (Fan controller) 2                 34.0   (85) 83.4\
+  \     95       105\n24      FE 0 sensor                            32.2   (85) 83.4\
+  \     95       105\n25      FE 1 sensor                            32.0   (85) 83.4\
+  \     95       105\n26      FE 2 sensor                            31.8   (85) 83.4\
+  \     95       105\n\nPowerSupply 1:\n                                         \
+  \                        Alert  Critical\n                                     \
+  \          Temp    Setpoint  Limit     Limit\nSensor  Description              \
+  \               (C)         (C)    (C)       (C)\n------- -----------------------------------\
+  \ ------- ----------- ------ ---------\n1       ORing FET sensor               \
+  \        23.1  (N/A) 65.3    102       109\n2       Ambient sensor             \
+  \            25.4   (55) 53.4     65        70\n3       PFC sensor             \
+  \                33.2  (N/A) 51.2     80        98\n\nPowerSupply 2:\n         \
+  \                                                        Alert  Critical\n     \
+  \                                          Temp    Setpoint  Limit     Limit\nSensor\
+  \  Description                             (C)         (C)    (C)       (C)\n-------\
+  \ ----------------------------------- ------- ----------- ------ ---------\n1  \
+  \     ORing FET sensor                       23.7  (N/A) 65.3    102       109\n\
+  2       Ambient sensor                         24.8   (55) 53.4     65        70\n\
+  3       PFC sensor                             32.1  (N/A) 51.2     80        98\n\
+  \nPowerSupply 5:\n                                                             \
+  \    Alert  Critical\n                                               Temp    Setpoint\
+  \  Limit     Limit\nSensor  Description                             (C)        \
+  \ (C)    (C)       (C)\n------- ----------------------------------- ------- -----------\
+  \ ------ ---------\n1       ORing FET sensor                       21.1  (N/A) 65.3\
+  \    102       109\n2       Ambient sensor                         26.0   (55) 53.4\
+  \     65        70\n3       PFC sensor                              N/A  (N/A) 51.2\
+  \     80        98\n\nPowerSupply 6:\n                                         \
+  \                        Alert  Critical\n                                     \
+  \          Temp    Setpoint  Limit     Limit\nSensor  Description              \
+  \               (C)         (C)    (C)       (C)\n------- -----------------------------------\
+  \ ------- ----------- ------ ---------\n1       ORing FET sensor               \
+  \        20.2  (N/A) 65.3    102       109\n2       Ambient sensor             \
+  \            24.4   (55) 53.4     65        70\n3       PFC sensor             \
+  \                 N/A  (N/A) 51.2     80        98\n\nPowerSupply 7:\n         \
+  \                                                        Alert  Critical\n     \
+  \                                          Temp    Setpoint  Limit     Limit\nSensor\
+  \  Description                             (C)         (C)    (C)       (C)\n-------\
+  \ ----------------------------------- ------- ----------- ------ ---------\n1  \
+  \     ORing FET sensor                       24.5  (N/A) 65.3    102       109\n\
+  2       Ambient sensor                         24.3   (55) 53.4     65        70\n\
+  3       PFC sensor                             30.8  (N/A) 51.2     80        98\n\
+  \nPowerSupply 8:\n                                                             \
+  \    Alert  Critical\n                                               Temp    Setpoint\
+  \  Limit     Limit\nSensor  Description                             (C)        \
+  \ (C)    (C)       (C)\n------- ----------------------------------- ------- -----------\
+  \ ------ ---------\n1       ORing FET sensor                       23.2  (N/A) 65.3\
+  \    102       109\n2       Ambient sensor                         24.4   (55) 53.4\
+  \     65        70\n3       PFC sensor                             30.4  (N/A) 51.2\
+  \     80        98\n\nPowerSupply 11:\n                                        \
+  \                         Alert  Critical\n                                    \
+  \           Temp    Setpoint  Limit     Limit\nSensor  Description             \
+  \                (C)         (C)    (C)       (C)\n------- -----------------------------------\
+  \ ------- ----------- ------ ---------\n1       ORing FET sensor               \
+  \        19.8  (N/A) 65.3    102       109\n2       Ambient sensor             \
+  \            23.4   (55) 53.4     65        70\n3       PFC sensor             \
+  \                 N/A  (N/A) 51.2     80        98\n\nPowerSupply 12:\n        \
+  \                                                         Alert  Critical\n    \
+  \                                           Temp    Setpoint  Limit     Limit\n\
+  Sensor  Description                             (C)         (C)    (C)       (C)\n\
+  ------- ----------------------------------- ------- ----------- ------ ---------\n\
+  1       ORing FET sensor                       19.5  (N/A) 65.3    102       109\n\
+  2       Ambient sensor                         22.8   (55) 53.4     65        70\n\
+  3       PFC sensor                              N/A  (N/A) 51.2     80        98\n\
+  .\n"
+description: Verify system temperature sensors environmentals are functional within
+  spec
+dut: bn305
+expected_output:
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+- false
+fail_reason: ''
+name: test_if_sensors_temp_is_in_spec_on_
+output_msg: 'PowerSupply Sensor |TempSensorP1/1| temperature alert status is |False|
+  and should be |False|.
+
+  PowerSupply Sensor |TempSensorP1/2| temperature alert status is |False| and should
+  be |False|.
+
+  PowerSupply Sensor |TempSensorP1/3| temperature alert status is |False| and should
+  be |False|.
+
+  PowerSupply Sensor |TempSensorP2/1| temperature alert status is |False| and should
+  be |False|.
+
+  PowerSupply Sensor |TempSensorP2/2| temperature alert status is |False| and should
+  be |False|.
+
+  PowerSupply Sensor |TempSensorP2/3| temperature alert status is |False| and should
+  be |False|.
+
+  PowerSupply Sensor |TempSensorP5/1| temperature alert status is |False| and should
+  be |False|.
+
+  PowerSupply Sensor |TempSensorP5/2| temperature alert status is |False| and should
+  be |False|.
+
+  PowerSupply Sensor |TempSensorP5/3| temperature alert status is |False| and should
+  be |False|.
+
+  PowerSupply Sensor |TempSensorP6/1| temperature alert status is |False| and should
+  be |False|.
+
+  PowerSupply Sensor |TempSensorP6/2| temperature alert status is |False| and should
+  be |False|.
+
+  PowerSupply Sensor |TempSensorP6/3| temperature alert status is |False| and should
+  be |False|.
+
+  PowerSupply Sensor |TempSensorP7/1| temperature alert status is |False| and should
+  be |False|.
+
+  PowerSupply Sensor |TempSensorP7/2| temperature alert status is |False| and should
+  be |False|.
+
+  PowerSupply Sensor |TempSensorP7/3| temperature alert status is |False| and should
+  be |False|.
+
+  PowerSupply Sensor |TempSensorP8/1| temperature alert status is |False| and should
+  be |False|.
+
+  PowerSupply Sensor |TempSensorP8/2| temperature alert status is |False| and should
+  be |False|.
+
+  PowerSupply Sensor |TempSensorP8/3| temperature alert status is |False| and should
+  be |False|.
+
+  PowerSupply Sensor |TempSensorP11/1| temperature alert status is |False| and should
+  be |False|.
+
+  PowerSupply Sensor |TempSensorP11/2| temperature alert status is |False| and should
+  be |False|.
+
+  PowerSupply Sensor |TempSensorP11/3| temperature alert status is |False| and should
+  be |False|.
+
+  PowerSupply Sensor |TempSensorP12/1| temperature alert status is |False| and should
+  be |False|.
+
+  PowerSupply Sensor |TempSensorP12/2| temperature alert status is |False| and should
+  be |False|.
+
+  PowerSupply Sensor |TempSensorP12/3| temperature alert status is |False| and should
+  be |False|.
+
+  Supervisor Sensor |TempSensor1/1| temperature alert status is |False| and should
+  be |False|.
+
+  Supervisor Sensor |TempSensor1/2| temperature alert status is |False| and should
+  be |False|.
+
+  Supervisor Sensor |TempSensor1/3| temperature alert status is |False| and should
+  be |False|.
+
+  Supervisor Sensor |TempSensor1/4| temperature alert status is |False| and should
+  be |False|.
+
+  Supervisor Sensor |TempSensor1/5| temperature alert status is |False| and should
+  be |False|.
+
+  Supervisor Sensor |TempSensor1/6| temperature alert status is |False| and should
+  be |False|.
+
+  Supervisor Sensor |TempSensor1/7| temperature alert status is |False| and should
+  be |False|.
+
+  Supervisor Sensor |TempSensor1/8| temperature alert status is |False| and should
+  be |False|.
+
+  Supervisor Sensor |TempSensor1/9| temperature alert status is |False| and should
+  be |False|.
+
+  Supervisor Sensor |TempSensor1/10| temperature alert status is |False| and should
+  be |False|.
+
+  Supervisor Sensor |TempSensor1/11| temperature alert status is |False| and should
+  be |False|.
+
+  Supervisor Sensor |TempSensor1/12| temperature alert status is |False| and should
+  be |False|.
+
+  Supervisor Sensor |TempSensor1/13| temperature alert status is |False| and should
+  be |False|.
+
+  Supervisor Sensor |TempSensor1/14| temperature alert status is |False| and should
+  be |False|.
+
+  Supervisor Sensor |TempSensor1/15| temperature alert status is |False| and should
+  be |False|.
+
+  Supervisor Sensor |TempSensor1/16| temperature alert status is |False| and should
+  be |False|.
+
+  Supervisor Sensor |TempSensor1/17| temperature alert status is |False| and should
+  be |False|.
+
+  Supervisor Sensor |TempSensor1/37| temperature alert status is |False| and should
+  be |False|.
+
+  Supervisor Sensor |TempSensor1/38| temperature alert status is |False| and should
+  be |False|.
+
+  Linecard Sensor |TempSensor3/1| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor3/2| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor3/3| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor3/4| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor3/5| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor3/6| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor3/7| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor3/8| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor3/9| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor3/10| temperature alert status is |False| and should
+  be |False|.
+
+  Linecard Sensor |TempSensor3/11| temperature alert status is |False| and should
+  be |False|.
+
+  Linecard Sensor |TempSensor4/1| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor4/2| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor4/3| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor4/4| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor4/5| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor4/6| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor4/7| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor4/8| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor4/9| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor4/10| temperature alert status is |False| and should
+  be |False|.
+
+  Linecard Sensor |TempSensor4/11| temperature alert status is |False| and should
+  be |False|.
+
+  Linecard Sensor |TempSensor5/5| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor5/6| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor5/7| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor6/1| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor6/2| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor6/3| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor6/4| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor6/5| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor6/6| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor6/7| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor6/8| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor6/9| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor6/10| temperature alert status is |False| and should
+  be |False|.
+
+  Linecard Sensor |TempSensor6/11| temperature alert status is |False| and should
+  be |False|.
+
+  Linecard Sensor |TempSensor7/1| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor7/2| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor7/3| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor7/4| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor7/5| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor7/6| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor7/7| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor7/8| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor7/9| temperature alert status is |False| and should be
+  |False|.
+
+  Linecard Sensor |TempSensor7/10| temperature alert status is |False| and should
+  be |False|.
+
+  Linecard Sensor |TempSensor7/11| temperature alert status is |False| and should
+  be |False|.
+
+  Fabric Sensor |TempSensor51/20| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor51/21| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor51/22| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor51/23| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor51/24| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor51/25| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor51/26| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor52/20| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor52/21| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor52/22| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor52/23| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor52/24| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor52/25| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor52/26| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor53/20| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor53/21| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor53/22| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor53/23| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor53/24| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor53/25| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor53/26| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor54/20| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor54/21| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor54/22| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor54/23| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor54/24| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor54/25| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor54/26| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor55/20| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor55/21| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor55/22| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor55/23| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor55/24| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor55/25| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor55/26| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor56/20| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor56/21| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor56/22| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor56/23| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor56/24| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor56/25| temperature alert status is |False| and should be
+  |False|.
+
+  Fabric Sensor |TempSensor56/26| temperature alert status is |False| and should be
+  |False|.
+
+  '
+show_cmd: null
+test_result: true
+test_suite: test_environment.py

@@ -1,34 +1,34 @@
 duts:
-- mgmt_ip: 3.22.137.44
-  name: kg-topology-CloudEosRR1
-  neighbors:
-  - neighborDevice: leaf01
-    neighborPort: Ethernet2
-    port: Ethernet1
-  password: arista123
-  transport: https
-  username: kgrozis
-- mgmt_ip: 3.131.6.163
-  name: kg-topology-CloudEosRR2
-  neighbors:
-  - neighborDevice: spine01
-    neighborPort: Ethernet2
-    port: Ethernet1
-  password: arista123
-  transport: https
-  username: kgrozis
-- mgmt_ip: 3.132.90.164
-  name: kg-topology-CloudEOSEdge1
-  neighbors:
-  - neighborDevice: spine01
-    neighborPort: Ethernet2
-    port: Ethernet1
-  - neighborDevice: leaf01
-    neighborPort: Ethernet2
-    port: Ethernet2
-  password: arista123
-  transport: https
-  username: kgrozis
+#- mgmt_ip: 3.22.137.44
+#  name: kg-topology-CloudEosRR1
+#  neighbors:
+#  - neighborDevice: leaf01
+#    neighborPort: Ethernet2
+#    port: Ethernet1
+#  password: arista123
+#  transport: https
+#  username: kgrozis
+#- mgmt_ip: 3.131.6.163
+#  name: kg-topology-CloudEosRR2
+#  neighbors:
+#  - neighborDevice: spine01
+#    neighborPort: Ethernet2
+#    port: Ethernet1
+#  password: arista123
+#  transport: https
+#  username: kgrozis
+#- mgmt_ip: 3.132.90.164
+#  name: kg-topology-CloudEOSEdge1
+#  neighbors:
+#  - neighborDevice: spine01
+#    neighborPort: Ethernet2
+#    port: Ethernet1
+#  - neighborDevice: leaf01
+#    neighborPort: Ethernet2
+#    port: Ethernet2
+#  password: arista123
+#  transport: https
+#  username: kgrozis
 - mgmt_ip: 3.131.34.190
   name: kg-topology-CloudEOSEdge2
   neighbors:
@@ -41,14 +41,36 @@ duts:
   password: arista123
   transport: https
   username: kgrozis
+#- mgmt_ip: 172.30.145.163
+#  name: bn304
+#  neighbors:
+#  - neighborDevice: spine01
+#    neighborPort: Ethernet2
+#    port: Ethernet1
+#  - neighborDevice: leaf01
+#    neighborPort: Ethernet2
+#    port: Ethernet2
+#  transport: https
+#  username: admin
+- mgmt_ip: 172.30.146.38
+  name: bn305
+  neighbors:
+  - neighborDevice: spine01
+    neighborPort: Ethernet2
+    port: Ethernet1
+  - neighborDevice: leaf01
+    neighborPort: Ethernet2
+    port: Ethernet2
+  transport: https
+  username: admin
 parameters:
   eapi_file: /home/docker/.eapi.conf
   eapi_template: ../templates/eapi.conf.j2
   excel_report: null
   html_report: ../reports/report
   json_report: ../reports/report
-  mark: null
-  processes: 4
+  mark: environment
+  processes: null
   report_dir: ../reports
   results_file: result.yml
   results_dir: ../reports/results

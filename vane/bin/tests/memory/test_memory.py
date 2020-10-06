@@ -60,12 +60,11 @@ class MemoryTests():
         memory_free = dut["output"][tops.show_cmd]["json"]['memFree']
         memory_percent = 0.00
         tops.actual_output = (float(memory_free) / float(memory_total)) * 100
+        tops.test_result = tops.actual_output < tops.expected_output
 
         tops.output_msg = (f"On router |{tops.dut_name}| memory utilization percent is "
                            f"|{tops.actual_output}%| and should be under "
                            f"|{tops.expected_output}%|")
-
-        tops.test_result = tops.actual_output < tops.expected_output
         tops.comment = (f'TEST if memory utilization is less than specified '
                         f'value on  |{tops.dut_name}|.\n'
                         f'GIVEN memory utilization is less than |{tops.expected_output}|.\n'

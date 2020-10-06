@@ -70,10 +70,10 @@ class InterfaceStatusTests():
                                f"line protocol status is set to: |{tops.actual_output}|"
                                f", correct state is |{tops.expected_output}|.\n\n")
             tops.comment += (f'TEST if interface |{interface_name}| link prootocol '
-                            f'statuses on |{tops.dut_name}|.\n'
-                            f'GIVEN interface status is |{tops.expected_output}|.\n'
-                            f'WHEN interface status is |{tops.actual_output}|.\n'
-                            f'THEN test case result is |{tops.test_result}|.\n\n')
+                             f'statuses on |{tops.dut_name}|.\n'
+                             f'GIVEN interface status is |{tops.expected_output}|.\n'
+                             f'WHEN interface status is |{tops.actual_output}|.\n'
+                             f'THEN test case result is |{tops.test_result}|.\n\n')
 
             tops.actual_results.append(tops.actual_output)
             tops.expected_results.append(tops.expected_output)
