@@ -1,0 +1,23 @@
+actual_output:
+- 0
+comment: "TEST if interface |Ethernet1| counters has outbound discards on |kg-topology-CloudEosRR2|.\n\
+  GIVEN interface outbound discards are |0|\nWHEN interface outbound discards are\
+  \ |0|.\nTHEN test case result is |True|.\n\nOUTPUT of |show interfaces counters\
+  \ discards| is :\n\nPort               InDiscards    OutDiscards \n---------------\
+  \ ---------------- ----------- \nEt1                         0              0 \n\
+  Et100                       0              0 \n---------           ---------   \
+  \   --------- \nTotals                      0              0 \n\n.\n"
+description: Verify the interfaces of interest have no outDiscards
+dut: kg-topology-CloudEosRR2
+expected_output:
+- 0
+fail_reason: ''
+name: test_if_intf_out_counters_are_discarding_on_
+output_msg: 'On interface |Ethernet1|: interface counter discards has |0| outDiscards,
+  correct state is |0|.
+
+
+  '
+show_cmd: show interfaces counters discards
+test_result: true
+test_suite: test_interface.py

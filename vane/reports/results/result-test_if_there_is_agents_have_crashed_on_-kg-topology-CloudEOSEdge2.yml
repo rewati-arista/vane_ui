@@ -1,0 +1,28 @@
+actual_output: 0
+comment: 'TEST number of agent crashes on |kg-topology-CloudEOSEdge2|.
+
+  GIVEN |0| agent crashes.
+
+  WHEN |0| agent crashes.
+
+  THEN test case result is |True|.
+
+  OUTPUT of |show agent logs crash| is:
+
+  .
+
+  '
+description: Verifies the agents logs crash is empty
+dut: kg-topology-CloudEOSEdge2
+expected_output: 0
+fail_reason: ''
+name: test_if_there_is_agents_have_crashed_on_
+output_msg: '
+
+  On router |kg-topology-CloudEOSEdge2| has |0| agent crashes correct number of agent
+  crashes is |0|.
+
+  '
+show_cmd: null
+test_result: true
+test_suite: test_system.py

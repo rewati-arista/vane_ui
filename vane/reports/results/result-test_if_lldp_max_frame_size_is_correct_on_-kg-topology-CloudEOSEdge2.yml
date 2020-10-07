@@ -1,0 +1,55 @@
+actual_output:
+- 9236
+- 9236
+comment: 'TEST if |kg-topology-CloudEOSEdge2| LLDP maxFrameSize is correct on interface
+  |Ethernet1|.
+
+  GIVEN LLDP maxFrameSize is |10200|.
+
+  WHEN LLDP maxFrameSize is |9236|.
+
+  THEN test case result is |False|.
+
+
+  TEST if |kg-topology-CloudEOSEdge2| LLDP maxFrameSize is correct on interface |Ethernet2|.
+
+  GIVEN LLDP maxFrameSize is |10200|.
+
+  WHEN LLDP maxFrameSize is |9236|.
+
+  THEN test case result is |False|.
+
+
+  OUTPUT of |show lldp local-info| is :
+
+
+  .
+
+  '
+description: Verify show lldp local-info maxFrameSize is correct
+dut: kg-topology-CloudEOSEdge2
+expected_output:
+- 10200
+- 10200
+fail_reason: 'On interface |Ethernet1|: LLDP local-info maxFrameSize is |9236|, correct
+  maxFrameSize is |10200|.
+
+
+  On interface |Ethernet2|: LLDP local-info maxFrameSize is |9236|, correct maxFrameSize
+  is |10200|.
+
+
+  '
+name: test_if_lldp_max_frame_size_is_correct_on_
+output_msg: 'On interface |Ethernet1|: LLDP local-info maxFrameSize is |9236|, correct
+  maxFrameSize is |10200|.
+
+
+  On interface |Ethernet2|: LLDP local-info maxFrameSize is |9236|, correct maxFrameSize
+  is |10200|.
+
+
+  '
+show_cmd: show lldp local-info
+test_result: false
+test_suite: test_lldp.py

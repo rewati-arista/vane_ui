@@ -283,6 +283,14 @@ test_suites:
     expected_output: 10178
     name: test_if_intf_mtu_is_correct_on_
     show_cmd: show interfaces
+  - description: Verifies interfaces L1 errors (Rx, Giants, Tx, Runts, FCS, Align)
+    expected_output: 0
+    name: test_if_interface_errors_on_
+    show_cmd: show interfaces
+  - description: Verifies interfaces L1 errors (Rx, Giants, Tx, Runts, FCS, Align)
+    expected_output: 70
+    name: test_interface_utilization_on_
+    show_cmd: show interfaces
 - name: test_lldp.py
   testcases:
   - description: Verify LLDP receive is enabled on interesting interfaces
@@ -343,6 +351,12 @@ test_suites:
     processes:
     - ntpd
     show_cmd: show processes
+- name: test_system.py
+  testcases:
+  - description: Verifies the agents logs crash is empty
+    expected_output: 0
+    name: test_if_there_is_agents_have_crashed_on_
+    show_cmd: null
 - name: test_tacacs.py
   testcases:
   - comment: null

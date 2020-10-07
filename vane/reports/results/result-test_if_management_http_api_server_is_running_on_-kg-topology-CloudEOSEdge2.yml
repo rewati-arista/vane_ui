@@ -1,0 +1,32 @@
+actual_output: false
+comment: "TEST is HTTP API running on |kg-topology-CloudEOSEdge2|.\n GIVEN HTTP API\
+  \ enabled is |False|.\nWHEN HTTP API enabled is |False|.\nTHEN test case result\
+  \ is |True|.\nOUTPUT of |show management api http-commands| is :\n\nEnabled:   \
+  \         Yes\nHTTPS server:       running, set to use port 443\nHTTP server:  \
+  \      shutdown, set to use port 80\nLocal HTTP server:  shutdown, no authentication,\
+  \ set to use port 8080\nUnix Socket server: shutdown, no authentication\nVRFs: \
+  \              default\nHits:               198424\nLast hit:           0 seconds\
+  \ ago\nBytes in:           30402682\nBytes out:          543200275\nRequests:  \
+  \         188807\nCommands:           383385\nDuration:           19998.441 seconds\n\
+  SSL Profile:        none\nFIPS Mode:          No\nQoS DSCP:           0\nLog Level:\
+  \          none\nCSP Frame Ancestor: None\nTLS Protocols:      1.0 1.1 1.2\n   User\
+  \          Requests       Bytes in       Bytes out    Last hit      \n-------------\
+  \ -------------- -------------- --------------- ------------- \n   kgrozis     \
+  \  188807         30402682       543200275    0 seconds ago \n\nURLs           \
+  \                         \n--------------------------------------- \nEthernet1\
+  \   : https://11.201.15.101:443 \nEthernet2   : https://11.201.15.201:443 \nEthernet100\
+  \ : https://11.201.8.1:443    \nLoopback0   : https://11.201.0.3:443    \nLoopback10\
+  \  : https://198.18.0.37:443   \n\n"
+description: Verify management api http server is not running
+dut: kg-topology-CloudEOSEdge2
+expected_output: false
+fail_reason: ''
+name: test_if_management_http_api_server_is_running_on_
+output_msg: '
+
+  On router |kg-topology-CloudEOSEdge2| HTTP Server is running state: |False|, should
+  be  in state |False|'
+result: true
+show_cmd: show management api http-commands
+test_result: true
+test_suite: test_api.py

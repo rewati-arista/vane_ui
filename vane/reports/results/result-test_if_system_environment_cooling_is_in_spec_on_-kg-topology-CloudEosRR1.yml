@@ -1,0 +1,16 @@
+actual_output: null
+comment: 'INVALID TEST: CloudEOS router |kg-topology-CloudEosRR1| doesnt require cooling.
+
+  '
+description: Verify system cooling environmentals are functional within spec
+dut: kg-topology-CloudEosRR1
+expected_output: null
+fail_reason: ''
+name: test_if_system_environment_cooling_is_in_spec_on_
+output_msg: 'INVALID TEST: CloudEOS router |kg-topology-CloudEosRR1| doesnt require
+  cooling.
+
+  '
+show_cmd: show system environment cooling
+test_result: true
+test_suite: test_environment.py

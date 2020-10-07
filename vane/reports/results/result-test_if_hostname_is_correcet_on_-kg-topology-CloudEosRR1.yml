@@ -1,0 +1,27 @@
+actual_output: kg-topology-CloudEosRR1
+comment: 'TEST is hostname correct.
+
+  GIVEN hostname |kg-topology-CloudEosRR1|.
+
+  WHEN hostname is |kg-topology-CloudEosRR1|.
+
+  THEN test case result is |True|.
+
+  OUTPUT of |show hostname| is :
+
+
+  Hostname: kg-topology-CloudEosRR1
+
+  FQDN:     kg-topology-CloudEosRR1
+
+  '
+description: Verify hostname is set on device is correct
+dut: kg-topology-CloudEosRR1
+expected_output: kg-topology-CloudEosRR1
+fail_reason: ''
+name: test_if_hostname_is_correcet_on_
+output_msg: On router |kg-topology-CloudEosRR1| the configured hostname is |kg-topology-CloudEosRR1|
+  and the correct hostname is |kg-topology-CloudEosRR1|
+show_cmd: show hostname
+test_result: true
+test_suite: test_host.py

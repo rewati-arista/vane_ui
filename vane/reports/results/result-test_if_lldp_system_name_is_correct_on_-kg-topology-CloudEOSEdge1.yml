@@ -1,0 +1,26 @@
+actual_output: kg-topology-CloudEOSEdge1
+comment: 'TEST if lldp system name matches hostname on dut kg-topology-CloudEOSEdge1.
+
+  GIVEN hostname is |kg-topology-CloudEOSEdge1|.
+
+  WHEN LLDP system name is |kg-topology-CloudEOSEdge1|.
+
+  THEN test case result is |True|.
+
+  OUTPUT of |show lldp local-info| is:
+
+
+  '
+description: Verify show lldp local-info hostname is the system's name
+dut: kg-topology-CloudEOSEdge1
+expected_output: kg-topology-CloudEOSEdge1
+fail_reason: ''
+name: test_if_lldp_system_name_is_correct_on_
+output_msg: 'On router |kg-topology-CloudEOSEdge1|: the LLDP local-info system name
+  is |kg-topology-CloudEOSEdge1|, correct name is |kg-topology-CloudEOSEdge1|.
+
+
+  '
+show_cmd: show lldp local-info
+test_result: true
+test_suite: test_lldp.py

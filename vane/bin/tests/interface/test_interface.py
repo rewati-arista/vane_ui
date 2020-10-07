@@ -603,3 +603,184 @@ class InterfaceMtuTests():
         tops.post_testcase()
 
         assert tops.actual_results == tops.expected_results
+
+
+@pytest.mark.nrfu
+@pytest.mark.interface_baseline_health
+@pytest.mark.interface
+class InterfaceCountersTests():
+    """ Interface Errors Test Suite
+    """
+
+    def test_if_interface_errors_on_(self, dut, tests_definitions):
+        """  Verify the interfaces of interest have no inDiscards
+
+            Args:
+                dut (dict): Encapsulates dut details including name, connection
+        """
+
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+
+        print(f"\nOn router |{tops.dut_name}|:")
+
+        for interface in tops.interface_list:
+            interface_name = interface['interface_name'].replace(" ", "")
+            int_ptr = dut["output"][tops.show_cmd]['json']['interfaces'][interface_name]
+            tops.actual_output = int_ptr['interfaceCounters']['totalInErrors']
+            tops.test_result = tops.actual_output <= tops.expected_output
+
+            tops.output_msg += (f"On interface |{interface_name}|: interface "
+                                f"Rx errors is |{tops.actual_output}|, correct Rx errors is "
+                                f"|{tops.expected_output}|.\n\n")
+            tops.comment += (f'TEST if interface |{interface_name}| Rx Errors is correct.\n'
+                             f'GIVEN Rx errors is |{tops.expected_output}|.\n'
+                             f'WHEN Rx errors is |{tops.actual_output}|.\n'
+                             f'THEN test case result is |{tops.test_result}|.\n\n')
+
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
+
+            tops.actual_output = int_ptr['interfaceCounters']['inputErrorsDetail']['giantFrames']
+            tops.test_result = tops.actual_output <= tops.expected_output
+
+            tops.output_msg += (f"On interface |{interface_name}|: interface "
+                                f"Giant Frames is |{tops.actual_output}|, correct Giant Frames is "
+                                f"|{tops.expected_output}|.\n\n")
+            tops.comment += (f'TEST if interface |{interface_name}| Giant Frames is correct.\n'
+                             f'GIVEN Giant Frames is |{tops.expected_output}|.\n'
+                             f'WHEN Giant Frames is |{tops.actual_output}|.\n'
+                             f'THEN test case result is |{tops.test_result}|.\n\n')
+
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
+
+            tops.actual_output = int_ptr['interfaceCounters']['totalOutErrors']
+            tops.test_result = tops.actual_output <= tops.expected_output
+
+            tops.output_msg += (f"On interface |{interface_name}|: interface "
+                                f"Tx Errors is |{tops.actual_output}|, correct Tx Errors is "
+                                f"|{tops.expected_output}|.\n\n")
+            tops.comment += (f'TEST if interface |{interface_name}| Tx Errors is correct.\n'
+                             f'GIVEN Tx Errors is |{tops.expected_output}|.\n'
+                             f'WHEN Tx Errors is |{tops.actual_output}|.\n'
+                             f'THEN test case result is |{tops.test_result}|.\n\n')
+
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
+
+            tops.actual_output = int_ptr['interfaceCounters']['inputErrorsDetail']['runtFrames']
+            tops.test_result = tops.actual_output <= tops.expected_output
+
+            tops.output_msg += (f"On interface |{interface_name}|: interface "
+                                f"Runt Frames is |{tops.actual_output}|, correct Runt Frames is "
+                                f"|{tops.expected_output}|.\n\n")
+            tops.comment += (f'TEST if interface |{interface_name}| Runt Frames is correct.\n'
+                             f'GIVEN Runt Frames is |{tops.expected_output}|.\n'
+                             f'WHEN Runt Frames is |{tops.actual_output}|.\n'
+                             f'THEN test case result is |{tops.test_result}|.\n\n')
+
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
+
+            tops.actual_output = int_ptr['interfaceCounters']['inputErrorsDetail']['fcsErrors']
+            tops.test_result = tops.actual_output <= tops.expected_output
+
+            tops.output_msg += (f"On interface |{interface_name}|: interface "
+                                f"FCS Errors is |{tops.actual_output}|, correct FCS Errors is "
+                                f"|{tops.expected_output}|.\n\n")
+            tops.comment += (f'TEST if interface |{interface_name}| FCS Errors is correct.\n'
+                             f'GIVEN FCS Errors is |{tops.expected_output}|.\n'
+                             f'WHEN FCS Errors is |{tops.actual_output}|.\n'
+                             f'THEN test case result is |{tops.test_result}|.\n\n')
+
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
+
+            tops.actual_output = int_ptr['interfaceCounters']['inputErrorsDetail']['alignmentErrors']
+            tops.test_result = tops.actual_output <= tops.expected_output
+
+            tops.output_msg += (f"On interface |{interface_name}|: interface "
+                                f"Alignment Errors is |{tops.actual_output}|, correct Alignment Errors is "
+                                f"|{tops.expected_output}|.\n\n")
+            tops.comment += (f'TEST if interface |{interface_name}| Alignment Errors is correct.\n'
+                             f'GIVEN Alignment Errors is |{tops.expected_output}|.\n'
+                             f'WHEN Alignment Errors is |{tops.actual_output}|.\n'
+                             f'THEN test case result is |{tops.test_result}|.\n\n')
+
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
+
+        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        print(f"{tops.output_msg}\n{tops.comment}")
+
+        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.post_testcase()
+
+        assert tops.actual_results == tops.expected_results
+
+    def test_interface_utilization_on_(self, dut, tests_definitions):
+        """  Verify the interfaces of interest have no inDiscards
+
+            Args:
+                dut (dict): Encapsulates dut details including name, connection
+        """
+
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+
+        print(f"\nOn router |{tops.dut_name}|:")
+
+        for interface in tops.interface_list:
+            interface_name = interface['interface_name'].replace(" ", "")
+            int_ptr = dut["output"][tops.show_cmd]['json']['interfaces'][interface_name]
+            in_bps = int_ptr['interfaceStatistics']['inBitsRate']
+
+            if tops.verify_veos():
+                bandwidth = 10000000000
+            else:
+                bandwidth = int_ptr['bandwidth']
+
+            if in_bps == 0:
+                tops.actual_output = in_bps
+            else:
+                tops.actual_output = (in_bps / bandwidth) * 100.00
+
+            tops.test_result = tops.actual_output <= tops.expected_output
+
+            tops.output_msg += (f"On interface |{interface_name}|: input bandwidth "
+                                f"utilization is |{tops.actual_output}%|, "
+                                f"bandwidth utilization should be less than |{tops.expected_output}%|.\n\n")
+            tops.comment += (f'TEST if interface |{interface_name}| input bw utilization is correct.\n'
+                             f'GIVEN bw utilization is |{tops.expected_output}|.\n'
+                             f'WHEN bw utilization is |{tops.actual_output}|.\n'
+                             f'THEN test case result is |{tops.test_result}|.\n\n')
+
+            tops.actual_results.append(tops.test_result)
+            tops.expected_results.append(True)
+
+            out_bps = int_ptr['interfaceStatistics']['outBitsRate']
+
+            if out_bps == 0:
+                tops.actual_output = out_bps
+            else:
+                tops.actual_output = (out_bps / bandwidth) * 100.00
+
+            tops.test_result = tops.actual_output <= tops.expected_output
+
+            tops.output_msg += (f"On interface |{interface_name}|: output bandwidth "
+                                f"utilization is |{tops.actual_output}%|, "
+                                f"bandwidth utilization should be less than |{tops.expected_output}%|.\n\n")
+            tops.comment += (f'TEST if interface |{interface_name}| output bw utilization is correct.\n'
+                             f'GIVEN bw utilization is |{tops.expected_output}|.\n'
+                             f'WHEN bw utilization is |{tops.actual_output}|.\n'
+                             f'THEN test case result is |{tops.test_result}|.\n\n')
+
+            tops.actual_results.append(tops.test_result)
+            tops.expected_results.append(True)
+
+        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        print(f"{tops.output_msg}\n{tops.comment}")
+
+        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.post_testcase()
+
+        assert tops.actual_results == tops.expected_results

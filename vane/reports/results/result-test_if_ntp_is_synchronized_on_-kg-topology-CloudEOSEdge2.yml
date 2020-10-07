@@ -1,0 +1,20 @@
+actual_output: synchronised
+comment: "TEST is NTP synchronized on |kg-topology-CloudEOSEdge2|.\nGIVEN NTP synchronized\
+  \ is |synchronised|.\nWHEN NTP synchronized is |synchronised|.\nTHEN test case result\
+  \ is |True|.\nOUTPUT of |show ntp status| is:\nsynchronised to NTP server (169.254.169.123)\
+  \ at stratum 4\n   time correct to within 33 ms\n   polling server every 1024 s\n\
+  \n.\n"
+description: Verify ntp is setup and working correctly
+dut: kg-topology-CloudEOSEdge2
+expected_output: synchronised
+fail_reason: ''
+name: test_if_ntp_is_synchronized_on_
+output_msg: '
+
+  On router |kg-topology-CloudEOSEdge2| NTP synchronised status is |synchronised|  correct
+  status is |synchronised|.
+
+  '
+show_cmd: show ntp status
+test_result: true
+test_suite: test_ntp.py

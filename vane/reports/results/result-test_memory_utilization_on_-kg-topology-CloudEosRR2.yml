@@ -1,0 +1,21 @@
+actual_output: 42.03627390550561
+comment: "TEST if memory utilization is less than specified value on  |kg-topology-CloudEosRR2|.\n\
+  GIVEN memory utilization is less than |70|.\nWHEN  memory utilization is |42.03627390550561|.\n\
+  THEN test case result is |True|.\nOUTPUT of |show version| is:\n\nArista vEOS\n\
+  Hardware version:    \nSerial number:       93F97AD3A1044C742872BA1CFA684D63\nSystem\
+  \ MAC address:  0654.9b7c.b00f\n\nSoftware image version: 4.23.1F-cloud-16179785.jakartarel\
+  \ (engineering build)\nArchitecture:           x86_64\nInternal build version: 4.23.1F-cloud-16179785.jakartarel\n\
+  Internal build ID:      6bc96200-86c1-4e86-bed7-8280a6802809\n\nUptime:        \
+  \         1 weeks, 2 days, 1 hours and 37 minutes\nTotal memory:           7761392\
+  \ kB\nFree memory:            3262892 kB\n\n"
+description: Verify memory is not exceeding high utlization
+dut: kg-topology-CloudEosRR2
+expected_output: 70
+fail_reason: ''
+name: test_memory_utilization_on_
+output_msg: On router |kg-topology-CloudEosRR2| memory utilization percent is |42.03627390550561%|
+  and should be under |70%|
+result: true
+show_cmd: show version
+test_result: true
+test_suite: test_memory.py

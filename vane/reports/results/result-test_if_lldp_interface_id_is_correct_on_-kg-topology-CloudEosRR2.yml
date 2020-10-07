@@ -1,0 +1,33 @@
+actual_output:
+- interfaceName
+comment: '
+
+  TEST if kg-topology-CloudEosRR2 LLDP interfaceIdType is correct on interface |Ethernet1|.
+
+  GIVEN LLDP interfaceIdType is |interfaceName|.
+
+  WHEN LLDP interfaceIdType is |interfaceName|.
+
+  THEN test case result is |True|.
+
+
+  OUTPUT of |show lldp local-info| is :
+
+
+  .
+
+  '
+description: Verify show lldp local-info interfaceIdType is correct
+dut: kg-topology-CloudEosRR2
+expected_output:
+- interfaceName
+fail_reason: ''
+name: test_if_lldp_interface_id_is_correct_on_
+output_msg: 'On interface |Ethernet1|: LLDP local-info interfaceIdType is |interfaceName|,
+  correct interfaceIdType is |interfaceName|.
+
+
+  '
+show_cmd: show lldp local-info
+test_result: true
+test_suite: test_lldp.py
