@@ -1,0 +1,30 @@
+actual_output: disabled
+comment: 'TEST is ZTP disabled on |kg-topology-CloudEosRR1|.
+
+  GIVEN ZTP state is |disabled|.
+
+  WHEN ZTP state is |disabled|.
+
+  THEN test case result is |True|.
+
+  OUTPUT of |show zerotouch| is :
+
+
+
+  ZeroTouch Mode: Disabled
+
+  Script Exec Timeout: 900
+
+  '
+description: Verify local log messages
+dut: kg-topology-CloudEosRR1
+expected_output: disabled
+fail_reason: ''
+name: test_if_zerotouch_is_disabled_on_
+output_msg: 'On router |kg-topology-CloudEosRR1|: ZTP process is in mode: |disabled|
+  correct mode is |disabled|
+
+  '
+show_cmd: show zerotouch
+test_result: true
+test_suite: test_ztp.py

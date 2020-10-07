@@ -6,33 +6,33 @@ comment: "TEST if interface |Ethernet1| MTU is correct on |kg-topology-CloudEosR
   \  Hardware is Ethernet, address is 0246.bbe9.20d4 (bia 0246.bbe9.20d4)\n  Internet\
   \ address is 11.201.12.101/24\n  Broadcast address is 255.255.255.255\n  Address\
   \ determined by DHCP\n  IP MTU 1500 bytes (default)\n  Full-duplex, Unconfigured,\
-  \ auto negotiation: off, uni-link: n/a\n  Up 1 day, 7 hours, 7 minutes, 37 seconds\n\
+  \ auto negotiation: off, uni-link: n/a\n  Up 9 days, 1 hour, 34 minutes, 5 seconds\n\
   \  Loopback Mode : None\n  3 link status changes since last clear\n  Last clearing\
-  \ of \"show interface\" counters never\n  5 minutes input rate 52.8 kbps (- with\
-  \ framing overhead), 46 packets/sec\n  5 minutes output rate 104 kbps (- with framing\
-  \ overhead), 48 packets/sec\n     2771193 packets input, 359812005 bytes\n     Received\
-  \ 0 broadcasts, 0 multicast\n     0 runts, 0 giants\n     0 input errors, 0 CRC,\
-  \ 0 alignment, 0 symbol, 0 input discards\n     0 PAUSE input\n     3059706 packets\
-  \ output, 642459525 bytes\n     Sent 0 broadcasts, 0 multicast\n     0 output errors,\
-  \ 0 collisions\n     0 late collision, 0 deferred, 0 output discards\n     0 PAUSE\
-  \ output\nEthernet100 is up, line protocol is up (connected)\n  Hardware is Ethernet,\
-  \ address is 0246.bb59.d5ae (bia 0246.bb59.d5ae)\n  Internet address is 11.201.8.1/22\n\
-  \  Broadcast address is 255.255.255.255\n  IP MTU 1400 bytes , BW 10000000 kbit\n\
-  \  Full-duplex, 10Gb/s, auto negotiation: off, uni-link: n/a\n  Up 1 day, 7 hours,\
-  \ 7 minutes, 35 seconds\n  Loopback Mode : None\n  3 link status changes since last\
-  \ clear\n  Last clearing of \"show interface\" counters never\n  5 minutes input\
-  \ rate 0 bps (0.0% with framing overhead), 0 packets/sec\n  5 minutes output rate\
-  \ 0 bps (0.0% with framing overhead), 0 packets/sec\n     0 packets input, 0 bytes\n\
-  \     Received 0 broadcasts, 0 multicast\n     0 runts, 0 giants\n     0 input errors,\
-  \ 0 CRC, 0 alignment, 0 symbol, 0 input discards\n     0 PAUSE input\n     0 packets\
-  \ output, 0 bytes\n     Sent 0 broadcasts, 0 multicast\n     0 output errors, 0\
-  \ collisions\n     0 late collision, 0 deferred, 0 output discards\n     0 PAUSE\
-  \ output\nLoopback0 is up, line protocol is up (connected)\n  Hardware is Loopback\n\
-  \  Internet address is 11.201.0.2/32\n  Broadcast address is 255.255.255.255\n \
-  \ IP MTU 65535 bytes (default)\n  Up 1 day, 7 hours, 8 minutes\nLoopback10 is up,\
-  \ line protocol is up (connected)\n  Hardware is Loopback\n  Internet address is\
-  \ 198.18.0.36/24\n  Broadcast address is 255.255.255.255\n  IP MTU 65535 bytes (default)\n\
-  \  Up 1 day, 7 hours, 8 minutes\n.\n"
+  \ of \"show interface\" counters never\n  5 minutes input rate 23.5 kbps (- with\
+  \ framing overhead), 24 packets/sec\n  5 minutes output rate 41.7 kbps (- with framing\
+  \ overhead), 27 packets/sec\n     17264126 packets input, 2172259601 bytes\n   \
+  \  Received 0 broadcasts, 0 multicast\n     0 runts, 0 giants\n     0 input errors,\
+  \ 0 CRC, 0 alignment, 0 symbol, 0 input discards\n     0 PAUSE input\n     19302235\
+  \ packets output, 3709318484 bytes\n     Sent 0 broadcasts, 0 multicast\n     0\
+  \ output errors, 0 collisions\n     0 late collision, 0 deferred, 0 output discards\n\
+  \     0 PAUSE output\nEthernet100 is up, line protocol is up (connected)\n  Hardware\
+  \ is Ethernet, address is 0246.bb59.d5ae (bia 0246.bb59.d5ae)\n  Internet address\
+  \ is 11.201.8.1/22\n  Broadcast address is 255.255.255.255\n  IP MTU 1400 bytes\
+  \ , BW 10000000 kbit\n  Full-duplex, 10Gb/s, auto negotiation: off, uni-link: n/a\n\
+  \  Up 9 days, 1 hour, 34 minutes, 3 seconds\n  Loopback Mode : None\n  3 link status\
+  \ changes since last clear\n  Last clearing of \"show interface\" counters never\n\
+  \  5 minutes input rate 0 bps (0.0% with framing overhead), 0 packets/sec\n  5 minutes\
+  \ output rate 0 bps (0.0% with framing overhead), 0 packets/sec\n     0 packets\
+  \ input, 0 bytes\n     Received 0 broadcasts, 0 multicast\n     0 runts, 0 giants\n\
+  \     0 input errors, 0 CRC, 0 alignment, 0 symbol, 0 input discards\n     0 PAUSE\
+  \ input\n     0 packets output, 0 bytes\n     Sent 0 broadcasts, 0 multicast\n \
+  \    0 output errors, 0 collisions\n     0 late collision, 0 deferred, 0 output\
+  \ discards\n     0 PAUSE output\nLoopback0 is up, line protocol is up (connected)\n\
+  \  Hardware is Loopback\n  Internet address is 11.201.0.2/32\n  Broadcast address\
+  \ is 255.255.255.255\n  IP MTU 65535 bytes (default)\n  Up 9 days, 1 hour, 34 minutes,\
+  \ 28 seconds\nLoopback10 is up, line protocol is up (connected)\n  Hardware is Loopback\n\
+  \  Internet address is 198.18.0.36/24\n  Broadcast address is 255.255.255.255\n\
+  \  IP MTU 65535 bytes (default)\n  Up 9 days, 1 hour, 34 minutes, 28 seconds\n.\n"
 description: Verify the interfaces of interest MTU
 dut: kg-topology-CloudEosRR1
 expected_output:

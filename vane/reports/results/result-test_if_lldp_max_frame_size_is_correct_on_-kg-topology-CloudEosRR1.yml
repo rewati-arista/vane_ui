@@ -1,41 +1,21 @@
 actual_output:
 - 9236
-comment: "TEST if |kg-topology-CloudEosRR1| LLDP maxFrameSize is correct on interface\
-  \ |Ethernet1|.\nGIVEN LLDP maxFrameSize is |10200|.\nWHEN LLDP maxFrameSize is |9236|.\n\
-  THEN test case result is |False|.\n\nOUTPUT of |show lldp local-info| is :\n\nLocal\
-  \ System:\n  - Chassis ID type: MAC address (4)\n    Chassis ID     : 0246.bb59.d5ae\n\
-  \  - System Name: \"kg-topology-CloudEosRR1\"\n  - System Description: \"Arista\
-  \ Networks EOS version 4.23.1F-cloud-16179785.jakartarel (engineering build) running\
-  \ on an Arista vEOS\"\n  - System Capabilities : Bridge, Router\n    Enabled Capabilities:\
-  \ Bridge, Router\n\nInterface Ethernet1:\n  - Port ID type: Interface name(5)\n\
-  \    Port ID     : \"Ethernet1\"\n  - Port Description: (empty)*\n  - Management\
-  \ Address Subtype: IPv4 \n    Management Address        : 11.201.0.2\n    Interface\
-  \ Number Subtype  : ifIndex (2)\n    Interface Number          : 5000000\n    OID\
-  \ String                : \n  - Management Address Subtype: IPv4 \n    Management\
-  \ Address        : 198.18.0.36\n    Interface Number Subtype  : ifIndex (2)\n  \
-  \  Interface Number          : 5000010\n    OID String                : \n  - Management\
-  \ Address Subtype: IPv4 \n    Management Address        : 11.201.12.101\n    Interface\
-  \ Number Subtype  : ifIndex (2)\n    Interface Number          : 1\n    OID String\
-  \                : \n  - Management Address Subtype: IPv4 \n    Management Address\
-  \        : 11.201.8.1\n    Interface Number Subtype  : ifIndex (2)\n    Interface\
-  \ Number          : 100\n    OID String                : \n  - IEEE802.1 Port VLAN\
-  \ ID: 0\n  - IEEE802.1/IEEE802.3 Link Aggregation\n    Link Aggregation Status:\
-  \ Capable, Disabled (0x01)\n    Port ID                : 0\n  - IEEE802.3 Maximum\
-  \ Frame Size: 9236 bytes\n\nInterface Ethernet100:\n  - Port ID type: Interface\
-  \ name(5)\n    Port ID     : \"Ethernet100\"\n  - Port Description: (empty)*\n \
-  \ - Management Address Subtype: IPv4 \n    Management Address        : 11.201.0.2\n\
-  \    Interface Number Subtype  : ifIndex (2)\n    Interface Number          : 5000000\n\
-  \    OID String                : \n  - Management Address Subtype: IPv4 \n    Management\
-  \ Address        : 198.18.0.36\n    Interface Number Subtype  : ifIndex (2)\n  \
-  \  Interface Number          : 5000010\n    OID String                : \n  - Management\
-  \ Address Subtype: IPv4 \n    Management Address        : 11.201.12.101\n    Interface\
-  \ Number Subtype  : ifIndex (2)\n    Interface Number          : 1\n    OID String\
-  \                : \n  - Management Address Subtype: IPv4 \n    Management Address\
-  \        : 11.201.8.1\n    Interface Number Subtype  : ifIndex (2)\n    Interface\
-  \ Number          : 100\n    OID String                : \n  - IEEE802.1 Port VLAN\
-  \ ID: 0\n  - IEEE802.1/IEEE802.3 Link Aggregation\n    Link Aggregation Status:\
-  \ Capable, Disabled (0x01)\n    Port ID                : 0\n  - IEEE802.3 Maximum\
-  \ Frame Size: 9236 bytes\n.\n"
+comment: 'TEST if |kg-topology-CloudEosRR1| LLDP maxFrameSize is correct on interface
+  |Ethernet1|.
+
+  GIVEN LLDP maxFrameSize is |10200|.
+
+  WHEN LLDP maxFrameSize is |9236|.
+
+  THEN test case result is |False|.
+
+
+  OUTPUT of |show lldp local-info| is :
+
+
+  .
+
+  '
 description: Verify show lldp local-info maxFrameSize is correct
 dut: kg-topology-CloudEosRR1
 expected_output:

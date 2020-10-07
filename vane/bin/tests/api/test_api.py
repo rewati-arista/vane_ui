@@ -51,182 +51,133 @@ class APITests():
     def test_if_management_https_api_server_is_running_on_(self,
                                                            dut,
                                                            tests_definitions):
-        """ Verify management api https server is running
+      """ Verify management api https server is running
+           Args:
+            dut (dict): Encapsulates dut details including name, connection
+            tests_definitions (dict): Test parameters
+      """
 
-             Args:
-              dut (dict): Encapsulates dut details including name, connection
-              tests_definitions (dict): Test parameters
-        """
+      tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+      ptr = dut["output"][tops.show_cmd]['json']
+      tops.actual_output = ptr['httpsServer']['running']
+      tops.test_result = tops.actual_output == tops.expected_output
 
-        test_case = inspect.currentframe().f_code.co_name
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+      tops.output_msg += (f"\nOn router |{tops.dut_name}| HTTPS Server is "
+                          f"running state: |{tops.actual_output}|, should be "
+                          f" in state |{tops.expected_output}|")
+      tops.comment += (f'TEST is HTTPS API running on |{tops.dut_name}|.\n '
+                       f'GIVEN HTTPS API state is |{tops.expected_output}|.\n'
+                       f'WHEN HTTPS API state is |{tops.actual_output}|.\n'
+                       f'THEN test case result is |{tops.test_result}|.\n'
+                       f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}')
 
-        dut_name = dut['name']
-        expected_output = test_parameters["expected_output"]
+      tops.post_testcase()
 
-        logging.info(f'TEST is HTTPS API running on |{dut_name}| ')
-        logging.info(f'GIVEN HTTPS API state is |{expected_output}|')
-
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
-        ptr = dut["output"][show_cmd]['json']
-        actual_output = ptr['httpsServer']['running']
-
-        print(f"\nOn router |{dut_name}| HTTPS Server is running state: "
-              f"|{expected_output}|")
-        logging.info(f'WHEN HTTPS API state is |{actual_output}|')
-
-        test_result = expected_output == actual_output
-        logging.info(f'THEN test case result is |{test_result}|')
-        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
-
-        assert expected_output == actual_output
+      assert tops.expected_output == tops.actual_output
 
     def test_if_management_https_api_server_port_is_correct_on_(self,
                                                                 dut,
                                                                 tests_definitions):
-        """ Verify https server is enabled on port 443
+      """ Verify https server is enabled on port 443
+           Args:
+            dut (dict): Encapsulates dut details including name, connection
+            tests_definitions (dict): Test parameters
+      """
 
-             Args:
-              dut (dict): Encapsulates dut details including name, connection
-              tests_definitions (dict): Test parameters
-        """
+      tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+      ptr = dut["output"][tops.show_cmd]['json']
+      tops.actual_output = ptr['httpsServer']['port']
+      tops.test_result = tops.actual_output == tops.expected_output
 
-        test_case = inspect.currentframe().f_code.co_name
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+      tops.output_msg += (f"\nOn router |{tops.dut_name}| HTTPS Server is "
+                          f"running on port: |{tops.actual_output}|, should be "
+                          f" port |{tops.expected_output}|")
+      tops.comment += (f'TEST is HTTPS API port on |{tops.dut_name}|.\n '
+                       f'GIVEN HTTPS API port is |{tops.expected_output}|.\n'
+                       f'WHEN HTTPS API port is |{tops.actual_output}|.\n'
+                       f'THEN test case result is |{tops.test_result}|.\n'
+                       f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}')
 
-        dut_name = dut['name']
-        expected_output = test_parameters["expected_output"]
+      tops.post_testcase()
 
-        logging.info(f'TEST is HTTPS API port on |{dut_name}| ')
-        logging.info(f'GIVEN HTTPS API port is |{expected_output}|')
-
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
-        actual_output = dut["output"][show_cmd]['json']['httpsServer']['port']
-
-        print(f"\nOn router |{dut_name}| HTTPS Server is running on port: "
-              f"|{actual_output}|")
-        logging.info(f'WHEN HTTPS API port is |{actual_output}|')
-
-        test_result = expected_output == actual_output
-        logging.info(f'THEN test case result is |{test_result}|')
-        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
-
-        assert actual_output == expected_output
+      assert tops.expected_output == tops.actual_output
 
     def test_if_management_https_api_server_is_enabled_on_(self,
                                                            dut,
                                                            tests_definitions):
-        """ Verify management api https server is enabled
+      """ Verify management api https server is enabled
+           Args:
+            dut (dict): Encapsulates dut details including name, connection
+            tests_definitions (dict): Test parameters
+      """
 
-             Args:
-              dut (dict): Encapsulates dut details including name, connection
-              tests_definitions (dict): Test parameters
-        """
+      tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+      tops.actual_output = dut["output"][tops.show_cmd]['json']['enabled']
+      tops.test_result = tops.actual_output == tops.expected_output
 
-        test_case = inspect.currentframe().f_code.co_name
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+      tops.output_msg += (f"\nOn router |{tops.dut_name}| API is "
+                          f"enabled state: |{tops.actual_output}|, should be "
+                          f" in state |{tops.expected_output}|")
+      tops.comment += (f'TEST is HTTPS API enabled on |{tops.dut_name}|.\n '
+                       f'GIVEN HTTPS API enabled is |{tops.expected_output}|.\n'
+                       f'WHEN HTTPS API enabled is |{tops.actual_output}|.\n'
+                       f'THEN test case result is |{tops.test_result}|.\n'
+                       f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}')
 
-        dut_name = dut['name']
-        expect_output = test_parameters["expected_output"]
+      tops.post_testcase()
 
-        logging.info(f'TEST is HTTPS API enabled on |{dut_name}| ')
-        logging.info(f'GIVEN HTTPS API enabled is |{expect_output}|')
-
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
-        actual_output = dut["output"][show_cmd]['json']['enabled']
-
-        print("\nOn router |{dut_name}| API is enabled state: "
-              f"|{actual_output}|")
-        logging.info(f'WHEN HTTPS API enabled is |{actual_output}|')
-
-        test_result = expect_output == actual_output
-        logging.info(f'THEN test case result is |{test_result}|')
-        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
-
-        assert expect_output == actual_output
+      assert tops.expected_output == tops.actual_output
 
     def test_if_management_http_api_server_is_running_on_(self,
                                                           dut,
                                                           tests_definitions):
-        """ Verify management api http server is not running
+      """ Verify management api http server is not running
+           Args:
+            dut (dict): Encapsulates dut details including name, connection
+            tests_definitions (dict): Test parameters
+      """
 
-             Args:
-              dut (dict): Encapsulates dut details including name, connection
-              tests_definitions (dict): Test parameters
-        """
+      tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+      ptr = dut["output"][tops.show_cmd]['json']
+      tops.actual_output = ptr['httpServer']['running']
+      tops.test_result = tops.actual_output == tops.expected_output
 
-        test_case = inspect.currentframe().f_code.co_name
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+      tops.output_msg += (f"\nOn router |{tops.dut_name}| HTTP Server is "
+                          f"running state: |{tops.actual_output}|, should be "
+                          f" in state |{tops.expected_output}|")
+      tops.comment += (f'TEST is HTTP API running on |{tops.dut_name}|.\n '
+                       f'GIVEN HTTP API enabled is |{tops.expected_output}|.\n'
+                       f'WHEN HTTP API enabled is |{tops.actual_output}|.\n'
+                       f'THEN test case result is |{tops.test_result}|.\n'
+                       f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}')
 
-        dut_name = dut['name']
-        expect_output = test_parameters["expected_output"]
+      tops.post_testcase()
 
-        logging.info(f'TEST is HTTP API running on |{dut_name}| ')
-        logging.info(f'GIVEN HTTP API state is |{expect_output}|')
-
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
-        ptr = dut["output"][show_cmd]['json']
-        actual_output = ptr['httpServer']['running']
-
-        print("\nOn router |{dut_name}| HTTP Server is running state: "
-              f"|{actual_output}|")
-        logging.info(f'WHEN HTTP API state is |{actual_output}|')
-
-        test_result = expect_output == actual_output
-        logging.info(f'THEN test case result is |{test_result}|')
-        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
-
-        assert expect_output is actual_output
+      assert tops.expected_output == tops.actual_output
 
     def test_if_management_local_http_api_server_is_running_on_(self,
                                                                 dut,
                                                                 tests_definitions):
-        """ Verify management api local httpserver is not running
+      """ Verify management api local httpserver is not running
+           Args:
+            dut (dict): Encapsulates dut details including name, connection
+            tests_definitions (dict): Test parameters
+      """
 
-             Args:
-              dut (dict): Encapsulates dut details including name, connection
-              tests_definitions (dict): Test parameters
-        """
+      tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+      ptr = dut["output"][tops.show_cmd]['json']
+      tops.actual_output = ptr['localHttpServer']['running']
+      tops.test_result = tops.actual_output == tops.expected_output
 
-        test_case = inspect.currentframe().f_code.co_name
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+      tops.output_msg += (f"\nOn router |{tops.dut_name}| HTTP Server is "
+                          f"running state: |{tops.actual_output}|, should be "
+                          f" in state |{tops.expected_output}|")
+      tops.comment += (f'TEST is local HTTP API running on |{tops.dut_name}|.\n '
+                       f'GIVEN local HTTP API enabled is |{tops.expected_output}|.\n'
+                       f'WHEN local HTTP API enabled is |{tops.actual_output}|.\n'
+                       f'THEN test case result is |{tops.test_result}|.\n'
+                       f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}')
 
-        dut_name = dut['name']
-        expect_output = test_parameters["expected_output"]
+      tops.post_testcase()
 
-        logging.info(f'TEST is local HTTP API running on |{dut_name}| ')
-        logging.info(f'GIVEN local HTTP API state is |{expect_output}|')
-
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
-        actual_output = \
-            dut["output"][show_cmd]['json']['localHttpServer']['running']
-
-        print(f"\nOn router |{dut['name']}| Local HTTP Server is running "
-              f"state: |{expect_output}|")
-        logging.info(f'WHEN HTTP API state is |{actual_output}|')
-
-        test_result = expect_output == actual_output
-        logging.info(f'THEN test case result is |{test_result}|')
-        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
-
-        assert expect_output is actual_output
+      assert tops.expected_output == tops.actual_output

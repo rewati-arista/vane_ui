@@ -48,8 +48,7 @@ class EnvironmentTests():
     """ Environment Test Suite
     """
 
-    @pytest.mark.skip(reason="CloudEOS doesnt have temp sensors")
-    def test_if_system_environment_temp_are_in_spec_on_(self,
+    def test_if_system_environment_temp_is_in_spec_on_(self,
                                                         dut,
                                                         tests_definitions):
         """ Verify system temperature environmentals are functional within spec
@@ -59,99 +58,140 @@ class EnvironmentTests():
               tests_definitions (dict): Test parameters
         """
 
-        test_case = inspect.currentframe().f_code.co_name
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
+        if not tests_tools.verify_veos(dut):
+            tops.return_show_cmd("show system environment temperature")
+            tops.actual_output = tops.show_output["systemStatus"]
+            tops.test_result = tops.actual_output == tops.expected_output
 
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
+            tops.output_msg = (f"On router |{tops.dut_name}| system temperature status "
+                               f"is |{tops.actual_output}| and should be "
+                               f"|{tops.expected_output}|")
+            tops.comment = (f"TEST is |{tops.dut_name}| system termperature "
+                            "environmentals functioning within spec.\n"
+                            f"GIVEN expected temperature state is |{tops.expected_output}|.\n"
+                            f"WHEN actual temperature state is |{tops.actual_output}|.\n"
+                            f'THEN test case result is |{tops.test_result}|.\n'
+                            f'OUTPUT of |{tops.show_cmd}| is:\n\n{tops.show_cmd_txt}')
+        else:
+            tops.test_result, tops.actual_output, tops.expected_output = True, None, None
 
-        logging.info(f'TEST is |{dut_name}| system termperature '
-                     'environmentals functioning within spec')
-        logging.info(f'GIVEN expected temperature state is {expected_output}')
+            tops.output_msg += ("INVALID TEST: CloudEOS router "
+                                f"|{tops.dut_name}| doesnt require cooling.\n")
+            tops.comment += ("INVALID TEST: CloudEOS router "
+                             f"|{tops.dut_name}| doesnt require cooling.\n")
 
-        dut_ptr = dut["output"][show_cmd]["json"]
-        system_status = dut_ptr["systemStatus"]
-        power_supply_slots = dut_ptr["powerSupplySlots"]
-        temp_sensors = dut_ptr["tempSensors"]
+        print(f"{tops.output_msg}\n{tops.comment}")
+        tops.post_testcase()
+        assert tops.actual_output == tops.expected_output
 
-        actual_output = f"System Status: {system_status} \nPower Supply Slots: \
-                        {power_supply_slots} \nTemperature Sensors: \
-                        {temp_sensors}"
-        logging.info(f'WHEN actual temperature state is {actual_output}')
-
-        print(f"\nOn router |{dut_name}| system temperature is "
-              f"|{system_status}|")
-
-        assert system_status == 'temperatureOk'
-
-        for powersupply in power_supply_slots:
-            for temp_sensors in powersupply['tempSensors']:
-                print("Power-supply temperature sensor "
-                      f"|{temp_sensors['name']}| alert state is "
-                      f"|{temp_sensors['inAlertState']}|")
-
-                assert temp_sensors['inAlertState'] is False
-
-        for temp_sensor in temp_sensors:
-            print(f"Temperature sensor |{temp_sensor['name']}| alert state "
-                  f"is |{temp_sensor['inAlertState']}|")
-
-            assert temp_sensor['inAlertState'] is False
-
-        logging.info('THEN test case result is |PASS|')
-        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
-
-    @pytest.mark.skip(reason="CloudEOS doesnt have power supplies")
-    def test_if_system_environment_power_are_in_spec_on_(self,
-                                                         dut,
-                                                         tests_definitions):
-        """ Verify system power environmentals are functional within spec
+    def test_if_sensors_temp_is_in_spec_on_(self, dut, tests_definitions):
+        """ Verify system temperature sensors environmentals are functional within spec
 
             Args:
               dut (dict): Encapsulates dut details including name, connection
               tests_definitions (dict): Test parameters
         """
 
-        test_case = inspect.currentframe().f_code.co_name
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
+        if not tests_tools.verify_veos(dut):
+            print(f"\nOn router |{tops.dut_name}|:")
 
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
+            tops.return_show_cmd("show system environment temperature")
+            powersupplies = tops.show_output["powerSupplySlots"]
+            cards = tops.show_output["cardSlots"]
 
-        logging.info(f'TEST is |{dut_name}| system power '
-                     'environmentals functioning within spec')
-        logging.info(f'GIVEN expected power state is {expected_output}')
+            for sensor_array in [powersupplies, cards]:
+                for sensor_card in sensor_array:
+                    tempsensors = sensor_card['tempSensors']
+                    sensor_name = sensor_card['entPhysicalClass']
 
-        power_supplies = dut["output"][show_cmd]["json"]["powerSupplies"]
+                    for temp_sensor in tempsensors:
+                        sensor = temp_sensor['name']
+                        tops.actual_output = temp_sensor['inAlertState']
+                        tops.test_result = tops.actual_output == tops.expected_output
 
-        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
-        print(f"\nOn router |{dut_name}|")
+                        tops.output_msg += (f"{sensor_name} Sensor |{sensor}| temperature alert status "
+                                            f"is |{tops.actual_output}| and should be "
+                                            f"|{tops.expected_output}|.\n")
+                        tops.comment += (f"TEST is |{tops.dut_name}| {sensor_name} sensor |{sensor}| termperature "
+                                         "environmentals functioning within spec.\n"
+                                         f"GIVEN expected alert status is |{tops.expected_output}|.\n"
+                                         f"WHEN actual alert status is |{tops.actual_output}|.\n"
+                                         f'THEN test case result is |{tops.test_result}|.\n\n')
 
-        for powersupply in power_supplies:
-            actual_output = power_supplies[powersupply]['state']
-            test_result = actual_output == expected_output
+                        tops.actual_results.append(tops.actual_output)
+                        tops.expected_results.append(tops.expected_output)
 
-            logging.info(f'WHEN actual power state is {actual_output}')
-            logging.info(f'THEN test case result is |{test_result}|')
-            logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+            tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+            tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
 
-            print(f"Power Supply |{powersupply}| state is |{actual_output}|")
+        else:
+            tops.test_result, tops.actual_output, tops.expected_output = True, None, None
+            tops.actual_results, tops.expected_results = [], []
 
-            assert actual_output == expected_output
+            tops.output_msg += ("INVALID TEST: CloudEOS router "
+                                f"|{tops.dut_name}| doesnt require cooling.\n")
+            tops.comment += ("INVALID TEST: CloudEOS router "
+                             f"|{tops.dut_name}| doesnt require cooling.\n")
 
-    @pytest.mark.skip(reason="CloudEOS doesnt have cooling")
+        print(f"{tops.output_msg}\n{tops.comment}")
+        tops.post_testcase()
+        assert tops.actual_results == tops.expected_results
+
+    def test_if_system_environment_power_are_in_spec_on_(self,
+                                                         dut,
+                                                         tests_definitions):
+        """ Verify system power environmentals are functional within spec
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+              tests_definitions (dict): Test parameters
+        """
+
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+
+        if not tests_tools.verify_veos(dut): 
+            tops.return_show_cmd("show system environment power")
+            power_supplies = tops.show_output["powerSupplies"]
+            print(f"\nOn router |{tops.dut_name}|")
+
+            for powersupply in power_supplies:
+                tops.actual_output = power_supplies[powersupply]['state']
+                tops.test_result = tops.actual_output == tops.expected_output
+
+                tops.output_msg += (f"Power-Supply {powersupply} state is "
+                                    f"|{tops.actual_output}|, should be in "
+                                    f"|{tops.expected_output}|.\n")
+                tops.comment += (f'TEST is power-supply |{powersupply}| '
+                                 'functioning within spec.\n'
+                                 f'GIVEN power state is |{tops.expected_output}|.\n'
+                                 f'WHEN power state is |{tops.actual_output}|.\n'
+                                 f'THEN test case result is |{tops.test_result}|.\n\n')
+    
+                tops.actual_results.append(tops.actual_output)
+                tops.expected_results.append(tops.expected_output)
+            
+            tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+
+        else:
+            tops.test_result = True
+
+            tops.output_msg += ("INVALID TEST: CloudEOS router "
+                                f"|{tops.dut_name}| doesnt have "
+                                "power-supplies.\n")
+            tops.comment += ("INVALID TEST: CloudEOS router "
+                             f"|{tops.dut_name}| doesnt have "
+                             "power-supplies.\n")
+
+        print(f"{tops.output_msg}\n{tops.comment}")
+
+        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.post_testcase()
+
+        assert tops.actual_results == tops.expected_results
+
     def test_if_system_environment_cooling_is_in_spec_on_(self,
                                                           dut,
                                                           tests_definitions):
@@ -162,30 +202,80 @@ class EnvironmentTests():
               tests_definitions (dict): Test parameters
         """
 
-        test_case = inspect.currentframe().f_code.co_name
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        show_cmd = test_parameters["show_cmd"]
-        tests_tools.verify_show_cmd(show_cmd, dut)
-        show_cmd_txt = dut["output"][show_cmd]['text']
+        if not tops.verify_veos():
+            tops.actual_output = dut["output"][tops.show_cmd]["json"]["systemStatus"]
+            tops.test_result = tops.actual_output == tops.expected_output
 
-        expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
+            tops.output_msg = (f"On router |{tops.dut_name}| system cooling status "
+                               f"is |{tops.actual_output}| and should be "
+                               f"|{tops.expected_output}|")
+            tops.comment = (f'TEST is |{tops.dut_name}| system cooling '
+                            'environmentals functioning within spec.\n'
+                            f'GIVEN cooling state is |{tops.expected_output}|.\n'
+                            f'WHEN cooling state is |{tops.actual_output}|.\n'
+                            f'THEN test case result is |{tops.test_result}|.\n'
+                            f'OUTPUT of |{tops.show_cmd}| is:\n\n{tops.show_cmd_txt}')
 
-        logging.info(f'TEST is |{dut_name}| system cooling '
-                     'environmentals functioning within spec')
-        logging.info(f'GIVEN expected cooling state is {expected_output}')
+        else:
+            tops.test_result, tops.actual_output, tops.expected_output = True, None, None
 
-        actual_output = dut["output"][show_cmd]["json"]["systemStatus"]
-        logging.info(f'WHEN actual cooling state is {actual_output}')
+            tops.output_msg += ("INVALID TEST: CloudEOS router "
+                                f"|{tops.dut_name}| doesnt require cooling.\n")
+            tops.comment += ("INVALID TEST: CloudEOS router "
+                             f"|{tops.dut_name}| doesnt require cooling.\n")
 
-        test_result = actual_output == expected_output
-        logging.info(f'THEN test case result is |{test_result}|')
-        logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+        print(f"{tops.output_msg}\n{tops.comment}")
+        tops.post_testcase()
+        assert tops.actual_output == tops.expected_output
 
-        print(f"\nOn router |{dut_name}| system cooling status is "
-              f"|{actual_output}|")
+    def test_if_fan_status_is_in_spec_on_(self, dut, tests_definitions):
+        """ Verify system cooling environmentals are functional within spec
 
-        assert actual_output == expected_output
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+              tests_definitions (dict): Test parameters
+        """
+
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+
+        if not tops.verify_veos():
+            powersupplies = dut["output"][tops.show_cmd]["json"]["powerSupplySlots"]
+            fan_trays = dut["output"][tops.show_cmd]["json"]["fanTraySlots"]
+
+            for fan_systems in [powersupplies, fan_trays]:
+                for fan_system in fan_systems:
+                    fans = fan_system['fans']
+
+                    for fan in fans:
+                        tops.actual_output = fan['status']
+                        fan_name = fan['label']
+                        tops.test_result = tops.actual_output == tops.expected_output
+
+                        tops.output_msg += (f"|{fan_name}| fan "
+                                            f"is |{tops.actual_output}| and should be "
+                                            f"|{tops.expected_output}|.\n")
+                        tops.comment += (f"TEST is |{fan_name}| operating correctly.\n"
+                                         f"GIVEN fan status is |{tops.expected_output}|.\n"
+                                         f"WHEN fan status is |{tops.actual_output}|.\n"
+                                         f'THEN test case result is |{tops.test_result}|.\n\n')
+
+                        tops.actual_results.append(tops.actual_output)
+                        tops.expected_results.append(tops.expected_output)
+
+            tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+            tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+
+        else:
+            tops.test_result, tops.actual_output, tops.expected_output = True, None, None
+            tops.actual_results, tops.expected_results = [], []
+
+            tops.output_msg += ("INVALID TEST: CloudEOS router "
+                                f"|{tops.dut_name}| doesnt require fans.\n")
+            tops.comment += ("INVALID TEST: CloudEOS router "
+                             f"|{tops.dut_name}| doesnt require fans.\n")
+
+        print(f"{tops.output_msg}\n{tops.comment}")
+        tops.post_testcase()
+        assert tops.actual_results == tops.expected_results

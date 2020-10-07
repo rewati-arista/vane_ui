@@ -41,6 +41,28 @@ duts:
   password: arista123
   transport: https
   username: kgrozis
+#- mgmt_ip: 172.30.145.163
+#  name: bn304
+#  neighbors:
+#  - neighborDevice: spine01
+#    neighborPort: Ethernet2
+#    port: Ethernet1
+#  - neighborDevice: leaf01
+#    neighborPort: Ethernet2
+#    port: Ethernet2
+#  transport: https
+#  username: admin
+#- mgmt_ip: 172.30.146.38
+#  name: bn305
+#  neighbors:
+#  - neighborDevice: spine01
+#    neighborPort: Ethernet2
+#    port: Ethernet1
+#  - neighborDevice: leaf01
+#    neighborPort: Ethernet2
+#    port: Ethernet2
+#  transport: https
+#  username: admin
 parameters:
   eapi_file: /home/docker/.eapi.conf
   eapi_template: ../templates/eapi.conf.j2
@@ -48,7 +70,7 @@ parameters:
   html_report: ../reports/report
   json_report: ../reports/report
   mark: null
-  processes: 4
+  processes: null
   report_dir: ../reports
   results_file: result.yml
   results_dir: ../reports/results

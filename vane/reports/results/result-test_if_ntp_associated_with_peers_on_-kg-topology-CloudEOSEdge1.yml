@@ -3,7 +3,7 @@ comment: "TEST is NTP associations with peers on |kg-topology-CloudEOSEdge1|.\nG
   \ associated are greater than or equal to |1|.\nWHEN NTP associated peers are |1|.\n\
   THEN test case result is |True|.\nOUTPUT of |show ntp associations| is:\n     remote\
   \          refid      st t when  poll reach   delay   offset  jitter\n==============================================================================\n\
-  *169.254.169.123 169.254.169.12  3 l  276  1024  377    0.098   -0.066   0.352\n\
+  *169.254.169.123 169.254.169.12  3 l  119  1024  377    0.127    0.202   0.067\n\
   .\n"
 description: Verify ntp peers are correct
 dut: kg-topology-CloudEOSEdge1

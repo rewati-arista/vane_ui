@@ -99,55 +99,56 @@ comment: "Test for log message |critical| on |kg-topology-CloudEOSEdge1|.\nGIVEN
   \                 debugging           debugging    \nvxlan                     \
   \ debugging           debugging    \nxmpp                       debugging      \
   \     debugging    \nztp                        debugging           debugging  \
-  \  \n\nLog Buffer:\nSep 29 19:47:21 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT:\
-  \ user kgrozis logged out [from: 173.79.124.35] [service: command-api]\nSep 29 19:49:50\
+  \  \n\nLog Buffer:\nOct  7 00:06:13 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT:\
+  \ user kgrozis logged out [from: 173.79.124.35] [service: command-api]\nOct  7 00:07:50\
   \ kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGIN: user kgrozis logged in [from: 173.79.124.35]\
-  \ [service: command-api]\nSep 29 19:50:20 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT:\
-  \ user kgrozis logged out [from: 173.79.124.35] [service: command-api]\nSep 29 19:50:34\
+  \ [service: command-api]\nOct  7 00:08:01 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT:\
+  \ user kgrozis logged out [from: 173.79.124.35] [service: command-api]\nOct  7 00:36:20\
   \ kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGIN: user kgrozis logged in [from: 173.79.124.35]\
-  \ [service: command-api]\nSep 29 19:50:42 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT:\
-  \ user kgrozis logged out [from: 173.79.124.35] [service: command-api]\nSep 29 19:51:07\
+  \ [service: command-api]\nOct  7 00:36:31 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT:\
+  \ user kgrozis logged out [from: 173.79.124.35] [service: command-api]\nOct  7 00:39:56\
   \ kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGIN: user kgrozis logged in [from: 173.79.124.35]\
-  \ [service: command-api]\nSep 29 19:51:37 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT:\
-  \ user kgrozis logged out [from: 173.79.124.35] [service: command-api]\nSep 29 19:51:53\
+  \ [service: command-api]\nOct  7 00:40:07 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT:\
+  \ user kgrozis logged out [from: 173.79.124.35] [service: command-api]\nOct  7 00:42:18\
   \ kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGIN: user kgrozis logged in [from: 173.79.124.35]\
-  \ [service: command-api]\nSep 29 19:52:01 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT:\
-  \ user kgrozis logged out [from: 173.79.124.35] [service: command-api]\nSep 29 19:55:15\
+  \ [service: command-api]\nOct  7 00:42:28 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT:\
+  \ user kgrozis logged out [from: 173.79.124.35] [service: command-api]\nOct  7 00:43:49\
   \ kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGIN: user kgrozis logged in [from: 173.79.124.35]\
-  \ [service: command-api]\nSep 29 19:55:44 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT:\
-  \ user kgrozis logged out [from: 173.79.124.35] [service: command-api]\nSep 29 19:57:31\
+  \ [service: command-api]\nOct  7 00:44:01 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT:\
+  \ user kgrozis logged out [from: 173.79.124.35] [service: command-api]\nOct  7 00:45:01\
   \ kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGIN: user kgrozis logged in [from: 173.79.124.35]\
-  \ [service: command-api]\nSep 29 19:57:59 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT:\
-  \ user kgrozis logged out [from: 173.79.124.35] [service: command-api]\nSep 29 19:58:11\
+  \ [service: command-api]\nOct  7 00:45:13 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT:\
+  \ user kgrozis logged out [from: 173.79.124.35] [service: command-api]\nOct  7 01:05:18\
   \ kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGIN: user kgrozis logged in [from: 173.79.124.35]\
-  \ [service: command-api]\nSep 29 19:58:19 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT:\
-  \ user kgrozis logged out [from: 173.79.124.35] [service: command-api]\nSep 29 20:07:47\
+  \ [service: command-api]\nOct  7 01:05:30 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT:\
+  \ user kgrozis logged out [from: 173.79.124.35] [service: command-api]\nOct  7 01:10:52\
   \ kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGIN: user kgrozis logged in [from: 173.79.124.35]\
-  \ [service: command-api]\nSep 29 20:08:16 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT:\
-  \ user kgrozis logged out [from: 173.79.124.35] [service: command-api]\nSep 29 20:08:30\
+  \ [service: command-api]\nOct  7 01:11:03 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT:\
+  \ user kgrozis logged out [from: 173.79.124.35] [service: command-api]\nOct  7 01:13:06\
   \ kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGIN: user kgrozis logged in [from: 173.79.124.35]\
-  \ [service: command-api]\nSep 29 20:08:38 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT:\
-  \ user kgrozis logged out [from: 173.79.124.35] [service: command-api]\nSep 29 20:10:16\
+  \ [service: command-api]\nOct  7 01:13:17 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT:\
+  \ user kgrozis logged out [from: 173.79.124.35] [service: command-api]\nOct  7 01:19:38\
   \ kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGIN: user kgrozis logged in [from: 173.79.124.35]\
-  \ [service: command-api]\nSep 29 20:10:44 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT:\
-  \ user kgrozis logged out [from: 173.79.124.35] [service: command-api]\nSep 29 20:10:56\
-  \ kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGIN: user kgrozis logged in [from: 173.79.124.35]\
-  \ [service: command-api]\nSep 29 20:11:04 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT:\
-  \ user kgrozis logged out [from: 173.79.124.35] [service: command-api]\nSep 29 20:11:56\
-  \ kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGIN: user kgrozis logged in [from: 173.79.124.35]\
-  \ [service: command-api]\nSep 29 20:12:22 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT:\
-  \ user kgrozis logged out [from: 173.79.124.35] [service: command-api]\nSep 29 20:12:37\
-  \ kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGIN: user kgrozis logged in [from: 173.79.124.35]\
-  \ [service: command-api]\nSep 29 20:12:45 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT:\
-  \ user kgrozis logged out [from: 173.79.124.35] [service: command-api]\nSep 29 20:13:58\
-  \ kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGIN: user kgrozis logged in [from: 173.79.124.35]\
-  \ [service: command-api]\nSep 29 20:14:26 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT:\
-  \ user kgrozis logged out [from: 173.79.124.35] [service: command-api]\nSep 29 20:14:50\
-  \ kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGIN: user kgrozis logged in [from: 173.79.124.35]\
-  \ [service: command-api]\nSep 29 20:14:59 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT:\
-  \ user kgrozis logged out [from: 173.79.124.35] [service: command-api]\nSep 29 20:16:16\
-  \ kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGIN: user kgrozis logged in [from: 173.79.124.35]\
-  \ [service: command-api]\n.\n"
+  \ [service: command-api]\nOct  7 01:19:49 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT:\
+  \ user kgrozis logged out [from: 173.79.124.35] [service: command-api]\nOct  7 10:24:33\
+  \ kg-topology-CloudEOSEdge1 Aaa: %AAA-4-LOGIN_FAILED: user super failed to login\
+  \ [from: 116.107.156.97] [service: sshd] [reason: Authentication failed - Bad user]\n\
+  Oct  7 10:24:36 kg-topology-CloudEOSEdge1 Aaa: %AAA-4-LOGIN_FAILED: user super failed\
+  \ to login [from: 116.107.156.97] [service: sshd] [reason: Authentication failed\
+  \ - Bad user]\nOct  7 13:41:41 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGIN: user\
+  \ kgrozis logged in [from: 173.79.124.35] [service: command-api]\nOct  7 13:41:52\
+  \ kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT: user kgrozis logged out [from: 173.79.124.35]\
+  \ [service: command-api]\nOct  7 13:43:53 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGIN:\
+  \ user kgrozis logged in [from: 173.79.124.35] [service: command-api]\nOct  7 13:44:05\
+  \ kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT: user kgrozis logged out [from: 173.79.124.35]\
+  \ [service: command-api]\nOct  7 14:42:34 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGIN:\
+  \ user kgrozis logged in [from: 173.79.124.35] [service: command-api]\nOct  7 14:42:40\
+  \ kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT: user kgrozis logged out [from: 173.79.124.35]\
+  \ [service: command-api]\nOct  7 14:42:41 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGIN:\
+  \ user kgrozis logged in [from: 173.79.124.35] [service: command-api]\nOct  7 14:42:46\
+  \ kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGOUT: user kgrozis logged out [from: 173.79.124.35]\
+  \ [service: command-api]\nOct  7 14:42:55 kg-topology-CloudEOSEdge1 Aaa: %AAA-5-LOGIN:\
+  \ user kgrozis logged in [from: 173.79.124.35] [service: command-api]\n.\n"
 description: Verify local log messages
 dut: kg-topology-CloudEOSEdge1
 expected_output:

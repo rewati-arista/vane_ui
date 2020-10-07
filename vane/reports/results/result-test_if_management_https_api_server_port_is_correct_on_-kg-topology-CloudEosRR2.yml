@@ -1,0 +1,31 @@
+actual_output: 443
+comment: "TEST is HTTPS API port on |kg-topology-CloudEosRR2|.\n GIVEN HTTPS API port\
+  \ is |443|.\nWHEN HTTPS API port is |443|.\nTHEN test case result is |True|.\nOUTPUT\
+  \ of |show management api http-commands| is :\n\nEnabled:            Yes\nHTTPS\
+  \ server:       running, set to use port 443\nHTTP server:        shutdown, set\
+  \ to use port 80\nLocal HTTP server:  shutdown, no authentication, set to use port\
+  \ 8080\nUnix Socket server: shutdown, no authentication\nVRFs:               default\n\
+  Hits:               35934\nLast hit:           0 seconds ago\nBytes in:        \
+  \   5597725\nBytes out:          97167517\nRequests:           34557\nCommands:\
+  \           73695\nDuration:           2894.374 seconds\nSSL Profile:        none\n\
+  FIPS Mode:          No\nQoS DSCP:           0\nLog Level:          none\nCSP Frame\
+  \ Ancestor: None\nTLS Protocols:      1.0 1.1 1.2\n   User          Requests   \
+  \    Bytes in       Bytes out    Last hit      \n------------- -------------- --------------\
+  \ --------------- ------------- \n   kgrozis       34557          5597725      \
+  \  97167517     0 seconds ago \n\nURLs                                    \n---------------------------------------\
+  \ \nEthernet1   : https://11.201.13.101:443 \nEthernet100 : https://11.201.8.1:443\
+  \    \nLoopback0   : https://11.201.0.4:443    \nLoopback10  : https://198.18.0.38:443\
+  \   \n\n"
+description: Verify https server is enabled on port 443
+dut: kg-topology-CloudEosRR2
+expected_output: 443
+fail_reason: ''
+name: test_if_management_https_api_server_port_is_correct_on_
+output_msg: '
+
+  On router |kg-topology-CloudEosRR2| HTTPS Server is running on port: |443|, should
+  be  port |443|'
+result: true
+show_cmd: show management api http-commands
+test_result: true
+test_suite: test_api.py

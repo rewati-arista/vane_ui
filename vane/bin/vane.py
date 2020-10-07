@@ -37,7 +37,7 @@ import argparse
 import logging
 import tests_client
 import report_client
-import input_client
+import xcel_client
 
 
 logging.basicConfig(level=logging.INFO, filename='vane.log', filemode='w',
@@ -61,9 +61,21 @@ def parse_cli():
                         default=DEFINITIONS_FILE,
                         help='Specify the name of the defintions file')
 
+    parser.add_argument('--input',
+                        action='store_true',
+                        default=False,
+                        help='Use spreadsheet for input')
+
     args = parser.parse_args()
 
     return args
+
+
+def input_spreadsheet(definitions_file):
+    """ Input data from a spreadsheet
+    """
+
+    vane_xcel_client = xcel_client.XcelClient(definitions_file)
 
 
 def run_tests(definitions_file):
@@ -90,8 +102,6 @@ def write_results(definitions_file):
                  'object')
     vane_report_client = report_client.ReportClient(definitions_file)
     vane_report_client.write_result_doc()
-    
-    #report_client.write_result_doc()
 
 
 def main():
@@ -105,6 +115,9 @@ def main():
         logging.warning('Changing Definitions name to '
                         f'{args.definitions_file}')
         DEFINITIONS_FILE = args.definitions_file
+
+    if args.input:
+        input_spreadsheet(DEFINITIONS_FILE)
 
     run_tests(DEFINITIONS_FILE)
     write_results(DEFINITIONS_FILE)

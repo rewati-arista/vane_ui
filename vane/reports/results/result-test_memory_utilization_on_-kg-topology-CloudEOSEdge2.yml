@@ -1,19 +1,19 @@
-actual_output: 37.18570070935729
+actual_output: 36.20520648873295
 comment: "TEST if memory utilization is less than specified value on  |kg-topology-CloudEOSEdge2|.\n\
-  GIVEN memory utilization is less than |70|.\nWHEN  memory utilization is |37.18570070935729|.\n\
+  GIVEN memory utilization is less than |70|.\nWHEN  memory utilization is |36.20520648873295|.\n\
   THEN test case result is |True|.\nOUTPUT of |show version| is:\n\nArista vEOS\n\
   Hardware version:    \nSerial number:       DE52F26D16E91F22BB1B507175C8C765\nSystem\
   \ MAC address:  0635.02ca.8297\n\nSoftware image version: 4.23.1F-cloud-16179785.jakartarel\
   \ (engineering build)\nArchitecture:           x86_64\nInternal build version: 4.23.1F-cloud-16179785.jakartarel\n\
   Internal build ID:      6bc96200-86c1-4e86-bed7-8280a6802809\n\nUptime:        \
-  \         6 weeks, 5 days, 18 hours and 58 minutes\nTotal memory:           7761392\
-  \ kB\nFree memory:            2885512 kB\n\n"
+  \         7 weeks, 6 days, 13 hours and 25 minutes\nTotal memory:           7761392\
+  \ kB\nFree memory:            2809492 kB\n\n"
 description: Verify memory is not exceeding high utlization
 dut: kg-topology-CloudEOSEdge2
 expected_output: 70
 fail_reason: ''
 name: test_memory_utilization_on_
-output_msg: On router |kg-topology-CloudEOSEdge2| memory utilization percent is |37.18570070935729%|
+output_msg: On router |kg-topology-CloudEOSEdge2| memory utilization percent is |36.20520648873295%|
   and should be under |70%|
 result: true
 show_cmd: show version

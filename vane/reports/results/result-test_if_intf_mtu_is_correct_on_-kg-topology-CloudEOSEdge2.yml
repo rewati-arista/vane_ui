@@ -9,62 +9,62 @@ comment: "TEST if interface |Ethernet1| MTU is correct on |kg-topology-CloudEOSE
   \  Hardware is Ethernet, address is 0635.0247.e530 (bia 0635.0247.e530)\n  Internet\
   \ address is 11.201.15.101/25\n  Broadcast address is 255.255.255.255\n  Address\
   \ determined by DHCP\n  IP MTU 1500 bytes (default)\n  Full-duplex, Unconfigured,\
-  \ auto negotiation: off, uni-link: n/a\n  Up 47 days, 18 hours, 57 minutes, 6 seconds\n\
+  \ auto negotiation: off, uni-link: n/a\n  Up 55 days, 13 hours, 23 minutes, 32 seconds\n\
   \  Loopback Mode : None\n  3 link status changes since last clear\n  Last clearing\
-  \ of \"show interface\" counters never\n  5 minutes input rate 68.7 kbps (- with\
-  \ framing overhead), 64 packets/sec\n  5 minutes output rate 153 kbps (- with framing\
-  \ overhead), 72 packets/sec\n     163849185 packets input, 19366192658 bytes\n \
+  \ of \"show interface\" counters never\n  5 minutes input rate 38.1 kbps (- with\
+  \ framing overhead), 40 packets/sec\n  5 minutes output rate 87.6 kbps (- with framing\
+  \ overhead), 48 packets/sec\n     192588009 packets input, 22734516959 bytes\n \
   \    Received 0 broadcasts, 0 multicast\n     0 runts, 0 giants\n     0 input errors,\
-  \ 0 CRC, 0 alignment, 0 symbol, 0 input discards\n     0 PAUSE input\n     193545230\
-  \ packets output, 41289694338 bytes\n     Sent 0 broadcasts, 0 multicast\n     0\
+  \ 0 CRC, 0 alignment, 0 symbol, 0 input discards\n     0 PAUSE input\n     227750490\
+  \ packets output, 48628100256 bytes\n     Sent 0 broadcasts, 0 multicast\n     0\
   \ output errors, 0 collisions\n     0 late collision, 0 deferred, 0 output discards\n\
   \     0 PAUSE output\nEthernet2 is up, line protocol is up (connected)\n  Hardware\
   \ is Ethernet, address is 0667.8522.a780 (bia 0667.8522.a780)\n  Internet address\
   \ is 11.201.15.201/25\n  Broadcast address is 255.255.255.255\n  IP MTU 9000 bytes\n\
-  \  Full-duplex, Unconfigured, auto negotiation: off, uni-link: n/a\n  Up 47 days,\
-  \ 18 hours, 57 minutes, 6 seconds\n  Loopback Mode : None\n  3 link status changes\
+  \  Full-duplex, Unconfigured, auto negotiation: off, uni-link: n/a\n  Up 55 days,\
+  \ 13 hours, 23 minutes, 32 seconds\n  Loopback Mode : None\n  3 link status changes\
   \ since last clear\n  Last clearing of \"show interface\" counters never\n  5 minutes\
-  \ input rate 64.5 kbps (- with framing overhead), 47 packets/sec\n  5 minutes output\
-  \ rate 38.3 kbps (- with framing overhead), 42 packets/sec\n     180337833 packets\
-  \ input, 30466016553 bytes\n     Received 0 broadcasts, 0 multicast\n     0 runts,\
+  \ input rate 64.5 kbps (- with framing overhead), 46 packets/sec\n  5 minutes output\
+  \ rate 38.1 kbps (- with framing overhead), 41 packets/sec\n     213018470 packets\
+  \ input, 36265312920 bytes\n     Received 0 broadcasts, 0 multicast\n     0 runts,\
   \ 0 giants\n     0 input errors, 0 CRC, 0 alignment, 0 symbol, 0 input discards\n\
-  \     0 PAUSE input\n     162218232 packets output, 18486142194 bytes\n     Sent\
+  \     0 PAUSE input\n     191314241 packets output, 21873148391 bytes\n     Sent\
   \ 0 broadcasts, 0 multicast\n     0 output errors, 0 collisions\n     0 late collision,\
   \ 0 deferred, 0 output discards\n     0 PAUSE output\nEthernet2.102 is up, line\
   \ protocol is up (connected)\n  Hardware is Subinterface, address is 0667.8522.a780\n\
   \  Internet address is 11.201.15.201/25\n  Broadcast address is 255.255.255.255\n\
-  \  IP MTU 9000 bytes (default)\n  Up 47 days, 18 hours, 51 minutes, 4 seconds\n\
+  \  IP MTU 9000 bytes (default)\n  Up 55 days, 13 hours, 17 minutes, 30 seconds\n\
   Ethernet100 is up, line protocol is up (connected)\n  Hardware is Ethernet, address\
   \ is 0635.02ca.8297 (bia 0635.02ca.8297)\n  Internet address is 11.201.8.1/22\n\
   \  Broadcast address is 255.255.255.255\n  IP MTU 1400 bytes , BW 10000000 kbit\n\
-  \  Full-duplex, 10Gb/s, auto negotiation: off, uni-link: n/a\n  Up 47 days, 18 hours,\
-  \ 57 minutes, 4 seconds\n  Loopback Mode : None\n  3 link status changes since last\
-  \ clear\n  Last clearing of \"show interface\" counters never\n  5 minutes input\
-  \ rate 0 bps (0.0% with framing overhead), 0 packets/sec\n  5 minutes output rate\
-  \ 0 bps (0.0% with framing overhead), 0 packets/sec\n     0 packets input, 0 bytes\n\
-  \     Received 0 broadcasts, 0 multicast\n     0 runts, 0 giants\n     0 input errors,\
-  \ 0 CRC, 0 alignment, 0 symbol, 0 input discards\n     0 PAUSE input\n     0 packets\
-  \ output, 0 bytes\n     Sent 0 broadcasts, 0 multicast\n     0 output errors, 0\
-  \ collisions\n     0 late collision, 0 deferred, 0 output discards\n     0 PAUSE\
-  \ output\nLoopback0 is up, line protocol is up (connected)\n  Hardware is Loopback\n\
-  \  Internet address is 11.201.0.3/32\n  Broadcast address is 255.255.255.255\n \
-  \ IP MTU 65535 bytes (default)\n  Up 47 days, 18 hours, 54 minutes, 23 seconds\n\
-  Loopback10 is up, line protocol is up (connected)\n  Hardware is Loopback\n  Internet\
-  \ address is 198.18.0.37/24\n  Broadcast address is 255.255.255.255\n  IP MTU 65535\
-  \ bytes (default)\n  Up 47 days, 18 hours, 57 minutes, 28 seconds\nVlan4093 is down,\
-  \ line protocol is lowerlayerdown (notconnect)\n  Hardware is Vlan, address is 0000.0000.0000\
-  \ (bia 0000.0000.0000)\n  IP MTU 9164 bytes (default)\n  Down 47 days, 18 hours,\
-  \ 51 minutes, 5 seconds\nVlan4094 is down, line protocol is lowerlayerdown (notconnect)\n\
-  \  Hardware is Vlan, address is 0000.0000.0000 (bia 0000.0000.0000)\n  IP MTU 9164\
-  \ bytes (default)\n  Down 47 days, 18 hours, 54 minutes, 19 seconds\nVxlan1 is up,\
-  \ line protocol is up (connected)\n  Hardware is Vxlan\n  Source interface is Loopback0\
-  \ and is active with 11.201.0.3\n  Replication/Flood Mode is headend with Flood\
-  \ List Source: CLI\n  Remote MAC learning is disabled\n  VNI mapping to VLANs\n\
-  \  Static VLAN to VNI mapping is \n  Dynamic VLAN to VNI mapping for 'evpn' is\n\
-  \    [4093, 102]       [4094, 101]      \n  Note: All Dynamic VLANs used by VCS\
-  \ are internal VLANs.\n        Use 'show vxlan vni' for details.\n  Static VRF to\
-  \ VNI mapping is \n   [default, 101]\n   [prod, 102]\n  MLAG Shared Router MAC is\
-  \ 0000.0000.0000\n.\n"
+  \  Full-duplex, 10Gb/s, auto negotiation: off, uni-link: n/a\n  Up 55 days, 13 hours,\
+  \ 23 minutes, 30 seconds\n  Loopback Mode : None\n  3 link status changes since\
+  \ last clear\n  Last clearing of \"show interface\" counters never\n  5 minutes\
+  \ input rate 0 bps (0.0% with framing overhead), 0 packets/sec\n  5 minutes output\
+  \ rate 0 bps (0.0% with framing overhead), 0 packets/sec\n     0 packets input,\
+  \ 0 bytes\n     Received 0 broadcasts, 0 multicast\n     0 runts, 0 giants\n   \
+  \  0 input errors, 0 CRC, 0 alignment, 0 symbol, 0 input discards\n     0 PAUSE\
+  \ input\n     0 packets output, 0 bytes\n     Sent 0 broadcasts, 0 multicast\n \
+  \    0 output errors, 0 collisions\n     0 late collision, 0 deferred, 0 output\
+  \ discards\n     0 PAUSE output\nLoopback0 is up, line protocol is up (connected)\n\
+  \  Hardware is Loopback\n  Internet address is 11.201.0.3/32\n  Broadcast address\
+  \ is 255.255.255.255\n  IP MTU 65535 bytes (default)\n  Up 55 days, 13 hours, 20\
+  \ minutes, 50 seconds\nLoopback10 is up, line protocol is up (connected)\n  Hardware\
+  \ is Loopback\n  Internet address is 198.18.0.37/24\n  Broadcast address is 255.255.255.255\n\
+  \  IP MTU 65535 bytes (default)\n  Up 55 days, 13 hours, 23 minutes, 54 seconds\n\
+  Vlan4093 is down, line protocol is lowerlayerdown (notconnect)\n  Hardware is Vlan,\
+  \ address is 0000.0000.0000 (bia 0000.0000.0000)\n  IP MTU 9164 bytes (default)\n\
+  \  Down 55 days, 13 hours, 17 minutes, 31 seconds\nVlan4094 is down, line protocol\
+  \ is lowerlayerdown (notconnect)\n  Hardware is Vlan, address is 0000.0000.0000\
+  \ (bia 0000.0000.0000)\n  IP MTU 9164 bytes (default)\n  Down 55 days, 13 hours,\
+  \ 20 minutes, 46 seconds\nVxlan1 is up, line protocol is up (connected)\n  Hardware\
+  \ is Vxlan\n  Source interface is Loopback0 and is active with 11.201.0.3\n  Replication/Flood\
+  \ Mode is headend with Flood List Source: CLI\n  Remote MAC learning is disabled\n\
+  \  VNI mapping to VLANs\n  Static VLAN to VNI mapping is \n  Dynamic VLAN to VNI\
+  \ mapping for 'evpn' is\n    [4093, 102]       [4094, 101]      \n  Note: All Dynamic\
+  \ VLANs used by VCS are internal VLANs.\n        Use 'show vxlan vni' for details.\n\
+  \  Static VRF to VNI mapping is \n   [default, 101]\n   [prod, 102]\n  MLAG Shared\
+  \ Router MAC is 0000.0000.0000\n.\n"
 description: Verify the interfaces of interest MTU
 dut: kg-topology-CloudEOSEdge2
 expected_output:

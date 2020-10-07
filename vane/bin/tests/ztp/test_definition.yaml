@@ -5,12 +5,8 @@ testcases:
     show_cmd: show zerotouch
     # ztp state 
     expected_output: disabled
-    comment: null
-    result: True
   - name: test_for_zerotouch_config_file_on_
     description: Verify zerotoucn-config file is on flash
     show_cmd: dir flash:zerotouch-config
     # if ztp file is on flash
     expected_output: True
-    comment: null
-    result: True

@@ -1,0 +1,31 @@
+actual_output: false
+comment: "TEST is local HTTP API running on |kg-topology-CloudEosRR2|.\n GIVEN local\
+  \ HTTP API enabled is |False|.\nWHEN local HTTP API enabled is |False|.\nTHEN test\
+  \ case result is |True|.\nOUTPUT of |show management api http-commands| is :\n\n\
+  Enabled:            Yes\nHTTPS server:       running, set to use port 443\nHTTP\
+  \ server:        shutdown, set to use port 80\nLocal HTTP server:  shutdown, no\
+  \ authentication, set to use port 8080\nUnix Socket server: shutdown, no authentication\n\
+  VRFs:               default\nHits:               35934\nLast hit:           0 seconds\
+  \ ago\nBytes in:           5597725\nBytes out:          97167517\nRequests:    \
+  \       34557\nCommands:           73695\nDuration:           2894.374 seconds\n\
+  SSL Profile:        none\nFIPS Mode:          No\nQoS DSCP:           0\nLog Level:\
+  \          none\nCSP Frame Ancestor: None\nTLS Protocols:      1.0 1.1 1.2\n   User\
+  \          Requests       Bytes in       Bytes out    Last hit      \n-------------\
+  \ -------------- -------------- --------------- ------------- \n   kgrozis     \
+  \  34557          5597725        97167517     0 seconds ago \n\nURLs           \
+  \                         \n--------------------------------------- \nEthernet1\
+  \   : https://11.201.13.101:443 \nEthernet100 : https://11.201.8.1:443    \nLoopback0\
+  \   : https://11.201.0.4:443    \nLoopback10  : https://198.18.0.38:443   \n\n"
+description: Verify management api local httpserver is not running
+dut: kg-topology-CloudEosRR2
+expected_output: false
+fail_reason: ''
+name: test_if_management_local_http_api_server_is_running_on_
+output_msg: '
+
+  On router |kg-topology-CloudEosRR2| HTTP Server is running state: |False|, should
+  be  in state |False|'
+result: true
+show_cmd: show management api http-commands
+test_result: true
+test_suite: test_api.py

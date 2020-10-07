@@ -1,26 +1,27 @@
-actual_output: 1.39
+actual_output: 1.21
 comment: "TEST if 1 minute CPU utilization is less than specified value on |kg-topology-CloudEOSEdge1|.\n\
-  GIVEN CPU utilization is less than |10|.\nWHEN CPU utilization is |1.39|.\nTHEN\
-  \ test case result is |True|.\nOUTPUT of |show processes| is :\n\n 20:16:29 up 47\
-  \ days, 18:58,  0 users,  load average: 1.58, 1.39, 1.28\n  PID %CPU %MEM TT   \
-  \    STAT  STARTED     TIME CMD\n 1928  102  3.7 ?        Sl     Aug 13 48-21:16:43\
-  \ Sfe\n 1725  0.4  2.3 ?        Sl     Aug 13 05:18:02 /usr/bin/TerminAttr -cvaddr=apiserver.arista.io:443\
-  \ -cvcompression=gzip -cvauth=token-secure,/tmp/token -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata-ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent\
-  \ -cvvrf=default -cvsourceip=11.201.14.101 -taillogs -grpcaddr=0.0.0.0:6042\n 1401\
-  \  0.2  0.6 ?        SNl    Sep 28 00:04:46 python2.7 /var/awslogs/bin/aws logs\
-  \ push --config-file /mnt/flash/awslogs/awslogs.conf --additional-configs-dir /mnt/flash/awslogs/config\n\
-  \ 1582  0.2  8.6 ?        Sl     Aug 13 02:32:37 ConfigAgent\n 1233  0.1  0.9 ?\
-  \        S      Aug 13 02:12:13 ProcMgr-worker\n 3405  0.1  1.4 ?        S     \
-  \ Aug 13 02:04:54 Fhrp\n    1  0.0  0.0 ?        Ss     Aug 13 00:06:38 /sbin/init\n\
-  \    2  0.0  0.0 ?        S      Aug 13 00:00:00 [kthreadd]\n    3  0.0  0.0 ? \
-  \       S      Aug 13 00:00:39 [ksoftirqd/0]\n    5  0.0  0.0 ?        S<     Aug\
-  \ 13 00:00:00 [kworker/0:0H]\n    7  0.0  0.0 ?        S      Aug 13 00:01:04 [rcu_preempt]\n\
+  GIVEN CPU utilization is less than |10|.\nWHEN CPU utilization is |1.21|.\nTHEN\
+  \ test case result is |True|.\nOUTPUT of |show processes| is :\n\n 14:42:56 up 55\
+  \ days, 13:25,  0 users,  load average: 1.43, 1.21, 1.20\n  PID %CPU %MEM TT   \
+  \    STAT  STARTED     TIME CMD\n 1928  102  3.7 ?        Sl     Aug 13 56-19:59:02\
+  \ Sfe\n12226  3.3  0.8 ?        SNl  14:15:07 00:00:55 python2.7 /var/awslogs/bin/aws\
+  \ logs push --config-file /mnt/flash/awslogs/awslogs.conf --additional-configs-dir\
+  \ /mnt/flash/awslogs/config\n 1725  0.4  2.3 ?        Sl     Aug 13 06:10:03 /usr/bin/TerminAttr\
+  \ -cvaddr=apiserver.arista.io:443 -cvcompression=gzip -cvauth=token-secure,/tmp/token\
+  \ -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata-ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent\
+  \ -cvvrf=default -cvsourceip=11.201.14.101 -taillogs -grpcaddr=0.0.0.0:6042\n 1582\
+  \  0.2  8.6 ?        Sl     Aug 13 02:52:57 ConfigAgent\n 1233  0.1  0.9 ?     \
+  \   S      Aug 13 02:34:48 ProcMgr-worker\n 3405  0.1  1.4 ?        S      Aug 13\
+  \ 02:25:15 Fhrp\n    1  0.0  0.0 ?        Ss     Aug 13 00:07:44 /sbin/init\n  \
+  \  2  0.0  0.0 ?        S      Aug 13 00:00:00 [kthreadd]\n    3  0.0  0.0 ?   \
+  \     S      Aug 13 00:00:45 [ksoftirqd/0]\n    5  0.0  0.0 ?        S<     Aug\
+  \ 13 00:00:00 [kworker/0:0H]\n    7  0.0  0.0 ?        S      Aug 13 00:01:14 [rcu_preempt]\n\
   \    8  0.0  0.0 ?        S      Aug 13 00:00:00 [rcu_sched]\n    9  0.0  0.0 ?\
   \        S      Aug 13 00:00:00 [rcu_bh]\n   10  0.0  0.0 ?        S      Aug 13\
   \ 00:00:00 [migration/0]\n   11  0.0  0.0 ?        S<     Aug 13 00:00:00 [lru-add-drain]\n\
   \   12  0.0  0.0 ?        S      Aug 13 00:00:01 [watchdog/0]\n   13  0.0  0.0 ?\
   \        S      Aug 13 00:00:00 [cpuhp/0]\n   14  0.0  0.0 ?        S      Aug 13\
-  \ 00:00:00 [cpuhp/1]\n   15  0.0  0.0 ?        S      Aug 13 00:00:04 [watchdog/1]\n\
+  \ 00:00:00 [cpuhp/1]\n   15  0.0  0.0 ?        S      Aug 13 00:00:05 [watchdog/1]\n\
   \   16  0.0  0.0 ?        S      Aug 13 00:00:00 [migration/1]\n   17  0.0  0.0\
   \ ?        S      Aug 13 00:00:00 [ksoftirqd/1]\n   18  0.0  0.0 ?        S    \
   \  Aug 13 00:00:00 [kworker/1:0]\n   19  0.0  0.0 ?        S<     Aug 13 00:00:00\
@@ -36,7 +37,7 @@ comment: "TEST if 1 minute CPU utilization is less than specified value on |kg-t
   \  Aug 13 00:00:00 [kworker/3:0H]\n   32  0.0  0.0 ?        S      Aug 13 00:00:00\
   \ [kdevtmpfs]\n   33  0.0  0.0 ?        S<     Aug 13 00:00:00 [netns]\n   34  0.0\
   \  0.0 ?        S      Aug 13 00:00:00 [khungtaskd]\n   35  0.0  0.0 ?        S\
-  \      Aug 13 00:01:57 [khungtaskd2]\n   36  0.0  0.0 ?        S      Aug 13 00:00:00\
+  \      Aug 13 00:02:17 [khungtaskd2]\n   36  0.0  0.0 ?        S      Aug 13 00:00:00\
   \ [oom_reaper]\n   37  0.0  0.0 ?        S<     Aug 13 00:00:00 [writeback]\n  \
   \ 38  0.0  0.0 ?        S      Aug 13 00:00:00 [kcompactd0]\n   39  0.0  0.0 ? \
   \       S<     Aug 13 00:00:00 [crypto]\n   40  0.0  0.0 ?        S<     Aug 13\
@@ -67,21 +68,21 @@ comment: "TEST if 1 minute CPU utilization is less than specified value on |kg-t
   \ 00:00:00 [loop0]\n  380  0.0  0.0 ?        Ss     Aug 13 00:00:00 /usr/lib/systemd/systemd-udevd\n\
   \  407  0.0  0.0 ?        Ss     Aug 13 00:00:00 /usr/sbin/lvmetad -f\n  499  0.0\
   \  0.0 ?        S<     Aug 13 00:00:00 [ena]\n  747  0.0  0.1 ?        Ss     Aug\
-  \ 13 00:04:01 /usr/bin/dbus-daemon --system --address=systemd: --nofork --nopidfile\
+  \ 13 00:04:41 /usr/bin/dbus-daemon --system --address=systemd: --nofork --nopidfile\
   \ --systemd-activation\n  759  0.0  0.0 ?        S      Aug 13 00:00:00 [kworker/1:1]\n\
   \  778  0.0  0.0 ?        Ss     Aug 13 00:00:00 /usr/sbin/mcelog --ignorenodev\
-  \ --daemon --foreground\n  782  0.0  0.0 ?        Ss     Aug 13 00:01:26 /usr/bin/ProcMonitor\n\
-  \  789  0.0  0.0 ?        Ss     Aug 13 00:01:54 /usr/lib/systemd/systemd-logind\n\
-  \  807  0.0  0.0 ?        Ss     Aug 13 00:00:21 /usr/sbin/crond -n\n  819  0.0\
-  \  0.0 ?        S<s    Aug 13 00:00:30 /usr/bin/wdogdev -t 60\n  824  0.0  0.0 ?\
-  \        Ss     Aug 13 00:00:07 /usr/sbin/xinetd -stayalive -pidfile /var/run/xinetd.pid\n\
+  \ --daemon --foreground\n  782  0.0  0.0 ?        Ss     Aug 13 00:01:41 /usr/bin/ProcMonitor\n\
+  \  789  0.0  0.0 ?        Ss     Aug 13 00:02:13 /usr/lib/systemd/systemd-logind\n\
+  \  807  0.0  0.0 ?        Ss     Aug 13 00:00:24 /usr/sbin/crond -n\n  819  0.0\
+  \  0.0 ?        S<s    Aug 13 00:00:35 /usr/bin/wdogdev -t 60\n  824  0.0  0.0 ?\
+  \        Ss     Aug 13 00:00:08 /usr/sbin/xinetd -stayalive -pidfile /var/run/xinetd.pid\n\
   \ 1005  0.0  0.0 ?        S      Aug 13 00:00:00 python /usr/bin/inotifyrun -c pax\
   \ -x sv4cpio -O -w -f /mnt/flash/persist/local.new . && mv /mnt/flash/persist/local.new\
   \ /mnt/flash/persist/local || logger -t SetupPersist Failed to update /mnt/flash/persist/local\
   \ --daemon --logfile=/var/log/inotifyrun-local.log --pidfile=/var/run/inotifyrun-local.pid\
   \ /persist/local\n 1007  0.0  0.0 pts/0    Ss+    Aug 13 00:00:00 inotifywait -m\
   \ -r -e modify -e create -e delete -e attrib -e move .\n 1017  0.0  0.0 ?      \
-  \  S      Aug 13 00:00:03 python /usr/bin/inotifyrun -c pax -x sv4cpio -O -w -f\
+  \  S      Aug 13 00:00:04 python /usr/bin/inotifyrun -c pax -x sv4cpio -O -w -f\
   \ /mnt/flash/persist/sys.new . && mv /mnt/flash/persist/sys.new /mnt/flash/persist/sys\
   \ || logger -t SetupPersist Failed to update /mnt/flash/persist/sys --daemon --logfile=/var/log/inotifyrun-sys.log\
   \ --pidfile=/var/run/inotifyrun-sys.pid /persist/sys\n 1018  0.0  0.0 pts/1    Ss+\
@@ -106,162 +107,161 @@ comment: "TEST if 1 minute CPU utilization is less than specified value on |kg-t
   \ procmgr libProcMgrSetup.so --daemonize\n 1218  0.0  0.3 ?        S      Aug 13\
   \ 00:00:00 netnsd-server   -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr\
   \ libProcMgrSetup.so --daemonize\n 1232  0.0  0.9 ?        S      Aug 13 00:00:00\
-  \ ProcMgr-master\n 1388  0.0  0.0 ?        S      Sep 28 00:00:00 /bin/sh /var/awslogs/bin/awslogs-agent-launcher.sh\n\
-  \ 1478  0.0  0.0 ?        S      Aug 13 00:16:03 /usr/bin/EosOomAdjust\n 1486  0.0\
-  \  0.0 ?        S      Aug 13 00:00:27 [rbfd_vrf_cleanu]\n 1501  0.0  0.0 ?    \
-  \    Ss     Aug 13 00:00:00 /usr/sbin/acpid\n 1538  0.0  0.0 ?        S      Aug\
-  \ 13 00:03:27 /usr/bin/SlabMonitor\n 1539  0.0  2.6 ?        S      Aug 13 01:06:50\
-  \ Sysdb\n 1581  0.0  1.2 ?        S      Aug 13 00:01:00 StageMgr\n 1584  0.0  1.4\
-  \ ?        S      Aug 13 00:03:03 Fru\n 1585  0.0  1.8 ?        S      Aug 13 00:01:40\
-  \ Launcher\n 1714  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=Lldp\
-  \ --demuxerOpts=267046295036,267046027633,tbl://sysdb/+n,Sysdb (pid:1539) --sysdbfd=7\
-  \ --dlopen procmgr /usr/bin/Lldp\n 1715  0.0  0.3 ?        Ss     Aug 13 00:00:00\
+  \ ProcMgr-master\n 1478  0.0  0.0 ?        S      Aug 13 00:18:48 /usr/bin/EosOomAdjust\n\
+  \ 1486  0.0  0.0 ?        S      Aug 13 00:00:32 [rbfd_vrf_cleanu]\n 1501  0.0 \
+  \ 0.0 ?        Ss     Aug 13 00:00:00 /usr/sbin/acpid\n 1538  0.0  0.0 ?       \
+  \ S      Aug 13 00:04:02 /usr/bin/SlabMonitor\n 1539  0.0  2.6 ?        S      Aug\
+  \ 13 01:17:35 Sysdb\n 1581  0.0  1.2 ?        S      Aug 13 00:01:10 StageMgr\n\
+  \ 1584  0.0  1.4 ?        S      Aug 13 00:03:33 Fru\n 1585  0.0  1.8 ?        S\
+  \      Aug 13 00:01:54 Launcher\n 1714  0.0  0.0 ?        S      Aug 13 00:00:00\
+  \ netns --agenttitle=Lldp --demuxerOpts=267046295036,267046027633,tbl://sysdb/+n,Sysdb\
+  \ (pid:1539) --sysdbfd=7 --dlopen procmgr /usr/bin/Lldp\n 1715  0.0  0.3 ?     \
+  \   Ss     Aug 13 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
+  \ procmgr libProcMgrSetup.so --daemonize\n 1717  0.0  0.0 ?        S      Aug 13\
+  \ 00:00:00 netns --agenttitle=McastCommon --demuxerOpts=267080979441,267080797725,tbl://sysdb/+n,Sysdb\
+  \ (pid:1539) --sysdbfd=7 --dlopen procmgr /usr/bin/McastCommon\n 1718  0.0  1.2\
+  \ ?        S      Aug 13 00:12:54 Lldp\n 1719  0.0  0.3 ?        Ss     Aug 13 00:00:00\
   \ netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so\
-  \ --daemonize\n 1717  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=McastCommon\
-  \ --demuxerOpts=267080979441,267080797725,tbl://sysdb/+n,Sysdb (pid:1539) --sysdbfd=7\
-  \ --dlopen procmgr /usr/bin/McastCommon\n 1718  0.0  1.2 ?        S      Aug 13\
-  \ 00:11:21 Lldp\n 1719  0.0  0.3 ?        Ss     Aug 13 00:00:00 netnsd-session\
-  \  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so --daemonize\n\
-  \ 1720  0.0  1.2 ?        S      Aug 13 00:05:09 McastCommon\n 1722  0.0  0.0 ?\
-  \        S      Aug 13 00:00:00 netns --agenttitle=PortSec --demuxerOpts=267138688824,267130622391,tbl://sysdb/+n,Sysdb\
+  \ --daemonize\n 1720  0.0  1.2 ?        S      Aug 13 00:05:59 McastCommon\n 1722\
+  \  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=PortSec --demuxerOpts=267138688824,267130622391,tbl://sysdb/+n,Sysdb\
   \ (pid:1539) --sysdbfd=7 --dlopen procmgr /usr/bin/PortSec\n 1724  0.0  0.3 ?  \
   \      Ss     Aug 13 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
   \ procmgr libProcMgrSetup.so --daemonize\n 1726  0.0  1.1 ?        S      Aug 13\
-  \ 00:03:36 PortSec\n 1739  0.0  0.0 ?        S<     Aug 13 00:00:00 [kworker/1:1H]\n\
+  \ 00:04:11 PortSec\n 1739  0.0  0.0 ?        S<     Aug 13 00:00:00 [kworker/1:1H]\n\
   \ 1744  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=Bfd --demuxerOpts=270600496842,267232117674,tbl://sysdb/+n,Sysdb\
   \ (pid:1539) --sysdbfd=7 --dlopen procmgr /usr/bin/Bfd\n 1745  0.0  0.3 ?      \
   \  Ss     Aug 13 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
   \ procmgr libProcMgrSetup.so --daemonize\n 1746  0.0  1.4 ?        S      Aug 13\
-  \ 00:06:52 Bfd\n 1747  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=Lag\
+  \ 00:07:58 Bfd\n 1747  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=Lag\
   \ --demuxerOpts=271099376041,271003644947,tbl://sysdb/+n,Sysdb (pid:1539) --sysdbfd=7\
   \ --dlopen procmgr /usr/bin/Lag\n 1750  0.0  0.3 ?        Ss     Aug 13 00:00:00\
   \ netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so\
-  \ --daemonize\n 1751  0.0  1.3 ?        S      Aug 13 00:24:27 Lag\n 1754  0.0 \
-  \ 1.7 ?        S      Aug 13 00:47:47 SuperServer\n 1767  0.0  0.0 ?        S  \
+  \ --daemonize\n 1751  0.0  1.3 ?        S      Aug 13 00:28:24 Lag\n 1754  0.0 \
+  \ 1.7 ?        S      Aug 13 00:55:47 SuperServer\n 1767  0.0  0.0 ?        S  \
   \    Aug 13 00:00:00 netns --agenttitle=Ira --demuxerOpts=275033642113,271344907121,tbl://sysdb/+n,Sysdb\
   \ (pid:1539) --sysdbfd=7 --dlopen procmgr /usr/bin/Ira\n 1768  0.0  0.3 ?      \
   \  Ss     Aug 13 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
   \ procmgr libProcMgrSetup.so --daemonize\n 1769  0.0  1.5 ?        S      Aug 13\
-  \ 00:05:58 Ira\n 1772  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=LedPolicy\
+  \ 00:06:57 Ira\n 1772  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=LedPolicy\
   \ --demuxerOpts=275203075095,275062053558,tbl://sysdb/+n,Sysdb (pid:1539) --sysdbfd=7\
   \ --dlopen procmgr /usr/bin/LedPolicy\n 1773  0.0  0.3 ?        Ss     Aug 13 00:00:00\
   \ netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so\
-  \ --daemonize\n 1774  0.0  1.2 ?        S      Aug 13 00:04:52 LedPolicy\n 1775\
+  \ --daemonize\n 1774  0.0  1.2 ?        S      Aug 13 00:05:40 LedPolicy\n 1775\
   \  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=EventMgr --demuxerOpts=275412252849,275377553919,tbl://sysdb/+n,Sysdb\
   \ (pid:1539) --sysdbfd=7 --dlopen procmgr /usr/bin/EventMgr\n 1776  0.0  0.3 ? \
   \       Ss     Aug 13 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
   \ procmgr libProcMgrSetup.so --daemonize\n 1777  0.0  1.3 ?        S      Aug 13\
-  \ 00:11:29 EventMgr\n 1778  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=StpTxRx\
+  \ 00:13:22 EventMgr\n 1778  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=StpTxRx\
   \ --demuxerOpts=275530943653,275498520824,tbl://sysdb/+n,Sysdb (pid:1539) --sysdbfd=7\
   \ --dlopen procmgr /usr/bin/StpTxRx\n 1779  0.0  0.3 ?        Ss     Aug 13 00:00:00\
   \ netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so\
-  \ --daemonize\n 1780  0.0  1.2 ?        S      Aug 13 00:39:20 StpTxRx\n 1781  0.0\
+  \ --daemonize\n 1780  0.0  1.2 ?        S      Aug 13 00:45:45 StpTxRx\n 1781  0.0\
   \  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=StandbyCpld --demuxerOpts=275673918628,275618185987,tbl://sysdb/+n,Sysdb\
   \ (pid:1539) --sysdbfd=7 --dlopen procmgr /usr/bin/StandbyCpld\n 1783  0.0  0.3\
   \ ?        Ss     Aug 13 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
   \ procmgr libProcMgrSetup.so --daemonize\n 1784  0.0  1.1 ?        S      Aug 13\
-  \ 00:00:52 StandbyCpld\n 1785  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=AgentMonitor\
+  \ 00:01:01 StandbyCpld\n 1785  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=AgentMonitor\
   \ --demuxerOpts=275814961243,275751809451,tbl://sysdb/+n,Sysdb (pid:1539) --sysdbfd=7\
   \ --dlopen procmgr /usr/bin/AgentMonitor\n 1786  0.0  0.3 ?        Ss     Aug 13\
   \ 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr\
-  \ libProcMgrSetup.so --daemonize\n 1787  0.0  1.0 ?        S      Aug 13 00:57:17\
+  \ libProcMgrSetup.so --daemonize\n 1787  0.0  1.0 ?        S      Aug 13 01:06:50\
   \ AgentMonitor\n 1788  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=Tunnel\
   \ --demuxerOpts=279268129963,279198956916,tbl://sysdb/+n,Sysdb (pid:1539) --sysdbfd=7\
   \ --dlopen procmgr /usr/bin/Tunnel\n 1789  0.0  0.3 ?        Ss     Aug 13 00:00:00\
   \ netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so\
-  \ --daemonize\n 1790  0.0  1.6 ?        Sl     Aug 13 00:14:35 Aaa\n 1791  0.0 \
-  \ 1.2 ?        S      Aug 13 00:02:02 Tunnel\n 1793  0.0  0.0 ?        S      Aug\
+  \ --daemonize\n 1790  0.0  1.6 ?        Sl     Aug 13 00:15:34 Aaa\n 1791  0.0 \
+  \ 1.2 ?        S      Aug 13 00:02:22 Tunnel\n 1793  0.0  0.0 ?        S      Aug\
   \ 13 00:00:00 netns --agenttitle=StpTopology --demuxerOpts=279517763852,279517565226,tbl://sysdb/+n,Sysdb\
   \ (pid:1539) --sysdbfd=7 --dlopen procmgr /usr/bin/StpTopology\n 1794  0.0  0.3\
   \ ?        Ss     Aug 13 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
   \ procmgr libProcMgrSetup.so --daemonize\n 1795  0.0  0.0 ?        S      Aug 13\
   \ 00:00:00 netns --agenttitle=Acl --demuxerOpts=279733513327,279733258943,tbl://sysdb/+n,Sysdb\
   \ (pid:1539) --sysdbfd=7 --dlopen procmgr /usr/bin/Acl\n 1796  0.0  1.2 ?      \
-  \  S      Aug 13 00:05:41 StpTopology\n 1797  0.0  0.3 ?        Ss     Aug 13 00:00:00\
+  \  S      Aug 13 00:06:33 StpTopology\n 1797  0.0  0.3 ?        Ss     Aug 13 00:00:00\
   \ netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so\
   \ --daemonize\n 1798  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=Stp\
   \ --demuxerOpts=279939374338,279887740448,tbl://sysdb/+n,Sysdb (pid:1539) --sysdbfd=7\
-  \ --dlopen procmgr /usr/bin/Stp\n 1799  0.0  1.4 ?        S      Aug 13 00:33:08\
+  \ --dlopen procmgr /usr/bin/Stp\n 1799  0.0  1.4 ?        S      Aug 13 00:38:22\
   \ Acl\n 1800  0.0  0.3 ?        Ss     Aug 13 00:00:00 netnsd-session  -d -i --dlopen\
   \ -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so --daemonize\n 1802\
-  \  0.0  1.1 ?        S      Aug 13 00:07:40 Stp\n 1803  0.0  0.0 ?        S    \
+  \  0.0  1.1 ?        S      Aug 13 00:08:56 Stp\n 1803  0.0  0.0 ?        S    \
   \  Aug 13 00:00:00 netns --agenttitle=KernelNetworkInfo --demuxerOpts=280114122924,280113919792,tbl://sysdb/+n,Sysdb\
   \ (pid:1539) --sysdbfd=7 --dlopen procmgr /usr/bin/KernelNetworkInfo\n 1804  0.0\
   \  0.3 ?        Ss     Aug 13 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l\
   \ libLoadDynamicLibs.so procmgr libProcMgrSetup.so --daemonize\n 1805  0.0  1.1\
-  \ ?        S      Aug 13 00:02:56 KernelNetworkInfo\n 1806  0.0  0.0 ?        S\
+  \ ?        S      Aug 13 00:03:21 KernelNetworkInfo\n 1806  0.0  0.0 ?        S\
   \      Aug 13 00:00:00 netns --agenttitle=McastCommon6 --demuxerOpts=283609312459,283573711926,tbl://sysdb/+n,Sysdb\
   \ (pid:1539) --sysdbfd=7 --dlopen procmgr /usr/bin/McastCommon6\n 1807  0.0  0.3\
   \ ?        Ss     Aug 13 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
   \ procmgr libProcMgrSetup.so --daemonize\n 1809  0.0  1.2 ?        S      Aug 13\
-  \ 00:05:17 McastCommon6\n 1811  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=LacpTxAgent\
+  \ 00:06:05 McastCommon6\n 1811  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=LacpTxAgent\
   \ --demuxerOpts=283839973599,283788015153,tbl://sysdb/+n,Sysdb (pid:1539) --sysdbfd=7\
   \ --dlopen procmgr /usr/bin/LacpTxAgent\n 1813  0.0  0.3 ?        Ss     Aug 13\
   \ 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr\
-  \ libProcMgrSetup.so --daemonize\n 1815  0.0  1.2 ?        S      Aug 13 00:05:10\
+  \ libProcMgrSetup.so --daemonize\n 1815  0.0  1.2 ?        S      Aug 13 00:05:57\
   \ LacpTxAgent\n 1816  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=Arp\
   \ --demuxerOpts=284123665160,284036522428,tbl://sysdb/+n,Sysdb (pid:1539) --sysdbfd=7\
   \ --dlopen procmgr /usr/bin/Arp\n 1817  0.0  0.3 ?        Ss     Aug 13 00:00:00\
   \ netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so\
-  \ --daemonize\n 1818  0.0  1.5 ?        S      Aug 13 00:07:23 Arp\n 1820  0.0 \
+  \ --daemonize\n 1818  0.0  1.5 ?        S      Aug 13 00:08:31 Arp\n 1820  0.0 \
   \ 0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=KernelFib --demuxerOpts=284390286503,284256513379,tbl://sysdb/+n,Sysdb\
   \ (pid:1539) --sysdbfd=7 --dlopen procmgr /usr/bin/KernelFib\n 1821  0.0  0.3 ?\
   \        Ss     Aug 13 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
   \ procmgr libProcMgrSetup.so --daemonize\n 1822  0.0  1.4 ?        S      Aug 13\
-  \ 00:05:53 KernelFib\n 1824  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=Qos\
+  \ 00:06:50 KernelFib\n 1824  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=Qos\
   \ --demuxerOpts=287877695955,287770964417,tbl://sysdb/+n,Sysdb (pid:1539) --sysdbfd=7\
   \ --dlopen procmgr /usr/bin/Qos\n 1825  0.0  0.3 ?        Ss     Aug 13 00:00:00\
   \ netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so\
-  \ --daemonize\n 1826  0.0  1.2 ?        S      Aug 13 00:04:30 Qos\n 1827  0.0 \
+  \ --daemonize\n 1826  0.0  1.2 ?        S      Aug 13 00:05:15 Qos\n 1827  0.0 \
   \ 0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=Thermostat --demuxerOpts=288015969009,288008313449,tbl://sysdb/+n,Sysdb\
   \ (pid:1539) --sysdbfd=7 --dlopen procmgr /usr/bin/Thermostat\n 1828  0.0  0.3 ?\
   \        Ss     Aug 13 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
   \ procmgr libProcMgrSetup.so --daemonize\n 1831  0.0  1.1 ?        S      Aug 13\
-  \ 00:02:46 Thermostat\n 1834  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=L2Rib\
+  \ 00:03:13 Thermostat\n 1834  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=L2Rib\
   \ --demuxerOpts=288430062677,288320872305,tbl://sysdb/+n,Sysdb (pid:1539) --sysdbfd=7\
   \ --dlopen procmgr /usr/bin/L2Rib\n 1838  0.0  0.3 ?        Ss     Aug 13 00:00:00\
   \ netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so\
-  \ --daemonize\n 1839  0.0  1.2 ?        S      Aug 13 00:01:33 L2Rib\n 1841  0.0\
+  \ --daemonize\n 1839  0.0  1.2 ?        S      Aug 13 00:01:48 L2Rib\n 1841  0.0\
   \  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=TopoAgent --demuxerOpts=288639642769,288566958102,tbl://sysdb/+n,Sysdb\
   \ (pid:1539) --sysdbfd=7 --dlopen procmgr /usr/bin/TopoAgent --scheduled\n 1842\
   \  0.0  0.3 ?        Ss     Aug 13 00:00:00 netnsd-session  -d -i --dlopen -p -f\
   \  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so --daemonize\n 1844  0.0 \
-  \ 1.2 ?        S      Aug 13 00:03:17 TopoAgent\n 1845  0.0  0.0 ?        S    \
+  \ 1.2 ?        S      Aug 13 00:03:50 TopoAgent\n 1845  0.0  0.0 ?        S    \
   \  Aug 13 00:00:00 netns --agenttitle=PowerFuse --demuxerOpts=292156458136,288755017730,tbl://sysdb/+n,Sysdb\
   \ (pid:1539) --sysdbfd=7 --dlopen procmgr /usr/bin/PowerFuse\n 1847  0.0  0.3 ?\
   \        Ss     Aug 13 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
   \ procmgr libProcMgrSetup.so --daemonize\n 1848  0.0  0.0 ?        S      Aug 13\
   \ 00:00:00 netns --agenttitle=PowerManager --demuxerOpts=292294904749,292294697982,tbl://sysdb/+n,Sysdb\
   \ (pid:1539) --sysdbfd=7 --dlopen procmgr /usr/bin/PowerManager\n 1849  0.0  1.1\
-  \ ?        S      Aug 13 00:00:49 PowerFuse\n 1852  0.0  0.3 ?        Ss     Aug\
+  \ ?        S      Aug 13 00:00:57 PowerFuse\n 1852  0.0  0.3 ?        Ss     Aug\
   \ 13 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr\
   \ libProcMgrSetup.so --daemonize\n 1853  0.0  0.0 ?        S      Aug 13 00:00:00\
   \ netns --agenttitle=Ebra --demuxerOpts=292452307410,292452110553,tbl://sysdb/+n,Sysdb\
   \ (pid:1539) --sysdbfd=7 --dlopen procmgr /usr/bin/Ebra\n 1854  0.0  1.1 ?     \
-  \   S      Aug 13 00:00:49 PowerManager\n 1856  0.0  0.3 ?        Ss     Aug 13\
+  \   S      Aug 13 00:00:57 PowerManager\n 1856  0.0  0.3 ?        Ss     Aug 13\
   \ 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr\
   \ libProcMgrSetup.so --daemonize\n 1859  0.0  0.0 ?        S      Aug 13 00:00:00\
   \ netns --agenttitle=ReloadCauseAgent --demuxerOpts=292715604954,292692638320,tbl://sysdb/+n,Sysdb\
   \ (pid:1539) --sysdbfd=7 --dlopen procmgr /usr/bin/ReloadCauseAgent\n 1860  0.0\
-  \  1.4 ?        S      Aug 13 00:09:06 Ebra\n 1861  0.0  0.3 ?        Ss     Aug\
+  \  1.4 ?        S      Aug 13 00:10:30 Ebra\n 1861  0.0  0.3 ?        Ss     Aug\
   \ 13 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr\
-  \ libProcMgrSetup.so --daemonize\n 1864  0.0  1.1 ?        S      Aug 13 00:00:53\
+  \ libProcMgrSetup.so --daemonize\n 1864  0.0  1.1 ?        S      Aug 13 00:01:02\
   \ ReloadCauseAgent\n 1866  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=SharedSecretProfile\
   \ --demuxerOpts=292863065168,292847136027,tbl://sysdb/+n,Sysdb (pid:1539) --sysdbfd=7\
   \ --dlopen procmgr /usr/bin/SharedSecretProfile\n 1874  0.0  0.3 ?        Ss   \
   \  Aug 13 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
   \ procmgr libProcMgrSetup.so --daemonize\n 1881  0.0  1.5 ?        S      Aug 13\
-  \ 00:06:01 IgmpSnooping\n 1883  0.0  1.1 ?        S      Aug 13 00:00:52 SharedSecretProfile\n\
+  \ 00:06:59 IgmpSnooping\n 1883  0.0  1.1 ?        S      Aug 13 00:01:01 SharedSecretProfile\n\
   \ 1894  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=StaticRoute\
   \ --demuxerOpts=296809139147,296808906976,tbl://sysdb/+n,Sysdb (pid:1539) --sysdbfd=7\
   \ --dlopen procmgr /usr/bin/StaticRoute --scheduled\n 1898  0.0  0.3 ?        Ss\
   \     Aug 13 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
   \ procmgr libProcMgrSetup.so --daemonize\n 1901  0.0  1.3 ?        S      Aug 13\
-  \ 00:02:33 StaticRoute\n 1903  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=IpRib\
+  \ 00:02:55 StaticRoute\n 1903  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=IpRib\
   \ --demuxerOpts=296917164765,296916917865,tbl://sysdb/+n,Sysdb (pid:1539) --sysdbfd=7\
   \ --dlopen procmgr /usr/bin/IpRib --scheduled\n 1906  0.0  0.3 ?        Ss     Aug\
   \ 13 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr\
-  \ libProcMgrSetup.so --daemonize\n 1907  0.0  1.7 ?        S      Aug 13 00:11:49\
+  \ libProcMgrSetup.so --daemonize\n 1907  0.0  1.7 ?        S      Aug 13 00:13:18\
   \ IpRib\n 1909  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=BgpCliHelper\
   \ --demuxerOpts=297076889668,297076654146,tbl://sysdb/+n,Sysdb (pid:1539) --sysdbfd=7\
   \ --dlopen procmgr /usr/bin/BgpCliHelper --scheduled\n 1910  0.0  0.3 ?        Ss\
@@ -269,41 +269,41 @@ comment: "TEST if 1 minute CPU utilization is less than specified value on |kg-t
   \ procmgr libProcMgrSetup.so --daemonize\n 1911  0.0  0.0 ?        S      Aug 13\
   \ 00:00:00 netns --agenttitle=ConnectedRoute --demuxerOpts=297209669171,297209436301,tbl://sysdb/+n,Sysdb\
   \ (pid:1539) --sysdbfd=7 --dlopen procmgr /usr/bin/ConnectedRoute\n 1912  0.0  1.9\
-  \ ?        S      Aug 13 00:03:09 BgpCliHelper\n 1914  0.0  0.3 ?        Ss    \
+  \ ?        S      Aug 13 00:03:39 BgpCliHelper\n 1914  0.0  0.3 ?        Ss    \
   \ Aug 13 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
   \ procmgr libProcMgrSetup.so --daemonize\n 1915  0.0  1.3 ?        S      Aug 13\
-  \ 00:05:49 ConnectedRoute\n 1916  0.0  0.0 ?        S      Aug 13 00:00:00 netns\
+  \ 00:06:47 ConnectedRoute\n 1916  0.0  0.0 ?        S      Aug 13 00:00:00 netns\
   \ --agenttitle=RouteInput --demuxerOpts=297333111290,297332906647,tbl://sysdb/+n,Sysdb\
   \ (pid:1539) --sysdbfd=7 --dlopen procmgr /usr/bin/RouteInput\n 1918  0.0  0.3 ?\
   \        Ss     Aug 13 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
   \ procmgr libProcMgrSetup.so --daemonize\n 1919  0.0  1.3 ?        S      Aug 13\
-  \ 00:02:38 RouteInput\n 1920  0.0  2.3 ?        Sl     Aug 13 00:24:26 Bgp\n 1922\
+  \ 00:03:01 RouteInput\n 1920  0.0  2.3 ?        Sl     Aug 13 00:28:38 Bgp\n 1922\
   \  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=Sfe --demuxerOpts=301070490425,300896034705,tbl://sysdb/+n,Sysdb\
   \ (pid:1539) --sysdbfd=7 --dlopen procmgr /usr/bin/Sfe\n 1926  0.0  0.3 ?      \
   \  Ss     Aug 13 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
   \ procmgr libProcMgrSetup.so --daemonize\n 2295  0.0  0.0 ?        Ssl    Aug 13\
-  \ 00:00:29 /usr/sbin/rsyslogd -n\n 2356  0.0  0.0 ?        S      Aug 13 00:00:00\
+  \ 00:00:32 /usr/sbin/rsyslogd -n\n 2356  0.0  0.0 ?        S      Aug 13 00:00:00\
   \ netns --agenttitle=LicenseManager --demuxerOpts=348668178089,348667946331,tbl://sysdb/+n,Sysdb\
   \ (pid:1539) --sysdbfd=7 --dlopen procmgr /usr/bin/LicenseManager\n 2360  0.0  0.3\
   \ ?        Ss     Aug 13 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
   \ procmgr libProcMgrSetup.so --daemonize\n 2363  0.0  1.1 ?        S      Aug 13\
-  \ 00:00:54 LicenseManager\n 2615  0.0  0.0 ?        S      Aug 13 00:00:00 /usr/bin/conlogd\n\
+  \ 00:01:02 LicenseManager\n 2615  0.0  0.0 ?        S      Aug 13 00:00:00 /usr/bin/conlogd\n\
   \ 2616  0.0  0.0 tty1     Ss+    Aug 13 00:00:00 /sbin/agetty --noclear tty1 linux\n\
   \ 2617  0.0  0.0 ttyS0    Ss+    Aug 13 00:00:00 /sbin/mingetty --noclear /dev/ttyS0\n\
   \ 2631  0.0  0.0 ?        Zs     Aug 13 00:00:00 [SuperServer] <defunct>\n 2634\
   \  0.0  0.0 ?        S      Aug 13 00:00:00 sh -c /usr/bin/tail -n 0 --retry --follow=name\
   \ --pid=2615 /var/log/eos-console | sed 's/\\(.*\\)/\\1\\r/'\n 2637  0.0  0.0 ?\
-  \        S      Aug 13 00:00:29 /usr/bin/tail -n 0 --retry --follow=name --pid=2615\
+  \        S      Aug 13 00:00:34 /usr/bin/tail -n 0 --retry --follow=name --pid=2615\
   \ /var/log/eos-console\n 2638  0.0  0.0 ?        S      Aug 13 00:00:00 sed s/\\\
   (.*\\)/\\1\\r/\n 2660  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=Ipsec\
   \ --demuxerOpts=369515596564,369515372050,tbl://sysdb/+n,Sysdb (pid:1539) --sysdbfd=7\
   \ --dlopen procmgr /usr/bin/Ipsec\n 2661  0.0  0.3 ?        Ss     Aug 13 00:00:00\
   \ netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so\
-  \ --daemonize\n 2662  0.0  1.2 ?        S      Aug 13 00:12:53 Ipsec\n 2671  0.0\
-  \  0.4 ?        Ss     Aug 13 00:00:01 dhclient -e SYSNAME=ar -e SYSDBSOCKNAME=sysdb\
+  \ --daemonize\n 2662  0.0  1.2 ?        S      Aug 13 00:15:01 Ipsec\n 2671  0.0\
+  \  0.4 ?        Ss     Aug 13 00:00:02 dhclient -e SYSNAME=ar -e SYSDBSOCKNAME=sysdb\
   \ -e VRFNAME=default -sf /etc/dhcp/dhclient-script.py -pf /var/run/dhclient-default.pid\
   \ -cf /etc/dhcp/dhclient-default.conf -lf /var/lib/dhclient/dhclient-default.leases\
-  \ -e et1=Ethernet1\n 2699  0.0  0.1 ?        Ssl    Aug 13 00:01:21 ntpd -u ntp:ntp\
+  \ -e et1=Ethernet1\n 2699  0.0  0.1 ?        Ssl    Aug 13 00:01:35 ntpd -u ntp:ntp\
   \ -g -p /var/run/ntpd.pid\n 2739  0.0  0.0 ?        Ss     Aug 13 00:00:00 fusermount\
   \ -o rw,nosuid,nodev,allow_other,auto_unmount,subtype=MfibFuse -- /BessProc\n 3281\
   \  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=Nat --demuxerOpts=1027180400275,1027179642339,tbl://sysdb/+n,Sysdb\
@@ -311,42 +311,44 @@ comment: "TEST if 1 minute CPU utilization is less than specified value on |kg-t
   \  Ss     Aug 13 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
   \ procmgr libProcMgrSetup.so --daemonize\n 3290  0.0  0.0 ?        S      Aug 13\
   \ 00:00:00 netns --agenttitle=Vxlan --demuxerOpts=1027289964523,1027289360240,tbl://sysdb/+n,Sysdb\
-  \ (pid:1539) --sysdbfd=7 --dlopen procmgr /usr/bin/Vxlan\n 3295  0.0  1.2 ?    \
-  \    S      Aug 13 00:10:19 Nat\n 3297  0.0  0.3 ?        Ss     Aug 13 00:00:00\
+  \ (pid:1539) --sysdbfd=7 --dlopen procmgr /usr/bin/Vxlan\n 3295  0.0  1.3 ?    \
+  \    S      Aug 13 00:11:58 Nat\n 3297  0.0  0.3 ?        Ss     Aug 13 00:00:00\
   \ netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so\
-  \ --daemonize\n 3301  0.0  1.3 ?        S      Aug 13 00:05:16 Vxlan\n 3304  0.0\
+  \ --daemonize\n 3301  0.0  1.3 ?        S      Aug 13 00:06:06 Vxlan\n 3304  0.0\
   \  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=VxlanSwFwd --demuxerOpts=1027467071119,1027361358810,tbl://sysdb/+n,Sysdb\
   \ (pid:1539) --sysdbfd=7 --dlopen procmgr /usr/bin/VxlanSwFwd\n 3307  0.0  0.3 ?\
   \        Ss     Aug 13 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
   \ procmgr libProcMgrSetup.so --daemonize\n 3308  0.0  1.3 ?        S      Aug 13\
-  \ 00:05:47 VxlanSwFwd\n 3365  0.0  0.0 ?        Ss     Aug 13 00:00:00 /usr/libexec/strongswan/starter\
-  \ --daemon charon\n 3367  0.0  0.1 ?        Ssl    Aug 13 00:01:30 /usr/libexec/strongswan/charon\
+  \ 00:06:43 VxlanSwFwd\n 3365  0.0  0.0 ?        Ss     Aug 13 00:00:00 /usr/libexec/strongswan/starter\
+  \ --daemon charon\n 3367  0.0  0.1 ?        Ssl    Aug 13 00:01:45 /usr/libexec/strongswan/charon\
   \ --use-syslog\n 3403  0.0  0.0 ?        S      Aug 13 00:00:00 netns --agenttitle=Fhrp\
   \ --demuxerOpts=1035728404808,1035728156871,tbl://sysdb/+n,Sysdb (pid:1539) --sysdbfd=7\
   \ --dlopen procmgr /usr/bin/Fhrp --scheduled\n 3404  0.0  0.3 ?        Ss     Aug\
   \ 13 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr\
   \ libProcMgrSetup.so --daemonize\n 3929  0.0  0.0 ?        S      Aug 13 00:00:02\
   \ [kworker/u8:0]\n 4048  0.0  0.0 ?        S      Aug 13 00:00:00 /usr/sbin/dnsmasq\n\
-  \ 8818  0.0  0.0 ?        S      Sep 12 00:00:00 [kworker/u8:1]\n12496  0.0  0.0\
-  \ ?        S    19:41:01 00:00:00 [kworker/0:0]\n18981  0.0  0.0 ?        S    \
-  \  Aug 26 00:00:00 netns --agenttitle=CapiApp --demuxerOpts=5050812972099146,5050812971830009,tbl://sysdb/+n,Sysdb\
-  \ (pid:1539) --sysdbfd=7 --dlopen procmgr /usr/bin/CapiApp --ini /etc/uwsgi/CapiApp.ini\n\
-  18982  0.0  0.3 ?        Ss     Aug 26 00:00:00 netnsd-session  -d -i --dlopen -p\
-  \ -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so --daemonize\n18983  0.0\
-  \  1.3 ?        Sl     Aug 26 00:03:03 CapiApp         -d -i --dlopen -p -f  -l\
-  \ libLoadDynamicLibs.so procmgr libProcMgrSetup.so --daemonize\n19027  0.0  0.0\
-  \ ?        Ss     Aug 26 00:00:00 nginx: master process /usr/sbin/nginx -c /etc/nginx/nginx.conf\
-  \ -g pid /var/run/nginx.pid;\n19029  0.0  0.1 ?        S      Aug 26 00:03:01 nginx:\
-  \ worker process                                              \n20486  0.0  0.0\
-  \ ?        S    20:01:01 00:00:00 [kworker/0:2]\n20883  0.0  0.0 ?        S    20:07:01\
-  \ 00:00:00 [kworker/0:3]\n24630  0.0  0.0 ?        S    20:13:00 00:00:00 [kworker/0:1]\n\
-  25912  0.0  0.0 ?        S    20:15:01 00:00:00 [kworker/0:4]\n26344  0.0  0.0 ?\
-  \        Rs   20:16:29 00:00:00 ps -e -o pid,pcpu,pmem,tt,stat,lstart,start,time,cmd\
-  \ --sort=-pcpu -ww\n30730  0.0  0.4 ?        Sl     Aug 17 00:20:50 dockerd -H tcp://127.0.0.1:4243\
-  \ -H unix:///var/run/docker.sock -s overlay\n30750  0.0  0.1 ?        Ssl    Aug\
-  \ 17 00:17:13 docker-containerd -l unix:///var/run/docker/libcontainerd/docker-containerd.sock\
-  \ --metrics-interval=0 --start-timeout 2m --state-dir /var/run/docker/libcontainerd/containerd\
-  \ --shim docker-containerd-shim --runtime docker-runc\n.\n"
+  \ 8818  0.0  0.0 ?        S      Sep 12 00:00:00 [kworker/u8:1]\n12212  0.0  0.0\
+  \ ?        S    14:15:06 00:00:00 /bin/sh /var/awslogs/bin/awslogs-agent-launcher.sh\n\
+  12353  0.0  0.0 ?        S    14:17:01 00:00:00 [kworker/0:0]\n13451  0.0  0.0 ?\
+  \        S    14:30:02 00:00:00 [kworker/0:4]\n13819  0.0  0.0 ?        S    14:36:01\
+  \ 00:00:00 [kworker/0:1]\n14133  0.0  0.0 ?        Ss   14:41:12 00:00:00 sshd:\
+  \ [accepted]                          \n14189  0.0  0.0 ?        S    14:42:01 00:00:00\
+  \ [kworker/0:2]\n14439  0.0  0.0 ?        Rs   14:42:55 00:00:00 ps -e -o pid,pcpu,pmem,tt,stat,lstart,start,time,cmd\
+  \ --sort=-pcpu -ww\n18981  0.0  0.0 ?        S      Aug 26 00:00:00 netns --agenttitle=CapiApp\
+  \ --demuxerOpts=5050812972099146,5050812971830009,tbl://sysdb/+n,Sysdb (pid:1539)\
+  \ --sysdbfd=7 --dlopen procmgr /usr/bin/CapiApp --ini /etc/uwsgi/CapiApp.ini\n18982\
+  \  0.0  0.3 ?        Ss     Aug 26 00:00:00 netnsd-session  -d -i --dlopen -p -f\
+  \  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so --daemonize\n18983  0.0 \
+  \ 1.3 ?        Sl     Aug 26 00:03:22 CapiApp         -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
+  \ procmgr libProcMgrSetup.so --daemonize\n19027  0.0  0.0 ?        Ss     Aug 26\
+  \ 00:00:00 nginx: master process /usr/sbin/nginx -c /etc/nginx/nginx.conf -g pid\
+  \ /var/run/nginx.pid;\n19029  0.0  0.1 ?        S      Aug 26 00:03:12 nginx: worker\
+  \ process                                              \n30730  0.0  0.4 ?     \
+  \   Sl     Aug 17 00:24:39 dockerd -H tcp://127.0.0.1:4243 -H unix:///var/run/docker.sock\
+  \ -s overlay\n30750  0.0  0.1 ?        Ssl    Aug 17 00:20:20 docker-containerd\
+  \ -l unix:///var/run/docker/libcontainerd/docker-containerd.sock --metrics-interval=0\
+  \ --start-timeout 2m --state-dir /var/run/docker/libcontainerd/containerd --shim\
+  \ docker-containerd-shim --runtime docker-runc\n.\n"
 description: Verify 1 minute CPU % is under specificied value
 dut: kg-topology-CloudEOSEdge1
 expected_output: 10
@@ -354,7 +356,7 @@ fail_reason: ''
 name: test_1_min_cpu_utlization_on_
 output_msg: '
 
-  On router |kg-topology-CloudEOSEdge1| 1 minute CPU load average is |1.39%| and should
+  On router |kg-topology-CloudEOSEdge1| 1 minute CPU load average is |1.21%| and should
   be under |10%|'
 show_cmd: show processes
 test_result: true

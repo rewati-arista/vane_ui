@@ -75,3 +75,13 @@ testcases:
     # Interface MTU size
     expected_output: 10178
     show_cmd: show interfaces
+  - name: test_if_interface_errors_on_
+    description: Verifies interfaces L1 errors (Rx, Giants, Tx, Runts, FCS, Align)
+    # Number of tolerable errrors
+    expected_output: 0
+    show_cmd: show interfaces
+  - name: test_interface_utilization_on_
+    description: Verifies interfaces L1 errors (Rx, Giants, Tx, Runts, FCS, Align)
+    # Number of tolerable errrors
+    expected_output: 70
+    show_cmd: show interfaces
