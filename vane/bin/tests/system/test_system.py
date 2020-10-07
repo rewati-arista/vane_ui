@@ -38,7 +38,6 @@ import tests_tools
 
 
 TEST_SUITE = __file__
-LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 
 
 @pytest.mark.nrfu

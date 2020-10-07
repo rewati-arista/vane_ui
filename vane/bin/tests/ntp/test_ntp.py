@@ -151,3 +151,65 @@ class NTPTests():
             tops.post_testcase()
 
             assert tops.actual_output == tops.expected_output
+
+    def test_ntp_configuration_on_(self, dut, tests_definitions):
+        """ Verify ntp processes are running
+
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
+
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops.return_show_cmd("show running-config section ntp")
+
+        tops.actual_output = tops.show_cmd_txt
+        ntp_servers = tops.test_parameters["ntp_servers"]
+        ntp_vrf = tops.test_parameters["ntp_vrf"]
+        ntp_intf = tops.test_parameters["ntp_intf"]
+        ntp_cfg = tops.show_cmd_txt
+        vane_ntp_cfg = ""
+
+        if ntp_servers:
+            for ntp_server in ntp_servers:
+                if ntp_vrf:
+                    ntp_server_cfg = f'ntp server vrf {ntp_vrf} {ntp_server}'
+                else:
+                    ntp_server_cfg = f'ntp server {ntp_server}'
+
+                vane_ntp_cfg += f"{ntp_server_cfg}\n"
+                tops.actual_output = ntp_server_cfg in ntp_cfg
+                tops.actual_results.append(tops.actual_output)
+                tops.expected_results.append(tops.expected_output)
+            
+            if ntp_intf and ntp_vrf:
+                ntp_server_cfg = f'ntp source vrf {ntp_vrf} {ntp_intf}'
+            elif ntp_intf:
+                ntp_server_cfg = f'ntp source {ntp_intf}'
+            else:
+                ntp_server_cfg = None
+
+            if ntp_server_cfg:
+                tops.actual_output = ntp_server_cfg in ntp_cfg
+                tops.actual_results.append(tops.actual_output)
+                tops.expected_results.append(tops.expected_output)
+                vane_ntp_cfg += f"{ntp_server_cfg}\n"
+
+        ntp_cfg_length = len(ntp_cfg.split('\n'))
+        vane_ntp_cfg_length = len(vane_ntp_cfg.split('\n'))
+        tops.actual_output = ntp_cfg_length == vane_ntp_cfg_length
+        tops.actual_results.append(tops.actual_output)
+        tops.expected_results.append(tops.expected_output)
+
+        tops.test_result = tops.actual_results == tops.expected_results
+        tops.output_msg += (f"|{tops.dut_name}| has the ntp config "
+                            f"|{ntp_cfg}|, expect the ntp config "
+                            f"|{vane_ntp_cfg}|.\n\n")
+        tops.comment += (f'TEST |{tops.dut_name}| NTP config.\n'
+                         f'GIVEN NTP config |{vane_ntp_cfg}|.\n'
+                         f'WHEN NTP config |{ntp_cfg}|.\n'
+                         f'THEN test case result is |{tops.test_result}|.\n\n')
+        print(f"{tops.output_msg}\n{tops.comment}")
+
+        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.post_testcase()
+        assert tops.actual_results == tops.expected_results

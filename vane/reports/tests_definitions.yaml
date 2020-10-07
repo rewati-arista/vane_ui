@@ -351,6 +351,14 @@ test_suites:
     processes:
     - ntpd
     show_cmd: show processes
+  - description: Verifies NTP configuration matches the recommended practices
+    expected_output: true
+    name: test_ntp_configuration_on_
+    ntp_intf: null
+    ntp_servers:
+    - 169.254.169.123
+    ntp_vrf: null
+    show_cmd: null
 - name: test_system.py
   testcases:
   - description: Verifies the agents logs crash is empty
