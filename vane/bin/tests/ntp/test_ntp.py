@@ -153,7 +153,7 @@ class NTPTests():
             assert tops.actual_output == tops.expected_output
 
     def test_ntp_configuration_on_(self, dut, tests_definitions):
-        """ Verify ntp processes are running
+        """ Verifies NTP configuration matches the recommended practices 
 
             Args:
               dut (dict): Encapsulates dut details including name, connection
@@ -212,4 +212,44 @@ class NTPTests():
 
         tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
         tops.post_testcase()
+        assert tops.actual_results == tops.expected_results
+
+    def test_if_ntp_servers_are_reachable_on_(self, dut, tests_definitions):
+        """ Verifies DNS servers are reachable via ping 
+
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
+
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        ntp_servers = tops.test_parameters["ntp_servers"]
+        ntp_vrf = tops.test_parameters["ntp_vrf"]
+
+        for ntp_server in ntp_servers:
+            if ntp_vrf:
+                show_cmd = f"ping vrf {ntp_vrf} ip {ntp_server}"
+            else:
+                show_cmd = f"ping {ntp_server}"
+
+            tops.return_show_cmd(show_cmd)
+            tops.actual_output = 'bytes from' in tops.show_cmd_txt
+            tops.test_result = tops.actual_output is tops.expected_output
+
+            tops.output_msg += (f"\nOn router |{tops.dut_name}|, verifying NTP "
+                                f"server reachability for |{ntp_server}| is "
+                                f"|{tops.test_result}|.\n")
+
+            tops.comment += (f'TEST NTP servers are reachable on |{tops.dut_name}| '
+                             f'GIVEN server |{ntp_server}|.\n'
+                             'WHEN exception is |bytes from| '
+                             'string.\n'
+                             f'THEN test case result is |{tops.test_result}|.\n'
+                             f'OUTPUT of |{show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
+
+        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.post_testcase()
+
         assert tops.actual_results == tops.expected_results
