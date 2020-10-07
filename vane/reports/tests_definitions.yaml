@@ -357,6 +357,10 @@ test_suites:
     expected_output: 0
     name: test_if_there_is_agents_have_crashed_on_
     show_cmd: null
+  - description: Verifies EOS version running on the device
+    expected_output: 4.23.1F-cloud-16179785.jakartarel (engineering build)
+    name: test_if_eos_version_is_correct_on_
+    show_cmd: show version
 - name: test_tacacs.py
   testcases:
   - comment: null

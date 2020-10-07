@@ -69,7 +69,7 @@ parameters:
   excel_report: null
   html_report: ../reports/report
   json_report: ../reports/report
-  mark: null
+  mark: system
   processes: null
   report_dir: ../reports
   results_file: result.yml
