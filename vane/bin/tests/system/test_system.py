@@ -78,3 +78,40 @@ class CrashTests():
         tops.post_testcase()
 
         assert tops.actual_output <= tops.expected_output
+
+
+@pytest.mark.nrfu
+@pytest.mark.platform_status
+@pytest.mark.system
+class SystemTests():
+    """ System Test Suite
+    """
+
+    def test_if_eos_version_is_correct_on_(self, dut, tests_definitions):
+        """ Verifies EOS version running on the device 
+
+            Args:
+                dut (dict): Encapsulates dut details including name, connection
+                tests_definitions (dict): Test parameters
+        """
+
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+
+        tops.actual_output = dut["output"][tops.show_cmd]["json"]["version"]
+        tops.test_result = tops.actual_output == tops.expected_output
+
+        tops.output_msg = (f"On router |{tops.dut_name}| EOS version is "
+                           f"|{tops.actual_output}%|, version should be "
+                           f"|{tops.expected_output}%|")
+        tops.comment = ('TEST EOS version running on the device on '
+                        f'|{tops.dut_name}|.\n'
+                        f'GIVEN version is |{tops.expected_output}|.\n'
+                        f'WHEN version is |{tops.actual_output}|.\n'
+                        f'THEN test case result is |{tops.test_result}|.\n'
+                        f'OUTPUT of |{tops.show_cmd}| is:\n\n{tops.show_cmd_txt}')
+
+        print(f"{tops.output_msg}\n{tops.comment}")
+
+        tops.post_testcase()
+
+        assert tops.actual_output == tops.expected_output
