@@ -89,3 +89,116 @@ class DNSTests():
         tops.post_testcase()
 
         assert tops.actual_results == tops.expected_results
+
+    def test_if_dns_servers_are_reachable_on_(self, dut, tests_definitions):
+        """ Verifies DNS servers are reachable via ping 
+
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
+
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        dns_servers = tops.test_parameters["dns_servers"]
+        dns_vrf = tops.test_parameters["dns_vrf"]
+
+        for dns_server in dns_servers:
+            if dns_vrf:
+                show_cmd = f"ping vrf {dns_vrf} ip {dns_server}"
+            else:
+                show_cmd = f"ping {dns_server}"
+
+            tops.return_show_cmd(show_cmd)
+            tops.actual_output = 'bytes from' in tops.show_cmd_txt
+            tops.test_result = tops.actual_output is tops.expected_output
+
+            tops.output_msg += (f"\nOn router |{tops.dut_name}|, verifying NTP "
+                                f"server reachability for |{dns_server}| is "
+                                f"|{tops.test_result}|.\n")
+
+            tops.comment += (f'TEST NTP servers are reachable on |{tops.dut_name}| '
+                             f'GIVEN server |{dns_server}|.\n'
+                             'WHEN exception is |bytes from| '
+                             'string.\n'
+                             f'THEN test case result is |{tops.test_result}|.\n'
+                             f'OUTPUT of |{show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
+
+        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.post_testcase()
+
+        assert tops.actual_results == tops.expected_results
+
+    def test_dns_configuration_on_(self, dut, tests_definitions):
+        """ Verifies DNS configuration matches the recommended practices 
+
+            Args:
+              dut (dict): Encapsulates dut details including name, connection
+        """
+
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops.return_show_cmd("show running-config section name-server")
+
+        tops.actual_output = tops.show_cmd_txt
+        dns_servers = tops.test_parameters["dns_servers"]
+        dns_vrf = tops.test_parameters["dns_vrf"]
+        dns_intf = tops.test_parameters["dns_intf"]
+        dn_name = tops.test_parameters["dn_name"]
+        dns_cfg = tops.show_cmd_txt
+        vane_dns_cfg = ""
+
+        if dns_servers:
+            for dns_server in dns_servers:
+                if dns_vrf:
+                    dns_server_cfg = f'ip name-server vrf {dns_vrf} {dns_server}'
+                else:
+                    dns_server_cfg = f'ip name-server {dns_server}'
+
+                vane_dns_cfg += f"{dns_server_cfg}\n"
+                tops.actual_output = dns_server_cfg in dns_cfg
+                tops.actual_results.append(tops.actual_output)
+                tops.expected_results.append(tops.expected_output)
+
+            if dns_intf and dns_vrf:
+                dns_server_cfg = f'ip domain lookup vrf {dns_vrf} source-interface {dns_intf}'
+            elif dns_intf:
+                dns_server_cfg = f'ip domain lookup source-interface {dns_intf}'
+            else:
+                dns_server_cfg = None
+
+            if dns_server_cfg:
+                tops.actual_output = dns_server_cfg in dns_cfg
+                tops.actual_results.append(tops.actual_output)
+                tops.expected_results.append(tops.expected_output)
+                vane_dns_cfg += f"{dns_server_cfg}\n"
+
+            if dn_name:
+                dns_server_cfg = f'ip domain-name {dn_name}'
+
+            if dns_server_cfg:
+                tops.actual_output = dns_server_cfg in dns_cfg
+                tops.actual_results.append(tops.actual_output)
+                tops.expected_results.append(tops.expected_output)
+                vane_dns_cfg += f"{dns_server_cfg}\n"
+
+        dns_cfg_length = len(dns_cfg.split('\n'))
+        vane_dns_cfg_length = len(vane_dns_cfg.split('\n'))
+        tops.actual_output = dns_cfg_length == vane_dns_cfg_length
+        tops.actual_results.append(tops.actual_output)
+        tops.expected_results.append(tops.expected_output)
+
+        tops.test_result = tops.actual_results == tops.expected_results
+        tops.output_msg += (f"|{tops.dut_name}| has the dns config "
+                            f"|{dns_cfg}|, expect the dns config "
+                            f"|{vane_dns_cfg}|.\n\n")
+        tops.comment += (f'TEST |{tops.dut_name}| DNS config.\n'
+                         f'GIVEN DNS config |{vane_dns_cfg}|.\n'
+                         f'WHEN DNS config |{dns_cfg}|.\n'
+                         f'THEN test case result is |{tops.test_result}|.\n\n'
+                         f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        print(f"{tops.output_msg}\n{tops.comment}")
+
+        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.post_testcase()
+        assert tops.actual_results == tops.expected_results

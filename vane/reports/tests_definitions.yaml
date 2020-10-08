@@ -166,6 +166,22 @@ test_suites:
     - google.com
     - cnn.com
     - arista.com
+  - description: Verifies DNS servers are reachable via ping
+    dns_servers:
+    - 11.201.12.2
+    dns_vrf: null
+    expected_output: true
+    name: test_if_dns_servers_are_reachable_on_
+    show_cmd: null
+  - description: Verifies DNS configuration matches the recommended practices
+    dn_name: null
+    dns_intf: null
+    dns_servers:
+    - 11.201.12.2
+    dns_vrf: default
+    expected_output: true
+    name: test_dns_configuration_on_
+    show_cmd: null
 - name: test_environment.py
   testcases:
   - description: Verify system temperature environmentals are functional within spec
@@ -359,7 +375,7 @@ test_suites:
     - 169.254.169.123
     ntp_vrf: null
     show_cmd: null
-  - description: Verifies DNS servers are reachable via ping
+  - description: Verifies NTP servers are reachable via ping
     expected_output: true
     name: test_if_ntp_servers_are_reachable_on_
     ntp_servers:
