@@ -69,7 +69,6 @@ class NTPTests():
                         f'THEN test case result is |{tops.test_result}|.\n'
                         f'OUTPUT of |{tops.show_cmd}| is:\n{tops.show_cmd_txt}'
                         '.\n')
-
         print(f"{tops.output_msg}\n{tops.comment}")
 
         tops.post_testcase()
@@ -86,13 +85,11 @@ class NTPTests():
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
         tops.actual_output = dut["output"][tops.show_cmd]['json']['peers']
         tops.actual_output = len(tops.actual_output)
+        tops.test_result = tops.actual_output >= tops.expected_output
 
         tops.output_msg = (f"\nOn router |{tops.dut_name}| has "
                            f"|{tops.actual_output}| NTP peer associations, "
                            f"correct associations is |{tops.expected_output}|")
-
-        tops.test_result = tops.actual_output >= tops.expected_output
-
         tops.comment = ('TEST is NTP associations with peers on '
                         f'|{tops.dut_name}|.\n'
                         'GIVEN associated are greater than or equal to '
@@ -102,7 +99,6 @@ class NTPTests():
                         f'THEN test case result is |{tops.test_result}|.\n'
                         f'OUTPUT of |{tops.show_cmd}| is:\n{tops.show_cmd_txt}'
                         '.\n')
-
         print(f"{tops.output_msg}\n{tops.comment}")
 
         tops.post_testcase()
@@ -145,7 +141,6 @@ class NTPTests():
                             f'THEN test case result is |{tops.test_result}|.\n'
                             f'OUTPUT of |{tops.show_cmd}| is:\n'
                             f'{tops.show_cmd_txt}.\n')
-    
             print(f"{tops.output_msg}\n{tops.comment}")
     
             tops.post_testcase()
