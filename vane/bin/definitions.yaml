@@ -1,5 +1,5 @@
 duts:
-- mgmt_ip: 3.22.137.44
+- mgmt_ip: 3.129.242.29
   name: kg-topology-CloudEosRR1
   neighbors:
   - neighborDevice: leaf01
@@ -8,7 +8,7 @@ duts:
   password: arista123
   transport: https
   username: kgrozis
-- mgmt_ip: 3.131.6.163
+- mgmt_ip: 3.23.123.34
   name: kg-topology-CloudEosRR2
   neighbors:
   - neighborDevice: spine01
@@ -17,7 +17,7 @@ duts:
   password: arista123
   transport: https
   username: kgrozis
-- mgmt_ip: 3.132.90.164
+- mgmt_ip: 3.129.78.225
   name: kg-topology-CloudEOSEdge1
   neighbors:
   - neighborDevice: spine01
@@ -29,7 +29,7 @@ duts:
   password: arista123
   transport: https
   username: kgrozis
-- mgmt_ip: 3.131.34.190
+- mgmt_ip: 3.137.2.78
   name: kg-topology-CloudEOSEdge2
   neighbors:
   - neighborDevice: spine01
@@ -69,7 +69,7 @@ parameters:
   excel_report: null
   html_report: ../reports/report
   json_report: ../reports/report
-  mark: dns
+  mark: null
   processes: 3
   report_dir: ../reports
   results_file: result.yml

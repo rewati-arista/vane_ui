@@ -7,8 +7,6 @@ testcases:
       - TerminAttr
     expected_output: True
     show_cmd: show daemon
-    comment: null
-    result: True
   - name: test_if_daemons_are_enabled_on_
     description: Verify a list of daemons are enabled on DUT
     # List daemons to check on DUT
@@ -16,5 +14,3 @@ testcases:
       - TerminAttr
     expected_output: True
     show_cmd: show daemon
-    comment: null
-    result: True

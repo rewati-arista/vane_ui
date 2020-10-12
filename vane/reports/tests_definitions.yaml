@@ -140,21 +140,17 @@ test_suites:
     show_cmd: show processes
 - name: test_daemon.py
   testcases:
-  - comment: null
-    daemons:
+  - daemons:
     - TerminAttr
     description: Verify a list of daemons are running on DUT
     expected_output: true
     name: test_if_daemons_are_running_on_
-    result: true
     show_cmd: show daemon
-  - comment: null
-    daemons:
+  - daemons:
     - TerminAttr
     description: Verify a list of daemons are enabled on DUT
     expected_output: true
     name: test_if_daemons_are_enabled_on_
-    result: true
     show_cmd: show daemon
 - name: test_dns.py
   testcases:
