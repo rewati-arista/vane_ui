@@ -4,5 +4,5 @@ build:
   services: 
     - docker:dind
   script:
-    - docker build . -f ci/Dockerfile -t vane:latest --network=host
+    - docker build . -t vane:latest
 
