@@ -18,6 +18,10 @@ clean:
 	docker stop $(CONTAINER_NAME)
 	docker rm $(CONTAINER_NAME)
 
+.PHONY: clean
+test:
+	pytest --cov=/project/vane/bin ./tests
+
 .PHONY: exec
 exec:
 	docker exec -it $(CONTAINER_NAME) /bin/bash
