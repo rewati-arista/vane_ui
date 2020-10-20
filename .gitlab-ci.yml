@@ -5,4 +5,4 @@ build:
     - docker:dind
   script:
     - docker build . -f ci/Dockerfile.ci -t vane:latest --build-arg UID=$(id -u) --build-arg GID=$(id -g)
-
+    - docker run -t -d --rm --name vane vane:0.0.1
