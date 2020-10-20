@@ -7,4 +7,5 @@ build:
     - if [ "$( docker container inspect -f '{{.State.Running}}' vane )" == "true" ]; then docker stop vane; fi
     - docker build . -f ci/Dockerfile.ci -t vane:latest --build-arg UID=$(id -u) --build-arg GID=$(id -g)
     - docker run -t -d --rm --name vane vane:latest
-    - docker exec -i vane ls  
+    - docker exec -i vane pwd
+    - docker exec -i vane "ls /project/vane"
