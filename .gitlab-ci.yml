@@ -1,3 +1,7 @@
+stages:
+ - build
+ - test
+
 build:
   stage: build
   image: docker:latest
@@ -8,15 +12,15 @@ build:
     - docker build . -f ci/Dockerfile.ci -t vane:latest --build-arg UID=$(id -u) --build-arg GID=$(id -g)
     - docker run -t -d --rm --name vane vane:latest
 
-unit_test:
-  stage: unit test
+unit_tests:
+  stage: test
   script:
     - docker exec -i vane pwd
     - pytest --cov=/project/vane/bin tests
 
 
-system_test:
-  stage: system test
+system_tests:
+  stage: test
   script:
     - docker exec -i vane pwd
     - docker exec -i vane bash -c "ls /project/vane"
