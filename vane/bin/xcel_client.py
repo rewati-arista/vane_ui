@@ -35,6 +35,7 @@ import logging
 import yaml
 import sys
 import openpyxl
+import pathlib
 
 
 logging.basicConfig(level=logging.INFO, filename='vane.log', filemode='w',
@@ -85,20 +86,17 @@ class XcelClient:
                 lld_spreadsheet (obj):    Abstraction of spreadsheet,
         """
 
-        file_object = pathlib.Path(self.lld_spreadsheet)
+        spreadsheet_path = self.definitions['parameters']['spreadsheet']
+        file_object = pathlib.Path(spreadsheet_path)
 
         if not file_object.exists():
-            self._record_error_entry(self.lld_spreadsheet,
-                                     None, None, "006", "002")
-            self.generate_error_report()
+            logging.error(f'Spreadsheet {spreadsheet_path} does not exist')
+            print(f'SPREADSHEET {spreadsheet_path} DOES NOT EXIST')
+            sys.exit(1)
 
         try:
-            lld_spreadsheet = openpyxl.load_workbook(self.lld_spreadsheet)
-            return lld_spreadsheet
+            self.spreadsheet = openpyxl.load_workbook(spreadsheet_path)
         except:
-            self._record_error_entry(self.lld_spreadsheet,
-                                     None,
-                                     None,
-                                     "006",
-                                     "001")
-            self.generate_error_report()
+            logging.error(f'Error opening spreadsheet {spreadsheet_path}')
+            print(f'ERROR OPENING SPREADSHEET {spreadsheet_path}')
+            sys.exit(1)

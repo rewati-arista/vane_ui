@@ -20,7 +20,7 @@ clean:
 
 .PHONY: clean
 test:
-	pytest --cov=/project/vane/bin ./tests
+	pytest --cov-report html --cov=/project/vane/bin tests
 
 .PHONY: exec
 exec:
