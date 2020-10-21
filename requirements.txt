@@ -7,6 +7,8 @@ python-docx
 # Dev
 pylint
 flake8
+coverage
+coverage-badge
 
 # pytest plugins
 pytest-excel

@@ -22,6 +22,7 @@ unit_tests:
     - docker exec -i vane bash -c "ls"
     #- docker cp vane:/project/cov.xml .
     - ls
+  coverage: 
   #artifacts:
   #  reports:
   #    cobertura: /project/cov.xml
