@@ -11,6 +11,7 @@ build:
     - if [ "$( docker container inspect -f '{{.State.Running}}' vane )" == "true" ]; then docker stop vane; fi
     - docker build . -f ci/Dockerfile.ci -t vane:latest --build-arg UID=$(id -u) --build-arg GID=$(id -g)
     - docker run -t -d --rm --name vane vane:latest
+    - docker cp vane:/project/cov.xml .
 
 unit_tests:
   stage: test
@@ -18,6 +19,7 @@ unit_tests:
     - docker exec -i vane pwd
     - docker exec -i vane bash -c "pytest --cov=/project/vane/bin --cov-report xml:cov.xml tests"
     - docker exec -i vane bash -c "ls"
+    - 
 
 
 system_tests:
@@ -27,4 +29,4 @@ system_tests:
     - docker exec -i vane bash -c "ls /project/vane"
     - docker exec -i vane bash -c "ls /project/vane/bin"
     - docker exec -i vane bash -c "ls /project/vane/reports"
-    - docker exec -i vane bash -c "cd /project/vane/bin && ./vane.py"
+    # - docker exec -i vane bash -c "cd /project/vane/bin && ./vane.py"
