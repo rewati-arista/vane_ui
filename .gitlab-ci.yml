@@ -16,7 +16,7 @@ unit_tests:
   stage: test
   script:
     - docker exec -i vane pwd
-    - pytest --cov=/project/vane/bin tests
+    - docker exec -i vane bash -c "pytest --cov=/project/vane/bin tests"
 
 
 system_tests:
