@@ -49,13 +49,11 @@ class XcelClient:
         """ Initializes the excel client
 
             Args:
-                lld_spreadsheet (str): Name and path of the PS LLD
+                spreadsheet (obj): Spreadsheet 
         """
 
-        self.definitions_file = definitions_file
-        self._import_yaml(definitions_file)
-
-        #self.lld_spreadsheet = lld_spreadsheet
+        self.definitions = self._import_yaml(definitions_file)
+        self.spreadsheet = ""
 
     def _import_yaml(self, yaml_file):
         """ Import YAML file as python data structure
