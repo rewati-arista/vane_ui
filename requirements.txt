@@ -16,3 +16,4 @@ pytest-json
 pytest-cache
 pytest-sugar
 #pytest-spec
+pytest-cov

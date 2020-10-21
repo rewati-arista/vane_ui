@@ -12,7 +12,7 @@ WORKDIR /project
 VOLUME ["/project"]
 
 # Add local directory to the container
-COPY ./* /project/vane/
+ADD ./ /project/
 
 # Install python modules required by the repo
 ADD requirements.txt /tmp/requirements.txt

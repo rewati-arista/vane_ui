@@ -244,6 +244,9 @@ class TestsClient:
         logging.info('Remove any existing results files in results directory '
                      f'{results_dir}')
 
+        if not os.path.exists(results_dir):
+            os.makedirs(results_dir)
+
         results_files = os.listdir(results_dir)
         logging.info(f'Result files are {results_files}')
 
