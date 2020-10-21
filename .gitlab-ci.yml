@@ -21,9 +21,9 @@ unit_tests:
     - docker exec -i vane bash -c "ls"
     - docker cp vane:/project/cov.xml .
     - ls
-  artifacts:
-    reports:
-      cobertura: /project/cov.xml
+  #artifacts:
+  #  reports:
+  #    cobertura: /project/cov.xml
  
 system_tests:
   stage: test
