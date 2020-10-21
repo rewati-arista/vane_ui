@@ -23,4 +23,3 @@ system_test:
     - docker exec -i vane bash -c "ls /project/vane/bin"
     - docker exec -i vane bash -c "ls /project/vane/reports"
 #    - docker exec -i vane bash -c "cd /project/vane/bin && ./vane.py"
-
