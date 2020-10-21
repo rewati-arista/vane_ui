@@ -24,7 +24,7 @@ unit_tests:
   artifacts:
     reports:
       cobertura: /project/cov.xml
-
+ 
 system_tests:
   stage: test
   script:
