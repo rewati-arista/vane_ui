@@ -17,6 +17,7 @@ unit_tests:
   script:
     - docker exec -i vane pwd
     - docker exec -i vane bash -c "pytest --cov=/project/vane/bin --cov-report xml:cov.xml tests"
+    - docker exec -i vane bash -c "ls"
 
 
 system_tests:
