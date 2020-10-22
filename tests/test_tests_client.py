@@ -41,8 +41,41 @@ def test_setting_test_parameters():
     """ Validate that test parametters are settable based on a definition file
     """
 
-    # Get parameters based on definition file
-    test_parameters = TC._set_test_parameters()
+    verbosity_levels = [False, True]
+    stdout_levels = [True, False]
+    testcases = ["All", "evpn", None]
+    html_reports = [None, "../reports/report"]
+
+    # Test verbosity level can be changed
+    for verbosity_level in verbosity_levels:
+        TC.data_model['parameters']['verbose'] = verbosity_level
+        test_parameters = TC._set_test_parameters()
+        assert verbosity_level == ('-v' in test_parameters)
+
+    # Test stdout level can be changed
+    for stdout_level in stdout_levels:
+        TC.data_model['parameters']['stdout'] = stdout_level
+        test_parameters = TC._set_test_parameters()
+        assert stdout_level == ('-s' in test_parameters)
+    
+    # Test testcase specific entries
+    for testcase in testcases:
+        TC.data_model['parameters']['test_cases'] = testcase
+        test_parameters = TC._set_test_parameters()
+
+        if testcase == 'All':
+            assert False == ('-k' in test_parameters)
+        else:
+            assert True == (f'-k {testcase}' in test_parameters)
+
+    for html_report in html_reports:
+        TC.data_model['parameters']['html_report'] = html_report
+        test_parameters = TC._set_test_parameters()
+
+        if html_report:
+            assert True == (f'--html={html_report}.html' in test_parameters)
+        else:
+            html_expr = [for x in ]
 
 def test_import_no_definitions():
     """ Test script exits if spreadsheet doesn't exist
