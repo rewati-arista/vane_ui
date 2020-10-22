@@ -68,14 +68,14 @@ def test_setting_test_parameters():
         else:
             assert True == (f'-k {testcase}' in test_parameters)
 
-    for html_report in html_reports:
-        TC.data_model['parameters']['html_report'] = html_report
-        test_parameters = TC._set_test_parameters()
-
-        if html_report:
-            assert True == (f'--html={html_report}.html' in test_parameters)
-        else:
-            html_expr = [for x in ]
+    # for html_report in html_reports:
+    #     TC.data_model['parameters']['html_report'] = html_report
+    #     test_parameters = TC._set_test_parameters()
+# 
+    #     if html_report:
+    #         assert True == (f'--html={html_report}.html' in test_parameters)
+    #     else:
+    #         html_expr = [for x in ]
 
 def test_import_no_definitions():
     """ Test script exits if spreadsheet doesn't exist
