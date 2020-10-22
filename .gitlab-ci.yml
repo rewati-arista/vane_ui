@@ -32,8 +32,8 @@ unit_tests:
       - htmlcov
       - junit.xml
       - cov.xml
-    reports:
-      junit: junit.xml
+    # reports:
+    #  junit: junit.xml
 
 system_tests:
   stage: test
