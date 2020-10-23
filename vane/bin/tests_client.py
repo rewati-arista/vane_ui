@@ -124,13 +124,9 @@ class TestsClient:
 
         logging.info('Initialize test parameter values')
         for parameter_key in parameter_keys:
-            print(f'>>>>>> test if {parameter_key} in test parameters')
             if parameter_key not in self.data_model['parameters']:
-                print(f'>>>>>> Init value for {parameter_key} in test parameters')
                 self.data_model['parameters'][parameter_key] = None
         
-        print(f'>>>>>> {self.data_model["parameters"]}')
-
         test_cases = self.data_model['parameters']['test_cases']
         report_dir = self.data_model['parameters']['report_dir']
         html_report = self.data_model['parameters']['html_report']

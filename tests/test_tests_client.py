@@ -1,5 +1,6 @@
 import vane.bin.tests_client as tests_client
 import os
+import configparser
 
 DEFINITIONS = '/project/vane/bin/definitions.yaml'
 TC = tests_client.TestsClient(DEFINITIONS)
@@ -131,7 +132,6 @@ def test_test_parameters_not_set():
     for definition in definitions:
         _ = tc.data_model['parameters'].pop(definition, 1)
         test_parameters = tc._set_test_parameters()
-        print(f'>>>>>>> {test_parameters}')
         assert None == tc.data_model['parameters'][definition]
 
 def test_import_no_definitions():
@@ -168,3 +168,43 @@ def test_import_bad_definitions():
             os.remove(bad_definition)
 
         assert True
+
+def test_rendering_eapi_cfg():
+    """ Verify .eapi.conf file renders
+    """
+
+    eapi_file = TC.data_model['parameters']['eapi_file']
+    file_life = 0
+
+    if os.path.exists(eapi_file):
+        file_life = os.path.getmtime(eapi_file)
+
+    TC._render_eapi_cfg()
+    new_file_life = os.path.getmtime(eapi_file)
+
+    assert new_file_life > file_life
+
+def test_eapi_cfg_data():
+    """ Verify if eapi cfg data is rendered correctly
+    """
+
+    eapi_file = TC.data_model['parameters']['eapi_file']
+    duts = TC.data_model['duts']
+
+    TC._render_eapi_cfg()
+
+    config = configparser.ConfigParser()
+    config.read(eapi_file)
+    dut_names = config.sections()
+
+    for dut in duts:
+        dut_name = f'connection:{dut["name"]}'
+
+        assert True == (dut_name in dut_names)
+
+        assert config[dut_name]['host'] == dut['mgmt_ip']
+        assert config[dut_name]['username'] == dut['username']
+        assert config[dut_name]['password'] == dut['password']
+
+
+
