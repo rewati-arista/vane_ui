@@ -117,8 +117,17 @@ class TestsClient:
 
         logging.info('Setting test parameters')
         test_parameters = []
+
+        parameter_keys = ['verbose', 'stdout', 'test_cases', 'html_report', 
+                          'excel_report', 'json_report', 'processes', 'mark',
+                          'setup_show']
+
+        logging.info('Initialize test parameter values')
+        for parameter_key in parameter_keys:
+            if parameter_key not in self.data_model['parameters']:
+                self.data_model['parameters'][parameter_key] = None
+        
         test_cases = self.data_model['parameters']['test_cases']
-        test_suites = self.data_model['parameters']['test_suites']
         report_dir = self.data_model['parameters']['report_dir']
         html_report = self.data_model['parameters']['html_report']
         excel_report = self.data_model['parameters']['excel_report']
@@ -145,6 +154,8 @@ class TestsClient:
 
         logging.info(f'Run the following tests: {test_cases}')
         if test_cases == 'All':
+            pass
+        elif not test_cases:
             pass
         else:
             test_parameters.append(f'-k {test_cases}')
@@ -187,12 +198,6 @@ class TestsClient:
             test_parameters.append(f'-m {mark}')
         else:
             logging.info('Do NOT use marking within test run')
-
-        if test_suites:
-            logging.info(f'Run the following tests suites: {test_cases}')
-            test_parameters.append(f'{test_suites}')
-        else:
-            logging.info('Run all tests suites')
 
         logging.info('Setting the following PyTest parmaters: '
                      f'{test_parameters}')

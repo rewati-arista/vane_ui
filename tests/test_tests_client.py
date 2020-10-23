@@ -1,5 +1,6 @@
 import vane.bin.tests_client as tests_client
 import os
+import configparser
 
 DEFINITIONS = '/project/vane/bin/definitions.yaml'
 TC = tests_client.TestsClient(DEFINITIONS)
@@ -41,41 +42,97 @@ def test_setting_test_parameters():
     """ Validate that test parametters are settable based on a definition file
     """
 
-    verbosity_levels = [False, True]
-    stdout_levels = [True, False]
-    testcases = ["All", "evpn", None]
-    html_reports = [None, "../reports/report"]
+    definitions = {
+        'verbose': [False, True],
+        'stdout': [True, False],
+        'test_cases': ["All", "evpn", None],
+        'html_report': [None, "report"],
+        'excel_report': ["report", None],
+        'json_report': [None, "report"],
+        'processes': [3, 2, 1, None],
+        'setup_show': [False, True],
+        'mark': ['nrfu', 'cpu', 'memory', None]
+    }
 
-    # Test verbosity level can be changed
-    for verbosity_level in verbosity_levels:
-        TC.data_model['parameters']['verbose'] = verbosity_level
-        test_parameters = TC._set_test_parameters()
-        assert verbosity_level == ('-v' in test_parameters)
+    extensions = {
+        'verbose': '-v',
+        'stdout': '-s',
+        'setup_show': '--setup-show',
+        'test_cases': '-k',
+        'html_report': 'html',
+        'json_report': 'json',
+        'excel_report': 'excel',
+        'processes': '-n',
+        'mark': '-m',
+    }
 
-    # Test stdout level can be changed
-    for stdout_level in stdout_levels:
-        TC.data_model['parameters']['stdout'] = stdout_level
-        test_parameters = TC._set_test_parameters()
-        assert stdout_level == ('-s' in test_parameters)
-    
-    # Test testcase specific entries
-    for testcase in testcases:
-        TC.data_model['parameters']['test_cases'] = testcase
-        test_parameters = TC._set_test_parameters()
+    processes = [3, 2, 1, None]
+    marks = ['nrfu', 'cpu', 'memory', None]
 
-        if testcase == 'All':
-            assert False == ('-k' in test_parameters)
-        else:
-            assert True == (f'-k {testcase}' in test_parameters)
+    for definition in definitions:
+        report_dir = TC.data_model['parameters']['report_dir']
 
-    # for html_report in html_reports:
-    #     TC.data_model['parameters']['html_report'] = html_report
-    #     test_parameters = TC._set_test_parameters()
-# 
-    #     if html_report:
-    #         assert True == (f'--html={html_report}.html' in test_parameters)
-    #     else:
-    #         html_expr = [for x in ]
+        if definition in ['verbose', 'stdout', 'setup_show']:
+            for definition_value in definitions[definition]:
+                TC.data_model['parameters'][definition] = definition_value
+                test_parameters = TC._set_test_parameters()
+
+                assert definition_value == (extensions[definition] in test_parameters)
+
+        elif definition in ['test_cases']:
+            for definition_value in definitions[definition]:
+                TC.data_model['parameters'][definition] = definition_value
+                test_parameters = TC._set_test_parameters()
+                extension = extensions[definition]
+
+                if definition_value == 'All' or not definition_value:
+                    assert False == (extension in test_parameters)
+                else:
+                    assert True == (f'{extension} {definition_value}' in test_parameters)
+        
+        elif definition in ['html_report', 'json_report', 'excel_report']:
+            for definition_value in definitions[definition]:
+                TC.data_model['parameters'][definition] = definition_value
+                test_parameters = TC._set_test_parameters()
+
+                if extensions[definition] == 'excel':
+                    extension = f'--{extensions[definition]}report'
+                    suffix = 'xlsx'
+                else:
+                    extension = f'--{extensions[definition]}'
+                    suffix = extensions[definition]
+
+                if definition_value:
+                    assert True == (f'{extension}={report_dir}/{definition_value}.{suffix}' in test_parameters)
+                else:
+                    list_output = [x for x in test_parameters if extension in x]
+                    assert True == (len(list_output) == 0)
+
+        elif definition in ['processes', 'mark']:
+            for definition_value in definitions[definition]:
+                TC.data_model['parameters'][definition] = definition_value
+                test_parameters = TC._set_test_parameters()
+                extension = extensions[definition]
+
+                if definition_value:
+                    assert True == (f'{extension} {definition_value}' in test_parameters)
+                else:
+                    list_output = [x for x in test_parameters if extension in x]
+                    assert True == (len(list_output) == 0)
+
+def test_test_parameters_not_set():
+    """ Validate that test parametters are settable based on a definition file
+    """
+
+    definitions = ['verbose', 'stdout', 'test_cases', 'html_report', 
+                   'excel_report', 'json_report', 'processes', 'mark',
+                   'setup_show']
+    tc = tests_client.TestsClient(DEFINITIONS)
+
+    for definition in definitions:
+        _ = tc.data_model['parameters'].pop(definition, 1)
+        test_parameters = tc._set_test_parameters()
+        assert None == tc.data_model['parameters'][definition]
 
 def test_import_no_definitions():
     """ Test script exits if spreadsheet doesn't exist
@@ -111,3 +168,43 @@ def test_import_bad_definitions():
             os.remove(bad_definition)
 
         assert True
+
+def test_rendering_eapi_cfg():
+    """ Verify .eapi.conf file renders
+    """
+
+    eapi_file = TC.data_model['parameters']['eapi_file']
+    file_life = 0
+
+    if os.path.exists(eapi_file):
+        file_life = os.path.getmtime(eapi_file)
+
+    TC._render_eapi_cfg()
+    new_file_life = os.path.getmtime(eapi_file)
+
+    assert new_file_life > file_life
+
+def test_eapi_cfg_data():
+    """ Verify if eapi cfg data is rendered correctly
+    """
+
+    eapi_file = TC.data_model['parameters']['eapi_file']
+    duts = TC.data_model['duts']
+
+    TC._render_eapi_cfg()
+
+    config = configparser.ConfigParser()
+    config.read(eapi_file)
+    dut_names = config.sections()
+
+    for dut in duts:
+        dut_name = f'connection:{dut["name"]}'
+
+        assert True == (dut_name in dut_names)
+
+        assert config[dut_name]['host'] == dut['mgmt_ip']
+        assert config[dut_name]['username'] == dut['username']
+        assert config[dut_name]['password'] == dut['password']
+
+
+
