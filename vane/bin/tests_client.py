@@ -73,6 +73,7 @@ class TestsClient:
         self.data_model = self._import_yaml(test_definition)
         logging.info('Internal test data-model initialized with value: '
                      f'{self.data_model}')
+        self.test_parameters = []
 
     def _import_yaml(self, yaml_file):
         """ Import YAML file as python data structure
@@ -104,19 +105,14 @@ class TestsClient:
         logging.info('Start test setup')
         self._render_eapi_cfg()
         self._remove_result_files()
-        test_paramters = self._set_test_parameters()
+        self._set_test_parameters()
 
         logging.info('Starting Test')
-        pytest.main(test_paramters)
+        pytest.main(self.test_parameters)
 
-    def _set_test_parameters(self):
-        """ Use data-model to create test parameters
+    def _init_parameters(self):
+        """ Initialize all test values
         """
-
-        logging.info('Use data-model to create test parameters')
-
-        logging.info('Setting test parameters')
-        test_parameters = []
 
         parameter_keys = ['verbose', 'stdout', 'test_cases', 'html_report', 
                           'excel_report', 'json_report', 'processes', 'mark',
@@ -126,31 +122,45 @@ class TestsClient:
         for parameter_key in parameter_keys:
             if parameter_key not in self.data_model['parameters']:
                 self.data_model['parameters'][parameter_key] = None
-        
-        test_cases = self.data_model['parameters']['test_cases']
-        report_dir = self.data_model['parameters']['report_dir']
-        html_report = self.data_model['parameters']['html_report']
-        excel_report = self.data_model['parameters']['excel_report']
-        json_report = self.data_model['parameters']['json_report']
-        processes = self.data_model['parameters']['processes']
-        setup_show = self.data_model['parameters']['setup_show']
+
+    def _set_verbosity(self):
+        """ Set verbosity for test run
+        """
+
         verbose = self.data_model['parameters']['verbose']
+        self._set_cmdline_no_input(verbose, '-v')
+
+    def _set_stdout(self):
+        """ Set stdout for test run
+        """
+
         stdout = self.data_model['parameters']['stdout']
-        mark = self.data_model['parameters']['mark']
+        self._set_cmdline_no_input(stdout, '-s')
 
-        test_parameters.append('--junit-xml=../reports/report.xml')
+    def _set_setup_show(self):
+        """ Set stdout for test run
+        """
 
-        if verbose:
-            logging.info('Enable pytest output verbosity')
-            test_parameters.append('-v')
+        setup_show = self.data_model['parameters']['setup_show']
+        self._set_cmdline_no_input(setup_show, '--setup-show')
+
+    def _set_cmdline_no_input(self, parameter, ext):
+
+        if parameter and ext not in self.test_parameters:
+            logging.info(f'Enable pytest output {parameter}')
+            self.test_parameters.append(ext)
+        if not parameter and ext in self.test_parameters:
+            logging.info(f'Remove and disable pytest output {parameter}')
+            parameter_index = self.test_parameters.index(ext)
+            self.test_parameters.pop(parameter_index)
         else:
-            logging.warning('Disable pytest output verbosity')
+            logging.warning(f'Disable pytest output {parameter}')
 
-        if stdout:
-            logging.info('Enable pytest printf to stdout')
-            test_parameters.append('-s')
-        else:
-            logging.warning('Disable pytest printf to stdout')
+    def _set_test_cases(self):
+        """ Set test cases for test run
+        """
+
+        test_cases = self.data_model['parameters']['test_cases']
 
         logging.info(f'Run the following tests: {test_cases}')
         if test_cases == 'All':
@@ -158,50 +168,109 @@ class TestsClient:
         elif not test_cases:
             pass
         else:
-            test_parameters.append(f'-k {test_cases}')
+            self.test_parameters.append(f'-k {test_cases}')
 
-        if html_report:
-            html_report = f'{report_dir}/{html_report}'
-            logging.info(f'Set HTML report name to: {html_report}')
-            test_parameters.append(f'--html={html_report}.html')
+    def _set_html_report(self, report_dir):
+        """ Set html_report for test run
+        """
+
+        html_report = self.data_model['parameters']['html_report']
+        html_name = f'--html={report_dir}/{html_report}.html'
+        list_out = [x for x in self.test_parameters if '--html' in x] 
+
+        if html_report and html_name not in self.test_parameters:
+            logging.info(f'Set HTML report name to: {html_name}')
+            self.test_parameters.append(html_name)
+        elif not html_report and len(list_out) > 0:
+            for list_item in list_out:
+                parameter_index = self.test_parameters.index(list_item)
+                self.test_parameters.pop(parameter_index)
         else:
             logging.warning('HTML report will NOT be created')
 
-        if excel_report:
-            excel_report = f'{report_dir}/{excel_report}'
-            logging.info(f'Set excel report name to: {excel_report}')
-            test_parameters.append(f'--excelreport={excel_report}.xlsx')
-        else:
-            logging.warning('Excel report will NOT be created')
+    def _set_excel_report(self, report_dir):
+        """ Set excel_report for test run
+        """
 
-        if json_report:
-            json_report = f'{report_dir}/{json_report}'
-            logging.info(f'Set json report name to: {json_report}')
-            test_parameters.append(f'--json={json_report}.json')
-        else:
-            logging.warning('JSON report will NOT be created')
+        excel_report = self.data_model['parameters']['excel_report']
+        excel_name = f'--excelreport={report_dir}/{excel_report}.xlsx'
+        self._set_cmdline_report(excel_report, excel_name, '--excelreport')
 
-        if processes:
-            logging.info(f'Set number of PyTest process to: {processes}')
-            test_parameters.append(f'-n {processes}')
-        else:
-            logging.warning('Using single PyTest processes')
+    def _set_json_report(self, report_dir):
+        """ Set json_report for test run
+        """
 
-        if setup_show:
-            logging.info('Enable debug for setup and teardown')
-            test_parameters.append('--setup-show')
-        else:
-            logging.warning('Disable debug for setup and teardown')
+        json_report = self.data_model['parameters']['json_report']
+        json_name = f'--json={report_dir}/{json_report}.json'
+        self._set_cmdline_report(json_report, json_name, '--json')
 
-        if mark:
-            logging.info(f'Run the test cases with mark: {mark}')
-            test_parameters.append(f'-m {mark}')
-        else:
-            logging.info('Do NOT use marking within test run')
+    def _set_cmdline_report(self, parameter, report, ext):
 
-        logging.info('Setting the following PyTest parmaters: '
-                     f'{test_parameters}')
-        return test_parameters
+        list_out = [x for x in self.test_parameters if ext in x] 
+
+        if parameter and report not in self.test_parameters:
+            logging.info(f'Set {ext} report name to: {report}')
+            self.test_parameters.append(report)
+        elif not parameter and len(list_out) > 0:
+            for list_item in list_out:
+                parameter_index = self.test_parameters.index(list_item)
+                self.test_parameters.pop(parameter_index)
+        else:
+            logging.warning(f'{ext} report will NOT be created')
+
+    def _set_processes(self):
+
+        processes = self.data_model['parameters']['processes']
+        self._set_cmdline_input(processes, '-n')
+
+    def _set_mark(self):
+
+        mark = self.data_model['parameters']['mark']
+        self._set_cmdline_input(mark, '-m')
+
+    def _set_junit(self):
+
+        self.test_parameters.append('--junit-xml=../reports/report.xml')
+
+    def _set_cmdline_input(self, parameter, ext):
+
+        list_out = [x for x in self.test_parameters if ext in x] 
+
+        if parameter and len(list_out) == 0:
+            logging.info(f'Set PyTest {ext} to: {parameter}')
+            self.test_parameters.append(f'{ext} {parameter}')
+        elif parameter and len(list_out) > 0:
+            for list_item in list_out:
+                parameter_index = self.test_parameters.index(list_item)
+                self.test_parameters.pop(parameter_index)
+            logging.info(f'Set PyTest {ext} to: {parameter}')
+            self.test_parameters.append(f'{ext} {parameter}')
+        elif not parameter and len(list_out) > 0:
+            for list_item in list_out:
+                parameter_index = self.test_parameters.index(list_item)
+                self.test_parameters.pop(parameter_index)
+        else:
+            logging.info(f'Not Setting PyTest {ext}')
+
+    def _set_test_parameters(self):
+        """ Use data-model to create test parameters
+        """
+
+        report_dir = self.data_model['parameters']['report_dir']
+
+        logging.info('Use data-model to create test parameters')
+        logging.info('Setting test parameters')
+        self._init_parameters()
+        self._set_verbosity()
+        self._set_stdout()
+        self._set_setup_show()
+        self._set_test_cases()
+        self._set_html_report(report_dir)
+        self._set_excel_report(report_dir)
+        self._set_json_report(report_dir)
+        self._set_processes()
+        self._set_mark()
+        self._set_junit()
 
     def _render_eapi_cfg(self):
         """ Render .eapi.conf file so pytests can log into devices
@@ -214,6 +283,7 @@ class TestsClient:
 
         try:
             logging.info(f'Open {eapi_template} Jinja2 template for reading')
+
             with open(eapi_template, 'r') as jinja_file:
                 logging.info(f'Read and save contents of {eapi_template} '
                              'Jinja2 template')
@@ -226,13 +296,25 @@ class TestsClient:
             logging.error(f'ERROR READING {eapi_template}: {err_data}')
             logging.error('EXITING TEST RUNNER')
             sys.exit(1)
+        
+        self._write_file(resource_file)
 
-        logging.info(f'Rendered {eapi_file} as: {resource_file}')
+    def _write_file(self, file_data):
+        """ Write data to a file
+
+        Args:
+            file_data (str): Data to write to file
+        """
+
+        eapi_file = self.data_model["parameters"]["eapi_file"]
+
+        logging.info(f'Rendered {eapi_file} as: {file_data}')
         try:
             logging.info(f'Open {eapi_file} for writing')
+
             with open(eapi_file, 'w') as output_file:
-                output_file.write(resource_file)
-        except IOError as err_data:
+                output_file.write(file_data)
+        except (IOError, FileNotFoundError) as err_data:
             print(f">>> ERROR WRITING {eapi_file}: {err_data}")
             logging.error(f'ERROR WRITING {eapi_file}: {err_data}')
             logging.error('EXITING TEST RUNNER')
