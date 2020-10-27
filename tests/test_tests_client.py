@@ -1,6 +1,7 @@
 import vane.bin.tests_client as tests_client
 import os
 import configparser
+import time
 
 DEFINITIONS = '/project/vane/bin/definitions.yaml'
 TC = tests_client.TestsClient(DEFINITIONS)
@@ -43,14 +44,14 @@ def test_setting_test_parameters():
     """
 
     definitions = {
-        'verbose': [False, True],
-        'stdout': [True, False],
+        'verbose': [False, True, False],
+        'stdout': [False, True, False],
         'test_cases': ["All", "evpn", None],
         'html_report': [None, "report"],
         'excel_report': ["report", None],
         'json_report': [None, "report"],
         'processes': [3, 2, 1, None],
-        'setup_show': [False, True],
+        'setup_show': [False, True, False],
         'mark': ['nrfu', 'cpu', 'memory', None]
     }
 
@@ -75,25 +76,25 @@ def test_setting_test_parameters():
         if definition in ['verbose', 'stdout', 'setup_show']:
             for definition_value in definitions[definition]:
                 TC.data_model['parameters'][definition] = definition_value
-                test_parameters = TC._set_test_parameters()
+                TC._set_test_parameters()
 
-                assert definition_value == (extensions[definition] in test_parameters)
+                assert definition_value == (extensions[definition] in TC.test_parameters)
 
         elif definition in ['test_cases']:
             for definition_value in definitions[definition]:
                 TC.data_model['parameters'][definition] = definition_value
-                test_parameters = TC._set_test_parameters()
+                TC._set_test_parameters()
                 extension = extensions[definition]
 
                 if definition_value == 'All' or not definition_value:
-                    assert False == (extension in test_parameters)
+                    assert False == (extension in TC.test_parameters)
                 else:
-                    assert True == (f'{extension} {definition_value}' in test_parameters)
+                    assert True == (f'{extension} {definition_value}' in TC.test_parameters)
         
         elif definition in ['html_report', 'json_report', 'excel_report']:
             for definition_value in definitions[definition]:
                 TC.data_model['parameters'][definition] = definition_value
-                test_parameters = TC._set_test_parameters()
+                TC._set_test_parameters()
 
                 if extensions[definition] == 'excel':
                     extension = f'--{extensions[definition]}report'
@@ -103,21 +104,24 @@ def test_setting_test_parameters():
                     suffix = extensions[definition]
 
                 if definition_value:
-                    assert True == (f'{extension}={report_dir}/{definition_value}.{suffix}' in test_parameters)
+                    assert True == (f'{extension}={report_dir}/{definition_value}.{suffix}' in TC.test_parameters)
                 else:
-                    list_output = [x for x in test_parameters if extension in x]
+                    list_output = [x for x in TC.test_parameters if extension in x]
+                    #print(f'>>> definition: {definition}, extension: {extension}, definition_value: {definition_value}, list output: {list_output}\n>>> {TC.test_parameters}')
                     assert True == (len(list_output) == 0)
 
         elif definition in ['processes', 'mark']:
             for definition_value in definitions[definition]:
                 TC.data_model['parameters'][definition] = definition_value
-                test_parameters = TC._set_test_parameters()
+                TC._set_test_parameters()
                 extension = extensions[definition]
 
+                print(f'>>> definition: {definition}, definition_value: {definition_value}\n>>> {TC.test_parameters}')
                 if definition_value:
-                    assert True == (f'{extension} {definition_value}' in test_parameters)
+                    assert True == (f'{extension} {definition_value}' in TC.test_parameters)
                 else:
-                    list_output = [x for x in test_parameters if extension in x]
+                    list_output = [x for x in TC.test_parameters if extension in x]
+                    print(f'>>> definition: {definition}, list output: {list_output}\n>>> {TC.test_parameters}')
                     assert True == (len(list_output) == 0)
 
 def test_test_parameters_not_set():
@@ -141,6 +145,9 @@ def test_import_no_definitions():
     try:
         definitions = '/project/vane/bin/no_definitions.yaml'
         tc = tests_client.TestsClient(definitions)
+
+        assert False
+
     except:
         assert True
 
@@ -163,6 +170,9 @@ def test_import_bad_definitions():
 
     try:
         tc = tests_client.TestsClient(bad_definition)
+
+        assert False
+
     except:
         if os.path.exists(bad_definition):
             os.remove(bad_definition)
@@ -206,5 +216,71 @@ def test_eapi_cfg_data():
         assert config[dut_name]['username'] == dut['username']
         assert config[dut_name]['password'] == dut['password']
 
+def test_no_eapi_template():
+    """ Verify an exception is created for Jinja2 template that doesn't exist
+    """
 
+    eapi_file = TC.data_model['parameters']['eapi_file']
+    file_life = 0
 
+    if os.path.exists(eapi_file):
+        file_life = os.path.getmtime(eapi_file)
+
+    TC.data_model['parameters']['eapi_template'] = 'not_a_file.j2'
+
+    try:
+        TC._render_eapi_cfg()
+
+        assert False
+
+    except:
+        new_file_life = os.path.getmtime(eapi_file)
+
+    assert new_file_life == file_life
+
+def test_not_able_to_write_file():
+    """ Verify an exception is created when eapi.conf file is unable to write
+    """
+
+    test_data = """[connection:kg-topology-CloudEosRR1]
+host: 3.129.242.29
+username: kgrozis
+password: arista123
+transport: https
+    """
+
+    tc = tests_client.TestsClient(DEFINITIONS)
+    tc.data_model['parameters']['eapi_file'] = '/no/such/dir/.eapi.conf'
+
+    try:
+        #tc._write_file(test_data)
+        pass
+
+    except Exception as e:
+        assert True
+
+def test_remove_result_files():
+    """ Verify files are removed from results directory
+    """
+
+    tc = tests_client.TestsClient(DEFINITIONS)
+    results_dir = tc.data_model['parameters']['results_dir']
+
+    if not os.path.exists(results_dir):
+        os.makedirs(results_dir)
+
+    for x in range(10):
+        file_name = f'{results_dir}/result-file{x}'
+
+        with open(file_name, 'w') as results_file:
+            results_file.write('test 1 2 3...')
+
+    tc = tests_client.TestsClient(DEFINITIONS)
+    tc._remove_result_files()
+    results_files = os.listdir(results_dir)
+
+    for name in results_files:
+        if 'result-' in name:
+            assert False
+    
+    assert True
