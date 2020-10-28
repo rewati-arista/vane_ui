@@ -67,8 +67,8 @@ parameters:
   eapi_file: /home/docker/.eapi.conf
   eapi_template: /project/vane/templates/eapi.conf.j2
   excel_report: null
-  html_report: ../reports/report
-  json_report: ../reports/report
+  html_report: /project/vane/reports/report
+  json_report: /project/vane/reports/report
   mark: null
   processes: 3
   report_dir: ../reports

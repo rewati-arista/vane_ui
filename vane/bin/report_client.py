@@ -66,7 +66,7 @@ class ReportClient:
 
         _results_file = self.data_model['parameters']['results_file']
         self._results_datamodel = None
-        self._compile_yaml_data('../reports/results/', _results_file)
+        self._compile_yaml_data('/project/vane/reports/results/', _results_file)
         logging.info(f'Results file data is {self._results_datamodel}')
 
         self._document = docx.Document()
@@ -196,7 +196,7 @@ class ReportClient:
         self._write_detail_report()
 
         _, file_date = self._return_date()
-        file_name = f'../reports/report_{file_date}.docx'
+        file_name = f'/project/vane/reports/report_{file_date}.docx'
         self._document.save(file_name)
 
     def _return_date(self):
@@ -705,7 +705,7 @@ class ReportClient:
         return tc_name
 
     def _format_test_field(self, test_field):
-        """ Input a test field  name and return a formatted name for
+        """ Input a test field name and return a formatted name for
             test field
 
         Args:
