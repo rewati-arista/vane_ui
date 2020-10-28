@@ -16,6 +16,7 @@ build:
 unit_tests:
   stage: test
   script:
+    - docker exec -i vane bash -c "mkdir /project/vane/reports/results/"
     - docker exec -i vane pwd
     - docker exec -i vane bash -c "pytest --cov-report html --cov-report xml:cov.xml --junit-xml=junit.xml --cov=/project/vane/bin tests"
     - docker exec -i vane bash -c "pytest --cov=/project/vane/bin tests"

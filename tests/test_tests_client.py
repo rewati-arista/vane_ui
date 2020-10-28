@@ -107,7 +107,6 @@ def test_setting_test_parameters():
                     assert True == (f'{extension}={report_dir}/{definition_value}.{suffix}' in TC.test_parameters)
                 else:
                     list_output = [x for x in TC.test_parameters if extension in x]
-                    #print(f'>>> definition: {definition}, extension: {extension}, definition_value: {definition_value}, list output: {list_output}\n>>> {TC.test_parameters}')
                     assert True == (len(list_output) == 0)
 
         elif definition in ['processes', 'mark']:
@@ -116,12 +115,10 @@ def test_setting_test_parameters():
                 TC._set_test_parameters()
                 extension = extensions[definition]
 
-                print(f'>>> definition: {definition}, definition_value: {definition_value}\n>>> {TC.test_parameters}')
                 if definition_value:
                     assert True == (f'{extension} {definition_value}' in TC.test_parameters)
                 else:
                     list_output = [x for x in TC.test_parameters if extension in x]
-                    print(f'>>> definition: {definition}, list output: {list_output}\n>>> {TC.test_parameters}')
                     assert True == (len(list_output) == 0)
 
 def test_test_parameters_not_set():
