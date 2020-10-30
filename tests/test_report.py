@@ -11,30 +11,16 @@ def test_assert():
     assert True
 
 
-def test_object():
+def test_object(rc_methods, rc_variables):
     """ Verify instance of TestsClient Object can be created 
     """
 
-    methods = ['_compile_yaml_data', '_reconcile_results', '_import_yaml', 
-               'write_result_doc', '_return_date', '_write_title_page',
-               '_write_toc_page', '_write_summary_report', 
-               '_write_summary_results', '_write_dut_summary_results', 
-               '_write_suite_summary_results', '_compile_test_results',
-               '_parse_testcases', '_totals', '_write_tests_case_report',
-               '_write_detail_report', '_write_detail_major_section', 
-               '_write_detail_minor_section', '_write_detail_dut_section',
-               '_add_dut_table_row', '_compile_suite_results',
-               '_compile_testcase_results', '_format_ts_name', '_format_tc_name',
-               '_format_test_field']
-    variables = ['data_model', '_summary_results', '_results_datamodel',
-                 '_document', '_major_section', '_test_id']
-
     # Test for known methods in object
-    for method in methods:
+    for method in rc_methods:
         assert True == (method in dir(RC))
 
     # Test for known methods in variables
-    for variable in variables:
+    for variable in rc_variables:
         assert True == (variable in dir(RC))
 
 def test_date_creation():
@@ -50,7 +36,7 @@ def test_date_creation():
     assert old_file_date == file_date
     assert old_file_date < format_date
 
-def test_formating_test_case_name(test_names, report_names):
+def test_formating_test_case(test_names, report_names):
     """ Verify object can format a test case name correctly
     """
 
@@ -63,3 +49,56 @@ def test_formating_test_case_name(test_names, report_names):
         format_name = RC._format_tc_name(test_name)
 
         assert format_name == report_name
+
+def test_format_test_field(test_names, field_names):
+    """ Verify object can format a test case field correctly
+
+    Args:
+        test_names (list): Names of tests
+        report_names (list): Names of pass criteria
+    """
+
+    test_range = len(test_names)
+
+    for test_index in range(test_range):
+        test_name = test_names[test_index]
+        field_name = field_names[test_index]
+
+        format_name = RC._format_test_field(test_name)
+
+        assert format_name == field_name
+
+def test_format_test_suite_name(test_suites):
+    """ Verify object can format a test suite name correcty
+    """
+
+    ts_inputs = test_suites['input']
+    ts_results = test_suites['result']
+    test_range = len(ts_inputs)
+
+    for test_index in range(test_range):
+        suite_name = ts_inputs[test_index]
+        suite_result = ts_results[test_index]
+
+        format_name = RC._format_ts_name(suite_name)
+
+        assert format_name == suite_result
+
+def test_if_keys_in_dict(duts_dict):
+    """ Verify object can test if an object is in dict
+    """
+
+    duts = duts_dict['duts']
+    questions = duts_dict['questions']
+    answers = duts_dict['answers']
+    test_range = len(questions)
+
+    for test_index in range(test_range):
+
+        question = questions[test_index]
+        answer = answers[test_index]
+
+        total = RC._totals(duts, question)
+
+        assert total == answer
+

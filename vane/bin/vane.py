@@ -38,6 +38,7 @@ import logging
 import tests_client
 import report_client
 import xcel_client
+import sys
 
 
 logging.basicConfig(level=logging.INFO, filename='vane.log', filemode='w',
@@ -76,6 +77,9 @@ def input_spreadsheet(definitions_file):
     """
 
     vane_xcel_client = xcel_client.XcelClient(definitions_file)
+    vane_xcel_client.import_spreadsheet()
+    vane_xcel_client.parse_spreadsheet()
+    sys.exit(0)
 
 
 def run_tests(definitions_file):

@@ -56,6 +56,9 @@ class XcelClient:
         self.definitions = self._import_yaml(definitions_file)
         self.spreadsheet = ""
 
+        xcel_defs = self.definitions['parameters']['xcel_definitions']
+        self.xcel_defs = self._import_yaml(xcel_defs)
+
     def _import_yaml(self, yaml_file):
         """ Import YAML file as python data structure
 
@@ -96,7 +99,75 @@ class XcelClient:
 
         try:
             self.spreadsheet = openpyxl.load_workbook(spreadsheet_path)
+            logging.info(f'Successfully importted spreadsheet {spreadsheet_path}')
         except:
             logging.error(f'Error opening spreadsheet {spreadsheet_path}')
             print(f'ERROR OPENING SPREADSHEET {spreadsheet_path}')
             sys.exit(1)
+
+    def parse_spreadsheet(self):
+        """ Use excel definitioins to parse informations from spreadsheet
+        """
+
+        worksheet = self._return_worksheet('HostnameMgmt')
+        self._parse_host_tab(worksheet)
+
+    def _return_worksheet(self, ws_role):
+        """ Returns worksheet name
+
+        Args:
+            ws_role (str): Excel Worksheet role
+
+        Returns:
+            str: Excel worksheet name
+        """
+
+        tab = None
+        worksheets = self.xcel_defs['worksheets']
+        ws_data = [x for x in worksheets if ws_role == x['role']]
+        logging.info(f'Found Worksheet role {ws_data}')
+        ws_name = ws_data[0]['name']
+        logging.info(f'Worksheet name is {ws_name}')
+
+        for worksheet in self.spreadsheet.sheetnames:
+            logging.info(f'Comparing criteria |{ws_name}| to tab |{worksheet}|')
+            if ws_name == worksheet:
+                logging.info(f"Matched tab {worksheet}")
+                tab = worksheet
+        
+        if tab:
+            logging.info(f'Found tab {tab}')
+            return tab
+        else:
+            logging.error(f'Error spreadsheet worksheet not found {ws_name}')
+            print(f'ERROR NO SPREADSHEET TAB NOT FOUND {ws_name}')
+            sys.exit(1)
+                
+    def _parse_host_tab(self, ws_name):
+
+        worksheets = self.xcel_defs['worksheets']
+        ws_data = [x for x in worksheets if ws_name == x['name']]
+        header_row = ws_data[0]['header_row']
+
+        hosts, host_col = self._return_header(header_row, 'hostname')
+        devices, device_col = self._return_header(header_row, 'device_function')
+
+        # hosts = [x for x in ws_data if 'hostname' == x['role']]
+        # host_col = hosts['column']
+        # hosts = [x for x in ws_data if 'hostname' == x['role']]
+        # host_col = hosts['column']
+# 
+        # for header_field in header_row:
+        #     name = header_field['name']
+        #     column = header_field['column']
+        #     last_row = len(self.spreadsheet[ws_name][column])
+        #     print(f'{name} {column}')
+
+    def _return_header(self, header, field):
+
+        header_data = [x for x in header if field == x['role']]
+        header_col = header_data[0]['column']
+        print(header_data[0], header_col)
+
+        return header_data[0], header_col
+

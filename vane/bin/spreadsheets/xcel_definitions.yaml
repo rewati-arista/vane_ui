@@ -1,0 +1,30 @@
+---
+name: PS-LLD-Questionnaire-Template.xlsx
+worksheets:
+- name: HostnameMgmt IPBGP ASRouter IDV
+  role: HostnameMgmt
+  header_row:
+  - name: Device Function
+    role: device_function
+    column: A
+    start_row: 1
+  - name: Hostname
+    role: hostname
+    column: B
+    start_row: 1
+  - name: Managment IP 
+    role: mgmt_ip
+    column: C
+    start_row: 1
+  - name: BGP AS Number
+    role: bgp_asn
+    column: D
+    start_row: 1
+  - name: BGP Router ID (lo0)
+    role: bgp_id
+    column: E
+    start_row: 1
+  - name: VTEP IP (lo1)
+    role: vtep_ip
+    column: F
+    start_row: 1
