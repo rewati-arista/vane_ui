@@ -13,7 +13,9 @@ build:
     - docker build . -f ci/Dockerfile.ci -t vane:latest --build-arg UID=$(id -u) --build-arg GID=$(id -g)
     - docker run -t -d --rm --name vane vane:latest
     - docker save vane > vane.tar
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build -t registry.gitlab.aristanetworks.com/arista-eosplus/vane . -f ci/Dockerfile.ci --build-arg UID=$(id -u) --build-arg GID=$(id -g)
+    - docker push registry.gitlab.aristanetworks.com/arista-eosplus/vane
 # Container to large to save
 #  artifacts:
 #    paths:
