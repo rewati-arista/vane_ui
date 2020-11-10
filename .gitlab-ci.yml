@@ -13,6 +13,9 @@ build:
     - docker build . -f ci/Dockerfile.ci -t vane:latest --build-arg UID=$(id -u) --build-arg GID=$(id -g)
     - docker run -t -d --rm --name vane vane:latest
     - docker save vane > vane.tar
+  artifacts:
+    paths:
+      - vane.tar
 
 unit_tests:
   stage: test
@@ -50,7 +53,6 @@ pages:
   stage: deploy
   script:
     - mv htmlcov/ public/
-    - mv vane.tar public
   artifacts:
     paths:
       - public
