@@ -83,3 +83,4 @@ parameters:
   verbose: true
   spreadsheet: /project/vane/bin/spreadsheets/PS-LLD-Questionnaire-Template.xlsx
   xcel_definitions: /project/vane/bin/spreadsheets/xcel_definitions.yaml
+  xcel_schema: /project/vane/bin/spreadsheets/xcel_schema.yaml

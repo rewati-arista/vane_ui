@@ -290,7 +290,6 @@ def return_show_cmd(show_cmd, dut, test_name, test_parameters):
     show_output = conn.enable(show_cmd)
     logging.info(f'Raw json output of {show_cmd} on dut {name}: {show_output}')
 
-
     try:
         show_output_text = conn.run_commands(show_cmd, encoding='text')
         raw_text = show_output_text[0]['output']
