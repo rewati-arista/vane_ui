@@ -3,7 +3,8 @@ stages:
  - test
  - deploy
 
-build:
+# build container locally for unit and system tests
+ci_build:
   stage: build
   image: docker:latest
   services: 
@@ -12,14 +13,17 @@ build:
     - if [ "$( docker container inspect -f '{{.State.Running}}' vane )" == "true" ]; then docker stop vane; fi
     - docker build . -f ci/Dockerfile.ci -t vane:latest --build-arg UID=$(id -u) --build-arg GID=$(id -g)
     - docker run -t -d --rm --name vane vane:latest
-    - docker save vane > vane.tar
+
+# build container for registry and distribution
+runtime_build:
+  stage: build
+  image: docker:latest
+  services: 
+    - docker:dind
+  script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build -t registry.gitlab.aristanetworks.com/arista-eosplus/vane . -f ci/Dockerfile.ci --build-arg UID=$(id -u) --build-arg GID=$(id -g)
     - docker push registry.gitlab.aristanetworks.com/arista-eosplus/vane
-# Container to large to save
-#  artifacts:
-#    paths:
-#      - vane.tar
 
 unit_tests:
   stage: test
