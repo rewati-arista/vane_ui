@@ -178,24 +178,9 @@ class XcelClient:
 
         table = self._read_spreadsheet2(worksheet, table_dimensions)
 
-        # print('>>> table')
-        # pprint.pprint(table)
-
         for row in table:
             if table[row]['hostname']:
                 self.data_model["switches"].append(table[row])
-
-        #pprint.pprint(self.data_model)
-        # hosts = [x for x in ws_data if 'hostname' == x['role']]
-        # host_col = hosts['column']
-        # hosts = [x for x in ws_data if 'hostname' == x['role']]
-        # host_col = hosts['column']
-# 
-        # for header_field in header_row:
-        #     name = header_field['name']
-        #     column = header_field['column']
-        #     last_row = len(self.spreadsheet[ws_name][column])
-        #     print(f'{name} {column}')
 
     def _return_cols(self, table_dimensions, multi_col):
 
@@ -242,74 +227,39 @@ class XcelClient:
 
             logging.info(f'Interesting rows {range(start_row, end_row)}')
 
-            #for row in range(start_row, end_row):
             for row in range(start_row, end_row):
-                # logging.info(f'Table iteration: {multi_col}, Table row iteration: {row}')
-
                 if row == start_row:
                     header_fields = []
-                    #for col in range(start_col, end_col):
+
                     for col in cols:
                         cell = worksheet.cell(row=row, column=col).value
-                        # print(f'row: {row}, col: {col}, value: {cell}')
                         header_fields.append(cell)
+
                     logging.info(f'Header Fields are {header_fields}')
                 else:
                     table[counter] = {}
-                    #for col in range(start_col, end_col):
-                    for col in cols:
-                        #print(f'col - {col} / multi - {multiplier} = {col/multiplier}')
-                        #col_key = int(col / multiplier)
 
+                    for col in cols:
                         if col < seed_col:
                             header_key = col - 1
                         else:
-                            # header_key = ((col - 1) - (multi_col * interval))
-                            # if interval == 0: interval = 1
                             header_key = ((col - 1) - ((multi_col - 1) * interval))
-
-                            # logging.info(f'header_key {header_key} = col '
-                            #              f'{col - 1} - (multi_col {multi_col}'
-                            #              f' * interval {interval})')
-                            #print(f'{header_key} | {col} | {multi_col} | {interval}')
-                            # logging.info(f'\n>>>> header_key {header_key}\n'
-                            #              f'>>>> col {col}\n'
-                            #              f'>>>> multi_col {multi_col}\n'
-                            #              f'>>>> interval {interval}\n'
-                            #              f'>>>> {header_key} = (({col} - 1) - ({multi_col} * ({interval} - 1))')
-
-
-                        # print(f'>>> {header_key}, {seed_col - 1}')
 
                         raw_key = header_fields[header_key]
                         key = header_row[raw_key]['role']
-                        # logging.info(f'Header_key is {header_key}, Raw_Key is '
-                        #              f'{raw_key}, Key is {key}')
-
                         cell = worksheet.cell(row=row, column=col).value
-                        # logging.info(f'Table iteration: {multi_col}, Table '
-                        #              f'row iteration: {row}, Table column '
-                        #              f'iteration: {col}, Cell value: {cell}')
-                        # logging.info(f'Adding {cell} to {key} in table using '
-                        #              f'{header_key}')
 
                         if header_key == (seed_col - 1) and device_start != 0:
                             device_col = seed_col * multi_col
-                            # print(f'>>> device_row: {device_start} device_col: {device_col}')
                             device = worksheet.cell(row=device_start, column=device_col).value
-                            #print(f'>>> device: {device}')
                             table[counter]['device'] = device
 
                         table[counter][key] = cell
-                        # logging.info(f'Table status: {table}')
 
                 counter += 1
 
         logging.info(f'Raw table output: {table}')
         table = self._clean_table(table)
-
-        # print('>>>> table')
-        # pprint.pprint(table)
 
         return table
 
@@ -336,10 +286,10 @@ class XcelClient:
         seed_col = (ord(seed_col.lower()) - 96)
 
         table_dimensions = {
-            'start_row' : start_row, # first row
-            'end_row': end_row,      # last row
-            'start_col': start_col,  # first col
-            'end_col' : end_col,     # last col
+            'start_row' : start_row,
+            'end_row': end_row,
+            'start_col': start_col,
+            'end_col' : end_col,
             'header_row' : header_row, 
             'interval' : interval,   
             'seed_col' : seed_col,
@@ -348,8 +298,6 @@ class XcelClient:
         }
 
         table = self._read_spreadsheet2(worksheet, table_dimensions)
-        # print('>>> table')
-        # pprint.pprint(table)
 
     def _clean_table(self, table):
         """ Take table constructed from excel and remove rows with None values
