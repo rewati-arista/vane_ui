@@ -157,11 +157,7 @@ class XcelClient:
         ws_data = [x for x in worksheets if ws_name == x['name']]
         header_row = ws_data[0]['header_row']
 
-        #hosts, host_col = self._return_header(header_row, 'hostname')
-        #devices, device_col = self._return_header(header_row, 'device_function')
-        #mgmt_ips, mgmt_ip_col = self._return_header(header_row, 'mgmt_ip')
-        #bgp_asns, bgp_asn_col = self._return_header(header_row, 'bgp_asn')
-        #vtep_ips, vtep_ip_col = self._return_header(header_row, 'vtep_ip')
+        print(header_row)
 
         host_col = header_row['Hostname']['column']
         end_row = len(self.spreadsheet[ws_name][host_col])
@@ -200,37 +196,6 @@ class XcelClient:
         #     column = header_field['column']
         #     last_row = len(self.spreadsheet[ws_name][column])
         #     print(f'{name} {column}')
-
-    def _return_header(self, header, field):
-
-        header_data = [x for x in header if field == x['role']]
-        header_col = header_data[0]['column']
-        
-        return header_data[0], header_col
-    
-    def _read_spreadsheet(self, worksheet, rows, cols, header_data, start_row=1):
-
-        table = {}
-
-        for row in range(start_row, rows):
-            if row == start_row:
-                header_row = []
-                for col in range(1, cols):
-                    cell = worksheet.cell(row=row, column=col).value
-                    #print(f'row: {row}, col: {col}, value: {cell}')
-                    header_row.append(cell)
-                logging.info(f'Header Row is {header_row}')
-            else:
-                table[row] = {}
-                for col in range(1, cols):
-                    raw_key = header_row[col - 1]
-                    key = header_data[raw_key]['role']
-                    cell = worksheet.cell(row=row, column=col).value
-                    table[row][key] = cell
-
-        table = self._clean_table(table)
-
-        return table
 
     def _return_cols(self, table_dimensions, multi_col):
 
@@ -332,7 +297,7 @@ class XcelClient:
                             device_col = seed_col * multi_col
                             # print(f'>>> device_row: {device_start} device_col: {device_col}')
                             device = worksheet.cell(row=device_start, column=device_col).value
-                            print(f'>>> device: {device}')
+                            #print(f'>>> device: {device}')
                             table[counter]['device'] = device
 
                         table[counter][key] = cell
@@ -344,7 +309,7 @@ class XcelClient:
         table = self._clean_table(table)
 
         # print('>>>> table')
-        pprint.pprint(table)
+        # pprint.pprint(table)
 
         return table
 
@@ -360,12 +325,6 @@ class XcelClient:
         header_row = ws_data[0]['device_row']['header_row']
         # print('>>> header:')
         # pprint.pprint(header_row)
-
-        #hosts, host_col = self._return_header(header_row, 'hostname')
-        #devices, device_col = self._return_header(header_row, 'device_function')
-        #mgmt_ips, mgmt_ip_col = self._return_header(header_row, 'mgmt_ip')
-        #bgp_asns, bgp_asn_col = self._return_header(header_row, 'bgp_asn')
-        #vtep_ips, vtep_ip_col = self._return_header(header_row, 'vtep_ip')
 
         int_col = header_row['Interface Number']['column']
         start_row = header_row['Interface Number']['start_row']
@@ -412,15 +371,11 @@ class XcelClient:
             for key in table_values:
                 value = table_values[key]
 
-                # logging.info(f'Test cell value: {value} for None')
                 if value != None and key != "device":
                     none_flag = False
             
             if not none_flag:
-                # logging.info(f'Adding row table[row] to new table')
                 new_table[row] = table[row]
-            # else:
-                # logging.info(f'Cleaning row table[{row}] from table')
 
         logging.info(f'Cleaned table output: {table}')
         return new_table

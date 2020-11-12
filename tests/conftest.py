@@ -31,6 +31,7 @@
 
 
 import pytest
+import vane.bin.xcel_client as xcel_client
 
 
 @pytest.fixture
@@ -117,3 +118,45 @@ def duts_dict():
                       'spine01' : 2, 'spine02': 4},
             'questions' : ['leaf01', 'spine01', 'dci'],
             'answers' : ['3', '2', '0'],}
+
+@pytest.fixture
+def xc():
+    """ create xcel_client object
+    """
+
+    definitions = '/project/vane/bin/definitions.yaml'
+    xc = xcel_client.XcelClient(definitions)
+
+    return xc
+
+@pytest.fixture
+def table():
+    """ represents a spreadsheet table
+    """
+
+    return { 'row1' : {'value1': 1, 'value2': 2, 'value3': 3},
+             'row2' : {'value1': None, 'value2': 2, 'value3': 3},
+             'row3' : {'value1': None, 'value2': None, 'value3': None},
+           }
+
+@pytest.fixture
+def columns():
+    """ represents a spreadsheet column
+    """
+
+    table_dimensions = {
+        'start_row' : 1, # first row
+        'end_row': 5,      # last row
+        'start_col': 1,  # first col
+        'end_col' : 10,     # last col
+        'header_row' : 1, 
+        'interval' : 3,   
+        'seed_col' : 3,
+        'multiplier' : 2,
+        'device_start' : 0,
+    }    
+    multi_cols = 2
+
+    return { 'table_dimensions' : table_dimensions,
+             'multi_cols' : multi_cols,
+           }
