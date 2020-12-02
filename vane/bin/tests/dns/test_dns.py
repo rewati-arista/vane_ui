@@ -42,42 +42,45 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.nrfu
 @pytest.mark.base_feature
 @pytest.mark.dns
-class DNSTests():
-    """ DNS Test Suite
-    """
+class DNSTests:
+    """DNS Test Suite"""
 
     def test_if_dns_resolves_on_(self, dut, tests_definitions):
-        """ Verify DNS is running by performing pings and verifying name resolution
+        """Verify DNS is running by performing pings and verifying name resolution
 
-             Args:
-              dut (dict): Encapsulates dut details including name, connection
+        Args:
+         dut (dict): Encapsulates dut details including name, connection
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
         show_cmds = []
 
         urls = tops.test_parameters["urls"]
-        dut_conn = dut['connection']
+        dut_conn = dut["connection"]
 
         for url in urls:
             show_cmd = f"ping {url}"
             show_cmds.append(show_cmd)
 
-            show_cmd_txt = dut_conn.run_commands(show_cmd, encoding='text')
-            show_cmd_txt = show_cmd_txt[0]['output']
+            show_cmd_txt = dut_conn.run_commands(show_cmd, encoding="text")
+            show_cmd_txt = show_cmd_txt[0]["output"]
 
-            tops.actual_output = 'Name or service not known' not in show_cmd_txt
+            tops.actual_output = "Name or service not known" not in show_cmd_txt
             tops.test_result = tops.actual_output is tops.expected_output
 
-            tops.output_msg += (f"\nOn router |{tops.dut_name}|, DNS resolution is"
-                                f"|{tops.test_result}| for {url}.\n")
+            tops.output_msg += (
+                f"\nOn router |{tops.dut_name}|, DNS resolution is"
+                f"|{tops.test_result}| for {url}.\n"
+            )
 
-            tops.comment += (f'TEST can |{tops.dut_name}| resolve |{url}|.\n'
-                             f'GIVEN URL is |{url}|.\n'
-                             'WHEN exception is |Name or service not known| '
-                             'string.\n'
-                             f'THEN test case result is |{tops.test_result}|.\n'
-                             f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}.\n')
+            tops.comment += (
+                f"TEST can |{tops.dut_name}| resolve |{url}|.\n"
+                f"GIVEN URL is |{url}|.\n"
+                "WHEN exception is |Name or service not known| "
+                "string.\n"
+                f"THEN test case result is |{tops.test_result}|.\n"
+                f"OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}.\n"
+            )
 
             tops.actual_results.append(tops.actual_output)
             tops.expected_results.append(tops.expected_output)
@@ -85,16 +88,19 @@ class DNSTests():
         print(f"{tops.output_msg}\n{tops.comment}")
 
         tops.show_cmd = show_cmds
-        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.actual_output, tops.expected_output = (
+            tops.actual_results,
+            tops.expected_results,
+        )
         tops.post_testcase()
 
         assert tops.actual_results == tops.expected_results
 
     def test_if_dns_servers_are_reachable_on_(self, dut, tests_definitions):
-        """ Verifies DNS servers are reachable via ping 
+        """Verifies DNS servers are reachable via ping
 
-            Args:
-              dut (dict): Encapsulates dut details including name, connection
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
@@ -108,33 +114,40 @@ class DNSTests():
                 show_cmd = f"ping {dns_server}"
 
             tops.return_show_cmd(show_cmd)
-            tops.actual_output = 'bytes from' in tops.show_cmd_txt
+            tops.actual_output = "bytes from" in tops.show_cmd_txt
             tops.test_result = tops.actual_output is tops.expected_output
 
-            tops.output_msg += (f"\nOn router |{tops.dut_name}|, verifying NTP "
-                                f"server reachability for |{dns_server}| is "
-                                f"|{tops.test_result}|.\n")
+            tops.output_msg += (
+                f"\nOn router |{tops.dut_name}|, verifying NTP "
+                f"server reachability for |{dns_server}| is "
+                f"|{tops.test_result}|.\n"
+            )
 
-            tops.comment += (f'TEST NTP servers are reachable on |{tops.dut_name}| '
-                             f'GIVEN server |{dns_server}|.\n'
-                             'WHEN exception is |bytes from| '
-                             'string.\n'
-                             f'THEN test case result is |{tops.test_result}|.\n'
-                             f'OUTPUT of |{show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+            tops.comment += (
+                f"TEST NTP servers are reachable on |{tops.dut_name}| "
+                f"GIVEN server |{dns_server}|.\n"
+                "WHEN exception is |bytes from| "
+                "string.\n"
+                f"THEN test case result is |{tops.test_result}|.\n"
+                f"OUTPUT of |{show_cmd}| is :\n\n{tops.show_cmd_txt}.\n"
+            )
 
             tops.actual_results.append(tops.actual_output)
             tops.expected_results.append(tops.expected_output)
 
-        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.actual_output, tops.expected_output = (
+            tops.actual_results,
+            tops.expected_results,
+        )
         tops.post_testcase()
 
         assert tops.actual_results == tops.expected_results
 
     def test_dns_configuration_on_(self, dut, tests_definitions):
-        """ Verifies DNS configuration matches the recommended practices 
+        """Verifies DNS configuration matches the recommended practices
 
-            Args:
-              dut (dict): Encapsulates dut details including name, connection
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
@@ -151,9 +164,11 @@ class DNSTests():
         if dns_servers:
             for dns_server in dns_servers:
                 if dns_vrf:
-                    dns_server_cfg = f'ip name-server vrf {dns_vrf} {dns_server}'
+                    dns_server_cfg = (
+                        f"ip name-server vrf {dns_vrf} {dns_server}"
+                    )
                 else:
-                    dns_server_cfg = f'ip name-server {dns_server}'
+                    dns_server_cfg = f"ip name-server {dns_server}"
 
                 vane_dns_cfg += f"{dns_server_cfg}\n"
                 tops.actual_output = dns_server_cfg in dns_cfg
@@ -161,9 +176,9 @@ class DNSTests():
                 tops.expected_results.append(tops.expected_output)
 
             if dns_intf and dns_vrf:
-                dns_server_cfg = f'ip domain lookup vrf {dns_vrf} source-interface {dns_intf}'
+                dns_server_cfg = f"ip domain lookup vrf {dns_vrf} source-interface {dns_intf}"
             elif dns_intf:
-                dns_server_cfg = f'ip domain lookup source-interface {dns_intf}'
+                dns_server_cfg = f"ip domain lookup source-interface {dns_intf}"
             else:
                 dns_server_cfg = None
 
@@ -174,7 +189,7 @@ class DNSTests():
                 vane_dns_cfg += f"{dns_server_cfg}\n"
 
             if dn_name:
-                dns_server_cfg = f'ip domain-name {dn_name}'
+                dns_server_cfg = f"ip domain-name {dn_name}"
 
             if dns_server_cfg:
                 tops.actual_output = dns_server_cfg in dns_cfg
@@ -182,23 +197,30 @@ class DNSTests():
                 tops.expected_results.append(tops.expected_output)
                 vane_dns_cfg += f"{dns_server_cfg}\n"
 
-        dns_cfg_length = len(dns_cfg.split('\n'))
-        vane_dns_cfg_length = len(vane_dns_cfg.split('\n'))
+        dns_cfg_length = len(dns_cfg.split("\n"))
+        vane_dns_cfg_length = len(vane_dns_cfg.split("\n"))
         tops.actual_output = dns_cfg_length == vane_dns_cfg_length
         tops.actual_results.append(tops.actual_output)
         tops.expected_results.append(tops.expected_output)
 
         tops.test_result = tops.actual_results == tops.expected_results
-        tops.output_msg += (f"|{tops.dut_name}| has the dns config "
-                            f"|{dns_cfg}|, expect the dns config "
-                            f"|{vane_dns_cfg}|.\n\n")
-        tops.comment += (f'TEST |{tops.dut_name}| DNS config.\n'
-                         f'GIVEN DNS config |{vane_dns_cfg}|.\n'
-                         f'WHEN DNS config |{dns_cfg}|.\n'
-                         f'THEN test case result is |{tops.test_result}|.\n\n'
-                         f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        tops.output_msg += (
+            f"|{tops.dut_name}| has the dns config "
+            f"|{dns_cfg}|, expect the dns config "
+            f"|{vane_dns_cfg}|.\n\n"
+        )
+        tops.comment += (
+            f"TEST |{tops.dut_name}| DNS config.\n"
+            f"GIVEN DNS config |{vane_dns_cfg}|.\n"
+            f"WHEN DNS config |{dns_cfg}|.\n"
+            f"THEN test case result is |{tops.test_result}|.\n\n"
+            f"OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n"
+        )
         print(f"{tops.output_msg}\n{tops.comment}")
 
-        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.actual_output, tops.expected_output = (
+            tops.actual_results,
+            tops.expected_results,
+        )
         tops.post_testcase()
         assert tops.actual_results == tops.expected_results

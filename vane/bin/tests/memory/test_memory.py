@@ -42,35 +42,38 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.nrfu
 @pytest.mark.platform_status
 @pytest.mark.memory
-class MemoryTests():
-    """ Memory Test Suite
-    """
+class MemoryTests:
+    """Memory Test Suite"""
 
     def test_memory_utilization_on_(self, dut, tests_definitions):
-        """ Verify memory is not exceeding high utlization
+        """Verify memory is not exceeding high utlization
 
-            Args:
-                dut (dict): Encapsulates dut details including name, connection
-                tests_definitions (dict): Test parameters
+        Args:
+            dut (dict): Encapsulates dut details including name, connection
+            tests_definitions (dict): Test parameters
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        memory_total = dut["output"][tops.show_cmd]["json"]['memTotal']
-        memory_free = dut["output"][tops.show_cmd]["json"]['memFree']
+        memory_total = dut["output"][tops.show_cmd]["json"]["memTotal"]
+        memory_free = dut["output"][tops.show_cmd]["json"]["memFree"]
         memory_percent = 0.00
         tops.actual_output = (float(memory_free) / float(memory_total)) * 100
         tops.test_result = tops.actual_output < tops.expected_output
 
-        tops.output_msg = (f"On router |{tops.dut_name}| memory utilization percent is "
-                           f"|{tops.actual_output}%| and should be under "
-                           f"|{tops.expected_output}%|")
-        tops.comment = (f'TEST if memory utilization is less than specified '
-                        f'value on  |{tops.dut_name}|.\n'
-                        f'GIVEN memory utilization is less than |{tops.expected_output}|.\n'
-                        f'WHEN  memory utilization is |{tops.actual_output}|.\n'
-                        f'THEN test case result is |{tops.test_result}|.\n'
-                        f'OUTPUT of |{tops.show_cmd}| is:\n\n{tops.show_cmd_txt}')
+        tops.output_msg = (
+            f"On router |{tops.dut_name}| memory utilization percent is "
+            f"|{tops.actual_output}%| and should be under "
+            f"|{tops.expected_output}%|"
+        )
+        tops.comment = (
+            f"TEST if memory utilization is less than specified "
+            f"value on  |{tops.dut_name}|.\n"
+            f"GIVEN memory utilization is less than |{tops.expected_output}|.\n"
+            f"WHEN  memory utilization is |{tops.actual_output}|.\n"
+            f"THEN test case result is |{tops.test_result}|.\n"
+            f"OUTPUT of |{tops.show_cmd}| is:\n\n{tops.show_cmd_txt}"
+        )
 
         print(f"{tops.output_msg}\n{tops.comment}")
 

@@ -44,134 +44,148 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.nrfu
 @pytest.mark.base_feature
 @pytest.mark.tacacs
-class TacacsTests():
-    """ AAA TACACS Test Suite
-    """
+class TacacsTests:
+    """AAA TACACS Test Suite"""
 
     def test_if_tacacs_is_sending_messages_on_(self, dut, tests_definitions):
-        """ Verify tacacs messages are sending correctly
+        """Verify tacacs messages are sending correctly
 
-            Args:
-              dut (dict): Encapsulates dut details including name, connection
-              tests_definitions (dict): Test parameters
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
+          tests_definitions (dict): Test parameters
         """
 
         test_case = inspect.currentframe().f_code.co_name
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+        test_parameters = tests_tools.get_parameters(
+            tests_definitions, TEST_SUITE, test_case
+        )
 
         expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
+        dut_name = dut["name"]
 
         show_cmd = test_parameters["show_cmd"]
         tests_tools.verify_show_cmd(show_cmd, dut)
         tacacs_servers = tests_tools.verify_tacacs(dut)
 
-        show_cmd_txt = dut["output"][show_cmd]['text']
+        show_cmd_txt = dut["output"][show_cmd]["text"]
 
-        logging.info(f'TEST is |{dut_name}| sending messages to TACACS server')
+        logging.info(f"TEST is |{dut_name}| sending messages to TACACS server")
 
         if tacacs_servers:
-            dut_ptr = dut["output"][show_cmd]['json']
-            eos_messages_sent_1 = dut_ptr['tacacsServers'][0]['messagesSent']
-            logging.info(f'GIVEN {eos_messages_sent_1} TACACS messages sent '
-                         'at time 1')
+            dut_ptr = dut["output"][show_cmd]["json"]
+            eos_messages_sent_1 = dut_ptr["tacacsServers"][0]["messagesSent"]
+            logging.info(
+                f"GIVEN {eos_messages_sent_1} TACACS messages sent " "at time 1"
+            )
 
-            show_output, _ = tests_tools.return_show_cmd(show_cmd,
-                                                         dut,
-                                                         test_case,
-                                                         LOG_FILE)
-            show_ptr = show_output[0]['result']
-            eos_messages_sent_2 = show_ptr['tacacsServers'][0]['messagesSent']
-            logging.info(f'WHEN {eos_messages_sent_2} TACACS messages sent '
-                         'at time 2')
+            show_output, _ = tests_tools.return_show_cmd(
+                show_cmd, dut, test_case, LOG_FILE
+            )
+            show_ptr = show_output[0]["result"]
+            eos_messages_sent_2 = show_ptr["tacacsServers"][0]["messagesSent"]
+            logging.info(
+                f"WHEN {eos_messages_sent_2} TACACS messages sent " "at time 2"
+            )
 
             actual_output = f"TACACS Sent Message Time 1: \
                             {eos_messages_sent_1} \nTACACS Sent Message \
                             Time 2: {eos_messages_sent_2}"
 
             if eos_messages_sent_1 < eos_messages_sent_2:
-                print(f"\nOn router |{dut_name}| TACACS messages2 sent: "
-                      f"|{eos_messages_sent_2}| increments from TACACS "
-                      f"messages1 sent: |{eos_messages_sent_1}|")
-                logging.info('THEN test case result is |True|')
+                print(
+                    f"\nOn router |{dut_name}| TACACS messages2 sent: "
+                    f"|{eos_messages_sent_2}| increments from TACACS "
+                    f"messages1 sent: |{eos_messages_sent_1}|"
+                )
+                logging.info("THEN test case result is |True|")
             else:
-                print(f"\nOn router |{dut_name}| TACACS messages2 sent: "
-                      f"|{eos_messages_sent_2}| doesn't increments from "
-                      f"TACACS messages1 sent: |{eos_messages_sent_1}|")
-                logging.info('THEN test case result is |False|')
+                print(
+                    f"\nOn router |{dut_name}| TACACS messages2 sent: "
+                    f"|{eos_messages_sent_2}| doesn't increments from "
+                    f"TACACS messages1 sent: |{eos_messages_sent_1}|"
+                )
+                logging.info("THEN test case result is |False|")
 
-            logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+            logging.info(f"OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}")
 
             assert eos_messages_sent_1 < eos_messages_sent_2
         else:
-            print(f"\nOn router |{dut_name}| does not have TACACS servers "
-                  "configured")
+            print(
+                f"\nOn router |{dut_name}| does not have TACACS servers "
+                "configured"
+            )
 
-    def test_if_tacacs_is_receiving_messages_on_(self,
-                                                      dut,
-                                                      tests_definitions):
-        """ Verify tacacs messages are received correctly
+    def test_if_tacacs_is_receiving_messages_on_(self, dut, tests_definitions):
+        """Verify tacacs messages are received correctly
 
-            Args:
-              dut (dict): Encapsulates dut details including name, connection
-              tests_definitions (dict): Test parameters
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
+          tests_definitions (dict): Test parameters
         """
 
         test_case = inspect.currentframe().f_code.co_name
-        test_parameters = tests_tools.get_parameters(tests_definitions,
-                                                     TEST_SUITE,
-                                                     test_case)
+        test_parameters = tests_tools.get_parameters(
+            tests_definitions, TEST_SUITE, test_case
+        )
 
         expected_output = test_parameters["expected_output"]
-        dut_name = dut['name']
+        dut_name = dut["name"]
 
         show_cmd = test_parameters["show_cmd"]
         tests_tools.verify_show_cmd(show_cmd, dut)
         tacacs_servers = tests_tools.verify_tacacs(dut)
 
-        show_cmd_txt = dut["output"][show_cmd]['text']
+        show_cmd_txt = dut["output"][show_cmd]["text"]
 
-        logging.info(f'TEST is |{dut_name}| receiving messages to TACACS '
-                     'server')
+        logging.info(
+            f"TEST is |{dut_name}| receiving messages to TACACS " "server"
+        )
 
         if tacacs_servers:
-            dut_ptr = dut["output"][show_cmd]['json']['tacacsServers']
-            eos_messages_received_1 = dut_ptr[0]['messagesReceived']
-            logging.info(f'GIVEN {eos_messages_received_1} TACACS messages '
-                         'recieved at time 1')
+            dut_ptr = dut["output"][show_cmd]["json"]["tacacsServers"]
+            eos_messages_received_1 = dut_ptr[0]["messagesReceived"]
+            logging.info(
+                f"GIVEN {eos_messages_received_1} TACACS messages "
+                "recieved at time 1"
+            )
 
-            show_output, _ = tests_tools.return_show_cmd(show_cmd,
-                                                         dut,
-                                                         test_case,
-                                                         LOG_FILE)
-            show_ptr = show_output[0]['result']['tacacsServers']
+            show_output, _ = tests_tools.return_show_cmd(
+                show_cmd, dut, test_case, LOG_FILE
+            )
+            show_ptr = show_output[0]["result"]["tacacsServers"]
 
-            eos_messages_received_2 = show_ptr[0]['messagesReceived']
-            logging.info(f'WHEN {eos_messages_received_2} TACACS messages '
-                         'sent at time 2')
+            eos_messages_received_2 = show_ptr[0]["messagesReceived"]
+            logging.info(
+                f"WHEN {eos_messages_received_2} TACACS messages "
+                "sent at time 2"
+            )
 
             actual_output = f"TACACS Sent Message Time 1: \
                             {eos_messages_received_1} \nTACACS Sent Message \
                             Time 2: {eos_messages_received_2}"
 
             if eos_messages_received_1 < eos_messages_received_2:
-                print(f"\nOn router |{dut['name']}| TACACS messages2 "
-                      f"received: |{eos_messages_received_2}| increments "
-                      "from TACACS messages1 received: "
-                      f"|{eos_messages_received_1}|")
-                logging.info('THEN test case result is |True|')
+                print(
+                    f"\nOn router |{dut['name']}| TACACS messages2 "
+                    f"received: |{eos_messages_received_2}| increments "
+                    "from TACACS messages1 received: "
+                    f"|{eos_messages_received_1}|"
+                )
+                logging.info("THEN test case result is |True|")
             else:
-                print(f"\nOn router |{dut['name']}| TACACS messages2 "
-                      f"received: |{eos_messages_received_2}| doesn't "
-                      "increments from ACACS messages1 received: "
-                      f"|{eos_messages_received_1}|")
-                logging.info('THEN test case result is |False|')
+                print(
+                    f"\nOn router |{dut['name']}| TACACS messages2 "
+                    f"received: |{eos_messages_received_2}| doesn't "
+                    "increments from ACACS messages1 received: "
+                    f"|{eos_messages_received_1}|"
+                )
+                logging.info("THEN test case result is |False|")
 
-            logging.info(f'OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}')
+            logging.info(f"OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}")
 
             assert eos_messages_received_1 < eos_messages_received_2
         else:
-            print(f"\nOn router |{dut_name}| does not have TACACS servers "
-                  "configured")
+            print(
+                f"\nOn router |{dut_name}| does not have TACACS servers "
+                "configured"
+            )

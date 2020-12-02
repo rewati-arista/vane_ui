@@ -43,15 +43,14 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.nrfu
 @pytest.mark.l2_protocols
 @pytest.mark.lldp
-class LldpTests():
-    """ LLDP Test Suite
-    """
+class LldpTests:
+    """LLDP Test Suite"""
 
     def test_if_lldp_rx_is_enabled_on_(self, dut, tests_definitions):
-        """  Verify LLDP receive is enabled on interesting interfaces
+        """Verify LLDP receive is enabled on interesting interfaces
 
-            Args:
-                dut (dict): Encapsulates dut details including name, connection
+        Args:
+            dut (dict): Encapsulates dut details including name, connection
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
@@ -59,69 +58,86 @@ class LldpTests():
         print(f"\nOn router |{tops.dut_name}|:")
 
         for interface in tops.interface_list:
-            interface_name = interface['interface_name'].replace(" ", "")
-            int_ptr = dut["output"][tops.show_cmd]['json']['lldpInterfaces']
-            tops.actual_output = int_ptr[interface_name]['rxEnabled']
+            interface_name = interface["interface_name"].replace(" ", "")
+            int_ptr = dut["output"][tops.show_cmd]["json"]["lldpInterfaces"]
+            tops.actual_output = int_ptr[interface_name]["rxEnabled"]
 
-            tops.output_msg += (f"On interface |{interface_name}|: interface LLDP"
-                                f"rxEnabled is in state |{tops.actual_output}|, correct "
-                                f"LLDP rxEnabled state is |{tops.expected_output}|")
+            tops.output_msg += (
+                f"On interface |{interface_name}|: interface LLDP"
+                f"rxEnabled is in state |{tops.actual_output}|, correct "
+                f"LLDP rxEnabled state is |{tops.expected_output}|"
+            )
 
             tops.test_result = tops.actual_output == tops.expected_output
-            tops.comment += (f'TEST if interface |{interface_name}| LLDP receive is '
-                             f'enabled on |{tops.dut_name}|.\n'
-                             f'GIVEN LLDP receive state is |{tops.expected_output}|.\n'
-                             f'WHEN LLDP receive state is |{tops.actual_output}|.\n'
-                             f'THEN test case result is |{tops.test_result}|.\n\n')
+            tops.comment += (
+                f"TEST if interface |{interface_name}| LLDP receive is "
+                f"enabled on |{tops.dut_name}|.\n"
+                f"GIVEN LLDP receive state is |{tops.expected_output}|.\n"
+                f"WHEN LLDP receive state is |{tops.actual_output}|.\n"
+                f"THEN test case result is |{tops.test_result}|.\n\n"
+            )
 
             tops.actual_results.append(tops.actual_output)
             tops.expected_results.append(tops.expected_output)
 
-        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        tops.comment += (
+            f"OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n"
+        )
 
         print(f"{tops.output_msg}\n{tops.comment}")
 
-        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.actual_output, tops.expected_output = (
+            tops.actual_results,
+            tops.expected_results,
+        )
         tops.post_testcase()
 
         assert tops.actual_results == tops.expected_results
 
     def test_if_lldp_tx_is_enabled_on_(self, dut, tests_definitions):
-        """  Verify LLDP transmit is enabled on interesting interfaces
+        """Verify LLDP transmit is enabled on interesting interfaces
 
-            Args:
-                dut (dict): Encapsulates dut details including name, connection
+        Args:
+            dut (dict): Encapsulates dut details including name, connection
         """
-
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
         print(f"\nOn router |{tops.dut_name}|:")
 
         for interface in tops.interface_list:
-            interface_name = interface['interface_name'].replace(" ", "")
-            int_ptr = dut["output"][tops.show_cmd]['json']['lldpInterfaces']
-            tops.actual_output = int_ptr[interface_name]['txEnabled']
+            interface_name = interface["interface_name"].replace(" ", "")
+            int_ptr = dut["output"][tops.show_cmd]["json"]["lldpInterfaces"]
+            tops.actual_output = int_ptr[interface_name]["txEnabled"]
 
-            tops.output_msg += (f"On interface |{interface_name}|: interface LLDP"
-                                f"txEnabled is in state |{tops.actual_output}|, correct "
-                                f"LLDP txEnabled state is |{tops.expected_output}|.\n\n")
+            tops.output_msg += (
+                f"On interface |{interface_name}|: interface LLDP"
+                f"txEnabled is in state |{tops.actual_output}|, correct "
+                f"LLDP txEnabled state is |{tops.expected_output}|.\n\n"
+            )
 
             tops.test_result = tops.actual_output == tops.expected_output
-            tops.comment += (f'TEST if interface |{interface_name}| LLDP receive is '
-                             f'enabled on |{tops.dut_name}|.\n'
-                             f'GIVEN LLDP receive state is |{tops.expected_output}|.\n'
-                             f'WHEN LLDP receive state is |{tops.actual_output}|.\n'
-                             f'THEN test case result is |{tops.test_result}|.\n\n')
+            tops.comment += (
+                f"TEST if interface |{interface_name}| LLDP receive is "
+                f"enabled on |{tops.dut_name}|.\n"
+                f"GIVEN LLDP receive state is |{tops.expected_output}|.\n"
+                f"WHEN LLDP receive state is |{tops.actual_output}|.\n"
+                f"THEN test case result is |{tops.test_result}|.\n\n"
+            )
 
             tops.actual_results.append(tops.actual_output)
             tops.expected_results.append(tops.expected_output)
 
-        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        tops.comment += (
+            f"OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n"
+        )
 
         print(f"{tops.output_msg}\n{tops.comment}")
 
-        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.actual_output, tops.expected_output = (
+            tops.actual_results,
+            tops.expected_results,
+        )
         tops.post_testcase()
 
         assert tops.actual_results == tops.expected_results
@@ -130,33 +146,36 @@ class LldpTests():
 @pytest.mark.nrfu
 @pytest.mark.l2_protocols
 @pytest.mark.lldp
-class LldpLocalInfoTests():
-    """ LLDP Local-Info Test Suite
-    """
+class LldpLocalInfoTests:
+    """LLDP Local-Info Test Suite"""
 
     def test_if_lldp_system_name_is_correct_on_(self, dut, tests_definitions):
-        """  Verify show lldp local-info hostname is the system's name
+        """Verify show lldp local-info hostname is the system's name
 
-            Args:
-                dut (dict): Encapsulates dut details including name, connection
+        Args:
+            dut (dict): Encapsulates dut details including name, connection
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
         tops.expected_output = tops.dut_name
-        tops.actual_output = dut["output"][tops.show_cmd]["json"]['systemName']
+        tops.actual_output = dut["output"][tops.show_cmd]["json"]["systemName"]
 
-        tops.output_msg = (f"On router |{tops.dut_name}|: the LLDP local-info system "
-                           f"name is |{tops.actual_output}|, correct name is "
-                           f"|{tops.expected_output}|.\n\n")
+        tops.output_msg = (
+            f"On router |{tops.dut_name}|: the LLDP local-info system "
+            f"name is |{tops.actual_output}|, correct name is "
+            f"|{tops.expected_output}|.\n\n"
+        )
         tops.test_result = tops.actual_output == tops.expected_output
 
-        tops.comment = ('TEST if lldp system name matches hostname on dut '
-                        f'{tops.dut_name}.\n'
-                        f'GIVEN hostname is |{tops.expected_output}|.\n'
-                        f'WHEN LLDP system name is |{tops.actual_output}|.\n'
-                        f'THEN test case result is |{tops.test_result}|.\n'
-                        f'OUTPUT of |{tops.show_cmd}| is:\n\n{tops.show_cmd_txt}')
+        tops.comment = (
+            "TEST if lldp system name matches hostname on dut "
+            f"{tops.dut_name}.\n"
+            f"GIVEN hostname is |{tops.expected_output}|.\n"
+            f"WHEN LLDP system name is |{tops.actual_output}|.\n"
+            f"THEN test case result is |{tops.test_result}|.\n"
+            f"OUTPUT of |{tops.show_cmd}| is:\n\n{tops.show_cmd_txt}"
+        )
 
         print(f"{tops.output_msg}\n{tops.comment}")
 
@@ -164,11 +183,13 @@ class LldpLocalInfoTests():
 
         assert tops.actual_output == tops.expected_output
 
-    def test_if_lldp_max_frame_size_is_correct_on_(self, dut, tests_definitions):
-        """  Verify show lldp local-info maxFrameSize is correct
+    def test_if_lldp_max_frame_size_is_correct_on_(
+        self, dut, tests_definitions
+    ):
+        """Verify show lldp local-info maxFrameSize is correct
 
-            Args:
-                dut (dict): Encapsulates dut details including name, connection
+        Args:
+            dut (dict): Encapsulates dut details including name, connection
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
@@ -176,37 +197,46 @@ class LldpLocalInfoTests():
         print(f"\nOn router |{tops.dut_name}|:")
 
         for interface in tops.interface_list:
-            interface_name = interface['interface_name'].replace(" ", "")
-            int_ptr = dut["output"][tops.show_cmd]["json"]['localInterfaceInfo']
-            tops.actual_output = int_ptr[interface_name]['maxFrameSize']
+            interface_name = interface["interface_name"].replace(" ", "")
+            int_ptr = dut["output"][tops.show_cmd]["json"]["localInterfaceInfo"]
+            tops.actual_output = int_ptr[interface_name]["maxFrameSize"]
 
-            tops.output_msg += (f"On interface |{interface_name}|: LLDP local-info "
-                                f"maxFrameSize is |{tops.actual_output}|, correct "
-                                f"maxFrameSize is |{tops.expected_output}|.\n\n")
+            tops.output_msg += (
+                f"On interface |{interface_name}|: LLDP local-info "
+                f"maxFrameSize is |{tops.actual_output}|, correct "
+                f"maxFrameSize is |{tops.expected_output}|.\n\n"
+            )
             tops.test_result = tops.actual_output == tops.expected_output
 
-            tops.comment += (f'TEST if |{tops.dut_name}| LLDP maxFrameSize is correct '
-                             f'on interface |{interface_name}|.\n'
-                             f'GIVEN LLDP maxFrameSize is |{tops.expected_output}|.\n'
-                             f'WHEN LLDP maxFrameSize is |{tops.actual_output}|.\n'
-                             f'THEN test case result is |{tops.test_result}|.\n\n')
+            tops.comment += (
+                f"TEST if |{tops.dut_name}| LLDP maxFrameSize is correct "
+                f"on interface |{interface_name}|.\n"
+                f"GIVEN LLDP maxFrameSize is |{tops.expected_output}|.\n"
+                f"WHEN LLDP maxFrameSize is |{tops.actual_output}|.\n"
+                f"THEN test case result is |{tops.test_result}|.\n\n"
+            )
 
             tops.actual_results.append(tops.actual_output)
             tops.expected_results.append(tops.expected_output)
 
-        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        tops.comment += (
+            f"OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n"
+        )
         print(f"{tops.output_msg}\n{tops.comment}")
 
-        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.actual_output, tops.expected_output = (
+            tops.actual_results,
+            tops.expected_results,
+        )
         tops.post_testcase()
 
         assert tops.actual_results == tops.expected_results
 
     def test_if_lldp_interface_id_is_correct_on_(self, dut, tests_definitions):
-        """  Verify show lldp local-info interfaceIdType is correct
+        """Verify show lldp local-info interfaceIdType is correct
 
-            Args:
-                dut (dict): Encapsulates dut details including name, connection
+        Args:
+            dut (dict): Encapsulates dut details including name, connection
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
@@ -214,28 +244,37 @@ class LldpLocalInfoTests():
         print(f"\nOn router |{tops.dut_name}|:")
 
         for interface in tops.interface_list:
-            interface_name = interface['interface_name'].replace(" ", "")
-            int_ptr = dut["output"][tops.show_cmd]["json"]['localInterfaceInfo']
-            tops.actual_output = int_ptr[interface_name]['interfaceIdType']
+            interface_name = interface["interface_name"].replace(" ", "")
+            int_ptr = dut["output"][tops.show_cmd]["json"]["localInterfaceInfo"]
+            tops.actual_output = int_ptr[interface_name]["interfaceIdType"]
 
-            tops.output_msg += (f"On interface |{interface_name}|: LLDP local-info "
-                                f"interfaceIdType is |{tops.actual_output}|, correct "
-                                f"interfaceIdType is |{tops.expected_output}|.\n\n")
+            tops.output_msg += (
+                f"On interface |{interface_name}|: LLDP local-info "
+                f"interfaceIdType is |{tops.actual_output}|, correct "
+                f"interfaceIdType is |{tops.expected_output}|.\n\n"
+            )
             tops.test_result = tops.actual_output == tops.expected_output
 
-            tops.comment += (f'\nTEST if {tops.dut_name} LLDP interfaceIdType is '
-                             f'correct on interface |{interface_name}|.\n'
-                             f'GIVEN LLDP interfaceIdType is |{tops.expected_output}|.\n'
-                             f'WHEN LLDP interfaceIdType is |{tops.actual_output}|.\n'
-                             f'THEN test case result is |{tops.test_result}|.\n\n')
+            tops.comment += (
+                f"\nTEST if {tops.dut_name} LLDP interfaceIdType is "
+                f"correct on interface |{interface_name}|.\n"
+                f"GIVEN LLDP interfaceIdType is |{tops.expected_output}|.\n"
+                f"WHEN LLDP interfaceIdType is |{tops.actual_output}|.\n"
+                f"THEN test case result is |{tops.test_result}|.\n\n"
+            )
 
             tops.actual_results.append(tops.actual_output)
             tops.expected_results.append(tops.expected_output)
 
-        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        tops.comment += (
+            f"OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n"
+        )
         print(f"{tops.output_msg}\n{tops.comment}")
 
-        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.actual_output, tops.expected_output = (
+            tops.actual_results,
+            tops.expected_results,
+        )
         tops.post_testcase()
 
         assert tops.actual_results == tops.expected_results

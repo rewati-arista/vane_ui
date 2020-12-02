@@ -44,140 +44,159 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.nrfu
 @pytest.mark.base_feature
 @pytest.mark.api
-class APITests():
-    """ API Test Suite
-    """
+class APITests:
+    """API Test Suite"""
 
-    def test_if_management_https_api_server_is_running_on_(self,
-                                                           dut,
-                                                           tests_definitions):
-      """ Verify management api https server is running
-           Args:
-            dut (dict): Encapsulates dut details including name, connection
-            tests_definitions (dict): Test parameters
-      """
+    def test_if_management_https_api_server_is_running_on_(
+        self, dut, tests_definitions
+    ):
+        """Verify management api https server is running
+        Args:
+         dut (dict): Encapsulates dut details including name, connection
+         tests_definitions (dict): Test parameters
+        """
 
-      tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
-      ptr = dut["output"][tops.show_cmd]['json']
-      tops.actual_output = ptr['httpsServer']['running']
-      tops.test_result = tops.actual_output == tops.expected_output
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        ptr = dut["output"][tops.show_cmd]["json"]
+        tops.actual_output = ptr["httpsServer"]["running"]
+        tops.test_result = tops.actual_output == tops.expected_output
 
-      tops.output_msg += (f"\nOn router |{tops.dut_name}| HTTPS Server is "
-                          f"running state: |{tops.actual_output}|, should be "
-                          f" in state |{tops.expected_output}|")
-      tops.comment += (f'TEST is HTTPS API running on |{tops.dut_name}|.\n '
-                       f'GIVEN HTTPS API state is |{tops.expected_output}|.\n'
-                       f'WHEN HTTPS API state is |{tops.actual_output}|.\n'
-                       f'THEN test case result is |{tops.test_result}|.\n'
-                       f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}')
+        tops.output_msg += (
+            f"\nOn router |{tops.dut_name}| HTTPS Server is "
+            f"running state: |{tops.actual_output}|, should be "
+            f" in state |{tops.expected_output}|"
+        )
+        tops.comment += (
+            f"TEST is HTTPS API running on |{tops.dut_name}|.\n "
+            f"GIVEN HTTPS API state is |{tops.expected_output}|.\n"
+            f"WHEN HTTPS API state is |{tops.actual_output}|.\n"
+            f"THEN test case result is |{tops.test_result}|.\n"
+            f"OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}"
+        )
 
-      tops.post_testcase()
+        tops.post_testcase()
 
-      assert tops.expected_output == tops.actual_output
+        assert tops.expected_output == tops.actual_output
 
-    def test_if_management_https_api_server_port_is_correct_on_(self,
-                                                                dut,
-                                                                tests_definitions):
-      """ Verify https server is enabled on port 443
-           Args:
-            dut (dict): Encapsulates dut details including name, connection
-            tests_definitions (dict): Test parameters
-      """
+    def test_if_management_https_api_server_port_is_correct_on_(
+        self, dut, tests_definitions
+    ):
+        """Verify https server is enabled on port 443
+        Args:
+         dut (dict): Encapsulates dut details including name, connection
+         tests_definitions (dict): Test parameters
+        """
 
-      tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
-      ptr = dut["output"][tops.show_cmd]['json']
-      tops.actual_output = ptr['httpsServer']['port']
-      tops.test_result = tops.actual_output == tops.expected_output
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        ptr = dut["output"][tops.show_cmd]["json"]
+        tops.actual_output = ptr["httpsServer"]["port"]
+        tops.test_result = tops.actual_output == tops.expected_output
 
-      tops.output_msg += (f"\nOn router |{tops.dut_name}| HTTPS Server is "
-                          f"running on port: |{tops.actual_output}|, should be "
-                          f" port |{tops.expected_output}|")
-      tops.comment += (f'TEST is HTTPS API port on |{tops.dut_name}|.\n '
-                       f'GIVEN HTTPS API port is |{tops.expected_output}|.\n'
-                       f'WHEN HTTPS API port is |{tops.actual_output}|.\n'
-                       f'THEN test case result is |{tops.test_result}|.\n'
-                       f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}')
+        tops.output_msg += (
+            f"\nOn router |{tops.dut_name}| HTTPS Server is "
+            f"running on port: |{tops.actual_output}|, should be "
+            f" port |{tops.expected_output}|"
+        )
+        tops.comment += (
+            f"TEST is HTTPS API port on |{tops.dut_name}|.\n "
+            f"GIVEN HTTPS API port is |{tops.expected_output}|.\n"
+            f"WHEN HTTPS API port is |{tops.actual_output}|.\n"
+            f"THEN test case result is |{tops.test_result}|.\n"
+            f"OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}"
+        )
 
-      tops.post_testcase()
+        tops.post_testcase()
 
-      assert tops.expected_output == tops.actual_output
+        assert tops.expected_output == tops.actual_output
 
-    def test_if_management_https_api_server_is_enabled_on_(self,
-                                                           dut,
-                                                           tests_definitions):
-      """ Verify management api https server is enabled
-           Args:
-            dut (dict): Encapsulates dut details including name, connection
-            tests_definitions (dict): Test parameters
-      """
+    def test_if_management_https_api_server_is_enabled_on_(
+        self, dut, tests_definitions
+    ):
+        """Verify management api https server is enabled
+        Args:
+         dut (dict): Encapsulates dut details including name, connection
+         tests_definitions (dict): Test parameters
+        """
 
-      tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
-      tops.actual_output = dut["output"][tops.show_cmd]['json']['enabled']
-      tops.test_result = tops.actual_output == tops.expected_output
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops.actual_output = dut["output"][tops.show_cmd]["json"]["enabled"]
+        tops.test_result = tops.actual_output == tops.expected_output
 
-      tops.output_msg += (f"\nOn router |{tops.dut_name}| API is "
-                          f"enabled state: |{tops.actual_output}|, should be "
-                          f" in state |{tops.expected_output}|")
-      tops.comment += (f'TEST is HTTPS API enabled on |{tops.dut_name}|.\n '
-                       f'GIVEN HTTPS API enabled is |{tops.expected_output}|.\n'
-                       f'WHEN HTTPS API enabled is |{tops.actual_output}|.\n'
-                       f'THEN test case result is |{tops.test_result}|.\n'
-                       f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}')
+        tops.output_msg += (
+            f"\nOn router |{tops.dut_name}| API is "
+            f"enabled state: |{tops.actual_output}|, should be "
+            f" in state |{tops.expected_output}|"
+        )
+        tops.comment += (
+            f"TEST is HTTPS API enabled on |{tops.dut_name}|.\n "
+            f"GIVEN HTTPS API enabled is |{tops.expected_output}|.\n"
+            f"WHEN HTTPS API enabled is |{tops.actual_output}|.\n"
+            f"THEN test case result is |{tops.test_result}|.\n"
+            f"OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}"
+        )
 
-      tops.post_testcase()
+        tops.post_testcase()
 
-      assert tops.expected_output == tops.actual_output
+        assert tops.expected_output == tops.actual_output
 
-    def test_if_management_http_api_server_is_running_on_(self,
-                                                          dut,
-                                                          tests_definitions):
-      """ Verify management api http server is not running
-           Args:
-            dut (dict): Encapsulates dut details including name, connection
-            tests_definitions (dict): Test parameters
-      """
+    def test_if_management_http_api_server_is_running_on_(
+        self, dut, tests_definitions
+    ):
+        """Verify management api http server is not running
+        Args:
+         dut (dict): Encapsulates dut details including name, connection
+         tests_definitions (dict): Test parameters
+        """
 
-      tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
-      ptr = dut["output"][tops.show_cmd]['json']
-      tops.actual_output = ptr['httpServer']['running']
-      tops.test_result = tops.actual_output == tops.expected_output
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        ptr = dut["output"][tops.show_cmd]["json"]
+        tops.actual_output = ptr["httpServer"]["running"]
+        tops.test_result = tops.actual_output == tops.expected_output
 
-      tops.output_msg += (f"\nOn router |{tops.dut_name}| HTTP Server is "
-                          f"running state: |{tops.actual_output}|, should be "
-                          f" in state |{tops.expected_output}|")
-      tops.comment += (f'TEST is HTTP API running on |{tops.dut_name}|.\n '
-                       f'GIVEN HTTP API enabled is |{tops.expected_output}|.\n'
-                       f'WHEN HTTP API enabled is |{tops.actual_output}|.\n'
-                       f'THEN test case result is |{tops.test_result}|.\n'
-                       f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}')
+        tops.output_msg += (
+            f"\nOn router |{tops.dut_name}| HTTP Server is "
+            f"running state: |{tops.actual_output}|, should be "
+            f" in state |{tops.expected_output}|"
+        )
+        tops.comment += (
+            f"TEST is HTTP API running on |{tops.dut_name}|.\n "
+            f"GIVEN HTTP API enabled is |{tops.expected_output}|.\n"
+            f"WHEN HTTP API enabled is |{tops.actual_output}|.\n"
+            f"THEN test case result is |{tops.test_result}|.\n"
+            f"OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}"
+        )
 
-      tops.post_testcase()
+        tops.post_testcase()
 
-      assert tops.expected_output == tops.actual_output
+        assert tops.expected_output == tops.actual_output
 
-    def test_if_management_local_http_api_server_is_running_on_(self,
-                                                                dut,
-                                                                tests_definitions):
-      """ Verify management api local httpserver is not running
-           Args:
-            dut (dict): Encapsulates dut details including name, connection
-            tests_definitions (dict): Test parameters
-      """
+    def test_if_management_local_http_api_server_is_running_on_(
+        self, dut, tests_definitions
+    ):
+        """Verify management api local httpserver is not running
+        Args:
+         dut (dict): Encapsulates dut details including name, connection
+         tests_definitions (dict): Test parameters
+        """
 
-      tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
-      ptr = dut["output"][tops.show_cmd]['json']
-      tops.actual_output = ptr['localHttpServer']['running']
-      tops.test_result = tops.actual_output == tops.expected_output
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        ptr = dut["output"][tops.show_cmd]["json"]
+        tops.actual_output = ptr["localHttpServer"]["running"]
+        tops.test_result = tops.actual_output == tops.expected_output
 
-      tops.output_msg += (f"\nOn router |{tops.dut_name}| HTTP Server is "
-                          f"running state: |{tops.actual_output}|, should be "
-                          f" in state |{tops.expected_output}|")
-      tops.comment += (f'TEST is local HTTP API running on |{tops.dut_name}|.\n '
-                       f'GIVEN local HTTP API enabled is |{tops.expected_output}|.\n'
-                       f'WHEN local HTTP API enabled is |{tops.actual_output}|.\n'
-                       f'THEN test case result is |{tops.test_result}|.\n'
-                       f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}')
+        tops.output_msg += (
+            f"\nOn router |{tops.dut_name}| HTTP Server is "
+            f"running state: |{tops.actual_output}|, should be "
+            f" in state |{tops.expected_output}|"
+        )
+        tops.comment += (
+            f"TEST is local HTTP API running on |{tops.dut_name}|.\n "
+            f"GIVEN local HTTP API enabled is |{tops.expected_output}|.\n"
+            f"WHEN local HTTP API enabled is |{tops.actual_output}|.\n"
+            f"THEN test case result is |{tops.test_result}|.\n"
+            f"OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}"
+        )
 
-      tops.post_testcase()
+        tops.post_testcase()
 
-      assert tops.expected_output == tops.actual_output
+        assert tops.expected_output == tops.actual_output

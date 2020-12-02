@@ -44,16 +44,15 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.nrfu
 @pytest.mark.base_feature
 @pytest.mark.users
-class UsersTests():
-    """ EOS Users Test Suite
-    """
+class UsersTests:
+    """EOS Users Test Suite"""
 
     def test_if_usernames_are_configured_on_(self, dut, tests_definitions):
-        """ Verify username is set correctly
+        """Verify username is set correctly
 
-            Args:
-              dut (dict): Encapsulates dut details including name, connection
-              tests_definitions (dict): Test parameters
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
+          tests_definitions (dict): Test parameters
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
@@ -63,25 +62,34 @@ class UsersTests():
             tops.actual_output = username in tops.show_cmd_txt
             tops.test_result = tops.actual_output == tops.expected_output
 
-            tops.output_msg += (f"On router |{tops.dut_name}|: |{username}| "
-                                f"username configured is "
-                                f"|{tops.actual_output}|, username configured "
-                                f"should be |{tops.expected_output}|.\n\n")
-            tops.comment += (f'TEST is {username} username configured on '
-                             f' |{tops.dut_name}|.\n'
-                             'GIVEN username configured status: '
-                             f'|{tops.expected_output}|.\n'
-                             'WHEN username configured status: '
-                             f'|{tops.actual_output}|.\n'
-                             f'THEN test case result is |{tops.test_result}|.\n\n')
+            tops.output_msg += (
+                f"On router |{tops.dut_name}|: |{username}| "
+                f"username configured is "
+                f"|{tops.actual_output}|, username configured "
+                f"should be |{tops.expected_output}|.\n\n"
+            )
+            tops.comment += (
+                f"TEST is {username} username configured on "
+                f" |{tops.dut_name}|.\n"
+                "GIVEN username configured status: "
+                f"|{tops.expected_output}|.\n"
+                "WHEN username configured status: "
+                f"|{tops.actual_output}|.\n"
+                f"THEN test case result is |{tops.test_result}|.\n\n"
+            )
 
             tops.actual_results.append(tops.actual_output)
             tops.expected_results.append(tops.expected_output)
 
-        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        tops.comment += (
+            f"OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n"
+        )
         print(f"{tops.output_msg}\n{tops.comment}")
 
-        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.actual_output, tops.expected_output = (
+            tops.actual_results,
+            tops.expected_results,
+        )
         tops.post_testcase()
 
         assert tops.actual_results == tops.expected_results
