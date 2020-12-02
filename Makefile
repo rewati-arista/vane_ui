@@ -28,6 +28,10 @@ test:
 exec:
 	docker exec -it $(CONTAINER_NAME) /bin/bash
 
+.PHONY: lint
+exec:
+	docker exec -it $(CONTAINER_NAME) black -l 80 
+
 .PHONY: dev
 dev:
 	docker build -t $(CONTAINER) . --build-arg UID=$(shell id -u) --build-arg GID=$(shell id -g)

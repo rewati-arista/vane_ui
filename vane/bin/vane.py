@@ -41,9 +41,13 @@ import xcel_client
 import sys
 
 
-logging.basicConfig(level=logging.INFO, filename='vane.log', filemode='w',
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logging.info('Starting vane.log file')
+logging.basicConfig(
+    level=logging.INFO,
+    filename="vane.log",
+    filemode="w",
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+logging.info("Starting vane.log file")
 
 DEFINITIONS_FILE = "/project/vane/bin/definitions.yaml"
 
@@ -55,17 +59,20 @@ def parse_cli():
         args (obj): An object containing the CLI arguments.
     """
 
-    parser = argparse.ArgumentParser(
-        description=('Network Certification Tool'))
+    parser = argparse.ArgumentParser(description=("Network Certification Tool"))
 
-    parser.add_argument('--definitions_file',
-                        default=DEFINITIONS_FILE,
-                        help='Specify the name of the defintions file')
+    parser.add_argument(
+        "--definitions_file",
+        default=DEFINITIONS_FILE,
+        help="Specify the name of the defintions file",
+    )
 
-    parser.add_argument('--input',
-                        action='store_true',
-                        default=False,
-                        help='Use spreadsheet for input')
+    parser.add_argument(
+        "--input",
+        action="store_true",
+        default=False,
+        help="Use spreadsheet for input",
+    )
 
     args = parser.parse_args()
 
@@ -73,8 +80,7 @@ def parse_cli():
 
 
 def input_spreadsheet(definitions_file):
-    """ Input data from a spreadsheet
-    """
+    """Input data from a spreadsheet"""
 
     vane_xcel_client = xcel_client.XcelClient(definitions_file)
     vane_xcel_client.import_spreadsheet()
@@ -83,41 +89,43 @@ def input_spreadsheet(definitions_file):
 
 
 def run_tests(definitions_file):
-    """ Make request to test client to run tests
+    """Make request to test client to run tests
 
-        Args:
-            definitions_file (str): Path and name of definition file
+    Args:
+        definitions_file (str): Path and name of definition file
     """
 
-    logging.info('Using class TestsClient to create vane_tests_client '
-                 'object')
+    logging.info(
+        "Using class TestsClient to create vane_tests_client " "object"
+    )
     vane_tests_client = tests_client.TestsClient(definitions_file)
     vane_tests_client.test_runner()
 
 
 def write_results(definitions_file):
-    """ Write results document
+    """Write results document
 
-        Args:
-            definitions_file (str): Path and name of definition file
+    Args:
+        definitions_file (str): Path and name of definition file
     """
 
-    logging.info('Using class ReportClient to create vane_report_client '
-                 'object')
+    logging.info(
+        "Using class ReportClient to create vane_report_client " "object"
+    )
     vane_report_client = report_client.ReportClient(definitions_file)
     vane_report_client.write_result_doc()
 
 
 def main():
-    """ main function
-    """
+    """main function"""
 
-    logging.info('Accept input from command-line')
+    logging.info("Accept input from command-line")
     args = parse_cli()
 
     if args.definitions_file:
-        logging.warning('Changing Definitions name to '
-                        f'{args.definitions_file}')
+        logging.warning(
+            "Changing Definitions name to " f"{args.definitions_file}"
+        )
         DEFINITIONS_FILE = args.definitions_file
 
     if args.input:
@@ -126,7 +134,7 @@ def main():
     run_tests(DEFINITIONS_FILE)
     write_results(DEFINITIONS_FILE)
 
-    logging.info('\n\n!VANE has completed without errors!\n\n')
+    logging.info("\n\n!VANE has completed without errors!\n\n")
 
 
 if __name__ == "__main__":

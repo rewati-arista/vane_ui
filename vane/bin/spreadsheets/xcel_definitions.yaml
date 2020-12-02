@@ -41,15 +41,15 @@ worksheets:
         column: A
         start_row: 2
       Interface Number:
-        role: local_int
+        role: port
         column: B
         start_row: 2
       Remote Device:
-        role: remote_host
+        role: neighborDevice
         column: C
         start_row: 2
       Remote Interface ID:
-        role: remote_int
+        role: neighborPort
         column: D
         start_row: 2
       Speed:

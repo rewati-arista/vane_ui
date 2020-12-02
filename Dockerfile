@@ -4,7 +4,7 @@ MAINTAINER Professional Service: Software Services <eos-cs-sw@arista.com>
 
 # Install necessary packages
 RUN apt-get update \
-    && apt-get -y install vim sudo \
+    && apt-get -y install vim sudo tree \
     && rm -rf /var/lib/apt/lists/*
 
 # Create the /project directory and add it as a mountpoint
