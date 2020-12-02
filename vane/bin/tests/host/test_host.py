@@ -42,16 +42,15 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.nrfu
 @pytest.mark.platform_status
 @pytest.mark.host
-class HostTests():
-    """ Host status Test Suite
-    """
+class HostTests:
+    """Host status Test Suite"""
 
     def test_if_hostname_is_correcet_on_(self, dut, tests_definitions):
-        """ Verify hostname is set on device is correct
+        """Verify hostname is set on device is correct
 
-            Args:
-              dut (dict): Encapsulates dut details including name, connection
-              tests_definitions (dict): Test parameters
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
+          tests_definitions (dict): Test parameters
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
@@ -59,16 +58,20 @@ class HostTests():
         tops.expected_output = tops.dut_name
         tops.actual_output = dut["output"][tops.show_cmd]["json"]["hostname"]
 
-        tops.output_msg = (f"On router |{tops.dut_name}| the configured hostname is "
-                           f"|{tops.actual_output}| and the correct hostname is "
-                           f"|{tops.expected_output}|")
+        tops.output_msg = (
+            f"On router |{tops.dut_name}| the configured hostname is "
+            f"|{tops.actual_output}| and the correct hostname is "
+            f"|{tops.expected_output}|"
+        )
 
         tops.test_result = tops.actual_output == tops.expected_output
-        tops.comment = ('TEST is hostname correct.\n'
-                        f'GIVEN hostname |{tops.expected_output}|.\n'
-                        f'WHEN hostname is |{tops.actual_output}|.\n'
-                        f'THEN test case result is |{tops.test_result}|.\n'
-                        f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}')
+        tops.comment = (
+            "TEST is hostname correct.\n"
+            f"GIVEN hostname |{tops.expected_output}|.\n"
+            f"WHEN hostname is |{tops.actual_output}|.\n"
+            f"THEN test case result is |{tops.test_result}|.\n"
+            f"OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}"
+        )
 
         print(f"{tops.output_msg}\n{tops.comment}")
 

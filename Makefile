@@ -19,7 +19,7 @@ clean:
 	docker stop $(CONTAINER_NAME)
 	docker rm $(CONTAINER_NAME)
 
-.PHONY: clean
+.PHONY: test
 test:
 	pytest --cov-report html --cov=/project/vane/bin tests
 	pytest -vs --cov=/project/vane/bin tests
@@ -27,6 +27,21 @@ test:
 .PHONY: exec
 exec:
 	docker exec -it $(CONTAINER_NAME) /bin/bash
+
+.PHONY: format
+format:
+	docker exec -it $(CONTAINER_NAME) bash -c "black -l 80 /project/vane/bin/*py"
+
+.PHONY: hints
+hints:
+	docker exec -it $(CONTAINER_NAME) bash -c "mypy /project/vane/bin/*py"
+
+.PHONY: lint
+lint:
+	docker exec -it $(CONTAINER_NAME) bash -c "pylint /project/vane/bin/*py"
+
+.PHONY: check
+check: format lint hints
 
 .PHONY: dev
 dev:

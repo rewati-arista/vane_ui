@@ -43,34 +43,37 @@ TEST_SUITE = __file__
 @pytest.mark.nrfu
 @pytest.mark.base_feature
 @pytest.mark.system
-class CrashTests():
-    """ Crash Test Suite
-    """
+class CrashTests:
+    """Crash Test Suite"""
 
     def test_if_there_is_agents_have_crashed_on_(self, dut, tests_definitions):
-        """ Verifies the agents logs crash is empty
+        """Verifies the agents logs crash is empty
 
-            Args:
-              dut (dict): Encapsulates dut details including name, connection
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
         tops.return_show_cmd("show agent logs crash")
-        lines = tops.show_cmd_txt.split('\n')
-        tops.actual_output = (len(lines) - 1)
+        lines = tops.show_cmd_txt.split("\n")
+        tops.actual_output = len(lines) - 1
 
         tops.test_result = tops.actual_output <= tops.expected_output
 
-        tops.output_msg = (f"\nOn router |{tops.dut_name}| has "
-                           f"|{tops.actual_output}| agent crashes"
-                           " correct number of agent crashes is "
-                           f"|{tops.expected_output}|.\n")
-        tops.comment = (f'TEST number of agent crashes on |{tops.dut_name}|.\n'
-                        f'GIVEN |{tops.expected_output}| agent crashes.\n'
-                        f'WHEN |{tops.actual_output}| agent crashes.\n'
-                        f'THEN test case result is |{tops.test_result}|.\n'
-                        f'OUTPUT of |{tops.show_cmd}| is:\n{tops.show_cmd_txt}'
-                        '.\n')
+        tops.output_msg = (
+            f"\nOn router |{tops.dut_name}| has "
+            f"|{tops.actual_output}| agent crashes"
+            " correct number of agent crashes is "
+            f"|{tops.expected_output}|.\n"
+        )
+        tops.comment = (
+            f"TEST number of agent crashes on |{tops.dut_name}|.\n"
+            f"GIVEN |{tops.expected_output}| agent crashes.\n"
+            f"WHEN |{tops.actual_output}| agent crashes.\n"
+            f"THEN test case result is |{tops.test_result}|.\n"
+            f"OUTPUT of |{tops.show_cmd}| is:\n{tops.show_cmd_txt}"
+            ".\n"
+        )
 
         print(f"{tops.output_msg}\n{tops.comment}")
 
@@ -82,16 +85,15 @@ class CrashTests():
 @pytest.mark.nrfu
 @pytest.mark.platform_status
 @pytest.mark.system
-class SystemTests():
-    """ System Test Suite
-    """
+class SystemTests:
+    """System Test Suite"""
 
     def test_if_eos_version_is_correct_on_(self, dut, tests_definitions):
-        """ Verifies EOS version running on the device 
+        """Verifies EOS version running on the device
 
-            Args:
-                dut (dict): Encapsulates dut details including name, connection
-                tests_definitions (dict): Test parameters
+        Args:
+            dut (dict): Encapsulates dut details including name, connection
+            tests_definitions (dict): Test parameters
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
@@ -99,15 +101,19 @@ class SystemTests():
         tops.actual_output = dut["output"][tops.show_cmd]["json"]["version"]
         tops.test_result = tops.actual_output == tops.expected_output
 
-        tops.output_msg = (f"On router |{tops.dut_name}| EOS version is "
-                           f"|{tops.actual_output}%|, version should be "
-                           f"|{tops.expected_output}%|")
-        tops.comment = ('TEST EOS version running on the device on '
-                        f'|{tops.dut_name}|.\n'
-                        f'GIVEN version is |{tops.expected_output}|.\n'
-                        f'WHEN version is |{tops.actual_output}|.\n'
-                        f'THEN test case result is |{tops.test_result}|.\n'
-                        f'OUTPUT of |{tops.show_cmd}| is:\n\n{tops.show_cmd_txt}')
+        tops.output_msg = (
+            f"On router |{tops.dut_name}| EOS version is "
+            f"|{tops.actual_output}%|, version should be "
+            f"|{tops.expected_output}%|"
+        )
+        tops.comment = (
+            "TEST EOS version running on the device on "
+            f"|{tops.dut_name}|.\n"
+            f"GIVEN version is |{tops.expected_output}|.\n"
+            f"WHEN version is |{tops.actual_output}|.\n"
+            f"THEN test case result is |{tops.test_result}|.\n"
+            f"OUTPUT of |{tops.show_cmd}| is:\n\n{tops.show_cmd_txt}"
+        )
 
         print(f"{tops.output_msg}\n{tops.comment}")
 

@@ -44,97 +44,110 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.nrfu
 @pytest.mark.base_feature
 @pytest.mark.extensions
-class ExtensionsTests():
-    """ EOS Extensions Test Suite
-    """
+class ExtensionsTests:
+    """EOS Extensions Test Suite"""
 
     def test_if_extensions_are_installed_on_(self, dut, tests_definitions):
-        """ Verify a list of extension are installed on a DUT
+        """Verify a list of extension are installed on a DUT
 
-            Args:
-              dut (dict): Encapsulates dut details including name, connection
-              tests_definitions (dict): Test parameters
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
+          tests_definitions (dict): Test parameters
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
         extensions = tops.test_parameters["extensions"]
 
         for extension in extensions:
-            dut_ptr = dut["output"][tops.show_cmd]['json']
+            dut_ptr = dut["output"][tops.show_cmd]["json"]
 
-            if extension in dut_ptr['extensions']:
-                tops.actual_output = dut_ptr['extensions'][extension]['status']
+            if extension in dut_ptr["extensions"]:
+                tops.actual_output = dut_ptr["extensions"][extension]["status"]
             else:
                 tops.actual_output = None
 
-            tops.output_msg += (f"\nOn router |{tops.dut_name}| extension "
-                               f"|{extension}| status is "
-                               f"|{tops.actual_output}|, correct status is "
-                               f"|{tops.expected_output}|.\n")
+            tops.output_msg += (
+                f"\nOn router |{tops.dut_name}| extension "
+                f"|{extension}| status is "
+                f"|{tops.actual_output}|, correct status is "
+                f"|{tops.expected_output}|.\n"
+            )
 
             tops.test_result = tops.actual_output == tops.expected_output
 
-            tops.comment += (f'TEST is {extension} extension installed on '
-                             f' |{tops.dut_name}|.\n'
-                             f'GIVEN {extension} extenstion installation state is '
-                             f'|{tops.expected_output}|.\n'
-                             f'WHEN {extension} extenstion installation state is '
-                             f'|{tops.actual_output}|.\n'
-                             f'THEN test case result is |{tops.test_result}|.\n'
-                             f'OUTPUT of |{tops.show_cmd}| is:\n{tops.show_cmd_txt}'
-                             '.\n')
+            tops.comment += (
+                f"TEST is {extension} extension installed on "
+                f" |{tops.dut_name}|.\n"
+                f"GIVEN {extension} extenstion installation state is "
+                f"|{tops.expected_output}|.\n"
+                f"WHEN {extension} extenstion installation state is "
+                f"|{tops.actual_output}|.\n"
+                f"THEN test case result is |{tops.test_result}|.\n"
+                f"OUTPUT of |{tops.show_cmd}| is:\n{tops.show_cmd_txt}"
+                ".\n"
+            )
 
             tops.actual_results.append(tops.actual_output)
             tops.expected_results.append(tops.expected_output)
-        
+
         print(f"{tops.output_msg}\n{tops.comment}")
 
-        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.actual_output, tops.expected_output = (
+            tops.actual_results,
+            tops.expected_results,
+        )
         tops.post_testcase()
 
         assert tops.actual_results == tops.expected_results
 
     def test_if_extensions_are_erroring_on_(self, dut, tests_definitions):
-        """ Verify a list of extension are not erroring on a DUT
+        """Verify a list of extension are not erroring on a DUT
 
-            Args:
-              dut (dict): Encapsulates dut details including name, connection
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
         extensions = tops.test_parameters["extensions"]
 
         for extension in extensions:
-            dut_ptr = dut["output"][tops.show_cmd]['json']
+            dut_ptr = dut["output"][tops.show_cmd]["json"]
 
-            if extension in dut_ptr['extensions']:
-                tops.actual_output = dut_ptr['extensions'][extension]['error']
+            if extension in dut_ptr["extensions"]:
+                tops.actual_output = dut_ptr["extensions"][extension]["error"]
             else:
                 tops.actual_output = None
 
-            tops.output_msg += (f"\nOn router |{tops.dut_name}| extension "
-                               f"|{extension}| error status is "
-                               f"|{tops.actual_output}|, correct error status "
-                               f"is |{tops.expected_output}|.\n")
+            tops.output_msg += (
+                f"\nOn router |{tops.dut_name}| extension "
+                f"|{extension}| error status is "
+                f"|{tops.actual_output}|, correct error status "
+                f"is |{tops.expected_output}|.\n"
+            )
 
             tops.test_result = tops.actual_output == tops.expected_output
 
-            tops.comment += (f'TEST is {extension} extension not erroring on '
-                             f' |{tops.dut_name}|.\n'
-                             f'GIVEN {extension} extenstion error state is '
-                             f'|{tops.expected_output}|.\n'
-                             f'WHEN {extension} extenstion error state is '
-                             f'|{tops.actual_output}|.\n'
-                             f'THEN test case result is |{tops.test_result}|.\n'
-                             f'OUTPUT of |{tops.show_cmd}| is:\n{tops.show_cmd_txt}'
-                             '.\n')
+            tops.comment += (
+                f"TEST is {extension} extension not erroring on "
+                f" |{tops.dut_name}|.\n"
+                f"GIVEN {extension} extenstion error state is "
+                f"|{tops.expected_output}|.\n"
+                f"WHEN {extension} extenstion error state is "
+                f"|{tops.actual_output}|.\n"
+                f"THEN test case result is |{tops.test_result}|.\n"
+                f"OUTPUT of |{tops.show_cmd}| is:\n{tops.show_cmd_txt}"
+                ".\n"
+            )
 
             tops.actual_results.append(tops.actual_output)
             tops.expected_results.append(tops.expected_output)
-        
+
         print(f"{tops.output_msg}\n{tops.comment}")
 
-        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.actual_output, tops.expected_output = (
+            tops.actual_results,
+            tops.expected_results,
+        )
         tops.post_testcase()
 
         assert tops.actual_results == tops.expected_results

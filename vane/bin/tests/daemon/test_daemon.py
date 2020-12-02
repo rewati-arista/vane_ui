@@ -44,82 +44,99 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.nrfu
 @pytest.mark.base_feature
 @pytest.mark.daemons
-class DaemonTests():
-    """ EOS Daemon Test Suite
-    """
+class DaemonTests:
+    """EOS Daemon Test Suite"""
 
     def test_if_daemons_are_running_on_(self, dut, tests_definitions):
-        """ Verify a list of daemons are running on DUT
+        """Verify a list of daemons are running on DUT
 
-            Args:
-              dut (dict): Encapsulates dut details including name, connection
-              tests_definitions (dict): Test parameters
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
+          tests_definitions (dict): Test parameters
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
         daemons = tops.test_parameters["daemons"]
 
         for daemon in daemons:
-            dut_ptr = dut["output"][tops.show_cmd]['json']['daemons']
-            tops.actual_output = dut_ptr[daemon]['running']
+            dut_ptr = dut["output"][tops.show_cmd]["json"]["daemons"]
+            tops.actual_output = dut_ptr[daemon]["running"]
             tops.test_result = tops.actual_output == tops.expected_output
 
-            tops.output_msg += (f"\nOn router |{tops.dut_name}|, daemon running "
-                               f"state is |{tops.actual_output}| correct"
-                               f" state is |{tops.expected_output}|.\n")
-            tops.comment += (f'TEST is {daemon} daemon running on '
-                            f'|{tops.dut_name}|.\n'
-                            f'GIVEN expected {daemon} running state: '
-                            f'|{tops.expected_output}|.\n'
-                            f'WHEN {daemon} device running state is '
-                            f'|{tops.actual_output}|.\n'
-                            f'THEN test case result is |{tops.test_result}|.\n')
-                            
+            tops.output_msg += (
+                f"\nOn router |{tops.dut_name}|, daemon running "
+                f"state is |{tops.actual_output}| correct"
+                f" state is |{tops.expected_output}|.\n"
+            )
+            tops.comment += (
+                f"TEST is {daemon} daemon running on "
+                f"|{tops.dut_name}|.\n"
+                f"GIVEN expected {daemon} running state: "
+                f"|{tops.expected_output}|.\n"
+                f"WHEN {daemon} device running state is "
+                f"|{tops.actual_output}|.\n"
+                f"THEN test case result is |{tops.test_result}|.\n"
+            )
+
             tops.actual_results.append(tops.actual_output)
             tops.expected_results.append(tops.expected_output)
 
-        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        tops.comment += (
+            f"OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n"
+        )
         print(f"{tops.output_msg}\n{tops.comment}")
 
-        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.actual_output, tops.expected_output = (
+            tops.actual_results,
+            tops.expected_results,
+        )
         tops.post_testcase()
 
         assert tops.actual_results == tops.expected_results
 
     def test_if_daemons_are_enabled_on_(self, dut, tests_definitions):
-        """ Verify a list of daemons are enabled on DUT
+        """Verify a list of daemons are enabled on DUT
 
-            Args:
-              dut (dict): Encapsulates dut details including name, connection
-              tests_definitions (dict): Test parameters
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
+          tests_definitions (dict): Test parameters
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
         daemons = tops.test_parameters["daemons"]
 
         for daemon in daemons:
-            dut_ptr = dut["output"][tops.show_cmd]['json']['daemons']
-            tops.actual_output = dut_ptr[daemon]['enabled']
+            dut_ptr = dut["output"][tops.show_cmd]["json"]["daemons"]
+            tops.actual_output = dut_ptr[daemon]["enabled"]
             tops.test_result = tops.actual_output == tops.expected_output
 
-            tops.output_msg += (f"\nOn router |{tops.dut_name}|, daemon enabled "
-                               f"state is |{tops.actual_output}| correct"
-                               f" state is |{tops.expected_output}|.\n")
-            tops.comment += (f'TEST is {daemon} daemon enabled on '
-                            f'|{tops.dut_name}|.\n'
-                            f'GIVEN expected {daemon} enabled state: '
-                            f'|{tops.expected_output}|.\n'
-                            f'WHEN {daemon} device enabled state is '
-                            f'|{tops.actual_output}|.\n'
-                            f'THEN test case result is |{tops.test_result}|.\n')
+            tops.output_msg += (
+                f"\nOn router |{tops.dut_name}|, daemon enabled "
+                f"state is |{tops.actual_output}| correct"
+                f" state is |{tops.expected_output}|.\n"
+            )
+            tops.comment += (
+                f"TEST is {daemon} daemon enabled on "
+                f"|{tops.dut_name}|.\n"
+                f"GIVEN expected {daemon} enabled state: "
+                f"|{tops.expected_output}|.\n"
+                f"WHEN {daemon} device enabled state is "
+                f"|{tops.actual_output}|.\n"
+                f"THEN test case result is |{tops.test_result}|.\n"
+            )
 
             tops.actual_results.append(tops.actual_output)
             tops.expected_results.append(tops.expected_output)
 
-        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        tops.comment += (
+            f"OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n"
+        )
         print(f"{tops.output_msg}\n{tops.comment}")
 
-        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.actual_output, tops.expected_output = (
+            tops.actual_results,
+            tops.expected_results,
+        )
         tops.post_testcase()
 
         assert tops.actual_results == tops.expected_results

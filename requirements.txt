@@ -9,6 +9,8 @@ pylint
 flake8
 coverage
 coverage-badge
+black
+mypy
 
 # pytest plugins
 pytest

@@ -44,31 +44,34 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.nrfu
 @pytest.mark.base_feature
 @pytest.mark.ntp
-class NTPTests():
-    """ NTP Test Suite
-    """
+class NTPTests:
+    """NTP Test Suite"""
 
     def test_if_ntp_is_synchronized_on_(self, dut, tests_definitions):
-        """ Verify ntp is synchronzied
+        """Verify ntp is synchronzied
 
-            Args:
-              dut (dict): Encapsulates dut details including name, connection
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
-        tops.actual_output = dut["output"][tops.show_cmd]['json']['status']
+        tops.actual_output = dut["output"][tops.show_cmd]["json"]["status"]
         tops.test_result = tops.actual_output == tops.expected_output
 
-        tops.output_msg = (f"\nOn router |{tops.dut_name}| NTP "
-                           f"synchronised status is |{tops.actual_output}| "
-                           f" correct status is |{tops.expected_output}|.\n")
-        tops.comment = (f'TEST is NTP synchronized on |{tops.dut_name}|.\n'
-                        f'GIVEN NTP synchronized is |{tops.expected_output}|'
-                        '.\n'
-                        f'WHEN NTP synchronized is |{tops.actual_output}|.\n'
-                        f'THEN test case result is |{tops.test_result}|.\n'
-                        f'OUTPUT of |{tops.show_cmd}| is:\n{tops.show_cmd_txt}'
-                        '.\n')
+        tops.output_msg = (
+            f"\nOn router |{tops.dut_name}| NTP "
+            f"synchronised status is |{tops.actual_output}| "
+            f" correct status is |{tops.expected_output}|.\n"
+        )
+        tops.comment = (
+            f"TEST is NTP synchronized on |{tops.dut_name}|.\n"
+            f"GIVEN NTP synchronized is |{tops.expected_output}|"
+            ".\n"
+            f"WHEN NTP synchronized is |{tops.actual_output}|.\n"
+            f"THEN test case result is |{tops.test_result}|.\n"
+            f"OUTPUT of |{tops.show_cmd}| is:\n{tops.show_cmd_txt}"
+            ".\n"
+        )
         print(f"{tops.output_msg}\n{tops.comment}")
 
         tops.post_testcase()
@@ -76,29 +79,33 @@ class NTPTests():
         assert tops.actual_output == tops.expected_output
 
     def test_if_ntp_associated_with_peers_on_(self, dut, tests_definitions):
-        """ Verify ntp peers are correct
+        """Verify ntp peers are correct
 
-            Args:
-              dut (dict): Encapsulates dut details including name, connection
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
-        tops.actual_output = dut["output"][tops.show_cmd]['json']['peers']
+        tops.actual_output = dut["output"][tops.show_cmd]["json"]["peers"]
         tops.actual_output = len(tops.actual_output)
         tops.test_result = tops.actual_output >= tops.expected_output
 
-        tops.output_msg = (f"\nOn router |{tops.dut_name}| has "
-                           f"|{tops.actual_output}| NTP peer associations, "
-                           f"correct associations is |{tops.expected_output}|")
-        tops.comment = ('TEST is NTP associations with peers on '
-                        f'|{tops.dut_name}|.\n'
-                        'GIVEN associated are greater than or equal to '
-                        f'|{tops.expected_output}|.\n'
-                        f'WHEN NTP associated peers are |{tops.actual_output}|'
-                        '.\n'
-                        f'THEN test case result is |{tops.test_result}|.\n'
-                        f'OUTPUT of |{tops.show_cmd}| is:\n{tops.show_cmd_txt}'
-                        '.\n')
+        tops.output_msg = (
+            f"\nOn router |{tops.dut_name}| has "
+            f"|{tops.actual_output}| NTP peer associations, "
+            f"correct associations is |{tops.expected_output}|"
+        )
+        tops.comment = (
+            "TEST is NTP associations with peers on "
+            f"|{tops.dut_name}|.\n"
+            "GIVEN associated are greater than or equal to "
+            f"|{tops.expected_output}|.\n"
+            f"WHEN NTP associated peers are |{tops.actual_output}|"
+            ".\n"
+            f"THEN test case result is |{tops.test_result}|.\n"
+            f"OUTPUT of |{tops.show_cmd}| is:\n{tops.show_cmd_txt}"
+            ".\n"
+        )
         print(f"{tops.output_msg}\n{tops.comment}")
 
         tops.post_testcase()
@@ -106,15 +113,15 @@ class NTPTests():
         assert tops.actual_output == tops.expected_output
 
     def test_if_process_is_running_on_(self, dut, tests_definitions):
-        """ Verify ntp processes are running
+        """Verify ntp processes are running
 
-            Args:
-              dut (dict): Encapsulates dut details including name, connection
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
         processes = tops.test_parameters["processes"]
-        process_nums = dut["output"][tops.show_cmd]['json']['processes']
+        process_nums = dut["output"][tops.show_cmd]["json"]["processes"]
 
         process_list = []
 
@@ -125,33 +132,37 @@ class NTPTests():
             results = [i for i in process_list if process in i]
             tops.actual_output = len(results)
 
-            tops.output_msg = (f"\nOn router |{tops.dut_name}| has "
-                               f"{tops.actual_output} NTP processes, "
-                               " correct processes is equal to or greater "
-                               f"|{tops.expected_output}|.\n")
+            tops.output_msg = (
+                f"\nOn router |{tops.dut_name}| has "
+                f"{tops.actual_output} NTP processes, "
+                " correct processes is equal to or greater "
+                f"|{tops.expected_output}|.\n"
+            )
 
             tops.test_result = tops.actual_output >= tops.expected_output
 
-            tops.comment = (f'TEST is {process} running on |{tops.dut_name}|'
-                            '.\n'
-                            f'GIVEN {process} number is '
-                            f'|{tops.expected_output}|.\n'
-                            f'WHEN {process} number is '
-                            f'|{tops.actual_output}|.\n'
-                            f'THEN test case result is |{tops.test_result}|.\n'
-                            f'OUTPUT of |{tops.show_cmd}| is:\n'
-                            f'{tops.show_cmd_txt}.\n')
+            tops.comment = (
+                f"TEST is {process} running on |{tops.dut_name}|"
+                ".\n"
+                f"GIVEN {process} number is "
+                f"|{tops.expected_output}|.\n"
+                f"WHEN {process} number is "
+                f"|{tops.actual_output}|.\n"
+                f"THEN test case result is |{tops.test_result}|.\n"
+                f"OUTPUT of |{tops.show_cmd}| is:\n"
+                f"{tops.show_cmd_txt}.\n"
+            )
             print(f"{tops.output_msg}\n{tops.comment}")
-    
+
             tops.post_testcase()
 
             assert tops.actual_output == tops.expected_output
 
     def test_ntp_configuration_on_(self, dut, tests_definitions):
-        """ Verifies NTP configuration matches the recommended practices 
+        """Verifies NTP configuration matches the recommended practices
 
-            Args:
-              dut (dict): Encapsulates dut details including name, connection
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
@@ -167,19 +178,19 @@ class NTPTests():
         if ntp_servers:
             for ntp_server in ntp_servers:
                 if ntp_vrf:
-                    ntp_server_cfg = f'ntp server vrf {ntp_vrf} {ntp_server}'
+                    ntp_server_cfg = f"ntp server vrf {ntp_vrf} {ntp_server}"
                 else:
-                    ntp_server_cfg = f'ntp server {ntp_server}'
+                    ntp_server_cfg = f"ntp server {ntp_server}"
 
                 vane_ntp_cfg += f"{ntp_server_cfg}\n"
                 tops.actual_output = ntp_server_cfg in ntp_cfg
                 tops.actual_results.append(tops.actual_output)
                 tops.expected_results.append(tops.expected_output)
-            
+
             if ntp_intf and ntp_vrf:
-                ntp_server_cfg = f'ntp source vrf {ntp_vrf} {ntp_intf}'
+                ntp_server_cfg = f"ntp source vrf {ntp_vrf} {ntp_intf}"
             elif ntp_intf:
-                ntp_server_cfg = f'ntp source {ntp_intf}'
+                ntp_server_cfg = f"ntp source {ntp_intf}"
             else:
                 ntp_server_cfg = None
 
@@ -189,31 +200,38 @@ class NTPTests():
                 tops.expected_results.append(tops.expected_output)
                 vane_ntp_cfg += f"{ntp_server_cfg}\n"
 
-        ntp_cfg_length = len(ntp_cfg.split('\n'))
-        vane_ntp_cfg_length = len(vane_ntp_cfg.split('\n'))
+        ntp_cfg_length = len(ntp_cfg.split("\n"))
+        vane_ntp_cfg_length = len(vane_ntp_cfg.split("\n"))
         tops.actual_output = ntp_cfg_length == vane_ntp_cfg_length
         tops.actual_results.append(tops.actual_output)
         tops.expected_results.append(tops.expected_output)
 
         tops.test_result = tops.actual_results == tops.expected_results
-        tops.output_msg += (f"|{tops.dut_name}| has the ntp config "
-                            f"|{ntp_cfg}|, expect the ntp config "
-                            f"|{vane_ntp_cfg}|.\n\n")
-        tops.comment += (f'TEST |{tops.dut_name}| NTP config.\n'
-                         f'GIVEN NTP config |{vane_ntp_cfg}|.\n'
-                         f'WHEN NTP config |{ntp_cfg}|.\n'
-                         f'THEN test case result is |{tops.test_result}|.\n\n')
+        tops.output_msg += (
+            f"|{tops.dut_name}| has the ntp config "
+            f"|{ntp_cfg}|, expect the ntp config "
+            f"|{vane_ntp_cfg}|.\n\n"
+        )
+        tops.comment += (
+            f"TEST |{tops.dut_name}| NTP config.\n"
+            f"GIVEN NTP config |{vane_ntp_cfg}|.\n"
+            f"WHEN NTP config |{ntp_cfg}|.\n"
+            f"THEN test case result is |{tops.test_result}|.\n\n"
+        )
         print(f"{tops.output_msg}\n{tops.comment}")
 
-        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.actual_output, tops.expected_output = (
+            tops.actual_results,
+            tops.expected_results,
+        )
         tops.post_testcase()
         assert tops.actual_results == tops.expected_results
 
     def test_if_ntp_servers_are_reachable_on_(self, dut, tests_definitions):
-        """ Verifies DNS servers are reachable via ping 
+        """Verifies DNS servers are reachable via ping
 
-            Args:
-              dut (dict): Encapsulates dut details including name, connection
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
@@ -227,24 +245,31 @@ class NTPTests():
                 show_cmd = f"ping {ntp_server}"
 
             tops.return_show_cmd(show_cmd)
-            tops.actual_output = 'bytes from' in tops.show_cmd_txt
+            tops.actual_output = "bytes from" in tops.show_cmd_txt
             tops.test_result = tops.actual_output is tops.expected_output
 
-            tops.output_msg += (f"\nOn router |{tops.dut_name}|, verifying NTP "
-                                f"server reachability for |{ntp_server}| is "
-                                f"|{tops.test_result}|.\n")
+            tops.output_msg += (
+                f"\nOn router |{tops.dut_name}|, verifying NTP "
+                f"server reachability for |{ntp_server}| is "
+                f"|{tops.test_result}|.\n"
+            )
 
-            tops.comment += (f'TEST NTP servers are reachable on |{tops.dut_name}| '
-                             f'GIVEN server |{ntp_server}|.\n'
-                             'WHEN exception is |bytes from| '
-                             'string.\n'
-                             f'THEN test case result is |{tops.test_result}|.\n'
-                             f'OUTPUT of |{show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+            tops.comment += (
+                f"TEST NTP servers are reachable on |{tops.dut_name}| "
+                f"GIVEN server |{ntp_server}|.\n"
+                "WHEN exception is |bytes from| "
+                "string.\n"
+                f"THEN test case result is |{tops.test_result}|.\n"
+                f"OUTPUT of |{show_cmd}| is :\n\n{tops.show_cmd_txt}.\n"
+            )
 
             tops.actual_results.append(tops.actual_output)
             tops.expected_results.append(tops.expected_output)
 
-        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.actual_output, tops.expected_output = (
+            tops.actual_results,
+            tops.expected_results,
+        )
         tops.post_testcase()
 
         assert tops.actual_results == tops.expected_results

@@ -45,15 +45,14 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.base_feature
 @pytest.mark.platform_status
 @pytest.mark.logging
-class LoggingTests():
-    """ Logging Test Suite
-    """
+class LoggingTests:
+    """Logging Test Suite"""
 
     def test_if_log_messages_appear_on_(self, dut, tests_definitions):
-        """ Verify local log messages
+        """Verify local log messages
 
-            Args:
-              dut (dict): Encapsulates dut details including name, connection
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
@@ -64,22 +63,31 @@ class LoggingTests():
         for sys_msg in sys_msgs:
             tops.actual_output = sys_msg in tops.show_cmd_txt
 
-            tops.output_msg += (f'Test for log message {sys_msg}, '
-                                'message should not be present.\n')
+            tops.output_msg += (
+                f"Test for log message {sys_msg}, "
+                "message should not be present.\n"
+            )
 
             tops.test_result = tops.actual_output is tops.expected_output
-            tops.comment += (f'Test for log message |{sys_msg}| on |{tops.dut_name}|.\n'
-                             f'GIVEN message presence is |{tops.expected_output}|.\n'
-                             f'WHEN message presence is |{tops.actual_output}|.\n'
-                             f'THEN test case result is |{tops.test_result}|.\n\n')
-                        
+            tops.comment += (
+                f"Test for log message |{sys_msg}| on |{tops.dut_name}|.\n"
+                f"GIVEN message presence is |{tops.expected_output}|.\n"
+                f"WHEN message presence is |{tops.actual_output}|.\n"
+                f"THEN test case result is |{tops.test_result}|.\n\n"
+            )
+
             tops.actual_results.append(tops.actual_output)
             tops.expected_results.append(tops.expected_output)
 
-        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        tops.comment += (
+            f"OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n"
+        )
         print(f"{tops.output_msg}\n{tops.comment}")
 
-        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.actual_output, tops.expected_output = (
+            tops.actual_results,
+            tops.expected_results,
+        )
         tops.post_testcase()
 
         assert tops.actual_results == tops.expected_results
