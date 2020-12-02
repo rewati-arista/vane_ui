@@ -28,9 +28,9 @@ test:
 exec:
 	docker exec -it $(CONTAINER_NAME) /bin/bash
 
-.PHONY: lint
+.PHONY: format
 exec:
-	docker exec -it $(CONTAINER_NAME) black -l 80 
+	docker exec -it $(CONTAINER_NAME) black -l 80 *.py
 
 .PHONY: dev
 dev:

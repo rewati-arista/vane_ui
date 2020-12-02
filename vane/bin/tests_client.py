@@ -54,212 +54,215 @@ import yaml
 import jinja2
 
 
-logging.basicConfig(level=logging.INFO, filename='vane.log', filemode='w',
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO,
+    filename="vane.log",
+    filemode="w",
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
 
 
 class TestsClient:
-    """ Creates an instance of the Test Client.
-    """
+    """Creates an instance of the Test Client."""
 
     def __init__(self, test_definition):
-        """ Initializes the Test Client
+        """Initializes the Test Client
 
-            Args:
-                test_definition (str): YAML representation of NRFU tests
+        Args:
+            test_definition (str): YAML representation of NRFU tests
         """
 
-        logging.info('Convert yaml data-model to a python data structure')
+        logging.info("Convert yaml data-model to a python data structure")
         self.data_model = self._import_yaml(test_definition)
-        logging.info('Internal test data-model initialized with value: '
-                     f'{self.data_model}')
+        logging.info(
+            "Internal test data-model initialized with value: "
+            f"{self.data_model}"
+        )
         self.test_parameters = []
 
     def _import_yaml(self, yaml_file):
-        """ Import YAML file as python data structure
+        """Import YAML file as python data structure
 
-            Args:
-                yaml_file (str): Name of YAML file
+        Args:
+            yaml_file (str): Name of YAML file
         """
 
-        logging.info(f'Opening {yaml_file} for read')
+        logging.info(f"Opening {yaml_file} for read")
         try:
-            with open(yaml_file, 'r') as input_yaml:
+            with open(yaml_file, "r") as input_yaml:
                 try:
                     yaml_data = yaml.safe_load(input_yaml)
-                    logging.info(f'Inputed the following yaml: '
-                                 f'{yaml_data}')
+                    logging.info(f"Inputed the following yaml: " f"{yaml_data}")
                     return yaml_data
                 except yaml.YAMLError as err_data:
-                    logging.error(f'Error in YAML file. {err_data}')
+                    logging.error(f"Error in YAML file. {err_data}")
                     sys.exit(1)
         except OSError as err_data:
-            logging.error(f'Defintions file: {yaml_file} not '
-                          f'found. {err_data}')
+            logging.error(
+                f"Defintions file: {yaml_file} not " f"found. {err_data}"
+            )
             sys.exit(1)
 
     def test_runner(self):
-        """ Run tests
-        """
+        """Run tests"""
 
-        logging.info('Start test setup')
+        logging.info("Start test setup")
         self._render_eapi_cfg()
         self._remove_result_files()
         self._set_test_parameters()
 
-        logging.info('Starting Test')
+        logging.info("Starting Test")
         pytest.main(self.test_parameters)
 
     def _init_parameters(self):
-        """ Initialize all test values
-        """
+        """Initialize all test values"""
 
-        parameter_keys = ['verbose', 'stdout', 'test_cases', 'html_report', 
-                          'excel_report', 'json_report', 'processes', 'mark',
-                          'setup_show']
+        parameter_keys = [
+            "verbose",
+            "stdout",
+            "test_cases",
+            "html_report",
+            "excel_report",
+            "json_report",
+            "processes",
+            "mark",
+            "setup_show",
+        ]
 
-        logging.info('Initialize test parameter values')
+        logging.info("Initialize test parameter values")
         for parameter_key in parameter_keys:
-            if parameter_key not in self.data_model['parameters']:
-                self.data_model['parameters'][parameter_key] = None
+            if parameter_key not in self.data_model["parameters"]:
+                self.data_model["parameters"][parameter_key] = None
 
     def _set_verbosity(self):
-        """ Set verbosity for test run
-        """
+        """Set verbosity for test run"""
 
-        verbose = self.data_model['parameters']['verbose']
-        self._set_cmdline_no_input(verbose, '-v')
+        verbose = self.data_model["parameters"]["verbose"]
+        self._set_cmdline_no_input(verbose, "-v")
 
     def _set_stdout(self):
-        """ Set stdout for test run
-        """
+        """Set stdout for test run"""
 
-        stdout = self.data_model['parameters']['stdout']
-        self._set_cmdline_no_input(stdout, '-s')
+        stdout = self.data_model["parameters"]["stdout"]
+        self._set_cmdline_no_input(stdout, "-s")
 
     def _set_setup_show(self):
-        """ Set stdout for test run
-        """
+        """Set stdout for test run"""
 
-        setup_show = self.data_model['parameters']['setup_show']
-        self._set_cmdline_no_input(setup_show, '--setup-show')
+        setup_show = self.data_model["parameters"]["setup_show"]
+        self._set_cmdline_no_input(setup_show, "--setup-show")
 
     def _set_cmdline_no_input(self, parameter, ext):
 
         if parameter and ext not in self.test_parameters:
-            logging.info(f'Enable pytest output {parameter}')
+            logging.info(f"Enable pytest output {parameter}")
             self.test_parameters.append(ext)
         if not parameter and ext in self.test_parameters:
-            logging.info(f'Remove and disable pytest output {parameter}')
+            logging.info(f"Remove and disable pytest output {parameter}")
             parameter_index = self.test_parameters.index(ext)
             self.test_parameters.pop(parameter_index)
         else:
-            logging.warning(f'Disable pytest output {parameter}')
+            logging.warning(f"Disable pytest output {parameter}")
 
     def _set_test_cases(self):
-        """ Set test cases for test run
-        """
+        """Set test cases for test run"""
 
-        test_cases = self.data_model['parameters']['test_cases']
+        test_cases = self.data_model["parameters"]["test_cases"]
 
-        logging.info(f'Run the following tests: {test_cases}')
-        if test_cases == 'All':
+        logging.info(f"Run the following tests: {test_cases}")
+        if test_cases == "All":
             pass
         elif not test_cases:
             pass
         else:
-            self.test_parameters.append(f'-k {test_cases}')
+            self.test_parameters.append(f"-k {test_cases}")
 
     def _set_html_report(self, report_dir):
-        """ Set html_report for test run
-        """
+        """Set html_report for test run"""
 
-        html_report = self.data_model['parameters']['html_report']
-        html_name = f'--html={report_dir}/{html_report}.html'
-        list_out = [x for x in self.test_parameters if '--html' in x] 
+        html_report = self.data_model["parameters"]["html_report"]
+        html_name = f"--html={report_dir}/{html_report}.html"
+        list_out = [x for x in self.test_parameters if "--html" in x]
 
         if html_report and html_name not in self.test_parameters:
-            logging.info(f'Set HTML report name to: {html_name}')
+            logging.info(f"Set HTML report name to: {html_name}")
             self.test_parameters.append(html_name)
         elif not html_report and len(list_out) > 0:
             for list_item in list_out:
                 parameter_index = self.test_parameters.index(list_item)
                 self.test_parameters.pop(parameter_index)
         else:
-            logging.warning('HTML report will NOT be created')
+            logging.warning("HTML report will NOT be created")
 
     def _set_excel_report(self, report_dir):
-        """ Set excel_report for test run
-        """
+        """Set excel_report for test run"""
 
-        excel_report = self.data_model['parameters']['excel_report']
-        excel_name = f'--excelreport={report_dir}/{excel_report}.xlsx'
-        self._set_cmdline_report(excel_report, excel_name, '--excelreport')
+        excel_report = self.data_model["parameters"]["excel_report"]
+        excel_name = f"--excelreport={report_dir}/{excel_report}.xlsx"
+        self._set_cmdline_report(excel_report, excel_name, "--excelreport")
 
     def _set_json_report(self, report_dir):
-        """ Set json_report for test run
-        """
+        """Set json_report for test run"""
 
-        json_report = self.data_model['parameters']['json_report']
-        json_name = f'--json={report_dir}/{json_report}.json'
-        self._set_cmdline_report(json_report, json_name, '--json')
+        json_report = self.data_model["parameters"]["json_report"]
+        json_name = f"--json={report_dir}/{json_report}.json"
+        self._set_cmdline_report(json_report, json_name, "--json")
 
     def _set_cmdline_report(self, parameter, report, ext):
 
-        list_out = [x for x in self.test_parameters if ext in x] 
+        list_out = [x for x in self.test_parameters if ext in x]
 
         if parameter and report not in self.test_parameters:
-            logging.info(f'Set {ext} report name to: {report}')
+            logging.info(f"Set {ext} report name to: {report}")
             self.test_parameters.append(report)
         elif not parameter and len(list_out) > 0:
             for list_item in list_out:
                 parameter_index = self.test_parameters.index(list_item)
                 self.test_parameters.pop(parameter_index)
         else:
-            logging.warning(f'{ext} report will NOT be created')
+            logging.warning(f"{ext} report will NOT be created")
 
     def _set_processes(self):
 
-        processes = self.data_model['parameters']['processes']
-        self._set_cmdline_input(processes, '-n')
+        processes = self.data_model["parameters"]["processes"]
+        self._set_cmdline_input(processes, "-n")
 
     def _set_mark(self):
 
-        mark = self.data_model['parameters']['mark']
-        self._set_cmdline_input(mark, '-m')
+        mark = self.data_model["parameters"]["mark"]
+        self._set_cmdline_input(mark, "-m")
 
     def _set_junit(self):
 
-        self.test_parameters.append('--junit-xml=../reports/report.xml')
+        self.test_parameters.append("--junit-xml=../reports/report.xml")
 
     def _set_cmdline_input(self, parameter, ext):
 
-        list_out = [x for x in self.test_parameters if ext in x] 
+        list_out = [x for x in self.test_parameters if ext in x]
 
         if parameter and len(list_out) == 0:
-            logging.info(f'Set PyTest {ext} to: {parameter}')
-            self.test_parameters.append(f'{ext} {parameter}')
+            logging.info(f"Set PyTest {ext} to: {parameter}")
+            self.test_parameters.append(f"{ext} {parameter}")
         elif parameter and len(list_out) > 0:
             for list_item in list_out:
                 parameter_index = self.test_parameters.index(list_item)
                 self.test_parameters.pop(parameter_index)
-            logging.info(f'Set PyTest {ext} to: {parameter}')
-            self.test_parameters.append(f'{ext} {parameter}')
+            logging.info(f"Set PyTest {ext} to: {parameter}")
+            self.test_parameters.append(f"{ext} {parameter}")
         elif not parameter and len(list_out) > 0:
             for list_item in list_out:
                 parameter_index = self.test_parameters.index(list_item)
                 self.test_parameters.pop(parameter_index)
         else:
-            logging.info(f'Not Setting PyTest {ext}')
+            logging.info(f"Not Setting PyTest {ext}")
 
     def _set_test_parameters(self):
-        """ Use data-model to create test parameters
-        """
+        """Use data-model to create test parameters"""
 
-        report_dir = self.data_model['parameters']['report_dir']
+        report_dir = self.data_model["parameters"]["report_dir"]
 
-        logging.info('Use data-model to create test parameters')
-        logging.info('Setting test parameters')
+        logging.info("Use data-model to create test parameters")
+        logging.info("Setting test parameters")
         self._init_parameters()
         self._set_verbosity()
         self._set_stdout()
@@ -273,34 +276,41 @@ class TestsClient:
         self._set_junit()
 
     def _render_eapi_cfg(self):
-        """ Render .eapi.conf file so pytests can log into devices
-        """
+        """Render .eapi.conf file so pytests can log into devices"""
 
-        logging.info('Render .eapi.conf file for device access')
+        logging.info("Render .eapi.conf file for device access")
         eapi_template = self.data_model["parameters"]["eapi_template"]
         eapi_file = self.data_model["parameters"]["eapi_file"]
         duts = self.data_model["duts"]
 
         try:
-            logging.info(f'Open {eapi_template} Jinja2 template for reading')
+            logging.info(f"Open {eapi_template} Jinja2 template for reading")
 
-            with open(eapi_template, 'r') as jinja_file:
-                logging.info(f'Read and save contents of {eapi_template} '
-                             'Jinja2 template')
+            with open(eapi_template, "r") as jinja_file:
+                logging.info(
+                    f"Read and save contents of {eapi_template} "
+                    "Jinja2 template"
+                )
                 jinja_template = jinja_file.read()
-                logging.info(f'Using {eapi_template} Jinja2 template to '
-                             f'render {eapi_file} file with parameters {duts}')
-                resource_file = jinja2.Environment().from_string(jinja_template).render(duts=duts)
+                logging.info(
+                    f"Using {eapi_template} Jinja2 template to "
+                    f"render {eapi_file} file with parameters {duts}"
+                )
+                resource_file = (
+                    jinja2.Environment()
+                    .from_string(jinja_template)
+                    .render(duts=duts)
+                )
         except IOError as err_data:
             print(f">>> ERROR READING {eapi_template}: {err_data}")
-            logging.error(f'ERROR READING {eapi_template}: {err_data}')
-            logging.error('EXITING TEST RUNNER')
+            logging.error(f"ERROR READING {eapi_template}: {err_data}")
+            logging.error("EXITING TEST RUNNER")
             sys.exit(1)
-        
+
         self._write_file(resource_file)
 
     def _write_file(self, file_data):
-        """ Write data to a file
+        """Write data to a file
 
         Args:
             file_data (str): Data to write to file
@@ -308,39 +318,40 @@ class TestsClient:
 
         eapi_file = self.data_model["parameters"]["eapi_file"]
 
-        logging.info(f'Rendered {eapi_file} as: {file_data}')
+        logging.info(f"Rendered {eapi_file} as: {file_data}")
         try:
-            logging.info(f'Open {eapi_file} for writing')
+            logging.info(f"Open {eapi_file} for writing")
 
-            with open(eapi_file, 'w') as output_file:
+            with open(eapi_file, "w") as output_file:
                 output_file.write(file_data)
         except (IOError, FileNotFoundError) as err_data:
             print(f">>> ERROR WRITING {eapi_file}: {err_data}")
-            logging.error(f'ERROR WRITING {eapi_file}: {err_data}')
-            logging.error('EXITING TEST RUNNER')
+            logging.error(f"ERROR WRITING {eapi_file}: {err_data}")
+            logging.error("EXITING TEST RUNNER")
             sys.exit(1)
 
-        logging.info(f'Change permissions of {eapi_file} to 777')
+        logging.info(f"Change permissions of {eapi_file} to 777")
         os.chmod(eapi_file, stat.S_IRWXU)
-    
+
     def _remove_result_files(self):
-        """ Remove pre-existing results file
-        """
+        """Remove pre-existing results file"""
 
         results_dir = self.data_model["parameters"]["results_dir"]
-        logging.info('Remove any existing results files in results directory '
-                     f'{results_dir}')
+        logging.info(
+            "Remove any existing results files in results directory "
+            f"{results_dir}"
+        )
 
         if not os.path.exists(results_dir):
             os.makedirs(results_dir)
 
         results_files = os.listdir(results_dir)
-        logging.info(f'Result files are {results_files}')
+        logging.info(f"Result files are {results_files}")
 
         for name in results_files:
-            if 'result-' in name:
-                result_file = f'{results_dir}/{name}'
-                logging.info(f'Remove result file: {result_file}')
+            if "result-" in name:
+                result_file = f"{results_dir}/{name}"
+                logging.info(f"Remove result file: {result_file}")
                 os.remove(result_file)
             else:
-                logging.warning(f'Not removing file: {name}')
+                logging.warning(f"Not removing file: {name}")
