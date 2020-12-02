@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="10" skipped="2" tests="124" time="34.338" timestamp="2020-12-02T19:14:34.143269" hostname="a329c4a11ab0"><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_authentication_counters_are_incrementing_on_[kg-topology-CloudEosRR1]" time="0.001"><skipped type="pytest.skip" message="No AAA setup on DUTs">/project/vane/bin/tests/aaa/test_aaa.py:51: No AAA setup on DUTs</skipped></testcase><testcase classname="tests.test_pytest.PyTestTests" name="test_assert_true[kg-topology-CloudEosRR1]" time="0.006" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_aaa_session_logging_is_working_on_[kg-topology-CloudEosRR1]" time="0.421" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_exec_authorization_methods_set_on_[kg-topology-CloudEosRR1]" time="0.428" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_commands_authorization_methods_set_on_[kg-topology-CloudEosRR1]" time="0.430" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_default_login_authentication_methods_set_on_[kg-topology-CloudEosRR1]" time="0.510" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_dot1x_authentication_methods_set_on_[kg-topology-CloudEosRR1]" time="0.533" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_login_authentication_methods_set_on_[kg-topology-CloudEosRR1]" time="0.538" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_enable_authentication_methods_set_on_[kg-topology-CloudEosRR1]" time="0.371" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_exec_accounting_methods_set_on_[kg-topology-CloudEosRR1]" time="0.407" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_system_accounting_methods_set_on_[kg-topology-CloudEosRR1]" time="0.405" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_priviledge_accounting_methods_set_on_[kg-topology-CloudEosRR1]" time="0.629" /><testcase classname="tests.api.test_api.APITests" name="test_if_management_https_api_server_is_running_on_[kg-topology-CloudEosRR1]" time="0.853" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_dot1x_accounting_methods_set_on_[kg-topology-CloudEosRR1]" time="0.664" /><testcase classname="tests.api.test_api.APITests" name="test_if_management_https_api_server_port_is_correct_on_[kg-topology-CloudEosRR1]" time="0.683" /><testcase classname="tests.api.test_api.APITests" name="test_if_management_https_api_server_is_enabled_on_[kg-topology-CloudEosRR1]" time="0.788" /><testcase classname="tests.api.test_api.APITests" name="test_if_management_http_api_server_is_running_on_[kg-topology-CloudEosRR1]" time="0.664" /><testcase classname="tests.api.test_api.APITests" name="test_if_management_local_http_api_server_is_running_on_[kg-topology-CloudEosRR1]" time="0.473" /><testcase classname="tests.cpu.test_cpu.CPUTests" name="test_1_sec_cpu_utlization_on_[kg-topology-CloudEosRR1]" time="0.621" /><testcase classname="tests.cpu.test_cpu.CPUTests" name="test_1_min_cpu_utlization_on_[kg-topology-CloudEosRR1]" time="0.574" /><testcase classname="tests.cpu.test_cpu.CPUTests" name="test_5_min_cpu_utlization_on_[kg-topology-CloudEosRR1]" time="0.604" /><testcase classname="tests.daemon.test_daemon.DaemonTests" name="test_if_daemons_are_running_on_[kg-topology-CloudEosRR1]" time="0.465" /><testcase classname="tests.daemon.test_daemon.DaemonTests" name="test_if_daemons_are_enabled_on_[kg-topology-CloudEosRR1]" time="0.457" /><testcase classname="tests.dns.test_dns.DNSTests" name="test_if_dns_resolves_on_[kg-topology-CloudEosRR1]" time="1.595" /><testcase classname="tests.dns.test_dns.DNSTests" name="test_if_dns_servers_are_reachable_on_[kg-topology-CloudEosRR1]" time="5.271"><failure message="assert [False] == [True]&#10;  At index 0 diff: False != True&#10;  Full diff:&#10;  - [True]&#10;  + [False]">self = &lt;vane.bin.tests.dns.test_dns.DNSTests object at 0x7f020dad9160&gt;
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="10" skipped="2" tests="124" time="32.619" timestamp="2020-12-02T19:55:52.477902" hostname="1e465f6291ce"><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_authentication_counters_are_incrementing_on_[kg-topology-CloudEosRR1]" time="0.001"><skipped type="pytest.skip" message="No AAA setup on DUTs">/project/vane/bin/tests/aaa/test_aaa.py:50: No AAA setup on DUTs</skipped></testcase><testcase classname="tests.test_pytest.PyTestTests" name="test_assert_true[kg-topology-CloudEosRR1]" time="0.007" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_exec_authorization_methods_set_on_[kg-topology-CloudEosRR1]" time="0.413" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_commands_authorization_methods_set_on_[kg-topology-CloudEosRR1]" time="0.412" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_aaa_session_logging_is_working_on_[kg-topology-CloudEosRR1]" time="0.429" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_login_authentication_methods_set_on_[kg-topology-CloudEosRR1]" time="0.343" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_default_login_authentication_methods_set_on_[kg-topology-CloudEosRR1]" time="0.347" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_dot1x_authentication_methods_set_on_[kg-topology-CloudEosRR1]" time="0.370" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_enable_authentication_methods_set_on_[kg-topology-CloudEosRR1]" time="0.331" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_system_accounting_methods_set_on_[kg-topology-CloudEosRR1]" time="0.367" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_exec_accounting_methods_set_on_[kg-topology-CloudEosRR1]" time="0.346" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_priviledge_accounting_methods_set_on_[kg-topology-CloudEosRR1]" time="0.334" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_dot1x_accounting_methods_set_on_[kg-topology-CloudEosRR1]" time="0.336" /><testcase classname="tests.api.test_api.APITests" name="test_if_management_https_api_server_is_running_on_[kg-topology-CloudEosRR1]" time="0.448" /><testcase classname="tests.api.test_api.APITests" name="test_if_management_https_api_server_port_is_correct_on_[kg-topology-CloudEosRR1]" time="0.437" /><testcase classname="tests.api.test_api.APITests" name="test_if_management_https_api_server_is_enabled_on_[kg-topology-CloudEosRR1]" time="0.473" /><testcase classname="tests.api.test_api.APITests" name="test_if_management_http_api_server_is_running_on_[kg-topology-CloudEosRR1]" time="0.350" /><testcase classname="tests.api.test_api.APITests" name="test_if_management_local_http_api_server_is_running_on_[kg-topology-CloudEosRR1]" time="0.360" /><testcase classname="tests.cpu.test_cpu.CPUTests" name="test_1_sec_cpu_utlization_on_[kg-topology-CloudEosRR1]" time="0.453" /><testcase classname="tests.cpu.test_cpu.CPUTests" name="test_1_min_cpu_utlization_on_[kg-topology-CloudEosRR1]" time="0.462" /><testcase classname="tests.cpu.test_cpu.CPUTests" name="test_5_min_cpu_utlization_on_[kg-topology-CloudEosRR1]" time="0.449" /><testcase classname="tests.daemon.test_daemon.DaemonTests" name="test_if_daemons_are_running_on_[kg-topology-CloudEosRR1]" time="0.358" /><testcase classname="tests.daemon.test_daemon.DaemonTests" name="test_if_daemons_are_enabled_on_[kg-topology-CloudEosRR1]" time="0.364" /><testcase classname="tests.dns.test_dns.DNSTests" name="test_if_dns_resolves_on_[kg-topology-CloudEosRR1]" time="1.630" /><testcase classname="tests.dns.test_dns.DNSTests" name="test_if_dns_servers_are_reachable_on_[kg-topology-CloudEosRR1]" time="5.007"><failure message="assert [False] == [True]&#10;  At index 0 diff: False != True&#10;  Full diff:&#10;  - [True]&#10;  + [False]">self = &lt;vane.bin.tests.dns.test_dns.DNSTests object at 0x7fced22c34f0&gt;
 dut = {'connection': Node(connection=EapiConnection(transport=https://3.129.242.29:443//command-api)), 'name': 'kg-topology-...TEM:\n  name=system default-action=none\nAccounting method list for DOT1X:\n  name=dot1x default-action=none\n'}, ...}}
 tests_definitions = {'test_suites': [{'name': 'test_aaa.py', 'testcases': [{'comment': None, 'description': 'Verify AAA counters are worki...ted_output': 'ok', 'name': 'test_if_fan_status_is_in_spec_on_', 'show_cmd': 'show system environment cooling'}]}, ...]}
 
     def test_if_dns_servers_are_reachable_on_(self, dut, tests_definitions):
-        """ Verifies DNS servers are reachable via ping
+        """Verifies DNS servers are reachable via ping
     
-            Args:
-              dut (dict): Encapsulates dut details including name, connection
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
         """
     
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
@@ -20,24 +20,31 @@ tests_definitions = {'test_suites': [{'name': 'test_aaa.py', 'testcases': [{'com
                 show_cmd = f"ping {dns_server}"
     
             tops.return_show_cmd(show_cmd)
-            tops.actual_output = 'bytes from' in tops.show_cmd_txt
+            tops.actual_output = "bytes from" in tops.show_cmd_txt
             tops.test_result = tops.actual_output is tops.expected_output
     
-            tops.output_msg += (f"\nOn router |{tops.dut_name}|, verifying NTP "
-                                f"server reachability for |{dns_server}| is "
-                                f"|{tops.test_result}|.\n")
+            tops.output_msg += (
+                f"\nOn router |{tops.dut_name}|, verifying NTP "
+                f"server reachability for |{dns_server}| is "
+                f"|{tops.test_result}|.\n"
+            )
     
-            tops.comment += (f'TEST NTP servers are reachable on |{tops.dut_name}| '
-                             f'GIVEN server |{dns_server}|.\n'
-                             'WHEN exception is |bytes from| '
-                             'string.\n'
-                             f'THEN test case result is |{tops.test_result}|.\n'
-                             f'OUTPUT of |{show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+            tops.comment += (
+                f"TEST NTP servers are reachable on |{tops.dut_name}| "
+                f"GIVEN server |{dns_server}|.\n"
+                "WHEN exception is |bytes from| "
+                "string.\n"
+                f"THEN test case result is |{tops.test_result}|.\n"
+                f"OUTPUT of |{show_cmd}| is :\n\n{tops.show_cmd_txt}.\n"
+            )
     
             tops.actual_results.append(tops.actual_output)
             tops.expected_results.append(tops.expected_output)
     
-        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.actual_output, tops.expected_output = (
+            tops.actual_results,
+            tops.expected_results,
+        )
         tops.post_testcase()
     
 &gt;       assert tops.actual_results == tops.expected_results
@@ -47,15 +54,17 @@ E         Full diff:
 E         - [True]
 E         + [False]
 
-tests/dns/test_dns.py:131: AssertionError</failure></testcase><testcase classname="tests.dns.test_dns.DNSTests" name="test_dns_configuration_on_[kg-topology-CloudEosRR1]" time="1.157" /><testcase classname="tests.environment.test_environment.EnvironmentTests" name="test_if_system_environment_power_are_in_spec_on_[kg-topology-CloudEosRR1]" time="0.327" /><testcase classname="tests.environment.test_environment.EnvironmentTests" name="test_if_system_environment_temp_is_in_spec_on_[kg-topology-CloudEosRR1]" time="0.348" /><testcase classname="tests.extension.test_extension.ExtensionsTests" name="test_if_extensions_are_installed_on_[kg-topology-CloudEosRR1]" time="0.380" /><testcase classname="tests.environment.test_environment.EnvironmentTests" name="test_if_system_environment_cooling_is_in_spec_on_[kg-topology-CloudEosRR1]" time="0.390" /><testcase classname="tests.extension.test_extension.ExtensionsTests" name="test_if_extensions_are_erroring_on_[kg-topology-CloudEosRR1]" time="0.380" /><testcase classname="tests.lldp.test_lldp.LldpLocalInfoTests" name="test_if_lldp_system_name_is_correct_on_[kg-topology-CloudEosRR1]" time="0.351" /><testcase classname="tests.filesystem.test_filesystem.FileSystemTests" name="test_if_files_on_[kg-topology-CloudEosRR1]" time="1.087" /><testcase classname="tests.lldp.test_lldp.LldpLocalInfoTests" name="test_if_lldp_max_frame_size_is_correct_on_[kg-topology-CloudEosRR1]" time="0.371"><failure message="assert [9236] == [10200]&#10;  At index 0 diff: 9236 != 10200&#10;  Full diff:&#10;  - [10200]&#10;  + [9236]">self = &lt;vane.bin.tests.lldp.test_lldp.LldpLocalInfoTests object at 0x7feb7600e850&gt;
+tests/dns/test_dns.py:144: AssertionError</failure></testcase><testcase classname="tests.dns.test_dns.DNSTests" name="test_dns_configuration_on_[kg-topology-CloudEosRR1]" time="0.864" /><testcase classname="tests.environment.test_environment.EnvironmentTests" name="test_if_system_environment_power_are_in_spec_on_[kg-topology-CloudEosRR1]" time="0.280" /><testcase classname="tests.extension.test_extension.ExtensionsTests" name="test_if_extensions_are_installed_on_[kg-topology-CloudEosRR1]" time="0.310" /><testcase classname="tests.extension.test_extension.ExtensionsTests" name="test_if_extensions_are_erroring_on_[kg-topology-CloudEosRR1]" time="0.410" /><testcase classname="tests.environment.test_environment.EnvironmentTests" name="test_if_system_environment_temp_is_in_spec_on_[kg-topology-CloudEosRR1]" time="0.410" /><testcase classname="tests.filesystem.test_filesystem.FileSystemTests" name="test_if_files_on_[kg-topology-CloudEosRR1]" time="0.997" /><testcase classname="tests.environment.test_environment.EnvironmentTests" name="test_if_system_environment_cooling_is_in_spec_on_[kg-topology-CloudEosRR1]" time="0.310" /><testcase classname="tests.lldp.test_lldp.LldpLocalInfoTests" name="test_if_lldp_system_name_is_correct_on_[kg-topology-CloudEosRR1]" time="0.288" /><testcase classname="tests.lldp.test_lldp.LldpLocalInfoTests" name="test_if_lldp_max_frame_size_is_correct_on_[kg-topology-CloudEosRR1]" time="0.293"><failure message="assert [9236] == [10200]&#10;  At index 0 diff: 9236 != 10200&#10;  Full diff:&#10;  - [10200]&#10;  + [9236]">self = &lt;vane.bin.tests.lldp.test_lldp.LldpLocalInfoTests object at 0x7fe559cbc580&gt;
 dut = {'connection': Node(connection=EapiConnection(transport=https://3.129.242.29:443//command-api)), 'name': 'kg-topology-...TEM:\n  name=system default-action=none\nAccounting method list for DOT1X:\n  name=dot1x default-action=none\n'}, ...}}
 tests_definitions = {'test_suites': [{'name': 'test_aaa.py', 'testcases': [{'comment': None, 'description': 'Verify AAA counters are worki...ted_output': 'ok', 'name': 'test_if_fan_status_is_in_spec_on_', 'show_cmd': 'show system environment cooling'}]}, ...]}
 
-    def test_if_lldp_max_frame_size_is_correct_on_(self, dut, tests_definitions):
-        """  Verify show lldp local-info maxFrameSize is correct
+    def test_if_lldp_max_frame_size_is_correct_on_(
+        self, dut, tests_definitions
+    ):
+        """Verify show lldp local-info maxFrameSize is correct
     
-            Args:
-                dut (dict): Encapsulates dut details including name, connection
+        Args:
+            dut (dict): Encapsulates dut details including name, connection
         """
     
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
@@ -63,28 +72,37 @@ tests_definitions = {'test_suites': [{'name': 'test_aaa.py', 'testcases': [{'com
         print(f"\nOn router |{tops.dut_name}|:")
     
         for interface in tops.interface_list:
-            interface_name = interface['interface_name'].replace(" ", "")
-            int_ptr = dut["output"][tops.show_cmd]["json"]['localInterfaceInfo']
-            tops.actual_output = int_ptr[interface_name]['maxFrameSize']
+            interface_name = interface["interface_name"].replace(" ", "")
+            int_ptr = dut["output"][tops.show_cmd]["json"]["localInterfaceInfo"]
+            tops.actual_output = int_ptr[interface_name]["maxFrameSize"]
     
-            tops.output_msg += (f"On interface |{interface_name}|: LLDP local-info "
-                                f"maxFrameSize is |{tops.actual_output}|, correct "
-                                f"maxFrameSize is |{tops.expected_output}|.\n\n")
+            tops.output_msg += (
+                f"On interface |{interface_name}|: LLDP local-info "
+                f"maxFrameSize is |{tops.actual_output}|, correct "
+                f"maxFrameSize is |{tops.expected_output}|.\n\n"
+            )
             tops.test_result = tops.actual_output == tops.expected_output
     
-            tops.comment += (f'TEST if |{tops.dut_name}| LLDP maxFrameSize is correct '
-                             f'on interface |{interface_name}|.\n'
-                             f'GIVEN LLDP maxFrameSize is |{tops.expected_output}|.\n'
-                             f'WHEN LLDP maxFrameSize is |{tops.actual_output}|.\n'
-                             f'THEN test case result is |{tops.test_result}|.\n\n')
+            tops.comment += (
+                f"TEST if |{tops.dut_name}| LLDP maxFrameSize is correct "
+                f"on interface |{interface_name}|.\n"
+                f"GIVEN LLDP maxFrameSize is |{tops.expected_output}|.\n"
+                f"WHEN LLDP maxFrameSize is |{tops.actual_output}|.\n"
+                f"THEN test case result is |{tops.test_result}|.\n\n"
+            )
     
             tops.actual_results.append(tops.actual_output)
             tops.expected_results.append(tops.expected_output)
     
-        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        tops.comment += (
+            f"OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n"
+        )
         print(f"{tops.output_msg}\n{tops.comment}")
     
-        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.actual_output, tops.expected_output = (
+            tops.actual_results,
+            tops.expected_results,
+        )
         tops.post_testcase()
     
 &gt;       assert tops.actual_results == tops.expected_results
@@ -94,15 +112,70 @@ E         Full diff:
 E         - [10200]
 E         + [9236]
 
-tests/lldp/test_lldp.py:203: AssertionError</failure></testcase><testcase classname="tests.lldp.test_lldp.LldpLocalInfoTests" name="test_if_lldp_interface_id_is_correct_on_[kg-topology-CloudEosRR1]" time="0.395" /><testcase classname="tests.log.test_logging.LoggingTests" name="test_if_log_messages_appear_on_[kg-topology-CloudEosRR1]" time="0.390" /><testcase classname="tests.host.test_host.HostTests" name="test_if_hostname_is_correcet_on_[kg-topology-CloudEosRR1]" time="0.333" /><testcase classname="tests.memory.test_memory.MemoryTests" name="test_memory_utilization_on_[kg-topology-CloudEosRR1]" time="0.305" /><testcase classname="tests.interface.test_interface.InterfaceStatusTests" name="test_if_intf_protocol_status_is_connected_on_[kg-topology-CloudEosRR1]" time="0.308" /><testcase classname="tests.ntp.test_ntp.NTPTests" name="test_if_ntp_is_synchronized_on_[kg-topology-CloudEosRR1]" time="0.305" /><testcase classname="tests.interface.test_interface.InterfaceStatusTests" name="test_if_intf_link_status_is_connected_on_[kg-topology-CloudEosRR1]" time="0.307" /><testcase classname="tests.ntp.test_ntp.NTPTests" name="test_if_ntp_associated_with_peers_on_[kg-topology-CloudEosRR1]" time="0.339" /><testcase classname="tests.interface.test_interface.InterfacePhyTests" name="test_if_intf_phy_status_connected_on_[kg-topology-CloudEosRR1]" time="0.331" /><testcase classname="tests.ntp.test_ntp.NTPTests" name="test_if_process_is_running_on_[kg-topology-CloudEosRR1]" time="0.433" /><testcase classname="tests.interface.test_interface.InterfaceCountersTests" name="test_if_interface_errors_on_[kg-topology-CloudEosRR1]" time="0.348" /><testcase classname="tests.interface.test_interface.InterfaceCountersTests" name="test_interface_utilization_on_[kg-topology-CloudEosRR1]" time="0.371" /><testcase classname="tests.ntp.test_ntp.NTPTests" name="test_ntp_configuration_on_[kg-topology-CloudEosRR1]" time="0.822" /><testcase classname="tests.environment.test_environment.EnvironmentTests" name="test_if_sensors_temp_is_in_spec_on_[kg-topology-CloudEosRR1]" time="0.347" /><testcase classname="tests.interface.test_interface.InterfaceDiscardTests" name="test_if_intf_out_counters_are_discarding_on_[kg-topology-CloudEosRR1]" time="0.351" /><testcase classname="tests.environment.test_environment.EnvironmentTests" name="test_if_fan_status_is_in_spec_on_[kg-topology-CloudEosRR1]" time="0.322" /><testcase classname="tests.interface.test_interface.InterfaceDiscardTests" name="test_if_intf_in_counters_are_discarding_on_[kg-topology-CloudEosRR1]" time="0.377" /><testcase classname="tests.ntp.test_ntp.NTPTests" name="test_if_ntp_servers_are_reachable_on_[kg-topology-CloudEosRR1]" time="4.962"><failure message="assert [False] == [True]&#10;  At index 0 diff: False != True&#10;  Full diff:&#10;  - [True]&#10;  + [False]">self = &lt;vane.bin.tests.ntp.test_ntp.NTPTests object at 0x7feb75f13a90&gt;
+tests/lldp/test_lldp.py:233: AssertionError</failure></testcase><testcase classname="tests.host.test_host.HostTests" name="test_if_hostname_is_correcet_on_[kg-topology-CloudEosRR1]" time="0.321" /><testcase classname="tests.lldp.test_lldp.LldpLocalInfoTests" name="test_if_lldp_interface_id_is_correct_on_[kg-topology-CloudEosRR1]" time="0.323" /><testcase classname="tests.interface.test_interface.InterfaceStatusTests" name="test_if_intf_protocol_status_is_connected_on_[kg-topology-CloudEosRR1]" time="0.306" /><testcase classname="tests.log.test_logging.LoggingTests" name="test_if_log_messages_appear_on_[kg-topology-CloudEosRR1]" time="0.345" /><testcase classname="tests.interface.test_interface.InterfaceStatusTests" name="test_if_intf_link_status_is_connected_on_[kg-topology-CloudEosRR1]" time="0.317" /><testcase classname="tests.memory.test_memory.MemoryTests" name="test_memory_utilization_on_[kg-topology-CloudEosRR1]" time="0.313" /><testcase classname="tests.interface.test_interface.InterfacePhyTests" name="test_if_intf_phy_status_connected_on_[kg-topology-CloudEosRR1]" time="0.333" /><testcase classname="tests.ntp.test_ntp.NTPTests" name="test_if_ntp_is_synchronized_on_[kg-topology-CloudEosRR1]" time="0.343" /><testcase classname="tests.interface.test_interface.InterfaceCountersTests" name="test_if_interface_errors_on_[kg-topology-CloudEosRR1]" time="0.447" /><testcase classname="tests.ntp.test_ntp.NTPTests" name="test_if_ntp_associated_with_peers_on_[kg-topology-CloudEosRR1]" time="0.504" /><testcase classname="tests.interface.test_interface.InterfaceCountersTests" name="test_interface_utilization_on_[kg-topology-CloudEosRR1]" time="0.376" /><testcase classname="tests.ntp.test_ntp.NTPTests" name="test_if_process_is_running_on_[kg-topology-CloudEosRR1]" time="0.496" /><testcase classname="tests.interface.test_interface.InterfaceDiscardTests" name="test_if_intf_out_counters_are_discarding_on_[kg-topology-CloudEosRR1]" time="0.412" /><testcase classname="tests.environment.test_environment.EnvironmentTests" name="test_if_sensors_temp_is_in_spec_on_[kg-topology-CloudEosRR1]" time="0.472" /><testcase classname="tests.ntp.test_ntp.NTPTests" name="test_ntp_configuration_on_[kg-topology-CloudEosRR1]" time="0.913" /><testcase classname="tests.interface.test_interface.InterfaceDiscardTests" name="test_if_intf_in_counters_are_discarding_on_[kg-topology-CloudEosRR1]" time="0.390" /><testcase classname="tests.environment.test_environment.EnvironmentTests" name="test_if_fan_status_is_in_spec_on_[kg-topology-CloudEosRR1]" time="0.392" /><testcase classname="tests.interface.test_interface.InterfaceMtuTests" name="test_if_intf_mtu_is_correct_on_[kg-topology-CloudEosRR1]" time="0.451"><failure message="assert [1500] == [10178]&#10;  At index 0 diff: 1500 != 10178&#10;  Full diff:&#10;  - [10178]&#10;  + [1500]">self = &lt;vane.bin.tests.interface.test_interface.InterfaceMtuTests object at 0x7f5898317100&gt;
+dut = {'connection': Node(connection=EapiConnection(transport=https://3.129.242.29:443//command-api)), 'name': 'kg-topology-...TEM:\n  name=system default-action=none\nAccounting method list for DOT1X:\n  name=dot1x default-action=none\n'}, ...}}
+tests_definitions = {'test_suites': [{'name': 'test_aaa.py', 'testcases': [{'comment': None, 'description': 'Verify AAA counters are worki...ted_output': 'ok', 'name': 'test_if_fan_status_is_in_spec_on_', 'show_cmd': 'show system environment cooling'}]}, ...]}
+
+    def test_if_intf_mtu_is_correct_on_(self, dut, tests_definitions):
+        """Verify the interfaces of interest have no inDiscards
+    
+        Args:
+            dut (dict): Encapsulates dut details including name, connection
+        """
+    
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+    
+        print(f"\nOn router |{tops.dut_name}|:")
+    
+        for interface in tops.interface_list:
+            interface_name = interface["interface_name"].replace(" ", "")
+            int_ptr = dut["output"][tops.show_cmd]["json"]["interfaces"]
+            tops.actual_output = int_ptr[interface_name]["mtu"]
+            tops.test_result = tops.actual_output == tops.expected_output
+    
+            tops.output_msg += (
+                f"On interface |{interface_name}|: interface "
+                f"MTU is |{tops.actual_output}|, correct MTU is "
+                f"|{tops.expected_output}|.\n\n"
+            )
+            tops.comment += (
+                f"TEST if interface |{interface_name}| MTU is correct "
+                f"on |{tops.dut_name}|.\n"
+                f"GIVEN MTU of |{tops.expected_output}|.\n"
+                f"WHEN interface MTU is |{tops.actual_output}|.\n"
+                f"THEN test case result is |{tops.test_result}|.\n\n"
+            )
+    
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
+    
+        tops.comment += (
+            f"OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n"
+        )
+        print(f"{tops.output_msg}\n{tops.comment}")
+    
+        tops.actual_output, tops.expected_output = (
+            tops.actual_results,
+            tops.expected_results,
+        )
+        tops.post_testcase()
+    
+&gt;       assert tops.actual_results == tops.expected_results
+E       assert [1500] == [10178]
+E         At index 0 diff: 1500 != 10178
+E         Full diff:
+E         - [10178]
+E         + [1500]
+
+tests/interface/test_interface.py:736: AssertionError</failure></testcase><testcase classname="tests.tacacs.test_tacacs.TacacsTests" name="test_if_tacacs_is_sending_messages_on_[kg-topology-CloudEosRR1]" time="0.423" /><testcase classname="tests.ntp.test_ntp.NTPTests" name="test_if_ntp_servers_are_reachable_on_[kg-topology-CloudEosRR1]" time="4.912"><failure message="assert [False] == [True]&#10;  At index 0 diff: False != True&#10;  Full diff:&#10;  - [True]&#10;  + [False]">self = &lt;vane.bin.tests.ntp.test_ntp.NTPTests object at 0x7fe559cbcc40&gt;
 dut = {'connection': Node(connection=EapiConnection(transport=https://3.129.242.29:443//command-api)), 'name': 'kg-topology-...TEM:\n  name=system default-action=none\nAccounting method list for DOT1X:\n  name=dot1x default-action=none\n'}, ...}}
 tests_definitions = {'test_suites': [{'name': 'test_aaa.py', 'testcases': [{'comment': None, 'description': 'Verify AAA counters are worki...ted_output': 'ok', 'name': 'test_if_fan_status_is_in_spec_on_', 'show_cmd': 'show system environment cooling'}]}, ...]}
 
     def test_if_ntp_servers_are_reachable_on_(self, dut, tests_definitions):
-        """ Verifies DNS servers are reachable via ping
+        """Verifies DNS servers are reachable via ping
     
-            Args:
-              dut (dict): Encapsulates dut details including name, connection
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
         """
     
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
@@ -116,24 +189,31 @@ tests_definitions = {'test_suites': [{'name': 'test_aaa.py', 'testcases': [{'com
                 show_cmd = f"ping {ntp_server}"
     
             tops.return_show_cmd(show_cmd)
-            tops.actual_output = 'bytes from' in tops.show_cmd_txt
+            tops.actual_output = "bytes from" in tops.show_cmd_txt
             tops.test_result = tops.actual_output is tops.expected_output
     
-            tops.output_msg += (f"\nOn router |{tops.dut_name}|, verifying NTP "
-                                f"server reachability for |{ntp_server}| is "
-                                f"|{tops.test_result}|.\n")
+            tops.output_msg += (
+                f"\nOn router |{tops.dut_name}|, verifying NTP "
+                f"server reachability for |{ntp_server}| is "
+                f"|{tops.test_result}|.\n"
+            )
     
-            tops.comment += (f'TEST NTP servers are reachable on |{tops.dut_name}| '
-                             f'GIVEN server |{ntp_server}|.\n'
-                             'WHEN exception is |bytes from| '
-                             'string.\n'
-                             f'THEN test case result is |{tops.test_result}|.\n'
-                             f'OUTPUT of |{show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+            tops.comment += (
+                f"TEST NTP servers are reachable on |{tops.dut_name}| "
+                f"GIVEN server |{ntp_server}|.\n"
+                "WHEN exception is |bytes from| "
+                "string.\n"
+                f"THEN test case result is |{tops.test_result}|.\n"
+                f"OUTPUT of |{show_cmd}| is :\n\n{tops.show_cmd_txt}.\n"
+            )
     
             tops.actual_results.append(tops.actual_output)
             tops.expected_results.append(tops.expected_output)
     
-        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.actual_output, tops.expected_output = (
+            tops.actual_results,
+            tops.expected_results,
+        )
         tops.post_testcase()
     
 &gt;       assert tops.actual_results == tops.expected_results
@@ -143,61 +223,15 @@ E         Full diff:
 E         - [True]
 E         + [False]
 
-tests/ntp/test_ntp.py:250: AssertionError</failure></testcase><testcase classname="tests.tacacs.test_tacacs.TacacsTests" name="test_if_tacacs_is_sending_messages_on_[kg-topology-CloudEosRR1]" time="0.386" /><testcase classname="tests.interface.test_interface.InterfaceMtuTests" name="test_if_intf_mtu_is_correct_on_[kg-topology-CloudEosRR1]" time="0.415"><failure message="assert [1500] == [10178]&#10;  At index 0 diff: 1500 != 10178&#10;  Full diff:&#10;  - [10178]&#10;  + [1500]">self = &lt;vane.bin.tests.interface.test_interface.InterfaceMtuTests object at 0x7f59d42176d0&gt;
-dut = {'connection': Node(connection=EapiConnection(transport=https://3.129.242.29:443//command-api)), 'name': 'kg-topology-...TEM:\n  name=system default-action=none\nAccounting method list for DOT1X:\n  name=dot1x default-action=none\n'}, ...}}
-tests_definitions = {'test_suites': [{'name': 'test_aaa.py', 'testcases': [{'comment': None, 'description': 'Verify AAA counters are worki...ted_output': 'ok', 'name': 'test_if_fan_status_is_in_spec_on_', 'show_cmd': 'show system environment cooling'}]}, ...]}
-
-    def test_if_intf_mtu_is_correct_on_(self, dut, tests_definitions):
-        """  Verify the interfaces of interest have no inDiscards
-    
-            Args:
-                dut (dict): Encapsulates dut details including name, connection
-        """
-    
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
-    
-        print(f"\nOn router |{tops.dut_name}|:")
-    
-        for interface in tops.interface_list:
-            interface_name = interface['interface_name'].replace(" ", "")
-            int_ptr = dut["output"][tops.show_cmd]['json']['interfaces']
-            tops.actual_output = int_ptr[interface_name]['mtu']
-            tops.test_result = tops.actual_output == tops.expected_output
-    
-            tops.output_msg += (f"On interface |{interface_name}|: interface "
-                                f"MTU is |{tops.actual_output}|, correct MTU is "
-                                f"|{tops.expected_output}|.\n\n")
-            tops.comment += (f'TEST if interface |{interface_name}| MTU is correct '
-                             f'on |{tops.dut_name}|.\n'
-                             f'GIVEN MTU of |{tops.expected_output}|.\n'
-                             f'WHEN interface MTU is |{tops.actual_output}|.\n'
-                             f'THEN test case result is |{tops.test_result}|.\n\n')
-    
-            tops.actual_results.append(tops.actual_output)
-            tops.expected_results.append(tops.expected_output)
-    
-        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
-        print(f"{tops.output_msg}\n{tops.comment}")
-    
-        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
-        tops.post_testcase()
-    
-&gt;       assert tops.actual_results == tops.expected_results
-E       assert [1500] == [10178]
-E         At index 0 diff: 1500 != 10178
-E         Full diff:
-E         - [10178]
-E         + [1500]
-
-tests/interface/test_interface.py:605: AssertionError</failure></testcase><testcase classname="tests.tacacs.test_tacacs.TacacsTests" name="test_if_tacacs_is_receiving_messages_on_[kg-topology-CloudEosRR1]" time="0.332" /><testcase classname="tests.lldp.test_lldp.LldpTests" name="test_if_lldp_rx_is_enabled_on_[kg-topology-CloudEosRR1]" time="0.342" /><testcase classname="tests.users.test_users.UsersTests" name="test_if_usernames_are_configured_on_[kg-topology-CloudEosRR1]" time="0.338" /><testcase classname="tests.lldp.test_lldp.LldpTests" name="test_if_lldp_tx_is_enabled_on_[kg-topology-CloudEosRR1]" time="0.338" /><testcase classname="tests.ztp.test_ztp.ZTPTests" name="test_if_zerotouch_is_disabled_on_[kg-topology-CloudEosRR1]" time="0.361" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_default_login_authentication_methods_set_on_[kg-topology-CloudEosRR2]" time="0.322" /><testcase classname="tests.ztp.test_ztp.ZTPTests" name="test_for_zerotouch_config_file_on_[kg-topology-CloudEosRR1]" time="0.341" /><testcase classname="tests.test_pytest.PyTestTests" name="test_assert_true[kg-topology-CloudEosRR2]" time="0.009" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_authentication_counters_are_incrementing_on_[kg-topology-CloudEosRR2]" time="0.001"><skipped type="pytest.skip" message="No AAA setup on DUTs">/project/vane/bin/tests/aaa/test_aaa.py:51: No AAA setup on DUTs</skipped></testcase><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_login_authentication_methods_set_on_[kg-topology-CloudEosRR2]" time="0.291" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_aaa_session_logging_is_working_on_[kg-topology-CloudEosRR2]" time="0.277" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_dot1x_authentication_methods_set_on_[kg-topology-CloudEosRR2]" time="0.275" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_commands_authorization_methods_set_on_[kg-topology-CloudEosRR2]" time="0.300" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_enable_authentication_methods_set_on_[kg-topology-CloudEosRR2]" time="0.292" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_exec_authorization_methods_set_on_[kg-topology-CloudEosRR2]" time="0.330" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_system_accounting_methods_set_on_[kg-topology-CloudEosRR2]" time="0.354" /><testcase classname="tests.api.test_api.APITests" name="test_if_management_https_api_server_is_running_on_[kg-topology-CloudEosRR2]" time="0.402" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_exec_accounting_methods_set_on_[kg-topology-CloudEosRR2]" time="0.352" /><testcase classname="tests.api.test_api.APITests" name="test_if_management_https_api_server_port_is_correct_on_[kg-topology-CloudEosRR2]" time="0.368" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_priviledge_accounting_methods_set_on_[kg-topology-CloudEosRR2]" time="0.333" /><testcase classname="tests.api.test_api.APITests" name="test_if_management_https_api_server_is_enabled_on_[kg-topology-CloudEosRR2]" time="0.308" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_dot1x_accounting_methods_set_on_[kg-topology-CloudEosRR2]" time="0.301" /><testcase classname="tests.api.test_api.APITests" name="test_if_management_http_api_server_is_running_on_[kg-topology-CloudEosRR2]" time="0.315" /><testcase classname="tests.cpu.test_cpu.CPUTests" name="test_1_sec_cpu_utlization_on_[kg-topology-CloudEosRR2]" time="0.388" /><testcase classname="tests.api.test_api.APITests" name="test_if_management_local_http_api_server_is_running_on_[kg-topology-CloudEosRR2]" time="0.327" /><testcase classname="tests.cpu.test_cpu.CPUTests" name="test_1_min_cpu_utlization_on_[kg-topology-CloudEosRR2]" time="0.459" /><testcase classname="tests.dns.test_dns.DNSTests" name="test_if_dns_servers_are_reachable_on_[kg-topology-CloudEosRR2]" time="4.983"><failure message="assert [False] == [True]&#10;  At index 0 diff: False != True&#10;  Full diff:&#10;  - [True]&#10;  + [False]">self = &lt;vane.bin.tests.dns.test_dns.DNSTests object at 0x7f020d751d00&gt;
+tests/ntp/test_ntp.py:275: AssertionError</failure></testcase><testcase classname="tests.lldp.test_lldp.LldpTests" name="test_if_lldp_rx_is_enabled_on_[kg-topology-CloudEosRR1]" time="0.375" /><testcase classname="tests.tacacs.test_tacacs.TacacsTests" name="test_if_tacacs_is_receiving_messages_on_[kg-topology-CloudEosRR1]" time="0.382" /><testcase classname="tests.lldp.test_lldp.LldpTests" name="test_if_lldp_tx_is_enabled_on_[kg-topology-CloudEosRR1]" time="0.330" /><testcase classname="tests.users.test_users.UsersTests" name="test_if_usernames_are_configured_on_[kg-topology-CloudEosRR1]" time="0.320" /><testcase classname="tests.ztp.test_ztp.ZTPTests" name="test_if_zerotouch_is_disabled_on_[kg-topology-CloudEosRR1]" time="0.311" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_default_login_authentication_methods_set_on_[kg-topology-CloudEosRR2]" time="0.313" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_login_authentication_methods_set_on_[kg-topology-CloudEosRR2]" time="0.355" /><testcase classname="tests.ztp.test_ztp.ZTPTests" name="test_for_zerotouch_config_file_on_[kg-topology-CloudEosRR1]" time="0.387" /><testcase classname="tests.test_pytest.PyTestTests" name="test_assert_true[kg-topology-CloudEosRR2]" time="0.003" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_authentication_counters_are_incrementing_on_[kg-topology-CloudEosRR2]" time="0.001"><skipped type="pytest.skip" message="No AAA setup on DUTs">/project/vane/bin/tests/aaa/test_aaa.py:50: No AAA setup on DUTs</skipped></testcase><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_dot1x_authentication_methods_set_on_[kg-topology-CloudEosRR2]" time="0.300" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_aaa_session_logging_is_working_on_[kg-topology-CloudEosRR2]" time="0.322" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_enable_authentication_methods_set_on_[kg-topology-CloudEosRR2]" time="0.310" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_commands_authorization_methods_set_on_[kg-topology-CloudEosRR2]" time="0.310" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_system_accounting_methods_set_on_[kg-topology-CloudEosRR2]" time="0.312" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_exec_authorization_methods_set_on_[kg-topology-CloudEosRR2]" time="0.314" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_exec_accounting_methods_set_on_[kg-topology-CloudEosRR2]" time="0.309" /><testcase classname="tests.api.test_api.APITests" name="test_if_management_https_api_server_is_running_on_[kg-topology-CloudEosRR2]" time="0.334" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_priviledge_accounting_methods_set_on_[kg-topology-CloudEosRR2]" time="0.328" /><testcase classname="tests.api.test_api.APITests" name="test_if_management_https_api_server_port_is_correct_on_[kg-topology-CloudEosRR2]" time="0.335" /><testcase classname="tests.aaa.test_aaa.AAATests" name="test_if_dot1x_accounting_methods_set_on_[kg-topology-CloudEosRR2]" time="0.327" /><testcase classname="tests.api.test_api.APITests" name="test_if_management_https_api_server_is_enabled_on_[kg-topology-CloudEosRR2]" time="0.360" /><testcase classname="tests.cpu.test_cpu.CPUTests" name="test_1_sec_cpu_utlization_on_[kg-topology-CloudEosRR2]" time="0.418" /><testcase classname="tests.api.test_api.APITests" name="test_if_management_http_api_server_is_running_on_[kg-topology-CloudEosRR2]" time="0.335" /><testcase classname="tests.cpu.test_cpu.CPUTests" name="test_1_min_cpu_utlization_on_[kg-topology-CloudEosRR2]" time="0.405" /><testcase classname="tests.api.test_api.APITests" name="test_if_management_local_http_api_server_is_running_on_[kg-topology-CloudEosRR2]" time="0.315" /><testcase classname="tests.dns.test_dns.DNSTests" name="test_if_dns_servers_are_reachable_on_[kg-topology-CloudEosRR2]" time="4.909"><failure message="assert [False] == [True]&#10;  At index 0 diff: False != True&#10;  Full diff:&#10;  - [True]&#10;  + [False]">self = &lt;vane.bin.tests.dns.test_dns.DNSTests object at 0x7fced22c3790&gt;
 dut = {'connection': Node(connection=EapiConnection(transport=https://3.23.123.34:443//command-api)), 'name': 'kg-topology-C...TEM:\n  name=system default-action=none\nAccounting method list for DOT1X:\n  name=dot1x default-action=none\n'}, ...}}
 tests_definitions = {'test_suites': [{'name': 'test_aaa.py', 'testcases': [{'comment': None, 'description': 'Verify AAA counters are worki...ted_output': 'ok', 'name': 'test_if_fan_status_is_in_spec_on_', 'show_cmd': 'show system environment cooling'}]}, ...]}
 
     def test_if_dns_servers_are_reachable_on_(self, dut, tests_definitions):
-        """ Verifies DNS servers are reachable via ping
+        """Verifies DNS servers are reachable via ping
     
-            Args:
-              dut (dict): Encapsulates dut details including name, connection
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
         """
     
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
@@ -211,24 +245,31 @@ tests_definitions = {'test_suites': [{'name': 'test_aaa.py', 'testcases': [{'com
                 show_cmd = f"ping {dns_server}"
     
             tops.return_show_cmd(show_cmd)
-            tops.actual_output = 'bytes from' in tops.show_cmd_txt
+            tops.actual_output = "bytes from" in tops.show_cmd_txt
             tops.test_result = tops.actual_output is tops.expected_output
     
-            tops.output_msg += (f"\nOn router |{tops.dut_name}|, verifying NTP "
-                                f"server reachability for |{dns_server}| is "
-                                f"|{tops.test_result}|.\n")
+            tops.output_msg += (
+                f"\nOn router |{tops.dut_name}|, verifying NTP "
+                f"server reachability for |{dns_server}| is "
+                f"|{tops.test_result}|.\n"
+            )
     
-            tops.comment += (f'TEST NTP servers are reachable on |{tops.dut_name}| '
-                             f'GIVEN server |{dns_server}|.\n'
-                             'WHEN exception is |bytes from| '
-                             'string.\n'
-                             f'THEN test case result is |{tops.test_result}|.\n'
-                             f'OUTPUT of |{show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+            tops.comment += (
+                f"TEST NTP servers are reachable on |{tops.dut_name}| "
+                f"GIVEN server |{dns_server}|.\n"
+                "WHEN exception is |bytes from| "
+                "string.\n"
+                f"THEN test case result is |{tops.test_result}|.\n"
+                f"OUTPUT of |{show_cmd}| is :\n\n{tops.show_cmd_txt}.\n"
+            )
     
             tops.actual_results.append(tops.actual_output)
             tops.expected_results.append(tops.expected_output)
     
-        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.actual_output, tops.expected_output = (
+            tops.actual_results,
+            tops.expected_results,
+        )
         tops.post_testcase()
     
 &gt;       assert tops.actual_results == tops.expected_results
@@ -238,16 +279,16 @@ E         Full diff:
 E         - [True]
 E         + [False]
 
-tests/dns/test_dns.py:131: AssertionError</failure></testcase><testcase classname="tests.cpu.test_cpu.CPUTests" name="test_5_min_cpu_utlization_on_[kg-topology-CloudEosRR2]" time="0.426" /><testcase classname="tests.system.test_system.CrashTests" name="test_if_there_is_agents_have_crashed_on_[kg-topology-CloudEosRR1]" time="0.742" /><testcase classname="tests.daemon.test_daemon.DaemonTests" name="test_if_daemons_are_running_on_[kg-topology-CloudEosRR2]" time="0.336" /><testcase classname="tests.daemon.test_daemon.DaemonTests" name="test_if_daemons_are_enabled_on_[kg-topology-CloudEosRR2]" time="0.419" /><testcase classname="tests.system.test_system.SystemTests" name="test_if_eos_version_is_correct_on_[kg-topology-CloudEosRR1]" time="0.354"><failure message="AssertionError: assert '4.24.0FX-cloud' == '4.23.1F-clou...eering build)'&#10;  - 4.23.1F-cloud-16179785.jakartarel (engineering build)&#10;  + 4.24.0FX-cloud">self = &lt;vane.bin.tests.system.test_system.SystemTests object at 0x7feb75c9acd0&gt;
+tests/dns/test_dns.py:144: AssertionError</failure></testcase><testcase classname="tests.cpu.test_cpu.CPUTests" name="test_5_min_cpu_utlization_on_[kg-topology-CloudEosRR2]" time="0.397" /><testcase classname="tests.daemon.test_daemon.DaemonTests" name="test_if_daemons_are_running_on_[kg-topology-CloudEosRR2]" time="0.296" /><testcase classname="tests.system.test_system.CrashTests" name="test_if_there_is_agents_have_crashed_on_[kg-topology-CloudEosRR1]" time="0.683" /><testcase classname="tests.daemon.test_daemon.DaemonTests" name="test_if_daemons_are_enabled_on_[kg-topology-CloudEosRR2]" time="0.310" /><testcase classname="tests.dns.test_dns.DNSTests" name="test_if_dns_resolves_on_[kg-topology-CloudEosRR2]" time="1.449" /><testcase classname="tests.system.test_system.SystemTests" name="test_if_eos_version_is_correct_on_[kg-topology-CloudEosRR1]" time="0.283"><failure message="AssertionError: assert '4.24.0FX-cloud' == '4.23.1F-clou...eering build)'&#10;  - 4.23.1F-cloud-16179785.jakartarel (engineering build)&#10;  + 4.24.0FX-cloud">self = &lt;vane.bin.tests.system.test_system.SystemTests object at 0x7fe559c834c0&gt;
 dut = {'connection': Node(connection=EapiConnection(transport=https://3.129.242.29:443//command-api)), 'name': 'kg-topology-...TEM:\n  name=system default-action=none\nAccounting method list for DOT1X:\n  name=dot1x default-action=none\n'}, ...}}
 tests_definitions = {'test_suites': [{'name': 'test_aaa.py', 'testcases': [{'comment': None, 'description': 'Verify AAA counters are worki...ted_output': 'ok', 'name': 'test_if_fan_status_is_in_spec_on_', 'show_cmd': 'show system environment cooling'}]}, ...]}
 
     def test_if_eos_version_is_correct_on_(self, dut, tests_definitions):
-        """ Verifies EOS version running on the device
+        """Verifies EOS version running on the device
     
-            Args:
-                dut (dict): Encapsulates dut details including name, connection
-                tests_definitions (dict): Test parameters
+        Args:
+            dut (dict): Encapsulates dut details including name, connection
+            tests_definitions (dict): Test parameters
         """
     
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
@@ -255,15 +296,19 @@ tests_definitions = {'test_suites': [{'name': 'test_aaa.py', 'testcases': [{'com
         tops.actual_output = dut["output"][tops.show_cmd]["json"]["version"]
         tops.test_result = tops.actual_output == tops.expected_output
     
-        tops.output_msg = (f"On router |{tops.dut_name}| EOS version is "
-                           f"|{tops.actual_output}%|, version should be "
-                           f"|{tops.expected_output}%|")
-        tops.comment = ('TEST EOS version running on the device on '
-                        f'|{tops.dut_name}|.\n'
-                        f'GIVEN version is |{tops.expected_output}|.\n'
-                        f'WHEN version is |{tops.actual_output}|.\n'
-                        f'THEN test case result is |{tops.test_result}|.\n'
-                        f'OUTPUT of |{tops.show_cmd}| is:\n\n{tops.show_cmd_txt}')
+        tops.output_msg = (
+            f"On router |{tops.dut_name}| EOS version is "
+            f"|{tops.actual_output}%|, version should be "
+            f"|{tops.expected_output}%|"
+        )
+        tops.comment = (
+            "TEST EOS version running on the device on "
+            f"|{tops.dut_name}|.\n"
+            f"GIVEN version is |{tops.expected_output}|.\n"
+            f"WHEN version is |{tops.actual_output}|.\n"
+            f"THEN test case result is |{tops.test_result}|.\n"
+            f"OUTPUT of |{tops.show_cmd}| is:\n\n{tops.show_cmd_txt}"
+        )
     
         print(f"{tops.output_msg}\n{tops.comment}")
     
@@ -274,15 +319,15 @@ E       AssertionError: assert '4.24.0FX-cloud' == '4.23.1F-clou...eering build)
 E         - 4.23.1F-cloud-16179785.jakartarel (engineering build)
 E         + 4.24.0FX-cloud
 
-tests/system/test_system.py:116: AssertionError</failure></testcase><testcase classname="tests.environment.test_environment.EnvironmentTests" name="test_if_system_environment_cooling_is_in_spec_on_[kg-topology-CloudEosRR2]" time="0.355" /><testcase classname="tests.dns.test_dns.DNSTests" name="test_if_dns_resolves_on_[kg-topology-CloudEosRR2]" time="1.360" /><testcase classname="tests.environment.test_environment.EnvironmentTests" name="test_if_fan_status_is_in_spec_on_[kg-topology-CloudEosRR2]" time="0.330" /><testcase classname="tests.extension.test_extension.ExtensionsTests" name="test_if_extensions_are_installed_on_[kg-topology-CloudEosRR2]" time="0.332" /><testcase classname="tests.extension.test_extension.ExtensionsTests" name="test_if_extensions_are_erroring_on_[kg-topology-CloudEosRR2]" time="0.372" /><testcase classname="tests.filesystem.test_filesystem.FileSystemTests" name="test_if_files_on_[kg-topology-CloudEosRR2]" time="1.092" /><testcase classname="tests.interface.test_interface.InterfaceStatusTests" name="test_if_intf_link_status_is_connected_on_[kg-topology-CloudEosRR2]" time="0.448" /><testcase classname="tests.interface.test_interface.InterfacePhyTests" name="test_if_intf_phy_status_connected_on_[kg-topology-CloudEosRR2]" time="0.312" /><testcase classname="tests.interface.test_interface.InterfaceCountersTests" name="test_if_interface_errors_on_[kg-topology-CloudEosRR2]" time="0.376" /><testcase classname="tests.host.test_host.HostTests" name="test_if_hostname_is_correcet_on_[kg-topology-CloudEosRR2]" time="0.390" /><testcase classname="tests.interface.test_interface.InterfaceCountersTests" name="test_interface_utilization_on_[kg-topology-CloudEosRR2]" time="0.368" /><testcase classname="tests.interface.test_interface.InterfaceStatusTests" name="test_if_intf_protocol_status_is_connected_on_[kg-topology-CloudEosRR2]" time="0.349" /><testcase classname="tests.interface.test_interface.InterfaceDiscardTests" name="test_if_intf_out_counters_are_discarding_on_[kg-topology-CloudEosRR2]" time="0.363" /><testcase classname="tests.interface.test_interface.InterfaceDiscardTests" name="test_if_intf_in_counters_are_discarding_on_[kg-topology-CloudEosRR2]" time="0.382" /><testcase classname="tests.lldp.test_lldp.LldpTests" name="test_if_lldp_rx_is_enabled_on_[kg-topology-CloudEosRR2]" time="0.427" /><testcase classname="tests.dns.test_dns.DNSTests" name="test_dns_configuration_on_[kg-topology-CloudEosRR2]" time="0.924" /><testcase classname="tests.interface.test_interface.InterfaceMtuTests" name="test_if_intf_mtu_is_correct_on_[kg-topology-CloudEosRR2]" time="0.445"><failure message="assert [1500] == [10178]&#10;  At index 0 diff: 1500 != 10178&#10;  Full diff:&#10;  - [10178]&#10;  + [1500]">self = &lt;vane.bin.tests.interface.test_interface.InterfaceMtuTests object at 0x7f59d41b73d0&gt;
+tests/system/test_system.py:122: AssertionError</failure></testcase><testcase classname="tests.filesystem.test_filesystem.FileSystemTests" name="test_if_files_on_[kg-topology-CloudEosRR2]" time="0.964" /><testcase classname="tests.environment.test_environment.EnvironmentTests" name="test_if_system_environment_cooling_is_in_spec_on_[kg-topology-CloudEosRR2]" time="0.306" /><testcase classname="tests.host.test_host.HostTests" name="test_if_hostname_is_correcet_on_[kg-topology-CloudEosRR2]" time="0.326" /><testcase classname="tests.environment.test_environment.EnvironmentTests" name="test_if_fan_status_is_in_spec_on_[kg-topology-CloudEosRR2]" time="0.368" /><testcase classname="tests.interface.test_interface.InterfaceStatusTests" name="test_if_intf_protocol_status_is_connected_on_[kg-topology-CloudEosRR2]" time="0.349" /><testcase classname="tests.extension.test_extension.ExtensionsTests" name="test_if_extensions_are_installed_on_[kg-topology-CloudEosRR2]" time="0.354" /><testcase classname="tests.interface.test_interface.InterfaceStatusTests" name="test_if_intf_link_status_is_connected_on_[kg-topology-CloudEosRR2]" time="0.340" /><testcase classname="tests.extension.test_extension.ExtensionsTests" name="test_if_extensions_are_erroring_on_[kg-topology-CloudEosRR2]" time="0.334" /><testcase classname="tests.interface.test_interface.InterfacePhyTests" name="test_if_intf_phy_status_connected_on_[kg-topology-CloudEosRR2]" time="0.324" /><testcase classname="tests.interface.test_interface.InterfaceCountersTests" name="test_interface_utilization_on_[kg-topology-CloudEosRR2]" time="0.345" /><testcase classname="tests.interface.test_interface.InterfaceCountersTests" name="test_if_interface_errors_on_[kg-topology-CloudEosRR2]" time="0.350" /><testcase classname="tests.interface.test_interface.InterfaceDiscardTests" name="test_if_intf_out_counters_are_discarding_on_[kg-topology-CloudEosRR2]" time="0.349" /><testcase classname="tests.interface.test_interface.InterfaceDiscardTests" name="test_if_intf_in_counters_are_discarding_on_[kg-topology-CloudEosRR2]" time="0.340" /><testcase classname="tests.lldp.test_lldp.LldpTests" name="test_if_lldp_rx_is_enabled_on_[kg-topology-CloudEosRR2]" time="0.343" /><testcase classname="tests.interface.test_interface.InterfaceMtuTests" name="test_if_intf_mtu_is_correct_on_[kg-topology-CloudEosRR2]" time="0.374"><failure message="assert [1500] == [10178]&#10;  At index 0 diff: 1500 != 10178&#10;  Full diff:&#10;  - [10178]&#10;  + [1500]">self = &lt;vane.bin.tests.interface.test_interface.InterfaceMtuTests object at 0x7fe559adbaf0&gt;
 dut = {'connection': Node(connection=EapiConnection(transport=https://3.23.123.34:443//command-api)), 'name': 'kg-topology-C...TEM:\n  name=system default-action=none\nAccounting method list for DOT1X:\n  name=dot1x default-action=none\n'}, ...}}
 tests_definitions = {'test_suites': [{'name': 'test_aaa.py', 'testcases': [{'comment': None, 'description': 'Verify AAA counters are worki...ted_output': 'ok', 'name': 'test_if_fan_status_is_in_spec_on_', 'show_cmd': 'show system environment cooling'}]}, ...]}
 
     def test_if_intf_mtu_is_correct_on_(self, dut, tests_definitions):
-        """  Verify the interfaces of interest have no inDiscards
+        """Verify the interfaces of interest have no inDiscards
     
-            Args:
-                dut (dict): Encapsulates dut details including name, connection
+        Args:
+            dut (dict): Encapsulates dut details including name, connection
         """
     
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
@@ -290,27 +335,36 @@ tests_definitions = {'test_suites': [{'name': 'test_aaa.py', 'testcases': [{'com
         print(f"\nOn router |{tops.dut_name}|:")
     
         for interface in tops.interface_list:
-            interface_name = interface['interface_name'].replace(" ", "")
-            int_ptr = dut["output"][tops.show_cmd]['json']['interfaces']
-            tops.actual_output = int_ptr[interface_name]['mtu']
+            interface_name = interface["interface_name"].replace(" ", "")
+            int_ptr = dut["output"][tops.show_cmd]["json"]["interfaces"]
+            tops.actual_output = int_ptr[interface_name]["mtu"]
             tops.test_result = tops.actual_output == tops.expected_output
     
-            tops.output_msg += (f"On interface |{interface_name}|: interface "
-                                f"MTU is |{tops.actual_output}|, correct MTU is "
-                                f"|{tops.expected_output}|.\n\n")
-            tops.comment += (f'TEST if interface |{interface_name}| MTU is correct '
-                             f'on |{tops.dut_name}|.\n'
-                             f'GIVEN MTU of |{tops.expected_output}|.\n'
-                             f'WHEN interface MTU is |{tops.actual_output}|.\n'
-                             f'THEN test case result is |{tops.test_result}|.\n\n')
+            tops.output_msg += (
+                f"On interface |{interface_name}|: interface "
+                f"MTU is |{tops.actual_output}|, correct MTU is "
+                f"|{tops.expected_output}|.\n\n"
+            )
+            tops.comment += (
+                f"TEST if interface |{interface_name}| MTU is correct "
+                f"on |{tops.dut_name}|.\n"
+                f"GIVEN MTU of |{tops.expected_output}|.\n"
+                f"WHEN interface MTU is |{tops.actual_output}|.\n"
+                f"THEN test case result is |{tops.test_result}|.\n\n"
+            )
     
             tops.actual_results.append(tops.actual_output)
             tops.expected_results.append(tops.expected_output)
     
-        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        tops.comment += (
+            f"OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n"
+        )
         print(f"{tops.output_msg}\n{tops.comment}")
     
-        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.actual_output, tops.expected_output = (
+            tops.actual_results,
+            tops.expected_results,
+        )
         tops.post_testcase()
     
 &gt;       assert tops.actual_results == tops.expected_results
@@ -320,15 +374,17 @@ E         Full diff:
 E         - [10178]
 E         + [1500]
 
-tests/interface/test_interface.py:605: AssertionError</failure></testcase><testcase classname="tests.lldp.test_lldp.LldpTests" name="test_if_lldp_tx_is_enabled_on_[kg-topology-CloudEosRR2]" time="0.408" /><testcase classname="tests.lldp.test_lldp.LldpLocalInfoTests" name="test_if_lldp_system_name_is_correct_on_[kg-topology-CloudEosRR2]" time="0.393" /><testcase classname="tests.lldp.test_lldp.LldpLocalInfoTests" name="test_if_lldp_max_frame_size_is_correct_on_[kg-topology-CloudEosRR2]" time="0.451"><failure message="assert [9236] == [10200]&#10;  At index 0 diff: 9236 != 10200&#10;  Full diff:&#10;  - [10200]&#10;  + [9236]">self = &lt;vane.bin.tests.lldp.test_lldp.LldpLocalInfoTests object at 0x7feb75e94e50&gt;
+tests/interface/test_interface.py:736: AssertionError</failure></testcase><testcase classname="tests.lldp.test_lldp.LldpTests" name="test_if_lldp_tx_is_enabled_on_[kg-topology-CloudEosRR2]" time="0.411" /><testcase classname="tests.dns.test_dns.DNSTests" name="test_dns_configuration_on_[kg-topology-CloudEosRR2]" time="0.844" /><testcase classname="tests.lldp.test_lldp.LldpLocalInfoTests" name="test_if_lldp_system_name_is_correct_on_[kg-topology-CloudEosRR2]" time="0.375" /><testcase classname="tests.lldp.test_lldp.LldpLocalInfoTests" name="test_if_lldp_max_frame_size_is_correct_on_[kg-topology-CloudEosRR2]" time="0.335"><failure message="assert [9236] == [10200]&#10;  At index 0 diff: 9236 != 10200&#10;  Full diff:&#10;  - [10200]&#10;  + [9236]">self = &lt;vane.bin.tests.lldp.test_lldp.LldpLocalInfoTests object at 0x7f5898317e80&gt;
 dut = {'connection': Node(connection=EapiConnection(transport=https://3.23.123.34:443//command-api)), 'name': 'kg-topology-C...TEM:\n  name=system default-action=none\nAccounting method list for DOT1X:\n  name=dot1x default-action=none\n'}, ...}}
 tests_definitions = {'test_suites': [{'name': 'test_aaa.py', 'testcases': [{'comment': None, 'description': 'Verify AAA counters are worki...ted_output': 'ok', 'name': 'test_if_fan_status_is_in_spec_on_', 'show_cmd': 'show system environment cooling'}]}, ...]}
 
-    def test_if_lldp_max_frame_size_is_correct_on_(self, dut, tests_definitions):
-        """  Verify show lldp local-info maxFrameSize is correct
+    def test_if_lldp_max_frame_size_is_correct_on_(
+        self, dut, tests_definitions
+    ):
+        """Verify show lldp local-info maxFrameSize is correct
     
-            Args:
-                dut (dict): Encapsulates dut details including name, connection
+        Args:
+            dut (dict): Encapsulates dut details including name, connection
         """
     
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
@@ -336,28 +392,37 @@ tests_definitions = {'test_suites': [{'name': 'test_aaa.py', 'testcases': [{'com
         print(f"\nOn router |{tops.dut_name}|:")
     
         for interface in tops.interface_list:
-            interface_name = interface['interface_name'].replace(" ", "")
-            int_ptr = dut["output"][tops.show_cmd]["json"]['localInterfaceInfo']
-            tops.actual_output = int_ptr[interface_name]['maxFrameSize']
+            interface_name = interface["interface_name"].replace(" ", "")
+            int_ptr = dut["output"][tops.show_cmd]["json"]["localInterfaceInfo"]
+            tops.actual_output = int_ptr[interface_name]["maxFrameSize"]
     
-            tops.output_msg += (f"On interface |{interface_name}|: LLDP local-info "
-                                f"maxFrameSize is |{tops.actual_output}|, correct "
-                                f"maxFrameSize is |{tops.expected_output}|.\n\n")
+            tops.output_msg += (
+                f"On interface |{interface_name}|: LLDP local-info "
+                f"maxFrameSize is |{tops.actual_output}|, correct "
+                f"maxFrameSize is |{tops.expected_output}|.\n\n"
+            )
             tops.test_result = tops.actual_output == tops.expected_output
     
-            tops.comment += (f'TEST if |{tops.dut_name}| LLDP maxFrameSize is correct '
-                             f'on interface |{interface_name}|.\n'
-                             f'GIVEN LLDP maxFrameSize is |{tops.expected_output}|.\n'
-                             f'WHEN LLDP maxFrameSize is |{tops.actual_output}|.\n'
-                             f'THEN test case result is |{tops.test_result}|.\n\n')
+            tops.comment += (
+                f"TEST if |{tops.dut_name}| LLDP maxFrameSize is correct "
+                f"on interface |{interface_name}|.\n"
+                f"GIVEN LLDP maxFrameSize is |{tops.expected_output}|.\n"
+                f"WHEN LLDP maxFrameSize is |{tops.actual_output}|.\n"
+                f"THEN test case result is |{tops.test_result}|.\n\n"
+            )
     
             tops.actual_results.append(tops.actual_output)
             tops.expected_results.append(tops.expected_output)
     
-        tops.comment += (f'OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+        tops.comment += (
+            f"OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n"
+        )
         print(f"{tops.output_msg}\n{tops.comment}")
     
-        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.actual_output, tops.expected_output = (
+            tops.actual_results,
+            tops.expected_results,
+        )
         tops.post_testcase()
     
 &gt;       assert tops.actual_results == tops.expected_results
@@ -367,15 +432,15 @@ E         Full diff:
 E         - [10200]
 E         + [9236]
 
-tests/lldp/test_lldp.py:203: AssertionError</failure></testcase><testcase classname="tests.environment.test_environment.EnvironmentTests" name="test_if_system_environment_temp_is_in_spec_on_[kg-topology-CloudEosRR2]" time="0.440" /><testcase classname="tests.lldp.test_lldp.LldpLocalInfoTests" name="test_if_lldp_interface_id_is_correct_on_[kg-topology-CloudEosRR2]" time="0.422" /><testcase classname="tests.log.test_logging.LoggingTests" name="test_if_log_messages_appear_on_[kg-topology-CloudEosRR2]" time="0.414" /><testcase classname="tests.environment.test_environment.EnvironmentTests" name="test_if_sensors_temp_is_in_spec_on_[kg-topology-CloudEosRR2]" time="0.418" /><testcase classname="tests.memory.test_memory.MemoryTests" name="test_memory_utilization_on_[kg-topology-CloudEosRR2]" time="0.411" /><testcase classname="tests.ntp.test_ntp.NTPTests" name="test_if_ntp_is_synchronized_on_[kg-topology-CloudEosRR2]" time="0.450" /><testcase classname="tests.ntp.test_ntp.NTPTests" name="test_if_ntp_associated_with_peers_on_[kg-topology-CloudEosRR2]" time="0.469" /><testcase classname="tests.environment.test_environment.EnvironmentTests" name="test_if_system_environment_power_are_in_spec_on_[kg-topology-CloudEosRR2]" time="0.489" /><testcase classname="tests.ntp.test_ntp.NTPTests" name="test_if_process_is_running_on_[kg-topology-CloudEosRR2]" time="0.576" /><testcase classname="tests.ntp.test_ntp.NTPTests" name="test_if_ntp_servers_are_reachable_on_[kg-topology-CloudEosRR2]" time="5.043"><failure message="assert [False] == [True]&#10;  At index 0 diff: False != True&#10;  Full diff:&#10;  - [True]&#10;  + [False]">self = &lt;vane.bin.tests.ntp.test_ntp.NTPTests object at 0x7f59d4110160&gt;
+tests/lldp/test_lldp.py:233: AssertionError</failure></testcase><testcase classname="tests.lldp.test_lldp.LldpLocalInfoTests" name="test_if_lldp_interface_id_is_correct_on_[kg-topology-CloudEosRR2]" time="0.362" /><testcase classname="tests.log.test_logging.LoggingTests" name="test_if_log_messages_appear_on_[kg-topology-CloudEosRR2]" time="0.472" /><testcase classname="tests.environment.test_environment.EnvironmentTests" name="test_if_system_environment_temp_is_in_spec_on_[kg-topology-CloudEosRR2]" time="0.448" /><testcase classname="tests.memory.test_memory.MemoryTests" name="test_memory_utilization_on_[kg-topology-CloudEosRR2]" time="0.459" /><testcase classname="tests.ntp.test_ntp.NTPTests" name="test_if_ntp_is_synchronized_on_[kg-topology-CloudEosRR2]" time="0.543" /><testcase classname="tests.environment.test_environment.EnvironmentTests" name="test_if_sensors_temp_is_in_spec_on_[kg-topology-CloudEosRR2]" time="0.521" /><testcase classname="tests.ntp.test_ntp.NTPTests" name="test_if_ntp_associated_with_peers_on_[kg-topology-CloudEosRR2]" time="0.483" /><testcase classname="tests.ntp.test_ntp.NTPTests" name="test_if_process_is_running_on_[kg-topology-CloudEosRR2]" time="0.539" /><testcase classname="tests.environment.test_environment.EnvironmentTests" name="test_if_system_environment_power_are_in_spec_on_[kg-topology-CloudEosRR2]" time="0.464" /><testcase classname="tests.ntp.test_ntp.NTPTests" name="test_ntp_configuration_on_[kg-topology-CloudEosRR2]" time="0.921" /><testcase classname="tests.system.test_system.CrashTests" name="test_if_there_is_agents_have_crashed_on_[kg-topology-CloudEosRR2]" time="0.780" /><testcase classname="tests.ntp.test_ntp.NTPTests" name="test_if_ntp_servers_are_reachable_on_[kg-topology-CloudEosRR2]" time="4.906"><failure message="assert [False] == [True]&#10;  At index 0 diff: False != True&#10;  Full diff:&#10;  - [True]&#10;  + [False]">self = &lt;vane.bin.tests.ntp.test_ntp.NTPTests object at 0x7f5898308ee0&gt;
 dut = {'connection': Node(connection=EapiConnection(transport=https://3.23.123.34:443//command-api)), 'name': 'kg-topology-C...TEM:\n  name=system default-action=none\nAccounting method list for DOT1X:\n  name=dot1x default-action=none\n'}, ...}}
 tests_definitions = {'test_suites': [{'name': 'test_aaa.py', 'testcases': [{'comment': None, 'description': 'Verify AAA counters are worki...ted_output': 'ok', 'name': 'test_if_fan_status_is_in_spec_on_', 'show_cmd': 'show system environment cooling'}]}, ...]}
 
     def test_if_ntp_servers_are_reachable_on_(self, dut, tests_definitions):
-        """ Verifies DNS servers are reachable via ping
+        """Verifies DNS servers are reachable via ping
     
-            Args:
-              dut (dict): Encapsulates dut details including name, connection
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
         """
     
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
@@ -389,24 +454,31 @@ tests_definitions = {'test_suites': [{'name': 'test_aaa.py', 'testcases': [{'com
                 show_cmd = f"ping {ntp_server}"
     
             tops.return_show_cmd(show_cmd)
-            tops.actual_output = 'bytes from' in tops.show_cmd_txt
+            tops.actual_output = "bytes from" in tops.show_cmd_txt
             tops.test_result = tops.actual_output is tops.expected_output
     
-            tops.output_msg += (f"\nOn router |{tops.dut_name}|, verifying NTP "
-                                f"server reachability for |{ntp_server}| is "
-                                f"|{tops.test_result}|.\n")
+            tops.output_msg += (
+                f"\nOn router |{tops.dut_name}|, verifying NTP "
+                f"server reachability for |{ntp_server}| is "
+                f"|{tops.test_result}|.\n"
+            )
     
-            tops.comment += (f'TEST NTP servers are reachable on |{tops.dut_name}| '
-                             f'GIVEN server |{ntp_server}|.\n'
-                             'WHEN exception is |bytes from| '
-                             'string.\n'
-                             f'THEN test case result is |{tops.test_result}|.\n'
-                             f'OUTPUT of |{show_cmd}| is :\n\n{tops.show_cmd_txt}.\n')
+            tops.comment += (
+                f"TEST NTP servers are reachable on |{tops.dut_name}| "
+                f"GIVEN server |{ntp_server}|.\n"
+                "WHEN exception is |bytes from| "
+                "string.\n"
+                f"THEN test case result is |{tops.test_result}|.\n"
+                f"OUTPUT of |{show_cmd}| is :\n\n{tops.show_cmd_txt}.\n"
+            )
     
             tops.actual_results.append(tops.actual_output)
             tops.expected_results.append(tops.expected_output)
     
-        tops.actual_output, tops.expected_output = tops.actual_results, tops.expected_results
+        tops.actual_output, tops.expected_output = (
+            tops.actual_results,
+            tops.expected_results,
+        )
         tops.post_testcase()
     
 &gt;       assert tops.actual_results == tops.expected_results
@@ -416,16 +488,16 @@ E         Full diff:
 E         - [True]
 E         + [False]
 
-tests/ntp/test_ntp.py:250: AssertionError</failure></testcase><testcase classname="tests.ntp.test_ntp.NTPTests" name="test_ntp_configuration_on_[kg-topology-CloudEosRR2]" time="0.925" /><testcase classname="tests.system.test_system.CrashTests" name="test_if_there_is_agents_have_crashed_on_[kg-topology-CloudEosRR2]" time="0.723" /><testcase classname="tests.tacacs.test_tacacs.TacacsTests" name="test_if_tacacs_is_sending_messages_on_[kg-topology-CloudEosRR2]" time="0.334" /><testcase classname="tests.tacacs.test_tacacs.TacacsTests" name="test_if_tacacs_is_receiving_messages_on_[kg-topology-CloudEosRR2]" time="0.334" /><testcase classname="tests.users.test_users.UsersTests" name="test_if_usernames_are_configured_on_[kg-topology-CloudEosRR2]" time="0.364" /><testcase classname="tests.ztp.test_ztp.ZTPTests" name="test_if_zerotouch_is_disabled_on_[kg-topology-CloudEosRR2]" time="0.333" /><testcase classname="tests.ztp.test_ztp.ZTPTests" name="test_for_zerotouch_config_file_on_[kg-topology-CloudEosRR2]" time="0.319" /><testcase classname="tests.system.test_system.SystemTests" name="test_if_eos_version_is_correct_on_[kg-topology-CloudEosRR2]" time="0.305"><failure message="AssertionError: assert '4.24.0FX-cloud' == '4.23.1F-clou...eering build)'&#10;  - 4.23.1F-cloud-16179785.jakartarel (engineering build)&#10;  + 4.24.0FX-cloud">self = &lt;vane.bin.tests.system.test_system.SystemTests object at 0x7f59d414d190&gt;
+tests/ntp/test_ntp.py:275: AssertionError</failure></testcase><testcase classname="tests.system.test_system.SystemTests" name="test_if_eos_version_is_correct_on_[kg-topology-CloudEosRR2]" time="0.318"><failure message="AssertionError: assert '4.24.0FX-cloud' == '4.23.1F-clou...eering build)'&#10;  - 4.23.1F-cloud-16179785.jakartarel (engineering build)&#10;  + 4.24.0FX-cloud">self = &lt;vane.bin.tests.system.test_system.SystemTests object at 0x7fe5598f6940&gt;
 dut = {'connection': Node(connection=EapiConnection(transport=https://3.23.123.34:443//command-api)), 'name': 'kg-topology-C...TEM:\n  name=system default-action=none\nAccounting method list for DOT1X:\n  name=dot1x default-action=none\n'}, ...}}
 tests_definitions = {'test_suites': [{'name': 'test_aaa.py', 'testcases': [{'comment': None, 'description': 'Verify AAA counters are worki...ted_output': 'ok', 'name': 'test_if_fan_status_is_in_spec_on_', 'show_cmd': 'show system environment cooling'}]}, ...]}
 
     def test_if_eos_version_is_correct_on_(self, dut, tests_definitions):
-        """ Verifies EOS version running on the device
+        """Verifies EOS version running on the device
     
-            Args:
-                dut (dict): Encapsulates dut details including name, connection
-                tests_definitions (dict): Test parameters
+        Args:
+            dut (dict): Encapsulates dut details including name, connection
+            tests_definitions (dict): Test parameters
         """
     
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
@@ -433,15 +505,19 @@ tests_definitions = {'test_suites': [{'name': 'test_aaa.py', 'testcases': [{'com
         tops.actual_output = dut["output"][tops.show_cmd]["json"]["version"]
         tops.test_result = tops.actual_output == tops.expected_output
     
-        tops.output_msg = (f"On router |{tops.dut_name}| EOS version is "
-                           f"|{tops.actual_output}%|, version should be "
-                           f"|{tops.expected_output}%|")
-        tops.comment = ('TEST EOS version running on the device on '
-                        f'|{tops.dut_name}|.\n'
-                        f'GIVEN version is |{tops.expected_output}|.\n'
-                        f'WHEN version is |{tops.actual_output}|.\n'
-                        f'THEN test case result is |{tops.test_result}|.\n'
-                        f'OUTPUT of |{tops.show_cmd}| is:\n\n{tops.show_cmd_txt}')
+        tops.output_msg = (
+            f"On router |{tops.dut_name}| EOS version is "
+            f"|{tops.actual_output}%|, version should be "
+            f"|{tops.expected_output}%|"
+        )
+        tops.comment = (
+            "TEST EOS version running on the device on "
+            f"|{tops.dut_name}|.\n"
+            f"GIVEN version is |{tops.expected_output}|.\n"
+            f"WHEN version is |{tops.actual_output}|.\n"
+            f"THEN test case result is |{tops.test_result}|.\n"
+            f"OUTPUT of |{tops.show_cmd}| is:\n\n{tops.show_cmd_txt}"
+        )
     
         print(f"{tops.output_msg}\n{tops.comment}")
     
@@ -452,4 +528,4 @@ E       AssertionError: assert '4.24.0FX-cloud' == '4.23.1F-clou...eering build)
 E         - 4.23.1F-cloud-16179785.jakartarel (engineering build)
 E         + 4.24.0FX-cloud
 
-tests/system/test_system.py:116: AssertionError</failure></testcase></testsuite></testsuites>
+tests/system/test_system.py:122: AssertionError</failure></testcase><testcase classname="tests.tacacs.test_tacacs.TacacsTests" name="test_if_tacacs_is_sending_messages_on_[kg-topology-CloudEosRR2]" time="0.369" /><testcase classname="tests.users.test_users.UsersTests" name="test_if_usernames_are_configured_on_[kg-topology-CloudEosRR2]" time="0.365" /><testcase classname="tests.ztp.test_ztp.ZTPTests" name="test_if_zerotouch_is_disabled_on_[kg-topology-CloudEosRR2]" time="0.348" /><testcase classname="tests.ztp.test_ztp.ZTPTests" name="test_for_zerotouch_config_file_on_[kg-topology-CloudEosRR2]" time="0.347" /><testcase classname="tests.tacacs.test_tacacs.TacacsTests" name="test_if_tacacs_is_receiving_messages_on_[kg-topology-CloudEosRR2]" time="0.264" /></testsuite></testsuites>
