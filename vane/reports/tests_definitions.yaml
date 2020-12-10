@@ -343,7 +343,7 @@ test_suites:
   testcases:
   - comment: null
     description: Verify memory is not exceeding high utlization
-    expected_output: 70
+    expected_output: 1
     name: test_memory_utilization_on_
     result: true
     show_cmd: show version

@@ -57,14 +57,13 @@ class HostTests:
 
         tops.expected_output = tops.dut_name
         tops.actual_output = dut["output"][tops.show_cmd]["json"]["hostname"]
+        tops.test_result = tops.actual_output == tops.expected_output
 
         tops.output_msg = (
             f"On router |{tops.dut_name}| the configured hostname is "
             f"|{tops.actual_output}| and the correct hostname is "
             f"|{tops.expected_output}|"
         )
-
-        tops.test_result = tops.actual_output == tops.expected_output
         tops.comment = (
             "TEST is hostname correct.\n"
             f"GIVEN hostname |{tops.expected_output}|.\n"

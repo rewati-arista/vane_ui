@@ -31,14 +31,11 @@
 
 """ Tests to validate base feature status."""
 
-import inspect
-import logging
 import pytest
 import tests_tools
 
 
 TEST_SUITE = __file__
-LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 
 
 @pytest.mark.nrfu
@@ -66,15 +63,14 @@ class ExtensionsTests:
             else:
                 tops.actual_output = None
 
+            tops.test_result = tops.actual_output == tops.expected_output
+
             tops.output_msg += (
                 f"\nOn router |{tops.dut_name}| extension "
                 f"|{extension}| status is "
                 f"|{tops.actual_output}|, correct status is "
                 f"|{tops.expected_output}|.\n"
             )
-
-            tops.test_result = tops.actual_output == tops.expected_output
-
             tops.comment += (
                 f"TEST is {extension} extension installed on "
                 f" |{tops.dut_name}|.\n"
