@@ -54,8 +54,6 @@ class HostTests:
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
-        print(f'>>>>> {dut["output"][tops.show_cmd]["json"]}')
-        print(f'>>>>> {dut["output"][tops.show_cmd]["text"]}')
 
         tops.expected_output = tops.dut_name
         tops.actual_output = dut["output"][tops.show_cmd]["json"]["hostname"]
