@@ -95,9 +95,7 @@ def run_tests(definitions_file):
         definitions_file (str): Path and name of definition file
     """
 
-    logging.info(
-        "Using class TestsClient to create vane_tests_client " "object"
-    )
+    logging.info("Using class TestsClient to create vane_tests_client object")
     vane_tests_client = tests_client.TestsClient(definitions_file)
     vane_tests_client.test_runner()
 
@@ -109,9 +107,7 @@ def write_results(definitions_file):
         definitions_file (str): Path and name of definition file
     """
 
-    logging.info(
-        "Using class ReportClient to create vane_report_client " "object"
-    )
+    logging.info("Using class ReportClient to create vane_report_client object")
     vane_report_client = report_client.ReportClient(definitions_file)
     vane_report_client.write_result_doc()
 
