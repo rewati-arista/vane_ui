@@ -202,6 +202,54 @@ def login_duts(test_parameters):
     return logins
 
 
+def send_cmds(show_cmds, conn, encoding):
+    """Send show commands to duts and recurse on failure
+
+    Args:
+        show_cmds (list): List of pre-process commands
+        conn (obj): connection
+    """
+
+    logging.info(f"In send_cmds")
+    try:
+        logging.info(
+            f"List of show commands in show_cmds with encoding {encoding}: {show_cmds}"
+        )
+        if encoding == "json":
+            show_cmd_list = conn.run_commands(show_cmds)
+        elif encoding == "text":
+            show_cmd_list = conn.run_commands(show_cmds, encoding="text")
+        logging.info(f"ran all show cmds with encoding {encoding}: {show_cmds}")
+
+    except Exception as e:
+        logging.error(f"error running all cmds: {e}")
+        show_cmds = remove_cmd(e, show_cmds)
+        logging.info(f"new show_cmds: {show_cmds}")
+        show_cmd_list = send_cmds(show_cmds, conn, encoding)
+        show_cmd_list = show_cmd_list[0]
+
+    logging.info(f"return all show cmds: {show_cmd_list}")
+    return show_cmd_list, show_cmds
+
+
+def remove_cmd(e, show_cmds):
+    """Remove command that is not supported by pyeapi
+
+    Args:
+        e (str): Error string
+        show_cmds (list): List of pre-process commands
+    """
+
+    logging.info(f"remove_cmd: {e}")
+    logging.info(f"remove_cmd show_cmds list: {show_cmds}")
+    for show_cmd in show_cmds:
+        if show_cmd in str(e):
+            cmd_index = show_cmds.index(show_cmd)
+            show_cmds.pop(cmd_index)
+
+    return show_cmds
+
+
 def dut_worker(dut, show_cmds, test_parameters):
     """Execute inputted show commands on dut.  Update dut structured data
     with show output.
@@ -211,63 +259,49 @@ def dut_worker(dut, show_cmds, test_parameters):
       connection test_suite (str): test suite name
     """
 
-    dut["output"] = {}
     name = dut["name"]
+    conn = dut["connection"]
+    dut["output"] = {}
+    dut["output"]["interface_list"] = return_interfaces(name, test_parameters)
+
     logging.info(f"Executing show commands on {name}")
     logging.info(f"List of show commands {show_cmds}")
     logging.info(f"Number of show commands {len(show_cmds)}")
 
-    try:
-        all_cmds = show_cmds.copy()
-        all_cmds.remove("show logging")
-        all_cmds.remove("show running-config section username")
-        logging.info(f"List of show commands in all_cmds: {all_cmds}")
+    all_cmds_json = show_cmds.copy()
+    show_cmd_json_list, show_cmds_json = send_cmds(all_cmds_json, conn, "json")
+    logging.info(f"Returned from send_cmds_json {show_cmds_json}")
 
-        conn = dut["connection"]
-        show_cmd_list = conn.run_commands(all_cmds)
-        logging.info(f"ran all show cmds: {show_cmd_list}")
-
-    except Exception as e:
-        logging.error(f"error running all cmds: {e}")
-
-    try:
-        all_txt_cmds = show_cmds.copy()
-        all_txt_cmds.remove("show lldp local-info")
-        show_cmd_txt_list = conn.run_commands(all_txt_cmds, encoding="text")
-    except Exception as e:
-        logging.error(f"error running all show cmds with text: {e}")
+    all_cmds_txt = show_cmds.copy()
+    show_cmd_txt_list, show_cmds_txt = send_cmds(all_cmds_txt, conn, "text")
+    logging.info(f"Returned from send_cmds_txt {show_cmds_txt}")
 
     for show_cmd in show_cmds:
-        logging.info(f"In for looop and iterating on {show_cmd}")
         function_def = f'test_{("_").join(show_cmd.split())}'
         logging.info(
             f"Executing show command: {show_cmd} for test " f"{function_def}"
         )
 
-        dut["output"]["interface_list"] = return_interfaces(
-            name, test_parameters
-        )
-
         logging.info(f"Adding output of {show_cmd} to duts data structure")
         dut["output"][show_cmd] = {}
 
-        logging.info(
-            f"check all_cmds: {len(all_cmds)} vs show_cmd_list {len(show_cmd_list)}"
-        )
-        if show_cmd in all_cmds:
-            cmd_index = all_cmds.index(show_cmd)
+        if show_cmd in show_cmds_json:
+            cmd_index = show_cmds_json.index(show_cmd)
             logging.info(
-                f"found cmd: {show_cmd} at index {cmd_index} of {all_cmds}"
+                f"found cmd: {show_cmd} at index {cmd_index} of {show_cmds_json}"
             )
-            show_output = show_cmd_list[cmd_index]
+            logging.info(
+                f"length of cmds: {len(show_cmds_json)} vs length of output {len(show_cmd_json_list)}"
+            )
+            show_output = show_cmd_json_list[cmd_index]
             dut["output"][show_cmd]["json"] = show_output
             logging.info(f"Adding cmd {show_cmd} to dut and data {show_output}")
         else:
             dut["output"][show_cmd]["json"] = ""
             logging.info(f"No json output for {show_cmd}")
 
-        if show_cmd in all_txt_cmds:
-            cmd_index = all_txt_cmds.index(show_cmd)
+        if show_cmd in show_cmds_txt:
+            cmd_index = show_cmds_txt.index(show_cmd)
             show_output_txt = show_cmd_txt_list[cmd_index]
             dut["output"][show_cmd]["text"] = show_output_txt["output"]
             logging.warning(
@@ -277,7 +311,7 @@ def dut_worker(dut, show_cmds, test_parameters):
             dut["output"][show_cmd]["text"] = ""
             logging.warning(f"No text output for {show_cmd}")
 
-    logging.info(f"{name} updated with show output")
+    logging.info(f"{name} updated with show output {dut}")
 
 
 def return_show_cmd(show_cmd, dut, test_name, test_parameters):
