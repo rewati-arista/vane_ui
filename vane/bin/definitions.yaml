@@ -1,6 +1,6 @@
 duts:
-- mgmt_ip: 3.129.242.29
-  name: kg-topology-CloudEosRR1
+- mgmt_ip: 3.141.92.242
+  name: att-CloudEOS1
   neighbors:
   - neighborDevice: leaf01
     neighborPort: Ethernet2
@@ -8,8 +8,8 @@ duts:
   password: arista123
   transport: https
   username: kgrozis
-- mgmt_ip: 3.23.123.34
-  name: kg-topology-CloudEosRR2
+- mgmt_ip: 3.139.150.68
+  name: att-CloudEOS2
   neighbors:
   - neighborDevice: spine01
     neighborPort: Ethernet2
@@ -17,60 +17,32 @@ duts:
   password: arista123
   transport: https
   username: kgrozis
-# - mgmt_ip: 3.129.78.225
-#   name: kg-topology-CloudEOSEdge1
-#   neighbors:
-#   - neighborDevice: spine01
-#     neighborPort: Ethernet2
-#     port: Ethernet1
-#   - neighborDevice: leaf01
-#     neighborPort: Ethernet2
-#     port: Ethernet2
-#   password: arista123
-#   transport: https
-#   username: kgrozis
-# - mgmt_ip: 3.137.2.78
-#   name: kg-topology-CloudEOSEdge2
-#   neighbors:
-#   - neighborDevice: spine01
-#     neighborPort: Ethernet2
-#     port: Ethernet1
-#   - neighborDevice: leaf01
-#     neighborPort: Ethernet2
-#     port: Ethernet2
-#   password: arista123
-#   transport: https
-#   username: kgrozis
-#- mgmt_ip: 172.30.145.163
-#  name: bn304
-#  neighbors:
-#  - neighborDevice: spine01
-#    neighborPort: Ethernet2
-#    port: Ethernet1
-#  - neighborDevice: leaf01
-#    neighborPort: Ethernet2
-#    port: Ethernet2
-#  transport: https
-#  username: admin
-#- mgmt_ip: 172.30.146.38
-#  name: bn305
-#  neighbors:
-#  - neighborDevice: spine01
-#    neighborPort: Ethernet2
-#    port: Ethernet1
-#  - neighborDevice: leaf01
-#    neighborPort: Ethernet2
-#    port: Ethernet2
-#  transport: https
-#  username: admin
+- mgmt_ip: 3.23.152.127
+  name: att-Leaf01
+  neighbors:
+  - neighborDevice: leaf01
+    neighborPort: Ethernet2
+    port: Ethernet1
+  password: arista123
+  transport: https
+  username: kgrozis
+- mgmt_ip: 3.141.125.33
+  name: att-Leaf02
+  neighbors:
+  - neighborDevice: spine01
+    neighborPort: Ethernet2
+    port: Ethernet1
+  password: arista123
+  transport: https
+  username: kgrozis
 parameters:
   eapi_file: /home/docker/.eapi.conf
   eapi_template: /project/vane/templates/eapi.conf.j2
   excel_report: null
   html_report: /project/vane/reports/report
   json_report: /project/vane/reports/report
-  mark: null
-  processes: 3
+  mark: demo
+  processes: null
   report_dir: ../reports
   results_file: result.yml
   results_dir: /project/vane/reports/results

@@ -40,7 +40,7 @@ import tests_tools
 TEST_SUITE = __file__
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 
-
+@pytest.mark.demo
 @pytest.mark.nrfu
 @pytest.mark.base_feature
 @pytest.mark.api
@@ -64,7 +64,7 @@ class APITests:
         tops.output_msg += (
             f"\nOn router |{tops.dut_name}| HTTPS Server is "
             f"running state: |{tops.actual_output}|, should be "
-            f" in state |{tops.expected_output}|"
+            f"in state |{tops.expected_output}|"
         )
         tops.comment += (
             f"TEST is HTTPS API running on |{tops.dut_name}|.\n "
@@ -73,6 +73,7 @@ class APITests:
             f"THEN test case result is |{tops.test_result}|.\n"
             f"OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}"
         )
+        print(f"{tops.output_msg}\n{tops.comment}")
 
         tops.post_testcase()
 
@@ -95,7 +96,7 @@ class APITests:
         tops.output_msg += (
             f"\nOn router |{tops.dut_name}| HTTPS Server is "
             f"running on port: |{tops.actual_output}|, should be "
-            f" port |{tops.expected_output}|"
+            f"port |{tops.expected_output}|"
         )
         tops.comment += (
             f"TEST is HTTPS API port on |{tops.dut_name}|.\n "
@@ -104,6 +105,7 @@ class APITests:
             f"THEN test case result is |{tops.test_result}|.\n"
             f"OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}"
         )
+        print(f"{tops.output_msg}\n{tops.comment}")
 
         tops.post_testcase()
 
@@ -125,7 +127,7 @@ class APITests:
         tops.output_msg += (
             f"\nOn router |{tops.dut_name}| API is "
             f"enabled state: |{tops.actual_output}|, should be "
-            f" in state |{tops.expected_output}|"
+            f"in state |{tops.expected_output}|"
         )
         tops.comment += (
             f"TEST is HTTPS API enabled on |{tops.dut_name}|.\n "
@@ -134,6 +136,7 @@ class APITests:
             f"THEN test case result is |{tops.test_result}|.\n"
             f"OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}"
         )
+        print(f"{tops.output_msg}\n{tops.comment}")
 
         tops.post_testcase()
 
@@ -156,7 +159,7 @@ class APITests:
         tops.output_msg += (
             f"\nOn router |{tops.dut_name}| HTTP Server is "
             f"running state: |{tops.actual_output}|, should be "
-            f" in state |{tops.expected_output}|"
+            f"in state |{tops.expected_output}|"
         )
         tops.comment += (
             f"TEST is HTTP API running on |{tops.dut_name}|.\n "
@@ -165,6 +168,7 @@ class APITests:
             f"THEN test case result is |{tops.test_result}|.\n"
             f"OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}"
         )
+        print(f"{tops.output_msg}\n{tops.comment}")
 
         tops.post_testcase()
 
@@ -187,7 +191,7 @@ class APITests:
         tops.output_msg += (
             f"\nOn router |{tops.dut_name}| HTTP Server is "
             f"running state: |{tops.actual_output}|, should be "
-            f" in state |{tops.expected_output}|"
+            f"in state |{tops.expected_output}|"
         )
         tops.comment += (
             f"TEST is local HTTP API running on |{tops.dut_name}|.\n "
@@ -196,6 +200,7 @@ class APITests:
             f"THEN test case result is |{tops.test_result}|.\n"
             f"OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}"
         )
+        print(f"{tops.output_msg}\n{tops.comment}")
 
         tops.post_testcase()
 

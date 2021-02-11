@@ -40,6 +40,7 @@ import tests_tools
 TEST_SUITE = __file__
 
 
+@pytest.mark.demo
 @pytest.mark.nrfu
 @pytest.mark.base_feature
 @pytest.mark.system
@@ -82,6 +83,7 @@ class CrashTests:
         assert tops.actual_output <= tops.expected_output
 
 
+@pytest.mark.demo
 @pytest.mark.nrfu
 @pytest.mark.platform_status
 @pytest.mark.system

@@ -6,6 +6,7 @@ testcases:
     extensions:
       - awslogs.swix
       - awsha.rpm
+      - twamp.rpm
     show_cmd: show extensions
     expected_output: installed
   - name: test_if_extensions_are_erroring_on_

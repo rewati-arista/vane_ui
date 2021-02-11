@@ -41,6 +41,7 @@ TEST_SUITE = __file__
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 
 
+@pytest.mark.demo
 @pytest.mark.nrfu
 @pytest.mark.base_feature
 @pytest.mark.ztp
@@ -72,6 +73,7 @@ class ZTPTests:
             f"OUTPUT of |{tops.show_cmd}| is :"
             f"\n\n{tops.show_cmd_txt}"
         )
+        print(f"{tops.output_msg}\n{tops.comment}")
 
         tops.post_testcase()
 
@@ -105,6 +107,7 @@ class ZTPTests:
             f"OUTPUT of |{tops.show_cmd}| is :"
             f"\n\n{tops.show_cmd_txt}"
         )
+        print(f"{tops.output_msg}\n{tops.comment}")
 
         tops.post_testcase()
 

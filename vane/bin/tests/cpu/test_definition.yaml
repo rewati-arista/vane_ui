@@ -4,7 +4,7 @@ testcases:
     description: Verify 1 second CPU % is under specificied value
     show_cmd: show processes
     # CPU process ceiling
-    expected_output: 10
+    expected_output: 1
   - name: test_1_min_cpu_utlization_on_
     description: Verify 1 minute CPU % is under specificied value
     show_cmd: show processes

@@ -127,7 +127,7 @@ test_suites:
 - name: test_cpu.py
   testcases:
   - description: Verify 1 second CPU % is under specificied value
-    expected_output: 10
+    expected_output: 1
     name: test_1_sec_cpu_utlization_on_
     show_cmd: show processes
   - description: Verify 1 minute CPU % is under specificied value
@@ -208,6 +208,7 @@ test_suites:
     extensions:
     - awslogs.swix
     - awsha.rpm
+    - twamp.rpm
     name: test_if_extensions_are_installed_on_
     show_cmd: show extensions
   - description: Verify a list of extension are not erroring on a DUT
@@ -343,7 +344,7 @@ test_suites:
   testcases:
   - comment: null
     description: Verify memory is not exceeding high utlization
-    expected_output: 70
+    expected_output: 80
     name: test_memory_utilization_on_
     result: true
     show_cmd: show version
@@ -385,7 +386,7 @@ test_suites:
     name: test_if_there_is_agents_have_crashed_on_
     show_cmd: null
   - description: Verifies EOS version running on the device
-    expected_output: 4.23.1F-cloud-16179785.jakartarel (engineering build)
+    expected_output: 4.24.0FX-cloud
     name: test_if_eos_version_is_correct_on_
     show_cmd: show version
 - name: test_tacacs.py

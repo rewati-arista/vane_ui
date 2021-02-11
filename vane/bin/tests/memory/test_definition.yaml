@@ -4,6 +4,6 @@ testcases:
     description: Verify memory is not exceeding high utlization
     show_cmd: show version
     # memory process ceiling
-    expected_output: 70
+    expected_output: 80
     comment: null
     result: True

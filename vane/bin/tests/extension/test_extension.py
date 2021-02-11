@@ -37,7 +37,7 @@ import tests_tools
 
 TEST_SUITE = __file__
 
-
+@pytest.mark.demo
 @pytest.mark.nrfu
 @pytest.mark.base_feature
 @pytest.mark.extensions

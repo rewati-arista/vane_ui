@@ -39,6 +39,7 @@ TEST_SUITE = __file__
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 
 
+@pytest.mark.demo
 @pytest.mark.nrfu
 @pytest.mark.platform_status
 @pytest.mark.host

@@ -111,7 +111,7 @@ class TestsClient:
         self._remove_result_files()
         self._set_test_parameters()
 
-        logging.info("Starting Test")
+        logging.info(f"Starting Test with parameters: {self.test_parameters}")
         pytest.main(self.test_parameters)
 
     def _init_parameters(self):
@@ -181,7 +181,7 @@ class TestsClient:
         """Set html_report for test run"""
 
         html_report = self.data_model["parameters"]["html_report"]
-        html_name = f"--html={report_dir}/{html_report}.html"
+        html_name = f"--html={html_report}.html"
         list_out = [x for x in self.test_parameters if "--html" in x]
 
         if html_report and html_name not in self.test_parameters:
@@ -205,7 +205,7 @@ class TestsClient:
         """Set json_report for test run"""
 
         json_report = self.data_model["parameters"]["json_report"]
-        json_name = f"--json={report_dir}/{json_report}.json"
+        json_name = f"--json={json_report}.json"
         self._set_cmdline_report(json_report, json_name, "--json")
 
     def _set_cmdline_report(self, parameter, report, ext):

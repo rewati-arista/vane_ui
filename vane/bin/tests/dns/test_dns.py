@@ -118,13 +118,13 @@ class DNSTests:
             tops.test_result = tops.actual_output is tops.expected_output
 
             tops.output_msg += (
-                f"\nOn router |{tops.dut_name}|, verifying NTP "
+                f"\nOn router |{tops.dut_name}|, verifying DNS "
                 f"server reachability for |{dns_server}| is "
                 f"|{tops.test_result}|.\n"
             )
 
             tops.comment += (
-                f"TEST NTP servers are reachable on |{tops.dut_name}| "
+                f"TEST DNS servers are reachable on |{tops.dut_name}| "
                 f"GIVEN server |{dns_server}|.\n"
                 "WHEN exception is |bytes from| "
                 "string.\n"
@@ -134,6 +134,8 @@ class DNSTests:
 
             tops.actual_results.append(tops.actual_output)
             tops.expected_results.append(tops.expected_output)
+
+        print(f"{tops.output_msg}\n{tops.comment}")
 
         tops.actual_output, tops.expected_output = (
             tops.actual_results,
