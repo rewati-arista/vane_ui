@@ -41,6 +41,8 @@ TEST_SUITE = __file__
 @pytest.mark.nrfu
 @pytest.mark.platform_status
 @pytest.mark.memory
+@pytest.mark.virtual
+@pytest.mark.physical
 class MemoryTests:
     """Memory Test Suite"""
 

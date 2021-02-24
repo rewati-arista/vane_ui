@@ -44,6 +44,8 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.nrfu
 @pytest.mark.base_feature
 @pytest.mark.filesystem
+@pytest.mark.virtual
+@pytest.mark.physical
 class FileSystemTests:
     """EOS File System Test Suite"""
 
