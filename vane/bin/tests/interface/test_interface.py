@@ -46,6 +46,8 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 class InterfaceStatusTests:
     """Interface Status Test Suite"""
 
+    @pytest.mark.virtual
+    @pytest.mark.physical
     def test_if_intf_protocol_status_is_connected_on_(
         self, dut, tests_definitions
     ):
@@ -95,6 +97,8 @@ class InterfaceStatusTests:
 
         assert tops.actual_results == tops.expected_results
 
+    @pytest.mark.virtual
+    @pytest.mark.physical
     def test_if_intf_link_status_is_connected_on_(self, dut, tests_definitions):
         """Verify the interfaces of interest link statuses are up
 
@@ -149,6 +153,7 @@ class InterfaceStatusTests:
 class InterfacePhyTests:
     """Interface Status Test Suite"""
 
+    @pytest.mark.physical
     def test_if_intf_phy_status_connected_on_(self, dut, tests_definitions):
         """Verify the interfaces of interest physical state is link up
 
@@ -226,6 +231,8 @@ class InterfacePhyTests:
 class InterfaceCountersTests:
     """Interface Status Test Suite"""
 
+    @pytest.mark.virtual
+    @pytest.mark.physical
     def test_if_intf_counters_has_input_errors_on_(
         self, dut, tests_definitions
     ):
@@ -276,6 +283,8 @@ class InterfaceCountersTests:
 
         assert tops.actual_results == tops.expected_results
 
+    @pytest.mark.virtual
+    @pytest.mark.physical
     def test_if_intf_counters_has_output_errors_on_(
         self, dut, tests_definitions
     ):
@@ -326,6 +335,8 @@ class InterfaceCountersTests:
 
         assert tops.actual_results == tops.expected_results
 
+    @pytest.mark.virtual
+    @pytest.mark.physical
     def test_if_intf_counters_has_frame_too_short_errors_on_(
         self, dut, tests_definitions
     ):
@@ -377,6 +388,8 @@ class InterfaceCountersTests:
 
         assert tops.actual_results == tops.expected_results
 
+    @pytest.mark.virtual
+    @pytest.mark.physical
     def test_if_intf_counters_has_frame_too_long_errors_on_(
         self, dut, tests_definitions
     ):
@@ -428,6 +441,8 @@ class InterfaceCountersTests:
 
         assert tops.actual_results == tops.expected_results
 
+    @pytest.mark.virtual
+    @pytest.mark.physical
     def test_if_intf_counters_has_fcs_errors_on_(self, dut, tests_definitions):
         """Verify the interfaces of interest have no fcsErrors errors
 
@@ -477,6 +492,8 @@ class InterfaceCountersTests:
 
         assert tops.actual_results == tops.expected_results
 
+    @pytest.mark.virtual
+    @pytest.mark.physical
     def test_if_intf_counters_has_alignment_errors_on_(
         self, dut, tests_definitions
     ):
@@ -528,6 +545,8 @@ class InterfaceCountersTests:
 
         assert tops.actual_results == tops.expected_results
 
+    @pytest.mark.virtual
+    @pytest.mark.physical
     def test_if_intf_counters_has_symbol_errors_on_(
         self, dut, tests_definitions
     ):
@@ -586,6 +605,8 @@ class InterfaceCountersTests:
 class InterfaceDiscardTests:
     """Interface Discard Test Suite"""
 
+    @pytest.mark.virtual
+    @pytest.mark.physical
     def test_if_intf_out_counters_are_discarding_on_(
         self, dut, tests_definitions
     ):
@@ -635,6 +656,8 @@ class InterfaceDiscardTests:
 
         assert tops.actual_results == tops.expected_results
 
+    @pytest.mark.virtual
+    @pytest.mark.physical
     def test_if_intf_in_counters_are_discarding_on_(
         self, dut, tests_definitions
     ):
@@ -690,6 +713,8 @@ class InterfaceDiscardTests:
 class InterfaceMtuTests:
     """Interface MTU Test Suite"""
 
+    @pytest.mark.virtual
+    @pytest.mark.physical
     def test_if_intf_mtu_is_correct_on_(self, dut, tests_definitions):
         """Verify the interfaces of interest have no inDiscards
 
@@ -743,6 +768,8 @@ class InterfaceMtuTests:
 class InterfaceCountersTests:
     """Interface Errors Test Suite"""
 
+    @pytest.mark.virtual
+    @pytest.mark.physical
     def test_if_interface_errors_on_(self, dut, tests_definitions):
         """Verify the interfaces of interest have no inDiscards
 

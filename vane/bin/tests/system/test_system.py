@@ -44,6 +44,8 @@ TEST_SUITE = __file__
 @pytest.mark.nrfu
 @pytest.mark.base_feature
 @pytest.mark.system
+@pytest.mark.virtual
+@pytest.mark.physical
 class CrashTests:
     """Crash Test Suite"""
 
@@ -87,6 +89,8 @@ class CrashTests:
 @pytest.mark.nrfu
 @pytest.mark.platform_status
 @pytest.mark.system
+@pytest.mark.virtual
+@pytest.mark.physical
 class SystemTests:
     """System Test Suite"""
 

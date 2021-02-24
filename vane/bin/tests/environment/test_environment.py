@@ -44,6 +44,7 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.nrfu
 @pytest.mark.platform_status
 @pytest.mark.environment
+@pytest.mark.physical
 class EnvironmentTests:
     """Environment Test Suite"""
 

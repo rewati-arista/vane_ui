@@ -42,6 +42,8 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.nrfu
 @pytest.mark.platform_status
 @pytest.mark.cpu
+@pytest.mark.virtual
+@pytest.mark.physical
 class CPUTests:
     """CPU Test Suite"""
 
