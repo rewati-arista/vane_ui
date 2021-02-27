@@ -46,6 +46,7 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.daemons
 @pytest.mark.virtual
 @pytest.mark.physical
+@pytest.mark.eos424
 class DaemonTests:
     """EOS Daemon Test Suite"""
 

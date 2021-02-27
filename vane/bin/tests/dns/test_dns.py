@@ -42,6 +42,7 @@ TEST_SUITE = __file__
 @pytest.mark.dns
 @pytest.mark.virtual
 @pytest.mark.physical
+@pytest.mark.eos424
 class DNSTests:
     """DNS Test Suite"""
 

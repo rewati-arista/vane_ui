@@ -48,6 +48,7 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.logging
 @pytest.mark.virtual
 @pytest.mark.physical
+@pytest.mark.eos424
 class LoggingTests:
     """Logging Test Suite"""
 

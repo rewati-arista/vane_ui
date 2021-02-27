@@ -43,6 +43,7 @@ TEST_SUITE = __file__
 @pytest.mark.lldp
 @pytest.mark.virtual
 @pytest.mark.physical
+@pytest.mark.eos424
 class LldpTests:
     """LLDP Test Suite"""
 
@@ -148,6 +149,7 @@ class LldpTests:
 @pytest.mark.lldp
 @pytest.mark.virtual
 @pytest.mark.physical
+@pytest.mark.eos424
 class LldpLocalInfoTests:
     """LLDP Local-Info Test Suite"""
 

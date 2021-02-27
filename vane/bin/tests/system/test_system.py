@@ -46,6 +46,7 @@ TEST_SUITE = __file__
 @pytest.mark.system
 @pytest.mark.virtual
 @pytest.mark.physical
+@pytest.mark.eos424
 class CrashTests:
     """Crash Test Suite"""
 
@@ -91,6 +92,7 @@ class CrashTests:
 @pytest.mark.system
 @pytest.mark.virtual
 @pytest.mark.physical
+@pytest.mark.eos424
 class SystemTests:
     """System Test Suite"""
 
