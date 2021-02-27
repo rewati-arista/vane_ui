@@ -43,6 +43,7 @@ TEST_SUITE = __file__
 @pytest.mark.memory
 @pytest.mark.virtual
 @pytest.mark.physical
+@pytest.mark.eos424
 class MemoryTests:
     """Memory Test Suite"""
 

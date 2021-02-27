@@ -48,6 +48,7 @@ class InterfaceStatusTests:
 
     @pytest.mark.virtual
     @pytest.mark.physical
+    @pytest.mark.eos424
     def test_if_intf_protocol_status_is_connected_on_(
         self, dut, tests_definitions
     ):
@@ -99,6 +100,7 @@ class InterfaceStatusTests:
 
     @pytest.mark.virtual
     @pytest.mark.physical
+    @pytest.mark.eos424
     def test_if_intf_link_status_is_connected_on_(self, dut, tests_definitions):
         """Verify the interfaces of interest link statuses are up
 
@@ -154,6 +156,7 @@ class InterfacePhyTests:
     """Interface Status Test Suite"""
 
     @pytest.mark.physical
+    @pytest.mark.eos424
     def test_if_intf_phy_status_connected_on_(self, dut, tests_definitions):
         """Verify the interfaces of interest physical state is link up
 
@@ -233,6 +236,7 @@ class InterfaceCountersTests:
 
     @pytest.mark.virtual
     @pytest.mark.physical
+    @pytest.mark.eos424
     def test_if_intf_counters_has_input_errors_on_(
         self, dut, tests_definitions
     ):
@@ -285,6 +289,7 @@ class InterfaceCountersTests:
 
     @pytest.mark.virtual
     @pytest.mark.physical
+    @pytest.mark.eos424
     def test_if_intf_counters_has_output_errors_on_(
         self, dut, tests_definitions
     ):
@@ -337,6 +342,7 @@ class InterfaceCountersTests:
 
     @pytest.mark.virtual
     @pytest.mark.physical
+    @pytest.mark.eos424
     def test_if_intf_counters_has_frame_too_short_errors_on_(
         self, dut, tests_definitions
     ):
@@ -390,6 +396,7 @@ class InterfaceCountersTests:
 
     @pytest.mark.virtual
     @pytest.mark.physical
+    @pytest.mark.eos424
     def test_if_intf_counters_has_frame_too_long_errors_on_(
         self, dut, tests_definitions
     ):
@@ -443,6 +450,7 @@ class InterfaceCountersTests:
 
     @pytest.mark.virtual
     @pytest.mark.physical
+    @pytest.mark.eos424
     def test_if_intf_counters_has_fcs_errors_on_(self, dut, tests_definitions):
         """Verify the interfaces of interest have no fcsErrors errors
 
@@ -494,6 +502,7 @@ class InterfaceCountersTests:
 
     @pytest.mark.virtual
     @pytest.mark.physical
+    @pytest.mark.eos424
     def test_if_intf_counters_has_alignment_errors_on_(
         self, dut, tests_definitions
     ):
@@ -547,6 +556,7 @@ class InterfaceCountersTests:
 
     @pytest.mark.virtual
     @pytest.mark.physical
+    @pytest.mark.eos424
     def test_if_intf_counters_has_symbol_errors_on_(
         self, dut, tests_definitions
     ):
@@ -607,6 +617,7 @@ class InterfaceDiscardTests:
 
     @pytest.mark.virtual
     @pytest.mark.physical
+    @pytest.mark.eos424
     def test_if_intf_out_counters_are_discarding_on_(
         self, dut, tests_definitions
     ):
@@ -658,6 +669,7 @@ class InterfaceDiscardTests:
 
     @pytest.mark.virtual
     @pytest.mark.physical
+    @pytest.mark.eos424
     def test_if_intf_in_counters_are_discarding_on_(
         self, dut, tests_definitions
     ):
@@ -770,6 +782,7 @@ class InterfaceCountersTests:
 
     @pytest.mark.virtual
     @pytest.mark.physical
+    @pytest.mark.eos424
     def test_if_interface_errors_on_(self, dut, tests_definitions):
         """Verify the interfaces of interest have no inDiscards
 

@@ -43,6 +43,7 @@ TEST_SUITE = __file__
 @pytest.mark.extensions
 @pytest.mark.virtual
 @pytest.mark.physical
+@pytest.mark.eos424
 class ExtensionsTests:
     """EOS Extensions Test Suite"""
 

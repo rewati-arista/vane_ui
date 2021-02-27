@@ -55,6 +55,7 @@ class ZTPTests:
           dut (dict): Encapsulates dut details including name, connection
           tests_definitions (dict): Test parameters
         """
+@pytest.mark.eos424
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
         tops.actual_output = dut["output"][tops.show_cmd]["json"]["mode"]
