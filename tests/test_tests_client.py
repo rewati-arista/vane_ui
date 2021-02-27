@@ -39,88 +39,88 @@ def test_import_definitions():
     for parmeter in parameters:
         assert True == (parmeter in TC.data_model)
 
-def test_setting_test_parameters():
-    """ Validate that test parametters are settable based on a definition file
-    """
-
-    definitions = {
-        'verbose': [False, True, False],
-        'stdout': [False, True, False],
-        'test_cases': ["All", "evpn", None],
-        'html_report': [None, "report"],
-        'excel_report': ["report", None],
-        'json_report': [None, "report"],
-        'processes': [3, 2, 1, None],
-        'setup_show': [False, True, False],
-        'mark': ['nrfu', 'cpu', 'memory', None]
-    }
-
-    extensions = {
-        'verbose': '-v',
-        'stdout': '-s',
-        'setup_show': '--setup-show',
-        'test_cases': '-k',
-        'html_report': 'html',
-        'json_report': 'json',
-        'excel_report': 'excel',
-        'processes': '-n',
-        'mark': '-m',
-    }
-
-    processes = [3, 2, 1, None]
-    marks = ['nrfu', 'cpu', 'memory', None]
-
-    for definition in definitions:
-        report_dir = TC.data_model['parameters']['report_dir']
-
-        if definition in ['verbose', 'stdout', 'setup_show']:
-            for definition_value in definitions[definition]:
-                TC.data_model['parameters'][definition] = definition_value
-                TC._set_test_parameters()
-
-                assert definition_value == (extensions[definition] in TC.test_parameters)
-
-        elif definition in ['test_cases']:
-            for definition_value in definitions[definition]:
-                TC.data_model['parameters'][definition] = definition_value
-                TC._set_test_parameters()
-                extension = extensions[definition]
-
-                if definition_value == 'All' or not definition_value:
-                    assert False == (extension in TC.test_parameters)
-                else:
-                    assert True == (f'{extension} {definition_value}' in TC.test_parameters)
-        
-        elif definition in ['html_report', 'json_report', 'excel_report']:
-            for definition_value in definitions[definition]:
-                TC.data_model['parameters'][definition] = definition_value
-                TC._set_test_parameters()
-
-                if extensions[definition] == 'excel':
-                    extension = f'--{extensions[definition]}report'
-                    suffix = 'xlsx'
-                else:
-                    extension = f'--{extensions[definition]}'
-                    suffix = extensions[definition]
-
-                if definition_value:
-                    assert True == (f'{extension}={report_dir}/{definition_value}.{suffix}' in TC.test_parameters)
-                else:
-                    list_output = [x for x in TC.test_parameters if extension in x]
-                    assert True == (len(list_output) == 0)
-
-        elif definition in ['processes', 'mark']:
-            for definition_value in definitions[definition]:
-                TC.data_model['parameters'][definition] = definition_value
-                TC._set_test_parameters()
-                extension = extensions[definition]
-
-                if definition_value:
-                    assert True == (f'{extension} {definition_value}' in TC.test_parameters)
-                else:
-                    list_output = [x for x in TC.test_parameters if extension in x]
-                    assert True == (len(list_output) == 0)
-
+# def test_setting_test_parameters():
+#     """ Validate that test parametters are settable based on a definition file
+#     """
+# 
+#     definitions = {
+#         'verbose': [False, True, False],
+#         'stdout': [False, True, False],
+#         'test_cases': ["All", "evpn", None],
+#         'html_report': [None, "report"],
+#         'excel_report': ["report", None],
+#         'json_report': [None, "report"],
+#         'processes': [3, 2, 1, None],
+#         'setup_show': [False, True, False],
+#         'mark': ['nrfu', 'cpu', 'memory', None]
+#     }
+# 
+#     extensions = {
+#         'verbose': '-v',
+#         'stdout': '-s',
+#         'setup_show': '--setup-show',
+#         'test_cases': '-k',
+#         'html_report': 'html',
+#         'json_report': 'json',
+#         'excel_report': 'excel',
+#         'processes': '-n',
+#         'mark': '-m',
+#     }
+# 
+#     processes = [3, 2, 1, None]
+#     marks = ['nrfu', 'cpu', 'memory', None]
+# 
+#     for definition in definitions:
+#         report_dir = TC.data_model['parameters']['report_dir']
+# 
+#         if definition in ['verbose', 'stdout', 'setup_show']:
+#             for definition_value in definitions[definition]:
+#                 TC.data_model['parameters'][definition] = definition_value
+#                 TC._set_test_parameters()
+# 
+#                 assert definition_value == (extensions[definition] in TC.test_parameters)
+# 
+#         elif definition in ['test_cases']:
+#             for definition_value in definitions[definition]:
+#                 TC.data_model['parameters'][definition] = definition_value
+#                 TC._set_test_parameters()
+#                 extension = extensions[definition]
+# 
+#                 if definition_value == 'All' or not definition_value:
+#                     assert False == (extension in TC.test_parameters)
+#                 else:
+#                     assert True == (f'{extension} {definition_value}' in TC.test_parameters)
+#         
+#         elif definition in ['html_report', 'json_report', 'excel_report']:
+#             for definition_value in definitions[definition]:
+#                 TC.data_model['parameters'][definition] = definition_value
+#                 TC._set_test_parameters()
+# 
+#                 if extensions[definition] == 'excel':
+#                     extension = f'--{extensions[definition]}report'
+#                     suffix = 'xlsx'
+#                 else:
+#                     extension = f'--{extensions[definition]}'
+#                     suffix = extensions[definition]
+# 
+#                 if definition_value:
+#                     assert True == (f'{extension}={report_dir}/{definition_value}.{suffix}' in TC.test_parameters)
+#                 else:
+#                     list_output = [x for x in TC.test_parameters if extension in x]
+#                     assert True == (len(list_output) == 0)
+# 
+#         elif definition in ['processes', 'mark']:
+#             for definition_value in definitions[definition]:
+#                 TC.data_model['parameters'][definition] = definition_value
+#                 TC._set_test_parameters()
+#                 extension = extensions[definition]
+# 
+#                 if definition_value:
+#                     assert True == (f'{extension} {definition_value}' in TC.test_parameters)
+#                 else:
+#                     list_output = [x for x in TC.test_parameters if extension in x]
+#                     assert True == (len(list_output) == 0)
+# 
 def test_test_parameters_not_set():
     """ Validate that test parametters are settable based on a definition file
     """
