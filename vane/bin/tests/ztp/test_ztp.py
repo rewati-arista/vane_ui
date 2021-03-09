@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 #
 # Copyright (c) 2019, Arista Networks EOS+
 # All rights reserved.
@@ -45,6 +45,7 @@ TEST_SUITE = __file__
 @pytest.mark.ztp
 @pytest.mark.virtual
 @pytest.mark.physical
+@pytest.mark.eos424
 class ZTPTests:
     """Zero Touch Provisioning Test Suite"""
 
@@ -55,7 +56,6 @@ class ZTPTests:
           dut (dict): Encapsulates dut details including name, connection
           tests_definitions (dict): Test parameters
         """
-@pytest.mark.eos424
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
         tops.actual_output = dut["output"][tops.show_cmd]["json"]["mode"]
