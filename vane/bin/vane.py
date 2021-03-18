@@ -141,12 +141,15 @@ def show_markers():
     with redirect_stdout(temp_stdout):
         result = pytest.main(["--markers"])
     stdout_str = temp_stdout.getvalue()
+    marker_list = []
     for i in stdout_str.split('\n'):
       if 'pytest' in i:
          marker_name = i.split(': ')[0].split('.')[2]
          marker_description = i.split(': ')[1]
          if marker_name not in inbuilt_list:
-            print(dict(marker=marker_name, description=marker_description))
+            marker_list.append(dict(marker=marker_name,
+                                    description=marker_description))
+    return marker_list
 
 def main():
     """main function"""
@@ -155,7 +158,7 @@ def main():
     args = parse_cli()
 
     if args.markers:
-       show_markers()
+       print(f"{show_markers()}")
 
     else:
         if args.definitions_file:
