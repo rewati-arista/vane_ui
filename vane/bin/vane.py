@@ -68,6 +68,13 @@ def parse_cli():
     )
 
     parser.add_argument(
+        "--markers",
+        help=("List of supported technology tests. "
+              "Equivalent to pytest --markers"),
+        action='store_true',
+    )
+
+    parser.add_argument(
         "--input",
         action="store_true",
         default=False,
@@ -111,6 +118,35 @@ def write_results(definitions_file):
     vane_report_client = report_client.ReportClient(definitions_file)
     vane_report_client.write_result_doc()
 
+def show_markers():
+    import os
+    import pytest
+    from io import StringIO
+    from contextlib import redirect_stdout
+
+    inbuilt_list = [")",
+                    "'",
+                    "trylast",
+                    "forked",
+                    "no_cover",
+                    "filterwarnings(warning)",
+                    "skip(reason=None)",
+                    "skipif(condition, ",
+                    "xfail(condition, ",
+                    "parametrize(argnames, argvalues)",
+                    "usefixtures(fixturename1, fixturename2, ",
+                    "tryfirst"]
+
+    temp_stdout = StringIO()
+    with redirect_stdout(temp_stdout):
+        result = pytest.main(["--markers"])
+    stdout_str = temp_stdout.getvalue()
+    for i in stdout_str.split('\n'):
+      if 'pytest' in i:
+         marker_name = i.split(': ')[0].split('.')[2]
+         marker_description = i.split(': ')[1]
+         if marker_name not in inbuilt_list:
+            print(dict(marker=marker_name, description=marker_description))
 
 def main():
     """main function"""
@@ -118,19 +154,23 @@ def main():
     logging.info("Accept input from command-line")
     args = parse_cli()
 
-    if args.definitions_file:
-        logging.warning(
-            "Changing Definitions name to " f"{args.definitions_file}"
-        )
-        DEFINITIONS_FILE = args.definitions_file
+    if args.markers:
+       show_markers()
 
-    if args.input:
-        input_spreadsheet(DEFINITIONS_FILE)
+    else:
+        if args.definitions_file:
+            logging.warning(
+                "Changing Definitions name to " f"{args.definitions_file}"
+            )
+            DEFINITIONS_FILE = args.definitions_file
 
-    run_tests(DEFINITIONS_FILE)
-    write_results(DEFINITIONS_FILE)
+        if args.input:
+            input_spreadsheet(DEFINITIONS_FILE)
 
-    logging.info("\n\n!VANE has completed without errors!\n\n")
+        run_tests(DEFINITIONS_FILE)
+        write_results(DEFINITIONS_FILE)
+
+        logging.info("\n\n!VANE has completed without errors!\n\n")
 
 
 if __name__ == "__main__":
