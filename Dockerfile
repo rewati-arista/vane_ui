@@ -1,5 +1,5 @@
 # Use official Python3 supported container
-FROM python:3
+FROM python:3.9
 MAINTAINER Professional Service: Software Services <eos-cs-sw@arista.com>
 
 # Install necessary packages
