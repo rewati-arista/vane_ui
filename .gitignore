@@ -13,6 +13,7 @@ __pycache__/*
 .*.docx
 */.ipynb_checkpoints/*
 vane/reports/results/*
+*.DS_Store
 
 # Project files
 .ropeproject
