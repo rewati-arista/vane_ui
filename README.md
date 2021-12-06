@@ -16,6 +16,73 @@ Let user know how to install
 
 Contributed pull requests are gladly welcomed for this project.
 
+### Vane Commands
+
+1. Running help command.
+
+```
+    python3 vane.py --help
+```
+
+2. Running with custom definitions file.
+
+```
+    python3 vane.py --definitions_file definitions.yaml
+```
+
+3. Listing the inputs from excel_definitions file.
+
+```
+    python3 vane.py --input
+```
+
+4. Listing the available test markers.
+
+    filesystem
+    daemons
+    extensions
+    users
+    tacacs
+    aaa
+    host
+    base_feature
+    platform_status
+    authorization
+    authentication
+    accounting
+    api
+    dns
+    logging
+    ztp
+    ntp
+    nrfu
+    pytest
+    environment
+    cpu
+    memory
+    interface
+    interface_baseline_health
+    l2_protocols
+    lldp
+    system
+    demo
+    physical
+    virtual
+    eos_424
+	
+```
+    python3 vane.py --marker
+```
+
+5. Running specific markers (specific test suites)
+	
+
+    Change the 'mark' parameter value in definitions.yaml file to one of the above supported markers (for example, 'nrfu') and then run vane.py script
+
+```
+    python3 vane.py
+```
+
 ### Build Docker Container
 
 The docker container approach for development can be used to ensure that
@@ -38,11 +105,11 @@ following command.
     $ docker run -it --volume "$(pwd):/repo-name" repo-name
 ```
 
-## Contributing	
-	
-Contributing pull requests are gladly welcomed for this repository.	
-Please note that all contributions that modify the library behavior	
-require corresponding test cases otherwise the pull request will be	
+## Contributing
+
+Contributing pull requests are gladly welcomed for this repository.
+Please note that all contributions that modify the library behavior
+require corresponding test cases otherwise the pull request will be
 rejected.
 
 ## License
@@ -55,11 +122,9 @@ modification, are permitted provided that the following conditions are met:
 
 * Redistributions of source code must retain the above copyright notice, this
   list of conditions and the following disclaimer.
-
 * Redistributions in binary form must reproduce the above copyright notice,
   this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
-
 * Neither the name of the Arista nor the names of its
   contributors may be used to endorse or promote products derived from
   this software without specific prior written permission.
