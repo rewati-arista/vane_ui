@@ -52,6 +52,8 @@ import logging
 import pytest
 import yaml
 import jinja2
+import configparser
+import tests_tools
 
 
 logging.basicConfig(
@@ -164,6 +166,12 @@ class TestsClient:
         else:
             logging.warning(f"Disable pytest output {parameter}")
 
+    def _get_testcase(self):
+        yaml_file = "definitions.yaml"
+        test_parameters = tests_tools.import_yaml(yaml_file)
+        test_defs = tests_tools.return_test_defs(test_parameters)
+        return test_defs     
+
     def _set_test_cases(self):
         """Set test cases for test run"""
 
@@ -175,7 +183,16 @@ class TestsClient:
         elif not test_cases:
             pass
         else:
-            self.test_parameters.append(f"-k {test_cases}")
+            test_case_name = []
+            test_getdef = self._get_testcase()
+            for test_suite in test_getdef["test_suites"]:
+                for testcase in test_suite["testcases"]:
+                    test_case_name.append(testcase['name'])
+            if not test_cases in test_case_name:
+                print("test_case %s is not supported. Update test_case parameter in definition file" % (test_cases))
+                sys.exit(0)
+            else:
+                self.test_parameters.append(f"-k {test_cases}")           
 
     def _set_html_report(self, report_dir):
         """Set html_report for test run"""
@@ -226,11 +243,22 @@ class TestsClient:
 
         processes = self.data_model["parameters"]["processes"]
         self._set_cmdline_input(processes, "-n")
+        
+
+    def _get_markers(self):
+        config = configparser.ConfigParser()
+        config.read('pytest.ini')
+        markers = config.get('pytest','markers')
+        markers = list(filter(None, [marker.split(":")[0] for marker in markers.split("\n")]))
+        return markers
 
     def _set_mark(self):
-
         mark = self.data_model["parameters"]["mark"]
+        if not mark in self._get_markers():
+            print("Marker %s is not supported. Update marker parameter in definition file" % (mark))
+            sys.exit(0)
         self._set_cmdline_input(mark, "-m")
+        
 
     def _set_junit(self):
 
