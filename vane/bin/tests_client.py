@@ -192,7 +192,7 @@ class TestsClient:
                 print("test_case %s is not supported. Update test_case parameter in definition file" % (test_cases))
                 sys.exit(0)
             else:
-                self.test_parameters.append(f"-k {test_cases}") 
+                self.test_parameters.append(f"-k {test_cases}")
 
     def _set_html_report(self, report_dir):
         """Set html_report for test run"""
