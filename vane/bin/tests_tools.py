@@ -189,6 +189,7 @@ def login_duts(test_parameters):
     duts = test_parameters["duts"]
     logins = []
 
+    pyeapi.load_config(test_parameters["parameters"]["eapi_file"])
     for dut in duts:
         name = dut["name"]
         login_index = len(logins)
