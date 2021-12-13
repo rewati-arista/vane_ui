@@ -138,7 +138,7 @@ def return_dut_list(test_parameters):
     return duts
 
 
-def init_duts(show_cmds, test_parameters):
+def init_duts(show_cmds, test_parameters, test_duts):
     """Use PS LLD spreadsheet to find interesting duts and then execute
     inputted show commands on each dut.  Return structured data of
     dut's output data, hostname, and connection.  Using threading to
@@ -159,14 +159,15 @@ def init_duts(show_cmds, test_parameters):
         "on each dut.  Return structured data of DUTs output "
         "data, hostname, and connection."
     )
-    duts = login_duts(test_parameters)
+    duts = login_duts(test_parameters, test_duts)
     workers = len(duts)
     logging.info(f"Duts login info: {duts} and create {workers} workers")
-    logging.info(f"Passing the following show commands to workers: {show_cmds}")
+    logging.info(
+        f"Passing the following show commands to workers: {show_cmds}")
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
         {
-            executor.submit(dut_worker, dut, show_cmds, test_parameters): dut
+            executor.submit(dut_worker, dut, show_cmds, test_duts): dut
             for dut in duts
         }
 
@@ -174,7 +175,7 @@ def init_duts(show_cmds, test_parameters):
     return duts
 
 
-def login_duts(test_parameters):
+def login_duts(test_parameters, test_duts):
     """Use eapi to connect to Arista switches for testing
 
     Args:
@@ -186,9 +187,8 @@ def login_duts(test_parameters):
     """
 
     logging.info("Using eapi to connect to Arista switches for testing")
-    duts = test_parameters["duts"]
+    duts = test_duts["duts"]
     logins = []
-
     pyeapi.load_config(test_parameters["parameters"]["eapi_file"])
     for dut in duts:
         name = dut["name"]
@@ -220,7 +220,8 @@ def send_cmds(show_cmds, conn, encoding):
             show_cmd_list = conn.run_commands(show_cmds)
         elif encoding == "text":
             show_cmd_list = conn.run_commands(show_cmds, encoding="text")
-        logging.info(f"ran all show cmds with encoding {encoding}: {show_cmds}")
+        logging.info(
+            f"ran all show cmds with encoding {encoding}: {show_cmds}")
 
     except Exception as e:
         logging.error(f"error running all cmds: {e}")
@@ -296,7 +297,8 @@ def dut_worker(dut, show_cmds, test_parameters):
             )
             show_output = show_cmd_json_list[cmd_index]
             dut["output"][show_cmd]["json"] = show_output
-            logging.info(f"Adding cmd {show_cmd} to dut and data {show_output}")
+            logging.info(
+                f"Adding cmd {show_cmd} to dut and data {show_output}")
         else:
             dut["output"][show_cmd]["json"] = ""
             logging.info(f"No json output for {show_cmd}")

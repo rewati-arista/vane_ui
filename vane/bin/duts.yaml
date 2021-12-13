@@ -1,0 +1,145 @@
+duts:
+- mgmt_ip: 10.255.106.54
+  name: DC1-L2LEAF1A
+  neighbors:
+  - neighborDevice: DC1-LEAF1A
+    neighborPort: Ethernet5
+    port: Ethernet1
+  - neighborDevice: DC1-LEAF1B
+    neighborPort: Ethernet5
+    port: Ethernet2  
+  password: arista
+  transport: https
+  username: arista
+- mgmt_ip: 10.255.44.206
+  name: DC1-L2LEAF2A
+  neighbors:
+  - neighborDevice: DC1-LEAF2A
+    neighborPort: Ethernet5
+    port: Ethernet1
+  - neighborDevice: DC1-LEAF2B
+    neighborPort: Ethernet5
+    port: Ethernet2
+  password: arista
+  transport: https
+  username: arista
+- mgmt_ip: 10.255.2.212
+  name: DC1-LEAF1A
+  neighbors:
+  - neighborDevice: DC1-SPINE1
+    neighborPort: Ethernet1
+    port: Ethernet1
+  - neighborDevice: DC1-SPINE2
+    neighborPort: Ethernet1
+    port: Ethernet2
+  - neighborDevice: DC1-LEAF1B
+    neighborPort: Ethernet3
+    port: Ethernet3
+  - neighborDevice: DC1-LEAF1B
+    neighborPort: Ethernet4
+    port: Ethernet4
+  - neighborDevice: DC1-L2LEAF1A
+    neighborPort: Ethernet1
+    port: Ethernet5
+  password: arista
+  transport: https
+  username: arista
+- mgmt_ip: 10.255.24.83
+  name: DC1-LEAF1B
+  neighbors:
+  - neighborDevice: DC1-SPINE1
+    neighborPort: Ethernet2
+    port: Ethernet1
+  - neighborDevice: DC1-SPINE2
+    neighborPort: Ethernet2
+    port: Ethernet2
+  - neighborDevice: DC1-LEAF1A
+    neighborPort: Ethernet3
+    port: Ethernet3
+  - neighborDevice: DC1-LEAF1A
+    neighborPort: Ethernet4
+    port: Ethernet4
+  - neighborDevice: DC1-L2LEAF1A
+    neighborPort: Ethernet2
+    port: Ethernet5
+  password: arista
+  transport: https
+  username: arista
+- mgmt_ip: 10.255.31.203
+  name: DC1-LEAF2A
+  neighbors:
+  - neighborDevice: DC1-SPINE1
+    neighborPort: Ethernet3
+    port: Ethernet1
+  - neighborDevice: DC1-SPINE2
+    neighborPort: Ethernet3
+    port: Ethernet2
+  - neighborDevice: DC1-LEAF2B
+    neighborPort: Ethernet3
+    port: Ethernet3
+  - neighborDevice: DC1-LEAF2B
+    neighborPort: Ethernet4
+    port: Ethernet4
+  - neighborDevice: DC1-L2LEAF2A
+    neighborPort: Ethernet1       
+    port: Ethernet5
+  password: arista
+  transport: https
+  username: arista
+- mgmt_ip: 10.255.105.126
+  name: DC1-LEAF2B
+  neighbors:
+  - neighborDevice: DC1-SPINE1
+    neighborPort: Ethernet4
+    port: Ethernet1
+  - neighborDevice: DC1-SPINE2
+    neighborPort: Ethernet4
+    port: Ethernet2
+  - neighborDevice: DC1-LEAF2A
+    neighborPort: Ethernet3
+    port: Ethernet3
+  - neighborDevice: DC1-LEAF2A
+    neighborPort: Ethernet4
+    port: Ethernet4
+  - neighborDevice: DC1-L2LEAF2A 
+    neighborPort: Ethernet2
+    port: Ethernet5
+  password: arista
+  transport: https
+  username: arista
+- mgmt_ip: 10.255.111.198
+  name: DC1-SPINE1
+  neighbors:
+  - neighborDevice: DC1-LEAF1A
+    neighborPort: Ethernet1
+    port: Ethernet1
+  - neighborDevice: DC1-LEAF1B
+    neighborPort: Ethernet1
+    port: Ethernet2
+  - neighborDevice: DC1-LEAF2A
+    neighborPort: Ethernet1
+    port: Ethernet3
+  - neighborDevice: DC1-LEAF2B
+    neighborPort: Ethernet1
+    port: Ethernet4
+  password: arista
+  transport: https
+  username: arista
+- mgmt_ip: 10.255.45.54
+  name: DC1-SPINE2
+  neighbors:
+  - neighborDevice: DC1-LEAF1A
+    neighborPort: Ethernet2
+    port: Ethernet1
+  - neighborDevice: DC1-LEAF1B
+    neighborPort: Ethernet2
+    port: Ethernet2
+  - neighborDevice: DC1-LEAF2A
+    neighborPort: Ethernet2
+    port: Ethernet3
+  - neighborDevice: DC1-LEAF2B
+    neighborPort: Ethernet2
+    port: Ethernet4
+  password: arista
+  transport: https
+  username: arista
