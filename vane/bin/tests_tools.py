@@ -188,7 +188,6 @@ def login_duts(test_parameters):
     logging.info("Using eapi to connect to Arista switches for testing")
     duts = test_parameters["duts"]
     logins = []
-
     pyeapi.load_config(test_parameters["parameters"]["eapi_file"])
     for dut in duts:
         name = dut["name"]
@@ -198,7 +197,9 @@ def login_duts(test_parameters):
         logging.info(f"Connecting to switch: {name} using parameters: {dut}")
         login_ptr["connection"] = pyeapi.connect_to(name)
         login_ptr["name"] = name
-
+        login_ptr["mgmt_ip"] = dut["mgmt_ip"]
+        login_ptr["username"] = dut["username"]
+        
     logging.info(f"Returning duts logins: {logins}")
     return logins
 
@@ -626,15 +627,15 @@ def return_test_defs(test_parameters):
 
     test_defs = {"test_suites": []}
     test_dir = test_parameters["parameters"]["tests_dir"]
-    tests_info = os.walk(test_dir)
-
-    for dir_path, _, file_names in tests_info:
-        for file_name in file_names:
-            if file_name == "test_definition.yaml":
-                file_path = f"{dir_path}/{file_name}"
-                test_def = import_yaml(file_path)
-                test_defs["test_suites"].append(test_def)
-
+    for test_directory in test_dir:
+        tests_info = os.walk(test_directory)
+        for dir_path, _ , file_names in tests_info:
+            for file_name in file_names:
+                if file_name == "test_definition.yaml":
+                    file_path = f"{dir_path}/{file_name}"
+                    test_def = import_yaml(file_path)
+                    test_defs["test_suites"].append(test_def)
+    
     export_yaml("../reports/tests_definitions.yaml", test_defs)
     logging.info(
         "Return the following test definitions data strcuture " f"{test_defs}"
