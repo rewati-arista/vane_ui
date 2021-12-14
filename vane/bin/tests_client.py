@@ -66,7 +66,7 @@ logging.basicConfig(
 
 class TestsClient:
     """Creates an instance of the Test Client."""
-    get_pytest_file = "/mnt/c/Users/GS-3289/Desktop/origional/vane-develop/vane/bin/pytest.ini"
+    get_pytest_file = "pytest.ini"
 
     def __init__(self, test_definition):
         """Initializes the Test Client
@@ -167,7 +167,7 @@ class TestsClient:
         else:
             logging.warning(f"Disable pytest output {parameter}")
 
-    def _get_test_cases(self,data_model):
+    def _get_test_cases(self, data_model):
         test_defs = tests_tools.return_test_defs(data_model)
         return test_defs
 
