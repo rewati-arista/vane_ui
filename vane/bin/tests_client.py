@@ -66,6 +66,7 @@ logging.basicConfig(
 
 class TestsClient:
     """Creates an instance of the Test Client."""
+    get_pytest_file = "/mnt/c/Users/GS-3289/Desktop/origional/vane-develop/vane/bin/pytest.ini"
 
     def __init__(self, test_definition):
         """Initializes the Test Client
@@ -166,10 +167,8 @@ class TestsClient:
         else:
             logging.warning(f"Disable pytest output {parameter}")
 
-    def _get_testcase(self):
-        yaml_file = "definitions.yaml"
-        test_parameters = tests_tools.import_yaml(yaml_file)
-        test_defs = tests_tools.return_test_defs(test_parameters)
+    def _get_test_cases(self,data_model):
+        test_defs = tests_tools.return_test_defs(data_model)
         return test_defs
 
     def _set_test_cases(self):
@@ -183,13 +182,13 @@ class TestsClient:
         elif not test_cases:
             pass
         else:
-            test_case_name = []
-            test_getdef = self._get_testcase()
-            for test_suite in test_getdef["test_suites"]:
+            test_case_names = []
+            test_get_def = self._get_test_cases(self.data_model)
+            for test_suite in test_get_def["test_suites"]:
                 for testcase in test_suite["testcases"]:
-                    test_case_name.append(testcase['name'])
-            if not test_cases in test_case_name:
-                print("test_case %s is not supported. Update test_case parameter in definition file" % (test_cases))
+                    test_case_names.append(testcase["name"])
+            if not test_cases in test_case_names:
+                print("Test case %s is not supported. Update test_case parameter in definition file" % (test_cases))
                 sys.exit(0)
             else:
                 self.test_parameters.append(f"-k {test_cases}")
@@ -247,7 +246,7 @@ class TestsClient:
 
     def _get_markers(self):
         config = configparser.ConfigParser()
-        config.read('pytest.ini')
+        config.read(self.get_pytest_file)
         markers = config.get('pytest','markers')
         markers = list(filter(None, [marker.split(":")[0] for marker in markers.split("\n")]))
         return markers
