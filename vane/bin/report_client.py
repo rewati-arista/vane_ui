@@ -71,7 +71,9 @@ class ReportClient:
 
         _results_file = self.data_model["parameters"]["results_file"]
         self._results_datamodel = None
-        self._compile_yaml_data("/project/vane/reports/results/", _results_file)
+        self._compile_yaml_data(
+            "/project/vane/reports/results/",
+            _results_file)
         logging.info(f"Results file data is {self._results_datamodel}")
 
         self._document = docx.Document()
@@ -87,8 +89,8 @@ class ReportClient:
         """
 
         logging.info(
-            f"yaml directory is {yaml_dir}\n" f"yaml output file is {yaml_file}"
-        )
+            f"yaml directory is {yaml_dir}\n"
+            f"yaml output file is {yaml_file}")
         yaml_files = os.listdir(yaml_dir)
         logging.info(f"yaml input files are {yaml_files}")
 
@@ -147,7 +149,8 @@ class ReportClient:
             self._results_datamodel["test_suites"].append(suite_stub)
             suite_index = len(self._results_datamodel["test_suites"]) - 1
 
-        logging.info(f"Find Index for test case: {test_case} on dut {dut_name}")
+        logging.info(
+            f"Find Index for test case: {test_case} on dut {dut_name}")
         test_cases = [
             param["name"]
             for param in self._results_datamodel["test_suites"][suite_index][
@@ -204,7 +207,9 @@ class ReportClient:
             with open(yaml_file, "r") as input_yaml:
                 try:
                     yaml_data = yaml.safe_load(input_yaml)
-                    logging.info(f"Inputed the following yaml: " f"{yaml_data}")
+                    logging.info(
+                        f"Inputed the following yaml: "
+                        f"{yaml_data}")
                     return yaml_data
                 except yaml.YAMLError as err_data:
                     logging.error(f"Error in YAML file. {err_data}")
@@ -422,8 +427,8 @@ class ReportClient:
         dut_list = []
 
         for testcase in testcases:
-            if re.search("\[.*\]", testcase["name"]):
-                dut_name = re.findall("\[.*\]", testcase["name"])[0][1:-1]
+            if re.search(r"\[.*\]", testcase["name"]):
+                dut_name = re.findall(r"\[.*\]", testcase["name"])[0][1:-1]
                 test_result = testcase["outcome"]
 
                 if dut_name not in dut_list:
@@ -553,8 +558,8 @@ class ReportClient:
         tc_name = self._format_tc_name(test_case["name"])
 
         self._document.add_heading(
-            f"{self._major_section}.{minor_section} " f"Test Case: {tc_name}", 2
-        )
+            f"{self._major_section}.{minor_section} "
+            f"Test Case: {tc_name}", 2)
 
     def _write_detail_dut_section(self, dut, minor_section, dut_section):
         """[summary]

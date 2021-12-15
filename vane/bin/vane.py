@@ -39,6 +39,7 @@ import tests_client
 import report_client
 import xcel_client
 import sys
+from config import DEFINITIONS_FILE, DUTS_FILE
 
 
 logging.basicConfig(
@@ -49,8 +50,6 @@ logging.basicConfig(
 )
 logging.info("Starting vane.log file")
 
-DEFINITIONS_FILE = "/project/vane/bin/definitions.yaml"
-
 
 def parse_cli():
     """Parse cli options.
@@ -59,7 +58,8 @@ def parse_cli():
         args (obj): An object containing the CLI arguments.
     """
 
-    parser = argparse.ArgumentParser(description=("Network Certification Tool"))
+    parser = argparse.ArgumentParser(
+        description=("Network Certification Tool"))
 
     parser.add_argument(
         "--definitions_file",
@@ -95,7 +95,7 @@ def input_spreadsheet(definitions_file):
     sys.exit(0)
 
 
-def run_tests(definitions_file):
+def run_tests(definitions_file, duts_file):
     """Make request to test client to run tests
 
     Args:
@@ -103,7 +103,7 @@ def run_tests(definitions_file):
     """
 
     logging.info("Using class TestsClient to create vane_tests_client object")
-    vane_tests_client = tests_client.TestsClient(definitions_file)
+    vane_tests_client = tests_client.TestsClient(definitions_file, duts_file)
     vane_tests_client.test_runner()
 
 
@@ -114,9 +114,11 @@ def write_results(definitions_file):
         definitions_file (str): Path and name of definition file
     """
 
-    logging.info("Using class ReportClient to create vane_report_client object")
+    logging.info(
+        "Using class ReportClient to create vane_report_client object")
     vane_report_client = report_client.ReportClient(definitions_file)
     vane_report_client.write_result_doc()
+
 
 def show_markers():
     import os
@@ -143,13 +145,14 @@ def show_markers():
     stdout_str = temp_stdout.getvalue()
     marker_list = []
     for i in stdout_str.split('\n'):
-      if 'pytest' in i:
-         marker_name = i.split(': ')[0].split('.')[2]
-         marker_description = i.split(': ')[1]
-         if marker_name not in inbuilt_list:
-            marker_list.append(dict(marker=marker_name,
-                                    description=marker_description))
+        if 'pytest' in i:
+            marker_name = i.split(': ')[0].split('.')[2]
+            marker_description = i.split(': ')[1]
+            if marker_name not in inbuilt_list:
+                marker_list.append(dict(marker=marker_name,
+                                        description=marker_description))
     return marker_list
+
 
 def main():
     """main function"""
@@ -158,7 +161,7 @@ def main():
     args = parse_cli()
 
     if args.markers:
-       print(f"{show_markers()}")
+        print(f"{show_markers()}")
 
     else:
         if args.definitions_file:
@@ -170,7 +173,7 @@ def main():
         if args.input:
             input_spreadsheet(DEFINITIONS_FILE)
 
-        run_tests(DEFINITIONS_FILE)
+        run_tests(DEFINITIONS_FILE, DUTS_FILE)
         write_results(DEFINITIONS_FILE)
 
         logging.info("\n\n!VANE has completed without errors!\n\n")

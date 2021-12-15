@@ -67,7 +67,7 @@ logging.basicConfig(
 class TestsClient:
     """Creates an instance of the Test Client."""
 
-    def __init__(self, test_definition):
+    def __init__(self, test_definition, test_duts):
         """Initializes the Test Client
 
         Args:
@@ -76,6 +76,8 @@ class TestsClient:
 
         logging.info("Convert yaml data-model to a python data structure")
         self.data_model = self._import_yaml(test_definition)
+        self.duts_model = self._import_yaml(test_duts)
+
         logging.info(
             "Internal test data-model initialized with value: "
             f"{self.data_model}"
@@ -94,7 +96,9 @@ class TestsClient:
             with open(yaml_file, "r") as input_yaml:
                 try:
                     yaml_data = yaml.safe_load(input_yaml)
-                    logging.info(f"Inputed the following yaml: " f"{yaml_data}")
+                    logging.info(
+                        f"Inputed the following yaml: "
+                        f"{yaml_data}")
                     return yaml_data
                 except yaml.YAMLError as err_data:
                     logging.error(f"Error in YAML file. {err_data}")
@@ -309,7 +313,7 @@ class TestsClient:
         logging.info("Render .eapi.conf file for device access")
         eapi_template = self.data_model["parameters"]["eapi_template"]
         eapi_file = self.data_model["parameters"]["eapi_file"]
-        duts = self.data_model["duts"]
+        duts = self.duts_model["duts"]
 
         try:
             logging.info(f"Open {eapi_template} Jinja2 template for reading")
