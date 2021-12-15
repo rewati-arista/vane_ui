@@ -626,8 +626,8 @@ def return_test_defs(test_parameters):
     """
 
     test_defs = {"test_suites": []}
-    test_dir = test_parameters["parameters"]["tests_dir"]
-    for test_directory in test_dir:
+    test_dirs = test_parameters["parameters"]["test_dirs"]
+    for test_directory in test_dirs:
         tests_info = os.walk(test_directory)
         for dir_path, _ , file_names in tests_info:
             for file_name in file_names:
