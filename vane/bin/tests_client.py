@@ -54,6 +54,7 @@ import yaml
 import jinja2
 import configparser
 import tests_tools
+from pytest import ExitCode
 
 
 logging.basicConfig(
@@ -115,7 +116,15 @@ class TestsClient:
         self._set_test_parameters()
 
         logging.info(f"Starting Test with parameters: {self.test_parameters}")
-        pytest.main(self.test_parameters)
+        pytest_result = pytest.main(self.test_parameters)
+        
+        if pytest_result == ExitCode.NO_TESTS_COLLECTED:
+            print("No tests collected with parameters: %s" % (self.test_parameters)[3])
+            sys.exit(1)
+        elif pytest_result == ExitCode.USAGE_ERROR:
+            command_errror = self.test_parameters[3][:3]
+            print("Pytest usage error with parameters: %s" % (command_errror))
+            sys.exit(1)
 
     def _init_parameters(self):
         """Initialize all test values"""
@@ -167,9 +176,6 @@ class TestsClient:
         else:
             logging.warning(f"Disable pytest output {parameter}")
 
-    def _get_test_cases(self, data_model):
-        test_defs = tests_tools.return_test_defs(data_model)
-        return test_defs
 
     def _set_test_cases(self):
         """Set test cases for test run"""
@@ -182,16 +188,8 @@ class TestsClient:
         elif not test_cases:
             pass
         else:
-            test_case_names = []
-            test_get_def = self._get_test_cases(self.data_model)
-            for test_suite in test_get_def["test_suites"]:
-                for testcase in test_suite["testcases"]:
-                    test_case_names.append(testcase["name"])
-            if not test_cases in test_case_names:
-                print("Test case %s is not supported. Update test_case parameter in definition file" % (test_cases))
-                sys.exit(0)
-            else:
-                self.test_parameters.append(f"-k {test_cases}")
+            self.test_parameters.append(f"-k {test_cases}")
+
 
     def _set_html_report(self, report_dir):
         """Set html_report for test run"""
