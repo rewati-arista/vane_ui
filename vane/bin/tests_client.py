@@ -119,11 +119,10 @@ class TestsClient:
         pytest_result = pytest.main(self.test_parameters)
         
         if pytest_result == ExitCode.NO_TESTS_COLLECTED:
-            print("No tests collected with parameters: %s" % (self.test_parameters)[3])
+            print("No tests collected with pytest command: pytest %s" % (" ".join(self.test_parameters)))
             sys.exit(1)
         elif pytest_result == ExitCode.USAGE_ERROR:
-            command_errror = self.test_parameters[3][:3]
-            print("Pytest usage error with parameters: %s" % (command_errror))
+            print("Pytest usage error with parameters: pytest %s" % (" ".join(self.test_parameters)))
             sys.exit(1)
 
     def _init_parameters(self):
