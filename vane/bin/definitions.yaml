@@ -13,7 +13,8 @@ parameters:
   show_log: show_output.log
   stdout: false
   test_cases: All
-  tests_dir: ./tests
+  test_dirs: 
+  - ./tests
   test_definitions: tests_definitions.yaml
   verbose: true
   spreadsheet: /project/vane/bin/spreadsheets/PS-LLD-Questionnaire-Template.xlsx
