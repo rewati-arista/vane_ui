@@ -35,7 +35,7 @@ import inspect
 import logging
 import pytest
 from vane import tests_tools
-from vane.tests_base import TestsBase
+
 
 TEST_SUITE = __file__
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
@@ -49,7 +49,7 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.virtual
 @pytest.mark.physical
 @pytest.mark.eos424
-class LoggingTests(TestsBase):
+class LoggingTests:
     """Logging Test Suite"""
 
     def test_if_log_messages_appear_on_(self, dut, tests_definitions):
@@ -59,7 +59,7 @@ class LoggingTests(TestsBase):
           dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
         sys_msgs = tops.test_parameters["sys_msgs"]
 
         print(f"\nOn router |{tops.dut_name}|:")

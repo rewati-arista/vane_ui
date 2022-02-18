@@ -114,7 +114,7 @@ class ReportClient:
 
         test_suite = test_parameters["test_suite"]
         test_suite = test_suite.split("/")[-1]
-        dut_name = test_parameters["dut"]
+        dut_names = test_parameters["duts"]
         test_case = test_parameters["name"]
         yaml_data = self._results_datamodel
 
@@ -130,7 +130,7 @@ class ReportClient:
 
         logging.info(
             f"\n\n\rFind the Index for test suite: {test_suite} on dut "
-            f"{dut_name}\n\n\r"
+            f"{dut_names}\n\n\r"
         )
         logging.info(self._results_datamodel["test_suites"])
         test_suites = [
@@ -150,7 +150,7 @@ class ReportClient:
             suite_index = len(self._results_datamodel["test_suites"]) - 1
 
         logging.info(
-            f"Find Index for test case: {test_case} on dut {dut_name}")
+            f"Find Index for test case: {test_case} on duts {dut_names}")
         test_cases = [
             param["name"]
             for param in self._results_datamodel["test_suites"][suite_index][
@@ -179,17 +179,17 @@ class ReportClient:
                 - 1
             )
 
-        logging.info(f"Find Index for dut {dut_name}")
+        logging.info(f"Find Index for duts {dut_names}")
         duts = [
-            param["dut"]
+            param["duts"]
             for param in self._results_datamodel["test_suites"][suite_index][
                 "test_cases"
             ][test_index]["duts"]
         ]
 
-        if dut_name not in duts:
+        if dut_names not in duts:
             logging.info(
-                f"Add DUT {dut_name} to test case {test_case} with "
+                f"Add DUT/s {dut_names} to test case {test_case} with "
                 f"parameters {test_parameters}"
             )
             yaml_ptr = self._results_datamodel["test_suites"][suite_index]
@@ -336,6 +336,11 @@ class ReportClient:
     def _write_dut_summary_results(self):
         """Write summary DUT result section"""
 
+        duts = self._summary_results["duts"]
+        if not duts:
+            logging.info("Skipping DUT summary results table")
+            return
+
         logging.info("Create DUT summary results table")
         self._document.add_heading(
             f"{self._major_section }.2 Summary Totals "
@@ -347,14 +352,12 @@ class ReportClient:
         table.style = "Table Grid"
 
         hdr_cells = table.rows[0].cells
-        hdr_cells[0].text = "DUT"
+        hdr_cells[0].text = "DUT/s"
         hdr_cells[1].text = "Total Tests"
         hdr_cells[2].text = "Total Passed"
         hdr_cells[3].text = "Total Failed"
         hdr_cells[4].text = "Total Skipped"
         hdr_cells[5].text = "Total Errored"
-
-        duts = self._summary_results["duts"]
 
         for dut in duts:
             total_tests = self._totals(dut, "TOTAL")
@@ -375,13 +378,17 @@ class ReportClient:
     def _write_suite_summary_results(self):
         """Write summary test suite result section"""
 
+        sub_section = 2
+        if self._summary_results["duts"]:
+            sub_section = 3
+
         logging.info("Create Suite summary results table")
         self._document.add_heading(
-            f"{self._major_section }.3 Summary Totals " "for Test Suites", 2
+            f"{self._major_section }.{sub_section} Summary Totals " "for Test Suites", 2
         )
         suite_results = self._compile_suite_results()
 
-        table = self._document.add_table(rows=1, cols=4)
+        table = self._document.add_table(rows=1, cols=5)
         table.style = "Table Grid"
 
         hdr_cells = table.rows[0].cells
@@ -389,7 +396,10 @@ class ReportClient:
         hdr_cells[1].text = "Total Tests"
         hdr_cells[2].text = "Total Passed"
         hdr_cells[3].text = "Total Failed"
-
+        hdr_cells[4].text = "Total Skipped"
+        if not suite_results:
+            logging.info("Skipping the test suite results")
+            return
         for suite_result in suite_results:
             ts_name = self._format_ts_name(suite_result["name"])
 
@@ -398,6 +408,7 @@ class ReportClient:
             row_cells[1].text = str(suite_result["total_tests"])
             row_cells[2].text = str(suite_result["total_pass"])
             row_cells[3].text = str(suite_result["total_fail"])
+            row_cells[4].text = str(suite_result["total_skip"])
 
     def _compile_test_results(self):
         """Parse PyTest JSON results and compile:"""
@@ -495,10 +506,12 @@ class ReportClient:
         hdr_cells[0].text = "Test Id"
         hdr_cells[1].text = "Test Suite"
         hdr_cells[2].text = "Test Case"
-        hdr_cells[3].text = "DUT"
+        hdr_cells[3].text = "DUT/s"
         hdr_cells[4].text = "Result"
         hdr_cells[5].text = "Failure Reason"
-
+        if not testcase_results:
+            logging.info("Skipping the summary testcase report")
+            return
         for testcase_result in testcase_results:
             row_cells = table.add_row().cells
             row_cells[0].text = str(test_num)
@@ -515,6 +528,9 @@ class ReportClient:
     def _write_detail_report(self):
         """Write detailed test case report"""
 
+        if not self._results_datamodel:
+            logging.info("Skipping the detailed testcase report")
+            return
         test_suites = self._results_datamodel["test_suites"]
 
         for test_suite in test_suites:
@@ -572,12 +588,12 @@ class ReportClient:
         """
 
         logging.info(f"Raw DUT data is {dut}")
-        dut_name = dut["dut"]
-        dut_name = dut_name.upper()
-        logging.info(f"DUT name is {dut_name}")
+        dut_names = dut["duts"]
+        dut_names = ", ".join(dut_name.upper() for dut_name in dut_names)
+        logging.info(f"DUT names: {dut_names}")
         self._document.add_heading(
             f"{self._major_section}.{minor_section}."
-            f"{dut_section} DUT: {dut_name}",
+            f"{dut_section} DUT/s: {dut_names}",
             3,
         )
 
@@ -636,6 +652,9 @@ class ReportClient:
             "The following test suites have been collected "
             f"{self._results_datamodel}"
         )
+        if not self._results_datamodel:
+            logging.info("Skipping the compiled test suite result")
+            return
         test_suites = self._results_datamodel["test_suites"]
         suite_results = []
 
@@ -644,6 +663,7 @@ class ReportClient:
             suite_result["total_tests"] = 0
             suite_result["total_pass"] = 0
             suite_result["total_fail"] = 0
+            suite_result["total_skip"] = 0
             suite_result["name"] = test_suite["name"]
 
             suite_name = suite_result["name"]
@@ -656,7 +676,9 @@ class ReportClient:
                 for dut in test_case["duts"]:
                     suite_result["total_tests"] += 1
 
-                    if dut["test_result"]:
+                    if dut["test_result"] and dut["test_result"] == "Skipped":
+                        suite_result["total_skip"] += 1
+                    elif dut["test_result"] and dut["test_result"] != "Skipped":
                         suite_result["total_pass"] += 1
                     else:
                         suite_result["total_fail"] += 1
@@ -670,6 +692,9 @@ class ReportClient:
     def _compile_testcase_results(self):
         """Compile test case results and return them"""
 
+        if not self._results_datamodel:
+            logging.info("Skipping test case results")
+            return
         test_suites = self._results_datamodel["test_suites"]
         testcase_results = []
 
@@ -686,18 +711,20 @@ class ReportClient:
                 for dut in duts:
                     testcase_result = {}
 
-                    dut_name = dut["dut"]
+                    dut_names = dut["duts"]
                     fail_reason = dut["fail_reason"]
-                    logging.info(f"Compiling results for DUT {dut_name}")
+                    logging.info(f"Compiling results for DUT/s {dut_names}")
 
-                    if dut["test_result"]:
+                    if dut["test_result"] and dut["test_result"] == "Skipped":
+                        test_result = "SKIP"
+                    elif dut["test_result"] and dut["test_result"] != "Skipped":
                         test_result = "PASS"
                     else:
                         test_result = "FAIL"
 
                     testcase_result["test_suite"] = ts_name
                     testcase_result["test_case"] = tc_name
-                    testcase_result["dut"] = dut_name
+                    testcase_result["dut"] = ", ".join(dut_names)
                     testcase_result["results"] = test_result
                     testcase_result["fail_reason"] = fail_reason
                     logging.info(f"Compiled results: {testcase_result}")
@@ -746,7 +773,7 @@ class ReportClient:
         """
 
         logging.info(f"Test case name is {tc_name}")
-        tc_name = " ".join(tc_name.split("_"))[:-3]
+        tc_name = " ".join(tc_name.split("_"))
         tc_name = tc_name.replace("intf", "interface")
         tc_name = tc_name.capitalize()
         logging.info(f"Formattted test case name is {tc_name}")

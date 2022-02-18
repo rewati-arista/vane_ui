@@ -34,7 +34,7 @@
 import inspect
 import pytest
 from vane import tests_tools
-from vane.tests_base import TestsBase
+
 
 TEST_SUITE = __file__
 
@@ -44,7 +44,7 @@ TEST_SUITE = __file__
 @pytest.mark.virtual
 @pytest.mark.physical
 @pytest.mark.eos424
-class LldpTests(TestsBase):
+class LldpTests:
     """LLDP Test Suite"""
 
     def test_if_lldp_rx_is_enabled_on_(self, dut, tests_definitions):
@@ -54,7 +54,7 @@ class LldpTests(TestsBase):
             dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
 
         print(f"\nOn router |{tops.dut_name}|:")
 
@@ -102,7 +102,7 @@ class LldpTests(TestsBase):
             dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
 
         print(f"\nOn router |{tops.dut_name}|:")
 
@@ -150,7 +150,7 @@ class LldpTests(TestsBase):
 @pytest.mark.virtual
 @pytest.mark.physical
 @pytest.mark.eos424
-class LldpLocalInfoTests(TestsBase):
+class LldpLocalInfoTests:
     """LLDP Local-Info Test Suite"""
 
     def test_if_lldp_system_name_is_correct_on_(self, dut, tests_definitions):
@@ -160,7 +160,7 @@ class LldpLocalInfoTests(TestsBase):
             dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
 
         tops.expected_output = tops.dut_name
         tops.actual_output = dut["output"][tops.show_cmd]["json"]["systemName"]
@@ -196,7 +196,7 @@ class LldpLocalInfoTests(TestsBase):
             dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
 
         print(f"\nOn router |{tops.dut_name}|:")
 
@@ -243,7 +243,7 @@ class LldpLocalInfoTests(TestsBase):
             dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
 
         print(f"\nOn router |{tops.dut_name}|:")
 

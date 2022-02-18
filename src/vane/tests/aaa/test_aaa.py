@@ -35,7 +35,7 @@ import inspect
 import logging
 import pytest
 from vane import tests_tools
-from vane.tests_base import TestsBase
+
 
 TEST_SUITE = __file__
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
@@ -44,7 +44,7 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.nrfu
 @pytest.mark.base_feature
 @pytest.mark.aaa
-class AAATests(TestsBase):
+class AAATests:
     """AAA Test Suite"""
 
     @pytest.mark.skip(reason="No AAA setup on DUTs")

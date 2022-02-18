@@ -34,7 +34,6 @@ setuptools.setup(
         'pytest-html',
         'pytest-json',
         'pytest-cache',
-        'pytest-sugar',
         'pytest-cov'
     ],
     python_requires=">=3.6",

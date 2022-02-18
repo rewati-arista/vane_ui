@@ -35,7 +35,7 @@ import inspect
 import logging
 import pytest
 from vane import tests_tools
-from vane.tests_base import TestsBase
+
 
 TEST_SUITE = __file__
 
@@ -45,7 +45,7 @@ TEST_SUITE = __file__
 @pytest.mark.virtual
 @pytest.mark.physical
 @pytest.mark.eos424
-class NTPTests(TestsBase):
+class NTPTests:
     """NTP Test Suite"""
 
     def test_if_ntp_is_synchronized_on_(self, dut, tests_definitions):
@@ -55,7 +55,7 @@ class NTPTests(TestsBase):
           dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
         tops.actual_output = dut["output"][tops.show_cmd]["json"]["status"]
         tops.test_result = tops.actual_output == tops.expected_output
 
@@ -86,7 +86,7 @@ class NTPTests(TestsBase):
           dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
         tops.actual_output = dut["output"][tops.show_cmd]["json"]["peers"]
         tops.actual_output = len(tops.actual_output)
         tops.test_result = tops.actual_output >= tops.expected_output
@@ -120,7 +120,7 @@ class NTPTests(TestsBase):
           dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
         processes = tops.test_parameters["processes"]
         process_nums = dut["output"][tops.show_cmd]["json"]["processes"]
 
@@ -166,7 +166,7 @@ class NTPTests(TestsBase):
           dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
         tops.return_show_cmd("show running-config section ntp")
 
         tops.actual_output = tops.show_cmd_txt
@@ -235,7 +235,7 @@ class NTPTests(TestsBase):
           dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
         ntp_servers = tops.test_parameters["ntp_servers"]
         ntp_vrf = tops.test_parameters["ntp_vrf"]
 

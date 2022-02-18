@@ -35,7 +35,7 @@ import inspect
 import logging
 import pytest
 from vane import tests_tools
-from vane.tests_base import TestsBase
+
 
 TEST_SUITE = __file__
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
@@ -44,7 +44,7 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.nrfu
 @pytest.mark.base_feature
 @pytest.mark.tacacs
-class TacacsTests(TestsBase):
+class TacacsTests:
     """AAA TACACS Test Suite"""
 
     def test_if_tacacs_is_sending_messages_on_(self, dut, tests_definitions):

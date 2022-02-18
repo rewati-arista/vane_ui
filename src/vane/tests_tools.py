@@ -40,11 +40,12 @@ import os
 import inspect
 import pyeapi
 import yaml
+import subprocess
 
 
 logging.basicConfig(
     level=logging.INFO,
-    filename="test_tools.log",
+    filename="vane.log",
     filemode="w",
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
@@ -200,6 +201,8 @@ def login_duts(test_parameters, test_duts):
         login_ptr["name"] = name
         login_ptr["mgmt_ip"] = dut["mgmt_ip"]
         login_ptr["username"] = dut["username"]
+        login_ptr["role"] = dut["role"]
+        login_ptr["neighbors"] = dut["neighbors"]
         login_ptr["results_dir"] = test_parameters["parameters"]["results_dir"]
 
     logging.info(f"Returning duts logins: {logins}")
@@ -634,13 +637,13 @@ def return_test_defs(test_parameters):
     report_dir = test_parameters["parameters"]["report_dir"]
     for test_directory in test_dirs:
         tests_info = os.walk(test_directory)
-        for dir_path, _ , file_names in tests_info:
+        for dir_path, _, file_names in tests_info:
             for file_name in file_names:
                 if file_name == "test_definition.yaml":
                     file_path = f"{dir_path}/{file_name}"
                     test_def = import_yaml(file_path)
                     test_defs["test_suites"].append(test_def)
-    
+
     export_yaml(report_dir + "/tests_definitions.yaml", test_defs)
     logging.info(
         "Return the following test definitions data strcuture " f"{test_defs}"
@@ -673,11 +676,31 @@ def export_yaml(yaml_file, yaml_data):
         logging.error("EXITING TEST RUNNER")
         sys.exit(1)
 
+def subprocess_ping(definition_file, dut_name, loopback_ip, repeat_ping):
+    """Subprocess to run the continuous ping command
+    Args:
+        definition_file: definitions.yaml file
+        dut_name: data structure of dut parameters
+        loopback_ip: loopback ip on device
+        repeat_ping: number of pings to flow the traffic
+
+    Returns:
+        process: instance of the subprocess
+    """
+    process = subprocess.Popen(['python',
+                        '/'.join(__file__.split("/")[:-1]) + '/test_ping.py',
+                        definition_file,
+                        dut_name,
+                        loopback_ip,
+                        repeat_ping], 
+                        stdout=subprocess.PIPE, 
+                        universal_newlines=True)
+    return process
 
 class TestOps:
     """Common testcase operations and variables"""
 
-    def __init__(self, tests_definitions, test_suite, dut):
+    def __init__(self, tests_definitions, test_suite, duts=[]):
         """Initializes TestOps Object
 
         Args:
@@ -692,15 +715,16 @@ class TestOps:
 
         self.expected_output = self.test_parameters["expected_output"]
 
-        self.interface_list = dut["output"]["interface_list"]
-        self.dut_name = dut["name"]
-        self.results_dir = dut["results_dir"]
-        self.show_cmd = self.test_parameters["show_cmd"]
-        self.dut = dut
+        self.dut = duts[0]
+        self.dut_name = self.dut["name"]
+        self.interface_list = self.dut["output"]["interface_list"]
+        self.results_dir = self.dut["results_dir"]
+        self.dut_names = [dut["name"] for dut in duts]
 
-        if self.show_cmd:
-            self._verify_show_cmd(self.show_cmd, dut)
-            self.show_cmd_txt = dut["output"][self.show_cmd]["text"]
+        self.show_cmd = self.test_parameters["show_cmd"]
+        if self.show_cmd and self.dut:
+            self._verify_show_cmd(self.show_cmd, self.dut)
+            self.show_cmd_txt = self.dut["output"][self.show_cmd]["text"]
         else:
             self.show_cmd_txt = ""
 
@@ -708,7 +732,6 @@ class TestOps:
         self.output_msg = ""
         self.actual_results = []
         self.expected_results = []
-
     def _verify_show_cmd(self, show_cmd, dut):
         """Verify if show command was successfully executed on dut
 
@@ -741,7 +764,8 @@ class TestOps:
         self.test_parameters["output_msg"] = self.output_msg
         self.test_parameters["expected_output"] = self.expected_output
         self.test_parameters["actual_output"] = self.actual_output
-        self.test_parameters["dut"] = self.dut_name
+        self.test_parameters["duts"] = self.dut_names
+        self.test_parameters["show_cmd"] = self.show_cmd
 
         self.test_parameters["fail_reason"] = ""
         if not self.test_parameters["test_result"]:
@@ -755,11 +779,11 @@ class TestOps:
         logging.info(f"Preparing to write results")
         test_suite = self.test_parameters["test_suite"]
         test_suite = test_suite.split("/")[-1]
-        dut_name = self.test_parameters["dut"]
+        dut_names = "-".join(self.test_parameters["duts"])
         test_case = self.test_parameters["name"]
         results_dir = self.results_dir
 
-        yaml_file = f"{results_dir}/result-{test_case}-{dut_name}.yml"
+        yaml_file = f"{results_dir}/result-{test_case}-{dut_names}.yml"
         logging.info(f"Creating results file named {yaml_file}")
         yaml_data = self.test_parameters
         export_yaml(yaml_file, yaml_data)
@@ -806,6 +830,10 @@ class TestOps:
         """
 
         self.show_cmd = show_cmd
+        self.show_output = ""
+        self.show_cmd_txt = ""
+        result = True
+        error = ""
         logging.info(f"Raw Input for return_show_cmd \nshow_cmd: {show_cmd}\n")
         conn = self.dut["connection"]
         name = self.dut["name"]
@@ -814,20 +842,47 @@ class TestOps:
             f"log text output for {show_cmd} with connnection {conn}"
         )
 
-        show_output = conn.enable(show_cmd)
-        self.show_output = show_output[0]["result"]
-        logging.info(
-            f"Raw json output of {show_cmd} on dut {name}: {self.show_output}"
-        )
+        try:
+            show_output = conn.enable(show_cmd)
+            self.show_output = show_output[0]["result"]
+            logging.info(
+                f"Raw json output of {show_cmd} on dut {name}: {self.show_output}"
+            )
 
-        show_output_text = conn.run_commands(show_cmd, encoding="text")
-        logging.info(
-            f"Raw text output of {show_cmd} on dut {name}: "
-            f"{self.show_cmd_txt}"
-        )
-        self.show_cmd_txt = show_output_text[0]["output"]
+            show_output_text = conn.run_commands(show_cmd, encoding="text")
+            logging.info(
+                f"Raw text output of {show_cmd} on dut {name}: "
+                f"{self.show_cmd_txt}"
+            )
+            self.show_cmd_txt = show_output_text[0]["output"]
+        except Exception as e:
+            logging.info("Error running show command %s: %s" %
+                         (show_cmd, str(e)))
+            error = str(e)
+            result = False
 
-        return self.show_output, self.show_cmd_txt
+        return result, self.show_output, self.show_cmd_txt, error
+
+    def generate_report(self, dut_name, output):
+        """Utility to generate report
+        Args:
+          dut_name: name of the device
+          output: actual output
+        """
+        self.output_msg = (
+            f"\nOn switch |{dut_name}| The actual output is "
+            f"|{output}%| and the expected output is "
+            f"|{self.expected_output}%|"
+        )
+        self.comment = (
+            "TEST is correct.\n"
+            f"GIVEN expected output is |{self.expected_output}|.\n"
+            f"WHEN actual output is |{self.actual_output}|.\n"
+            f'Final output of command executed on the device | \n {output} | .\n'
+        )
+        print(f"{self.output_msg}\n{self.comment}")
+
+        self.post_testcase()
 
     def verify_veos(self):
         """Verify DUT is a VEOS instance"""

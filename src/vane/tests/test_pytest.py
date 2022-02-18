@@ -33,15 +33,15 @@
 
 import logging
 import pytest
-from vane.tests_base import TestsBase
+
 
 
 @pytest.mark.pytest
-class PyTestTests(TestsBase):
+class PyTestTests:
     """ PyTest Test Suite
     """
 
-    def test_assert_true(self):
+    def test_assert_true(self, dut):
         """ Prior to running any tests this test Validates that PyTest is working
             correct by verifying PyTest can assert True.
         """

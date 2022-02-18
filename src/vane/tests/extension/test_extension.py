@@ -33,7 +33,7 @@
 
 import pytest
 from vane import tests_tools
-from vane.tests_base import TestsBase
+
 
 TEST_SUITE = __file__
 
@@ -44,7 +44,7 @@ TEST_SUITE = __file__
 @pytest.mark.virtual
 @pytest.mark.physical
 @pytest.mark.eos424
-class ExtensionsTests(TestsBase):
+class ExtensionsTests:
     """EOS Extensions Test Suite"""
 
     def test_if_extensions_are_installed_on_(self, dut, tests_definitions):
@@ -55,7 +55,7 @@ class ExtensionsTests(TestsBase):
           tests_definitions (dict): Test parameters
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
         extensions = tops.test_parameters["extensions"]
 
         for extension in extensions:
@@ -106,7 +106,7 @@ class ExtensionsTests(TestsBase):
           dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
         extensions = tops.test_parameters["extensions"]
 
         for extension in extensions:

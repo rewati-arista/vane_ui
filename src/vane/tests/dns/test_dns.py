@@ -33,7 +33,7 @@
 
 import pytest
 from vane import tests_tools
-from vane.tests_base import TestsBase
+
 
 TEST_SUITE = __file__
 
@@ -43,7 +43,7 @@ TEST_SUITE = __file__
 @pytest.mark.virtual
 @pytest.mark.physical
 @pytest.mark.eos424
-class DNSTests(TestsBase):
+class DNSTests:
     """DNS Test Suite"""
 
     def test_if_dns_resolves_on_(self, dut, tests_definitions):
@@ -53,7 +53,7 @@ class DNSTests(TestsBase):
          dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
         show_cmds = []
 
         urls = tops.test_parameters["urls"]
@@ -104,7 +104,7 @@ class DNSTests(TestsBase):
           dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
         dns_servers = tops.test_parameters["dns_servers"]
         dns_vrf = tops.test_parameters["dns_vrf"]
 
@@ -153,7 +153,7 @@ class DNSTests(TestsBase):
           dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
         tops.return_show_cmd("show running-config section name-server")
 
         tops.actual_output = tops.show_cmd_txt

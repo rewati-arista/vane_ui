@@ -33,7 +33,7 @@
 
 import pytest
 from vane import tests_tools
-from vane.tests_base import TestsBase
+
 
 TEST_SUITE = __file__
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
@@ -43,7 +43,7 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.nrfu
 @pytest.mark.interface_baseline_health
 @pytest.mark.interface
-class InterfaceStatusTests(TestsBase):
+class InterfaceStatusTests:
     """Interface Status Test Suite"""
 
     @pytest.mark.virtual
@@ -59,7 +59,7 @@ class InterfaceStatusTests(TestsBase):
             tests_definitions (dict): Test parameters
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
 
         print(f"\nOn router |{tops.dut_name}|:")
 
@@ -109,7 +109,7 @@ class InterfaceStatusTests(TestsBase):
             tests_definitions (dict): Test parameters
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
 
         print(f"\nOn router |{tops.dut_name}|:")
 
@@ -152,7 +152,7 @@ class InterfaceStatusTests(TestsBase):
 @pytest.mark.nrfu
 @pytest.mark.interface_baseline_health
 @pytest.mark.interface
-class InterfacePhyTests(TestsBase):
+class InterfacePhyTests:
     """Interface Status Test Suite"""
 
     @pytest.mark.physical
@@ -165,7 +165,7 @@ class InterfacePhyTests(TestsBase):
             tests_definitions (dict): Test parameters
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
         veos_bool = tests_tools.verify_veos(dut)
 
         if not veos_bool:
@@ -231,7 +231,7 @@ class InterfacePhyTests(TestsBase):
 @pytest.mark.nrfu
 @pytest.mark.interface_baseline_health
 @pytest.mark.interface
-class InterfaceCountersTests(TestsBase):
+class InterfaceCountersTests:
     """Interface Status Test Suite"""
 
     @pytest.mark.virtual
@@ -246,7 +246,7 @@ class InterfaceCountersTests(TestsBase):
             dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
 
         print(f"\nOn router |{tops.dut_name}|:")
 
@@ -299,7 +299,7 @@ class InterfaceCountersTests(TestsBase):
             dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
 
         print(f"\nOn router |{tops.dut_name}|:")
 
@@ -352,7 +352,7 @@ class InterfaceCountersTests(TestsBase):
             dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
 
         print(f"\nOn router |{tops.dut_name}|:")
 
@@ -406,7 +406,7 @@ class InterfaceCountersTests(TestsBase):
             dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
 
         print(f"\nOn router |{tops.dut_name}|:")
 
@@ -458,7 +458,7 @@ class InterfaceCountersTests(TestsBase):
             dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
 
         print(f"\nOn router |{tops.dut_name}|:")
 
@@ -512,7 +512,7 @@ class InterfaceCountersTests(TestsBase):
             dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
 
         print(f"\nOn router |{tops.dut_name}|:")
 
@@ -566,7 +566,7 @@ class InterfaceCountersTests(TestsBase):
             dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
 
         print(f"\nOn router |{tops.dut_name}|:")
 
@@ -612,7 +612,7 @@ class InterfaceCountersTests(TestsBase):
 @pytest.mark.nrfu
 @pytest.mark.interface_baseline_health
 @pytest.mark.interface
-class InterfaceDiscardTests(TestsBase):
+class InterfaceDiscardTests:
     """Interface Discard Test Suite"""
 
     @pytest.mark.virtual
@@ -627,7 +627,7 @@ class InterfaceDiscardTests(TestsBase):
             dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
 
         print(f"\nOn router |{tops.dut_name}|:")
 
@@ -679,7 +679,7 @@ class InterfaceDiscardTests(TestsBase):
             dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
 
         print(f"\nOn router |{tops.dut_name}|:")
 
@@ -722,7 +722,7 @@ class InterfaceDiscardTests(TestsBase):
 @pytest.mark.nrfu
 @pytest.mark.interface_baseline_health
 @pytest.mark.interface
-class InterfaceMtuTests(TestsBase):
+class InterfaceMtuTests:
     """Interface MTU Test Suite"""
 
     @pytest.mark.virtual
@@ -734,7 +734,7 @@ class InterfaceMtuTests(TestsBase):
             dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
 
         print(f"\nOn router |{tops.dut_name}|:")
 
@@ -777,7 +777,7 @@ class InterfaceMtuTests(TestsBase):
 @pytest.mark.nrfu
 @pytest.mark.interface_baseline_health
 @pytest.mark.interface
-class InterfaceCountersTests(TestsBase):
+class InterfaceCountersTests:
     """Interface Errors Test Suite"""
 
     @pytest.mark.virtual
@@ -790,7 +790,7 @@ class InterfaceCountersTests(TestsBase):
             dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
 
         print(f"\nOn router |{tops.dut_name}|:")
 
@@ -935,7 +935,7 @@ class InterfaceCountersTests(TestsBase):
             dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
 
         print(f"\nOn router |{tops.dut_name}|:")
 

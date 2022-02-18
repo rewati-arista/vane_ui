@@ -35,7 +35,7 @@ import inspect
 import logging
 import pytest
 from vane import tests_tools
-from vane.tests_base import TestsBase
+
 
 TEST_SUITE = __file__
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
@@ -47,7 +47,7 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.virtual
 @pytest.mark.physical
 @pytest.mark.eos424
-class DaemonTests(TestsBase):
+class DaemonTests:
     """EOS Daemon Test Suite"""
 
     def test_if_daemons_are_running_on_(self, dut, tests_definitions):
@@ -58,7 +58,7 @@ class DaemonTests(TestsBase):
           tests_definitions (dict): Test parameters
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
         daemons = tops.test_parameters["daemons"]
 
         for daemon in daemons:
@@ -105,7 +105,7 @@ class DaemonTests(TestsBase):
           tests_definitions (dict): Test parameters
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
         daemons = tops.test_parameters["daemons"]
 
         for daemon in daemons:

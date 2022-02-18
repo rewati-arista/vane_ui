@@ -35,6 +35,9 @@ import re
 import pytest
 from py.xml import html
 
+pytest_plugins = ("vane.fixtures")
+
+
 def pytest_addoption(parser):
     """Receive command line value from pytest
 
@@ -48,6 +51,7 @@ def pytest_addoption(parser):
         default="definitons.yaml",
         help="my option: type1 or type2",
     )
+
 
 @pytest.fixture
 def definitions(request):
