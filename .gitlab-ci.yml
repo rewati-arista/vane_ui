@@ -1,11 +1,11 @@
-before_script:
-  - docker info
 
 ci_build:
   stage: build
   image: docker:latest
   services: 
     - docker:dind
+  before_script:
+    - docker info
   script:
     - if [ "$( docker container inspect -f '{{.State.Running}}' vane )" == "true" ]; then docker stop vane; fi
     - docker build . -f ci/Dockerfile.ci -t vane:latest --build-arg UID=$(id -u) --build-arg GID=$(id -g)
