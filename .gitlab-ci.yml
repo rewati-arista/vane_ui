@@ -6,7 +6,8 @@ stages:
 # build container locally for unit and system tests
 ci_build:
   stage: build
-  image: docker:latest
+  image: docker:stable
+  previliged: true
   services: 
     - docker:dind
   script:
