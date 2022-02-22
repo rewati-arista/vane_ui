@@ -6,9 +6,11 @@ stages:
 # build container locally for unit and system tests
 ci_build:
   stage: build
-  image: docker:stable
+  image: docker:latest
   services: 
-    - docker:dind
+    -  docker:18.09.7-dind
+  variables:
+    DOCKER_HOST: tcp://localhost:2375/
   script:
     - if [ "$( docker container inspect -f '{{.State.Running}}' vane )" == "true" ]; then docker stop vane; fi
     - make dev
