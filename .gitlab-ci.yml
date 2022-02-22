@@ -7,7 +7,6 @@ stages:
 ci_build:
   stage: build
   image: docker:stable
-  privileged: true
   services: 
     - docker:dind
   script:
