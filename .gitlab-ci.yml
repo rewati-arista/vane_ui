@@ -18,3 +18,7 @@ before_script:
   - echo "$DOCKER_TOKEN" | docker login -u gitlab-ci-token --password-stdin registry.gitlab.com
   - docker-compose -f ./docker-compose.ci.yml pull
 
+build:
+  stage: build
+  script:
+    - make dev
