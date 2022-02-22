@@ -1,16 +1,18 @@
----
+image: docker:19.03
+
 variables:
-  # We need this for dind or this fail to connect when performing image build
-  DOCKER_TLS_CERTDIR: ""
   DOCKER_DRIVER: overlay2
-  DOCKER_HOST: tcp://docker:2375/
+  DOCKER_TLS_CERTDIR: "/certs/${CI_JOB_ID}" # Create a cert dir per job
+
 services:
-  - docker:dind
+  - docker:19.03-dind
 
 before_script:
-  - docker -v
+  - echo "$DOCKER_TLS_CERTDIR"
+  - docker info
 
-docker-build:
+build:
   stage: build
   script:
-    - ls -l Dockerfile
+    - echo "tada"
+    - docker build -t my-docker-image .
