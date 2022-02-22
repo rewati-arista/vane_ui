@@ -1,0 +1,16 @@
+[[runners]]
+  name = "docker"
+  url = "cccc"
+  token = "xxx"
+  executor = "docker"
+  environment = ["DOCKER_TLS_CERTDIR="]
+  [runners.custom_build_dir]
+  [runners.docker]
+    image = "alpine:3.9"
+    disable_cache = true
+    volumes = [
+        "/tmp/certs:/certs"
+    ]
+    pull_policy = "never"
+    shm_size = 0
+
