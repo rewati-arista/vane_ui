@@ -7,6 +7,7 @@
   [runners.custom_build_dir]
   [runners.docker]
     image = "alpine:3.9"
+    privileged = true
     disable_cache = true
     volumes = [
         "/tmp/certs:/certs"
