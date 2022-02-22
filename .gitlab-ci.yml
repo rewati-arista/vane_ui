@@ -1,18 +1,20 @@
-image: docker:19.03
+image: docker/compose
 
 variables:
+  # https://gitlab.com/gitlab-org/gitlab-runner/-/issues/4501#note_198547926
   DOCKER_DRIVER: overlay2
-  DOCKER_TLS_CERTDIR: "/certs/${CI_JOB_ID}" # Create a cert dir per job
-
+  DOCKER_HOST: tcp://docker:2376
+  DOCKER_TLS_CERTDIR: "/certs/${CI_JOB_ID}"
+  DOCKER_TLS_VERIFY: 1
+  DOCKER_CERT_PATH: /certs/${CI_JOB_ID}/client
+  
 services:
-  - docker:19.03-dind
+  - docker:19.03.12-dind
 
 before_script:
-  - echo "$DOCKER_TLS_CERTDIR"
   - docker info
+  - docker version
+  - docker-compose version
+  - echo "$DOCKER_TOKEN" | docker login -u gitlab-ci-token --password-stdin registry.gitlab.com
+  - docker-compose -f ./docker-compose.ci.yml pull
 
-build:
-  stage: build
-  script:
-    - echo "tada"
-    - docker build -t my-docker-image .
