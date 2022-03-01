@@ -1,5 +1,9 @@
 variables:
   OVPN_FILE: ovpn_profiles/eosplus-act.ovpn
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+  DOCKER_HOST: tcp://docker:2375/
+
 stages:
  - build
  - test
