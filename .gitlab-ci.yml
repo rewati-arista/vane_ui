@@ -9,7 +9,7 @@ stages:
 ci_build:
   stage: build
   before_script:
-    - apt update
+    - apk update
     - apt-get -y install openvpn unzip
     - openvpn --config ${OVPN_FILE} --daemon
   image: docker:latest
