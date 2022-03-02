@@ -17,7 +17,7 @@ ci_build:
     - apk add openvpn 
     - openvpn --config ${OVPN_FILE} --daemon
     - openvpn --help
-    - openvpn --version
+    - openvpn logs 
   image: docker:latest
   services: 
     - docker:dind
