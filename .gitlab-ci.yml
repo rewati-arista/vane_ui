@@ -19,6 +19,8 @@ ci_build:
     - sleep 20
     - cat file 
     - cat logfile 
+    - apk add iputils-ping
+    - ping 10.255.74.38 -c 5
   image: docker:latest
   services: 
     - docker:dind
