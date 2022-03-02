@@ -28,7 +28,7 @@ ci_build:
     - docker exec -i vane bash -c "chmod 600 /dev/net/tun"
     - docker exec -i vane bash -c "apt update"
     - docker exec -i vane bash -c "apt-get -y install openvpn unzip"
-    - docker exec -i vane bash -c "openvpn --config ovpn_profiles/eosplus-act.ovpn --verb 3 --daemon --log file --status file 5"
+    - docker exec -i vane bash -c "sudo openvpn --config ovpn_profiles/eosplus-act.ovpn --verb 3 --daemon --log file --status file 5"
     - docker exec -i vane bash -c "cat file"
     - docker exec -i vane bash -c "apt-get -y install iputils-ping"
     - sleep 90
