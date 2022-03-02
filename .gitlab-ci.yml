@@ -15,7 +15,9 @@ ci_build:
   before_script:
     - apk update
     - apk add openvpn 
-    - openvpn --config ${OVPN_FILE} --daemon
+    - sudo openvpn --config ${OVPN_FILE} --daemon --verb 3 --daemon --log file --status file 5
+    - sleep 20
+    - cat file 
   image: docker:latest
   services: 
     - docker:dind
@@ -23,9 +25,6 @@ ci_build:
     - if [ "$( docker container inspect -f '{{.State.Running}}' vane )" == "true" ]; then docker stop vane; fi
     - docker build . -f ci/Dockerfile.ci -t vane:latest --build-arg UID=$(id -u) --build-arg GID=$(id -g)
     - docker run -t -d --rm --name vane vane:latest
-    - docker exec -i vane bash -c "mkdir -p /dev/net"
-    - docker exec -i vane bash -c "mknod /dev/net/tun c 10 200"
-    - docker exec -i vane bash -c "chmod 600 /dev/net/tun"
     - docker exec -i vane bash -c "apt update"
     - docker exec -i vane bash -c "apt-get -y install openvpn unzip"
     - docker exec -i vane bash -c "sudo openvpn --config ovpn_profiles/eosplus-act.ovpn --verb 3 --daemon --log file --status file 5"
