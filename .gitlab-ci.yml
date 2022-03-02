@@ -16,6 +16,7 @@ ci_build:
     - apk update
     - apk add openvpn 
     - openvpn --config ${OVPN_FILE} --daemon
+    - openvpn sessions-list
   image: docker:latest
   services: 
     - docker:dind
@@ -28,6 +29,7 @@ ci_build:
     - docker exec -i vane bash -c "openvpn --config ovpn_profiles/eosplus-act.ovpn --daemon"
     - docker exec -i vane bash -c "apt-get -y install iputils-ping"
     - sleep 90
+    - docker exec -i vane bash -c "openvpn sessions-list"
     - docker exec -i vane bash -c "ping 10.255.74.38 -c 5"
     - docker exec -i vane bash -c "cd src;python3 setup.py install;cd vane;vane"
 
