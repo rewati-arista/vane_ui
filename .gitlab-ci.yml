@@ -20,6 +20,7 @@ ci_build:
     - cat file 
     - cat logfile 
     - apk add iputils
+    - ping --help
     - ping 10.255.74.38 -c 5
   image: docker:latest
   services: 
