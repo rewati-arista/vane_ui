@@ -14,9 +14,9 @@ ci_build:
   stage: build
   before_script:
     - apk update
-    - apk add openvpn 
-    - openvpn --config ${OVPN_FILE} --daemon
-    - openvpn sessions-list
+    - apk add openvpn3 
+    - openvpn3 --config ${OVPN_FILE} --daemon
+    - openvpn3 sessions-list
   image: docker:latest
   services: 
     - docker:dind
