@@ -28,6 +28,7 @@ ci_build:
     - if [ "$( docker container inspect -f '{{.State.Running}}' vane )" == "true" ]; then docker stop vane; fi
     - docker build . -f ci/Dockerfile.ci -t vane:latest --build-arg UID=$(id -u) --build-arg GID=$(id -g)
     - docker run -t -d --rm --name vane vane:latest
+    - docker exec -i vane bash -c "apt update"
     - docker exec -i vane bash -c "apt-get -y install iputils-ping"
     - docker exec -i vane bash -c "ping 10.255.74.38 -c 5"
     - docker exec -i vane bash -c "cd src;python3 setup.py install;cd vane;vane"
