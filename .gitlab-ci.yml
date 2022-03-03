@@ -16,11 +16,6 @@ ci_build:
     - apk update
     - apk add openvpn 
     - openvpn --config ${OVPN_FILE} --daemon --verb 3 --daemon --log logfile --status file 5
-    - sleep 20
-    - cat file 
-    - cat logfile 
-    - apk add iputils
-    - ping -c 5 10.255.74.38
   image: docker:latest
   services: 
     - docker:dind
