@@ -12,6 +12,8 @@ stages:
 # build container locally for unit and system tests
 ci_build:
   stage: build
+  tags:
+    - kms
   before_script:
     - apk update
     - apk add openvpn 
