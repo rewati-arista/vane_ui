@@ -12,10 +12,6 @@ stages:
 # build container locally for unit and system tests
 ci_build:
   stage: build
-  before_script:
-    - apk update
-    - apk add openvpn 
-    - openvpn --config ${OVPN_FILE} --daemon --verb 3 --daemon --log logfile --status file 5
   image: docker:latest
   services: 
     - docker:dind
