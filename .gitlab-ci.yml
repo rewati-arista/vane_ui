@@ -12,7 +12,7 @@ stages:
 # build container locally for unit and system tests
 ci_build:
   stage: build
-  image: python:3.9
+  image: docker:latest
   services: 
     - docker:dind
   script:
