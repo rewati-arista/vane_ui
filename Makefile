@@ -17,7 +17,8 @@ all:
 .PHONY: clean
 clean:
 	docker stop $(CONTAINER_NAME)
-	docker rm $(CONTAINER_NAME)
+	rm -rf src/build
+	rm -rf src/reports
 
 .PHONY: test
 test:

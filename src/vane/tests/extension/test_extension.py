@@ -37,7 +37,6 @@ from vane.tests_base import TestsBase
 
 TEST_SUITE = __file__
 
-@pytest.mark.demo
 @pytest.mark.nrfu
 @pytest.mark.base_feature
 @pytest.mark.extensions

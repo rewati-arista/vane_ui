@@ -9,4 +9,4 @@ testcases:
     description: Verifies EOS version running on the device 
     show_cmd: show version
     # EOS version name
-    expected_output: 4.24.0FX-cloud
+    expected_output: 4.24.2F
