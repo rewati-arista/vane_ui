@@ -16,6 +16,7 @@ ci_build:
   services: 
     - docker:dind
   script:
+    - apt-get -y install build-essential
     - make dev
     - docker exec -i vane bash -c "apt update"
     - docker exec -u 0 -i vane bash -c "apt-get -y install openvpn unzip"
