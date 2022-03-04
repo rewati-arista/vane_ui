@@ -18,7 +18,7 @@ ci_build:
   script:
     - apk update
     - apk add build-base
-    - make dev
+    - make docker
     - docker exec -i vane bash -c "apt update"
     - docker exec -u 0 -i vane bash -c "apt-get -y install openvpn unzip"
     - docker exec -u 0 -i vane bash -c "apt-get -y install iputils-ping"
