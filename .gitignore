@@ -48,6 +48,3 @@ cover/*
 report/*
 MANIFEST
 venv
-src/build
-src/reports
-vane
