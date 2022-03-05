@@ -1,3 +1,9 @@
+variables:
+  OVPN_FILE: ovpn_profiles/eosplus-act.ovpn
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+  DOCKER_HOST: tcp://docker:2375/
+
 stages:
  - build
  - test
@@ -12,7 +18,14 @@ ci_build:
   script:
     - if [ "$( docker container inspect -f '{{.State.Running}}' vane )" == "true" ]; then docker stop vane; fi
     - docker build . -f ci/Dockerfile.ci -t vane:latest --build-arg UID=$(id -u) --build-arg GID=$(id -g)
-    - docker run -t -d --rm --name vane vane:latest
+    - docker run --cap-add=NET_ADMIN --device /dev/net/tun:/dev/net/tun -t -d --rm --name vane vane:latest
+    - docker exec -i vane bash -c "apt update"
+    - docker exec -u 0 -i vane bash -c "apt-get -y install openvpn unzip"
+    - docker exec -u 0 -i vane bash -c "apt-get -y install iputils-ping"
+    - docker exec -u 0 -i vane bash -c "openvpn --config ovpn_profiles/eosplus-act.ovpn --daemon"
+    - docker exec -u 0 -i vane bash -c "ping 10.255.74.38 -c 5"
+    - docker exec -i vane bash -c "cd src;python3 setup.py install;pip3 freeze;cd vane;vane"
+
 
 # build container for registry and distribution
 runtime_build:

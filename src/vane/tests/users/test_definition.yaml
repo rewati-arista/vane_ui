@@ -4,7 +4,6 @@ testcases:
     description: Verify username is set correctly
     # List usernames to check on DUT
     usernames:
-      - ec2-user
-      - kgrozis
+      - admin
     show_cmd: show running-config section username
     expected_output: True

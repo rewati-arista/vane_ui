@@ -1,6 +1,6 @@
 parameters:
   eapi_file: /home/docker/.eapi.conf
-  eapi_template: /project/vane/templates/eapi.conf.j2
+  eapi_template: /project/src/templates/eapi.conf.j2
   excel_report: null
   html_report: /project/vane/reports/report
   json_report: /project/vane/reports/report
