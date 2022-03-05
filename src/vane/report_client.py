@@ -521,6 +521,10 @@ class ReportClient:
     def _write_detail_report(self):
         """Write detailed test case report"""
 
+        if not self._results_datamodel:
+            logging.info("Skipping the detailed testcase report")
+            return
+
         test_suites = self._results_datamodel["test_suites"]
 
         for test_suite in test_suites:
