@@ -380,6 +380,9 @@ class ReportClient:
             f"{self._major_section }.3 Summary Totals " "for Test Suites", 2
         )
         suite_results = self._compile_suite_results()
+        if not suite_results:
+            logging.info("Skipping the test suite results")
+            return
 
         table = self._document.add_table(rows=1, cols=4)
         table.style = "Table Grid"
@@ -389,10 +392,6 @@ class ReportClient:
         hdr_cells[1].text = "Total Tests"
         hdr_cells[2].text = "Total Passed"
         hdr_cells[3].text = "Total Failed"
-
-        if not suite_results:
-            logging.info("Skipping the test suite results")
-            return
 
         for suite_result in suite_results:
             ts_name = self._format_ts_name(suite_result["name"])
@@ -490,6 +489,9 @@ class ReportClient:
         self._major_section += 1
 
         testcase_results = self._compile_testcase_results()
+        if not testcase_results:
+            logging.info("Skipping the summary testcase report")
+            return
 
         table = self._document.add_table(rows=1, cols=6)
         table.style = "Table Grid"
