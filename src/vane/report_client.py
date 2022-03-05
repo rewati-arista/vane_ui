@@ -390,6 +390,10 @@ class ReportClient:
         hdr_cells[2].text = "Total Passed"
         hdr_cells[3].text = "Total Failed"
 
+        if not suite_results:
+            logging.info("Skipping the test suite results")
+            return
+
         for suite_result in suite_results:
             ts_name = self._format_ts_name(suite_result["name"])
 
@@ -636,9 +640,11 @@ class ReportClient:
             "The following test suites have been collected "
             f"{self._results_datamodel}"
         )
+
         if not self._results_datamodel:
             logging.info("Skipping the compiled test suite result")
             return
+
         test_suites = self._results_datamodel["test_suites"]
         suite_results = []
 
