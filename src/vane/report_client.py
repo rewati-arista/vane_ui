@@ -636,6 +636,9 @@ class ReportClient:
             "The following test suites have been collected "
             f"{self._results_datamodel}"
         )
+        if not self._results_datamodel:
+            logging.info("Skipping the compiled test suite result")
+            return
         test_suites = self._results_datamodel["test_suites"]
         suite_results = []
 
