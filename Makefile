@@ -1,27 +1,100 @@
 #!/usr/bin/make
+# WARN: gmake syntax
+########################################################
+# Makefile for Vane
+#
+# useful targets:
+#       make check -- syntax checking and manifest checks
+#       make clean -- clean distutils
+#       make dev -- build and run the dev container
+#       make coverage_report -- code coverage report
+#       make flake8 -- flake8 checks
+#       make pycodestyle -- pycodestyle checks
+#       make pylint -- source code checks
+#       make rpm -- build RPM package
+#       make sdist -- build python source distribution
+#       make systest -- runs the system tests
+#       make tests -- run all of the tests
+#       make unittest -- runs the unit tests
+#
+# Notes:
+# 1) flake8 is a wrapper around pep8, pyflakes, and McCabe.
+########################################################
+# variable section
 
-NAME = "Vane"
+NAME = "vane"
 
+PYTHON=python3
+COVERAGE=coverage
+
+VERSION := $(shell awk '/__version__/{print $$NF}' src/vane/__init__.py | sed "s/'//g")
+
+RPMSPECDIR = $(TOPDIR)
+RPMSPEC = $(RPMSPECDIR)/$(NAME).spec
+CVPRPMSPEC = $(RPMSPECDIR)/$(NAME)_cvpinstall.spec
+RPMRELEASE = 1
+
+BASENAME = $(NAME)-$(VERSION)-$(RPMRELEASE)
+DOCKER = docker
+UID = $(shell id -u)
+GID = $(shell id -g)
+IMAGE_TAG = latest
+SDIST = $(TMPDIR)/build/$(BASENAME)
+DIR_NAME = $(NAME)
 CONTAINER_NAME = vane
-CONTAINER_TAG = 0.0.1
+CONTAINER_TAG = $(IMAGE_TAG)
 CONTAINER = $(CONTAINER_NAME):$(CONTAINER_TAG)
 PROJECT_DIR = $(shell pwd)
 DOCKER_DIR = "/project"
 REPO = "registry.gitlab.aristanetworks.com/arista-eosplus/vane"
 
-all:
-	docker pull $(REPO)
-	docker run -t -d --rm --name $(CONTAINER_NAME) $(REPO)
-	docker exec -it $(CONTAINER_NAME) /bin/bash
+PEP8_IGNORE = E302,E203,E261,W503,C0209
+########################################################
+
+# Removed 'check' target as we need to work out the MANEFEST.IN issues
+all: clean pycodestyle flake8 pylint tests
+
+.PHONY: check
+check:
+	check-manifest
 
 .PHONY: clean
 clean:
-	docker stop $(CONTAINER_NAME)
+	@echo "Cleaning up distutils stuff"
+	rm -rf MANIFEST build dist rpmbuild rpms
+	rm -rf *.egg-info
+	rm -rf $(SDIST) $(TMPDIR)
+	@echo "Cleaning up byte compiled python stuff"
+	find . -type f -regex ".*\.py[co]$$" -delete
+	find . -type d -name __pycache__ | xargs rm -fr
 
-.PHONY: test
-test:
-	pytest --cov-report html --cov=/project/vane/bin tests
-	pytest -vs --cov=/project/vane/bin tests
+.PHONY: pycodestyle
+pycodestyle:
+	-pycodestyle -r --ignore=$(PEP8_IGNORE) src/ tests/
+
+.PHONY: flake8
+flake8:
+	flake8 --ignore=$(PEP8_IGNORE)  src/ tests/
+
+.PHONY: pylint
+pylint:
+	pylint src/ tests/
+
+.PHONY: systest
+systest: clean
+	echo "There are no system tests."
+
+.PHONY: unittest
+unittest: clean
+	pytest --cov-report html --cov=/project/src/vane/bin tests
+	pytest -vs --cov=/project/src/vane/bin tests
+
+.PHONY: coverage_report
+coverage_report:
+	$(COVERAGE) report --rcfile=".coveragerc"
+
+.PHONY: tests
+tests: unittest systest coverage_report
 
 .PHONY: exec
 exec:
@@ -29,21 +102,20 @@ exec:
 
 .PHONY: format
 format:
-	docker exec -it $(CONTAINER_NAME) bash -c "black -l 80 /project/vane/bin/*py"
+	docker exec -it $(CONTAINER_NAME) bash -c "black -l 80 /project/src/vane/bin/*py"
 
 .PHONY: hints
 hints:
-	docker exec -it $(CONTAINER_NAME) bash -c "mypy /project/vane/bin/*py"
-
-.PHONY: lint
-lint:
-	docker exec -it $(CONTAINER_NAME) bash -c "pylint /project/vane/bin/*py"
-
-.PHONY: check
-check: format lint hints
+	docker exec -it $(CONTAINER_NAME) bash -c "mypy /project/src/vane/bin/*py"
 
 .PHONY: dev
-dev:
-	docker build -t $(CONTAINER) . --build-arg UID=$(shell id -u) --build-arg GID=$(shell id -g)
-	docker run --cap-add=NET_ADMIN --device /dev/net/tun:/dev/net/tun -t -d --rm --name $(CONTAINER_NAME) -v $(PROJECT_DIR):$(DOCKER_DIR) $(CONTAINER)
-	docker exec -it $(CONTAINER_NAME) /bin/bash
+docker_build:
+	docker build -t $(CONTAINER) . --build-arg UID=$(UID) --build-arg GID=$(GID)
+
+docker_stop:
+	- docker stop $(CONTAINER_NAME)
+
+docker_run:
+	docker run -t -d --rm --name $(CONTAINER_NAME) -v $(PROJECT_DIR):$(DOCKER_DIR) $(CONTAINER)
+
+dev: docker_stop docker_build docker_run exec
