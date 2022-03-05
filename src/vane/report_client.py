@@ -679,6 +679,10 @@ class ReportClient:
     def _compile_testcase_results(self):
         """Compile test case results and return them"""
 
+        if not self._results_datamodel:
+            logging.info("Skipping test case results")
+            return
+
         test_suites = self._results_datamodel["test_suites"]
         testcase_results = []
 
