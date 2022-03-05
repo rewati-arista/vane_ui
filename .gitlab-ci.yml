@@ -27,39 +27,40 @@ ci_build:
     - docker exec -i vane bash -c "cd src;python3 setup.py install;pip3 freeze;cd vane;vane"
 
 
+# XXX Issue 238: uncomment when gitlab registry is working
 # build container for registry and distribution
-runtime_build:
-  stage: build
-  image: docker:latest
-  services: 
-    - docker:dind
-  script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t registry.gitlab.aristanetworks.com/arista-eosplus/vane . -f ci/Dockerfile.ci --build-arg UID=$(id -u) --build-arg GID=$(id -g)
-    - docker push registry.gitlab.aristanetworks.com/arista-eosplus/vane
-
-unit_tests:
-  stage: test
-  script:
-    - docker exec -i vane bash -c "mkdir /project/vane/reports/results/"
-    - docker exec -i vane pwd
-    - docker exec -i vane bash -c "pytest --cov-report html --cov-report xml:cov.xml --junit-xml=junit.xml --cov=/project/vane/bin tests"
-    - docker exec -i vane bash -c "pytest --cov=/project/vane/bin tests"
-    - docker exec -i vane bash -c "coverage report -m "
-    - docker exec -i vane bash -c "coverage-badge"
-    - docker exec -i vane bash -c "ls"
-    - docker cp vane:/project/htmlcov .
-    - docker cp vane:/project/junit.xml .
-    - docker cp vane:/project/cov.xml .
-    - ls
-  coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
-  artifacts:
-    paths:
-      - htmlcov
-      - junit.xml
-      - cov.xml
-    reports:
-     junit: junit.xml
+#runtime_build:
+#  stage: build
+#  image: docker:latest
+#  services: 
+#    - docker:dind
+#  script:
+#    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+#    - docker build -t registry.gitlab.aristanetworks.com/arista-eosplus/vane . -f ci/Dockerfile.ci --build-arg UID=$(id -u) --build-arg GID=$(id -g)
+#    - docker push registry.gitlab.aristanetworks.com/arista-eosplus/vane
+#
+#unit_tests:
+#  stage: test
+#  script:
+#    - docker exec -i vane bash -c "mkdir /project/vane/reports/results/"
+#    - docker exec -i vane pwd
+#    - docker exec -i vane bash -c "pytest --cov-report html --cov-report xml:cov.xml --junit-xml=junit.xml --cov=/project/vane/bin tests"
+#    - docker exec -i vane bash -c "pytest --cov=/project/vane/bin tests"
+#    - docker exec -i vane bash -c "coverage report -m "
+#    - docker exec -i vane bash -c "coverage-badge"
+#    - docker exec -i vane bash -c "ls"
+#    - docker cp vane:/project/htmlcov .
+#    - docker cp vane:/project/junit.xml .
+#    - docker cp vane:/project/cov.xml .
+#    - ls
+#  coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
+#  artifacts:
+#    paths:
+#      - htmlcov
+#      - junit.xml
+#      - cov.xml
+#    reports:
+#     junit: junit.xml
 
 system_tests:
   stage: test
