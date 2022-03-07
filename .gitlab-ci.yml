@@ -16,9 +16,8 @@ ci_build:
   services: 
     - docker:dind
   script:
-    - docker pull python:3.9 || true
     - if [ "$( docker container inspect -f '{{.State.Running}}' vane )" == "true" ]; then docker stop vane; fi
-    - docker build . -f ci/Dockerfile.ci -t vane:latest --build-arg UID=$(id -u) --build-arg GID=$(id -g)
+    - docker build . -f Dockerfile -t vane:latest --build-arg UID=$(id -u) --build-arg GID=$(id -g)
     - docker run --cap-add=NET_ADMIN --device /dev/net/tun:/dev/net/tun -t -d --rm --name vane vane:latest
     - docker exec -i vane bash -c "apt update"
     - docker exec -u 0 -i vane bash -c "apt-get -y install openvpn unzip"
