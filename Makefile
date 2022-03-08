@@ -9,6 +9,7 @@
 #       make dev -- build and run the dev container
 #       make coverage_report -- code coverage report
 #       make flake8 -- flake8 checks
+#       make install -- install application
 #       make pycodestyle -- pycodestyle checks
 #       make pylint -- source code checks
 #       make rpm -- build RPM package
@@ -95,6 +96,10 @@ coverage_report:
 
 .PHONY: tests
 tests: unittest systest coverage_report
+
+.PHONY: install
+install:
+	$(PYTHON) src/setup.py install
 
 .PHONY: exec
 exec:
