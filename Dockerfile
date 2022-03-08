@@ -16,6 +16,8 @@ ADD requirements.txt /tmp/requirements.txt
 RUN pip3 install --trusted-host pypi.python.org -r /tmp/requirements.txt \
     && pip3 install --upgrade pip
 
+RUN chmod 777 /usr/local/lib/python*/site-packages /usr/local/bin
+
 # Create the user/group that will be used in the container
 # Set some defaults that can be overridden in the build command
 ARG UNAME=docker
