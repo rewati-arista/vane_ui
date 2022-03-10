@@ -9,10 +9,7 @@ RUN apt-get update \
 
 # Create the /project directory and add it as a mountpoint
 WORKDIR /project
-VOLUME ["/project"]
-
-# Add local directory to the container
-ADD ./ /project/
+COPY . .
 
 # Install python modules required by the repo
 ADD requirements.txt /tmp/requirements.txt
