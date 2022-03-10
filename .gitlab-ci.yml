@@ -6,7 +6,6 @@ variables:
   OVPN_FILE: ovpn_profiles/eosplus-act.ovpn
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: ""
-  DOCKER_HOST: tcp://docker:2375/
 
   # Gitlab Container Registry
   REG_URL: eosplus-gitlab.aristanetworks.com:5050/arista-eosplus/vane
@@ -43,7 +42,6 @@ ci_build:
       --device /dev/net/tun:/dev/net/tun
       -t -d --rm
       --name ${DEV_CNAME} ${DEV_CNAME}:latest
-    - docker exec -i ${DEV_CNAME} bash -c "pwd"
     - docker exec -i ${DEV_CNAME} bash -c "apt update"
     - docker exec -u 0 -i ${DEV_CNAME} bash -c "apt-get -y install openvpn unzip"
     - docker exec -u 0 -i ${DEV_CNAME} bash -c "apt-get -y install iputils-ping"
