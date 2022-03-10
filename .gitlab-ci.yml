@@ -31,8 +31,7 @@ ci_build:
   services:
     - docker:dind
   script:
-    - if [ "$( docker container inspect -f '{{.State.Running}}' vane-dev )" \
-           == "true" ]; then docker stop ${DEV_CNAME}; fi
+    - if [ "$( docker container inspect -f '{{.State.Running}}' vane-dev )" == "true" ]; then docker stop ${DEV_CNAME}; fi
     - >
       docker build .
       -t ${DEV_CNAME}:latest
