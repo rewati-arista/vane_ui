@@ -43,6 +43,7 @@ ci_build:
       --device /dev/net/tun:/dev/net/tun
       -t -d --rm
       --name ${DEV_CNAME} ${DEV_CNAME}:latest
+    - docker exec -i ${DEV_CNAME} bash -c "pwd"
     - docker exec -i ${DEV_CNAME} bash -c "apt update"
     - docker exec -u 0 -i ${DEV_CNAME} bash -c "apt-get -y install openvpn unzip"
     - docker exec -u 0 -i ${DEV_CNAME} bash -c "apt-get -y install iputils-ping"
@@ -59,7 +60,7 @@ runtime_build:
     - docker:dind
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t ${REPOSITORY_URL}
+    - docker build -t ${REPOSITORY_URL} . -f ci/Dockerfile.ci --build-arg UID=$(id -u) --build-arg GID=$(id -g)
     - docker push ${REPOSITORY_URL}
 
 unit_tests:
