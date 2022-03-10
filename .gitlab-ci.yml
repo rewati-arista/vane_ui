@@ -64,12 +64,6 @@ runtime_build:
 unit_tests:
   stage: test
   script:
-    - >
-      docker run
-      --cap-add=NET_ADMIN
-      --device /dev/net/tun:/dev/net/tun
-      -t -d --rm
-      --name ${DEV_CNAME} ${DEV_CNAME}:latest
     - docker exec -i ${DEV_CNAME} bash -c "mkdir /project/vane/reports/results/"
     - docker exec -i ${DEV_CNAME} pwd
     - docker exec -i ${DEV_CNAME} bash -c "pytest --cov-report html --cov-report xml:cov.xml --junit-xml=junit.xml --cov=/project/vane/bin tests"
@@ -93,12 +87,6 @@ unit_tests:
 system_tests:
   stage: test
   script:
-    - >
-      docker run
-      --cap-add=NET_ADMIN
-      --device /dev/net/tun:/dev/net/tun
-      -t -d --rm
-      --name ${DEV_CNAME} ${DEV_CNAME}:latest
     - docker exec -i ${DEV_CNAME} pwd
     - docker exec -i ${DEV_CNAME} bash -c "ls /project/vane"
     - docker exec -i ${DEV_CNAME} bash -c "ls /project/vane/bin"
