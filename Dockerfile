@@ -4,18 +4,19 @@ MAINTAINER Professional Service: Software Services <eos-cs-sw@arista.com>
 
 # Install necessary packages
 RUN apt-get update \
-    && apt-get -y install vim sudo tree \
+    && apt-get -y install vim sudo tree rpm yamllint \
     && rm -rf /var/lib/apt/lists/*
 
 # Create the /project directory and add it as a mountpoint
 WORKDIR /project
-VOLUME ["/project"]
+COPY . .
 
 # Install python modules required by the repo
 ADD requirements.txt /tmp/requirements.txt
 RUN pip3 install --trusted-host pypi.python.org -r /tmp/requirements.txt \
     && pip3 install --upgrade pip
 
+# Allow python install to run without being root
 RUN chmod 777 /usr/local/lib/python*/site-packages /usr/local/bin
 
 # Create the user/group that will be used in the container
