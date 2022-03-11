@@ -700,7 +700,7 @@ def subprocess_ping(definition_file, dut_name, loopback_ip, repeat_ping):
 class TestOps:
     """Common testcase operations and variables"""
 
-    def __init__(self, tests_definitions, test_suite, duts=[]):
+    def __init__(self, tests_definitions, test_suite, dut):
         """Initializes TestOps Object
 
         Args:
@@ -715,11 +715,10 @@ class TestOps:
 
         self.expected_output = self.test_parameters["expected_output"]
 
-        self.dut = duts[0]
+        self.dut = dut
         self.dut_name = self.dut["name"]
         self.interface_list = self.dut["output"]["interface_list"]
         self.results_dir = self.dut["results_dir"]
-        self.dut_names = [dut["name"] for dut in duts]
 
         self.show_cmd = self.test_parameters["show_cmd"]
         if self.show_cmd and self.dut:
@@ -764,7 +763,7 @@ class TestOps:
         self.test_parameters["output_msg"] = self.output_msg
         self.test_parameters["expected_output"] = self.expected_output
         self.test_parameters["actual_output"] = self.actual_output
-        self.test_parameters["duts"] = self.dut_names
+        self.test_parameters["dut"] = self.dut_name
         self.test_parameters["show_cmd"] = self.show_cmd
 
         self.test_parameters["fail_reason"] = ""
@@ -779,11 +778,11 @@ class TestOps:
         logging.info(f"Preparing to write results")
         test_suite = self.test_parameters["test_suite"]
         test_suite = test_suite.split("/")[-1]
-        dut_names = "-".join(self.test_parameters["duts"])
+        dut_name = self.test_parameters["dut"]
         test_case = self.test_parameters["name"]
         results_dir = self.results_dir
 
-        yaml_file = f"{results_dir}/result-{test_case}-{dut_names}.yml"
+        yaml_file = f"{results_dir}/result-{test_case}-{dut_name}.yml"
         logging.info(f"Creating results file named {yaml_file}")
         yaml_data = self.test_parameters
         export_yaml(yaml_file, yaml_data)
