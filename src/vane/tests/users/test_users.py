@@ -35,7 +35,7 @@ import inspect
 import logging
 import pytest
 from vane import tests_tools
-
+from vane.tests_base import TestsBase
 
 TEST_SUITE = __file__
 
@@ -46,7 +46,7 @@ TEST_SUITE = __file__
 @pytest.mark.virtual
 @pytest.mark.physical
 @pytest.mark.eos424
-class UsersTests:
+class UsersTests(TestsBase):
     """EOS Users Test Suite"""
 
     def test_if_usernames_are_configured_on_(self, dut, tests_definitions):
@@ -57,7 +57,7 @@ class UsersTests:
           tests_definitions (dict): Test parameters
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
         usernames = tops.test_parameters["usernames"]
 
         for username in usernames:

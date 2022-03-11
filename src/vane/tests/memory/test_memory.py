@@ -33,7 +33,7 @@
 
 import pytest
 from vane import tests_tools
-
+from vane.tests_base import TestsBase
 
 TEST_SUITE = __file__
 
@@ -44,7 +44,7 @@ TEST_SUITE = __file__
 @pytest.mark.virtual
 @pytest.mark.physical
 @pytest.mark.eos424
-class MemoryTests:
+class MemoryTests(TestsBase):
     """Memory Test Suite"""
 
     def test_memory_utilization_on_(self, dut, tests_definitions):
@@ -55,7 +55,7 @@ class MemoryTests:
             tests_definitions (dict): Test parameters
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
         memory_total = dut["output"][tops.show_cmd]["json"]["memTotal"]
         memory_free = dut["output"][tops.show_cmd]["json"]["memFree"]

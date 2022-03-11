@@ -33,7 +33,7 @@
 
 import pytest
 from vane import tests_tools
-
+from vane.tests_base import TestsBase
 
 TEST_SUITE = __file__
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
@@ -45,7 +45,7 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.virtual
 @pytest.mark.physical
 @pytest.mark.eos424
-class CPUTests:
+class CPUTests(TestsBase):
     """CPU Test Suite"""
 
     def test_1_sec_cpu_utlization_on_(self, dut, tests_definitions):
@@ -55,7 +55,7 @@ class CPUTests:
             dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
         dut_ptr = dut["output"][tops.show_cmd]["json"]
         tops.actual_output = dut_ptr["timeInfo"]["loadAvg"][0]
@@ -88,7 +88,7 @@ class CPUTests:
             dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
         dut_ptr = dut["output"][tops.show_cmd]["json"]
         tops.actual_output = dut_ptr["timeInfo"]["loadAvg"][1]
@@ -121,7 +121,7 @@ class CPUTests:
             dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
         dut_ptr = dut["output"][tops.show_cmd]["json"]
         tops.actual_output = dut_ptr["timeInfo"]["loadAvg"][2]

@@ -35,7 +35,7 @@ import inspect
 import logging
 import pytest
 from vane import tests_tools
-
+from vane.tests_base import TestsBase
 
 TEST_SUITE = __file__
 
@@ -47,7 +47,7 @@ TEST_SUITE = __file__
 @pytest.mark.virtual
 @pytest.mark.physical
 @pytest.mark.eos424
-class CrashTests:
+class CrashTests(TestsBase):
     """Crash Test Suite"""
 
     def test_if_there_is_agents_have_crashed_on_(self, dut, tests_definitions):
@@ -57,7 +57,7 @@ class CrashTests:
           dut (dict): Encapsulates dut details including name, connection
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
         tops.return_show_cmd("show agent logs crash")
         lines = tops.show_cmd_txt.split("\n")
         tops.actual_output = len(lines) - 1
@@ -93,7 +93,7 @@ class CrashTests:
 @pytest.mark.virtual
 @pytest.mark.physical
 @pytest.mark.eos424
-class SystemTests:
+class SystemTests(TestsBase):
     """System Test Suite"""
 
     def test_if_eos_version_is_correct_on_(self, dut, tests_definitions):
@@ -104,7 +104,7 @@ class SystemTests:
             tests_definitions (dict): Test parameters
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
         tops.actual_output = dut["output"][tops.show_cmd]["json"]["version"]
         tops.test_result = tops.actual_output == tops.expected_output

@@ -35,7 +35,7 @@ import inspect
 import logging
 import pytest
 from vane import tests_tools
-
+from vane.tests_base import TestsBase
 
 TEST_SUITE = __file__
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
@@ -46,7 +46,7 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.environment
 @pytest.mark.physical
 @pytest.mark.eos424
-class EnvironmentTests:
+class EnvironmentTests(TestsBase):
     """Environment Test Suite"""
 
     def test_if_system_environment_temp_is_in_spec_on_(
@@ -59,7 +59,7 @@ class EnvironmentTests:
           tests_definitions (dict): Test parameters
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
         if not tests_tools.verify_veos(dut):
             tops.return_show_cmd("show system environment temperature")
@@ -107,7 +107,7 @@ class EnvironmentTests:
           tests_definitions (dict): Test parameters
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
         if not tests_tools.verify_veos(dut):
             print(f"\nOn router |{tops.dut_name}|:")
@@ -182,7 +182,7 @@ class EnvironmentTests:
           tests_definitions (dict): Test parameters
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
         if not tests_tools.verify_veos(dut):
             tops.return_show_cmd("show system environment power")
@@ -247,7 +247,7 @@ class EnvironmentTests:
           tests_definitions (dict): Test parameters
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
         if not tops.verify_veos():
             tops.actual_output = dut["output"][tops.show_cmd]["json"][
@@ -297,7 +297,7 @@ class EnvironmentTests:
           tests_definitions (dict): Test parameters
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
         if not tops.verify_veos():
             powersupplies = dut["output"][tops.show_cmd]["json"][

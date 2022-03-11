@@ -34,7 +34,7 @@
 import inspect
 import pytest
 from vane import tests_tools
-
+from vane.tests_base import TestsBase
 
 TEST_SUITE = __file__
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
@@ -47,7 +47,7 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.virtual
 @pytest.mark.physical
 @pytest.mark.eos424
-class FileSystemTests:
+class FileSystemTests(TestsBase):
     """EOS File System Test Suite"""
 
     def test_if_files_on_(self, dut, tests_definitions):
@@ -58,7 +58,7 @@ class FileSystemTests:
           tests_definitions (dict): Test parameters
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
         files = tops.test_parameters["files"]
 

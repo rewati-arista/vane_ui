@@ -35,7 +35,7 @@ import inspect
 import logging
 import pytest
 from vane import tests_tools
-
+from vane.tests_base import TestsBase
 
 TEST_SUITE = __file__
 
@@ -46,7 +46,7 @@ TEST_SUITE = __file__
 @pytest.mark.virtual
 @pytest.mark.physical
 @pytest.mark.eos424
-class ZTPTests:
+class ZTPTests(TestsBase):
     """Zero Touch Provisioning Test Suite"""
 
     def test_if_zerotouch_is_disabled_on_(self, dut, tests_definitions):
@@ -57,7 +57,7 @@ class ZTPTests:
           tests_definitions (dict): Test parameters
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
         tops.actual_output = dut["output"][tops.show_cmd]["json"]["mode"]
         tops.test_result = tops.actual_output == tops.expected_output
 
@@ -88,7 +88,7 @@ class ZTPTests:
           tests_definitions (dict): Test parameters
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, [dut])
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
         tops.actual_output = "zerotouch-config" in tops.show_cmd_txt
         tops.test_result = tops.actual_output == tops.expected_output
 
