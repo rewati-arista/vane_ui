@@ -386,7 +386,7 @@ test_suites:
     name: test_if_there_is_agents_have_crashed_on_
     show_cmd: null
   - description: Verifies EOS version running on the device
-    expected_output: 4.24.0FX-cloud
+    expected_output: 4.24.2F
     name: test_if_eos_version_is_correct_on_
     show_cmd: show version
 - name: test_tacacs.py
@@ -410,8 +410,7 @@ test_suites:
     name: test_if_usernames_are_configured_on_
     show_cmd: show running-config section username
     usernames:
-    - ec2-user
-    - kgrozis
+    - admin
 - name: test_ztp.py
   testcases:
   - description: Verify local log messages

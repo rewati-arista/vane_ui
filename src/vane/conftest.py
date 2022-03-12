@@ -102,7 +102,7 @@ def pytest_html_results_table_row(report, cells):
         cells: Cell data
     """
 
-    cells.insert(2, html.td(report.description))
+    cells.insert(2, html.td(getattr(report, 'description', '')))
     cells.insert(1, html.td(find_nodeid(report.nodeid), class_="col-device"))
     cells.pop()
 

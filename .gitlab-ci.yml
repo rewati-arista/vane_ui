@@ -1,43 +1,79 @@
+default:
+  tags:
+    - registry
+
+variables:
+  OVPN_FILE: ovpn_profiles/eosplus-act.ovpn
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+
+  # Gitlab Container Registry
+  REG_URL: eosplus-gitlab.aristanetworks.com:5050/arista-eosplus/vane
+
+  # CVP Container RPM
+  CNAME: vane
+  REPOSITORY_URL: $REG_URL/$CNAME
+
+  # For Dev Container in Gitlab Registry
+  DEV_CNAME: vane-dev
+  DEV_REPOSITORY_URL: $REG_URL/$DEV_CNAME
+
 stages:
- - build
- - test
- - deploy
+  - build
+  - test
+  - deploy
 
 # build container locally for unit and system tests
 ci_build:
   stage: build
   image: docker:latest
-  services: 
+  services:
     - docker:dind
   script:
-    - if [ "$( docker container inspect -f '{{.State.Running}}' vane )" == "true" ]; then docker stop vane; fi
-    - docker build . -f ci/Dockerfile.ci -t vane:latest --build-arg UID=$(id -u) --build-arg GID=$(id -g)
-    - docker run -t -d --rm --name vane vane:latest
+    - if [ "$( docker container inspect -f '{{.State.Running}}' vane-dev )" == "true" ]; then docker stop ${DEV_CNAME}; fi
+    - >
+      docker build .
+      -t ${DEV_CNAME}:latest
+      --build-arg UID=$(id -u)
+      --build-arg GID=$(id -g)
+    - >
+      docker run
+      --cap-add=NET_ADMIN
+      --device /dev/net/tun:/dev/net/tun
+      -t -d --rm
+      --name ${DEV_CNAME} ${DEV_CNAME}:latest
+    - docker exec -i ${DEV_CNAME} bash -c "apt update"
+    - docker exec -u 0 -i ${DEV_CNAME} bash -c "apt-get -y install openvpn unzip"
+    - docker exec -u 0 -i ${DEV_CNAME} bash -c "apt-get -y install iputils-ping"
+    - docker exec -u 0 -i ${DEV_CNAME} bash -c "openvpn --config ovpn_profiles/eosplus-act.ovpn --daemon"
+    - docker exec -u 0 -i ${DEV_CNAME} bash -c "ping 10.255.74.38 -c 5"
+    - docker exec -i ${DEV_CNAME} bash -c "cd src;python3 setup.py install;pip3 freeze;cd vane;vane"
+
 
 # build container for registry and distribution
 runtime_build:
   stage: build
   image: docker:latest
-  services: 
+  services:
     - docker:dind
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t registry.gitlab.aristanetworks.com/arista-eosplus/vane . -f ci/Dockerfile.ci --build-arg UID=$(id -u) --build-arg GID=$(id -g)
-    - docker push registry.gitlab.aristanetworks.com/arista-eosplus/vane
+    - docker build -t ${REPOSITORY_URL} . -f ci/Dockerfile.ci --build-arg UID=$(id -u) --build-arg GID=$(id -g)
+    - docker push ${REPOSITORY_URL}
 
 unit_tests:
   stage: test
   script:
-    - docker exec -i vane bash -c "mkdir /project/vane/reports/results/"
-    - docker exec -i vane pwd
-    - docker exec -i vane bash -c "pytest --cov-report html --cov-report xml:cov.xml --junit-xml=junit.xml --cov=/project/vane/bin tests"
-    - docker exec -i vane bash -c "pytest --cov=/project/vane/bin tests"
-    - docker exec -i vane bash -c "coverage report -m "
-    - docker exec -i vane bash -c "coverage-badge"
-    - docker exec -i vane bash -c "ls"
-    - docker cp vane:/project/htmlcov .
-    - docker cp vane:/project/junit.xml .
-    - docker cp vane:/project/cov.xml .
+    - docker exec -i ${DEV_CNAME} bash -c "mkdir /project/vane/reports/results/"
+    - docker exec -i ${DEV_CNAME} pwd
+    - docker exec -i ${DEV_CNAME} bash -c "pytest --cov-report html --cov-report xml:cov.xml --junit-xml=junit.xml --cov=/project/vane/bin tests"
+    - docker exec -i ${DEV_CNAME} bash -c "pytest --cov=/project/vane/bin tests"
+    - docker exec -i ${DEV_CNAME} bash -c "coverage report -m "
+    - docker exec -i ${DEV_CNAME} bash -c "coverage-badge"
+    - docker exec -i ${DEV_CNAME} bash -c "ls"
+    - docker cp ${DEV_CNAME}:/project/htmlcov .
+    - docker cp ${DEV_CNAME}:/project/junit.xml .
+    - docker cp ${DEV_CNAME}:/project/cov.xml .
     - ls
   coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
   artifacts:
@@ -51,11 +87,11 @@ unit_tests:
 system_tests:
   stage: test
   script:
-    - docker exec -i vane pwd
-    - docker exec -i vane bash -c "ls /project/vane"
-    - docker exec -i vane bash -c "ls /project/vane/bin"
-    - docker exec -i vane bash -c "ls /project/vane/reports"
-    # - docker exec -i vane bash -c "cd /project/vane/bin && ./vane.py"
+    - docker exec -i ${DEV_CNAME} pwd
+    - docker exec -i ${DEV_CNAME} bash -c "ls /project/vane"
+    - docker exec -i ${DEV_CNAME} bash -c "ls /project/vane/bin"
+    - docker exec -i ${DEV_CNAME} bash -c "ls /project/vane/reports"
+    # - docker exec -i ${DEV_CNAME} bash -c "cd /project/vane/bin && ./vane.py"
 
 pages:
   stage: deploy
