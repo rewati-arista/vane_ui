@@ -11,3 +11,4 @@ duts:
   password: cvp123!
   transport: https
   username: cvpadmin
+  role: leaf

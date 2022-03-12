@@ -150,7 +150,7 @@ class ReportClient:
             suite_index = len(self._results_datamodel["test_suites"]) - 1
 
         logging.info(
-            f"Find Index for test case: {test_case} on dut {dut_name}")
+            f"Find Index for test case: {test_case} on duts {dut_name}")
         test_cases = [
             param["name"]
             for param in self._results_datamodel["test_suites"][suite_index][
@@ -377,14 +377,14 @@ class ReportClient:
 
         logging.info("Create Suite summary results table")
         self._document.add_heading(
-            f"{self._major_section }.3 Summary Totals " "for Test Suites", 2
+                f"{self._major_section }.3 Summary Totals " "for Test Suites", 2
         )
         suite_results = self._compile_suite_results()
         if not suite_results:
             logging.info("Skipping the test suite results")
             return
 
-        table = self._document.add_table(rows=1, cols=4)
+        table = self._document.add_table(rows=1, cols=5)
         table.style = "Table Grid"
 
         hdr_cells = table.rows[0].cells
@@ -392,7 +392,10 @@ class ReportClient:
         hdr_cells[1].text = "Total Tests"
         hdr_cells[2].text = "Total Passed"
         hdr_cells[3].text = "Total Failed"
-
+        hdr_cells[4].text = "Total Skipped"
+        if not suite_results:
+            logging.info("Skipping the test suite results")
+            return
         for suite_result in suite_results:
             ts_name = self._format_ts_name(suite_result["name"])
 
@@ -401,6 +404,7 @@ class ReportClient:
             row_cells[1].text = str(suite_result["total_tests"])
             row_cells[2].text = str(suite_result["total_pass"])
             row_cells[3].text = str(suite_result["total_fail"])
+            row_cells[4].text = str(suite_result["total_skip"])
 
     def _compile_test_results(self):
         """Parse PyTest JSON results and compile:"""
@@ -504,7 +508,9 @@ class ReportClient:
         hdr_cells[3].text = "DUT"
         hdr_cells[4].text = "Result"
         hdr_cells[5].text = "Failure Reason"
-
+        if not testcase_results:
+            logging.info("Skipping the summary testcase report")
+            return
         for testcase_result in testcase_results:
             row_cells = table.add_row().cells
             row_cells[0].text = str(test_num)
@@ -659,6 +665,7 @@ class ReportClient:
             suite_result["total_tests"] = 0
             suite_result["total_pass"] = 0
             suite_result["total_fail"] = 0
+            suite_result["total_skip"] = 0
             suite_result["name"] = test_suite["name"]
 
             suite_name = suite_result["name"]
@@ -671,7 +678,9 @@ class ReportClient:
                 for dut in test_case["duts"]:
                     suite_result["total_tests"] += 1
 
-                    if dut["test_result"]:
+                    if dut["test_result"] and dut["test_result"] == "Skipped":
+                        suite_result["total_skip"] += 1
+                    elif dut["test_result"] and dut["test_result"] != "Skipped":
                         suite_result["total_pass"] += 1
                     else:
                         suite_result["total_fail"] += 1
@@ -707,9 +716,11 @@ class ReportClient:
 
                     dut_name = dut["dut"]
                     fail_reason = dut["fail_reason"]
-                    logging.info(f"Compiling results for DUT {dut_name}")
+                    logging.info(f"Compiling results for DUT/s {dut_name}")
 
-                    if dut["test_result"]:
+                    if dut["test_result"] and dut["test_result"] == "Skipped":
+                        test_result = "SKIP"
+                    elif dut["test_result"] and dut["test_result"] != "Skipped":
                         test_result = "PASS"
                     else:
                         test_result = "FAIL"
@@ -765,7 +776,7 @@ class ReportClient:
         """
 
         logging.info(f"Test case name is {tc_name}")
-        tc_name = " ".join(tc_name.split("_"))[:-3]
+        tc_name = " ".join(tc_name.split("_"))
         tc_name = tc_name.replace("intf", "interface")
         tc_name = tc_name.capitalize()
         logging.info(f"Formattted test case name is {tc_name}")

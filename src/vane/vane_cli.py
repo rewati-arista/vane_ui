@@ -36,6 +36,9 @@ network's readiness for production based on validation tests. """
 import sys
 import argparse
 import logging
+from io import StringIO
+from contextlib import redirect_stdout
+import pytest
 from vane import tests_client
 from vane import report_client
 from vane import xcel_client
@@ -86,6 +89,11 @@ def parse_cli():
         help="Use spreadsheet for input",
     )
 
+    parser.add_argument(
+        "--environment",
+        default=vane.config.ENVIRONMENT,
+        help="Specify the test execution environment",
+    )
     args = parser.parse_args()
 
     return args
@@ -126,11 +134,10 @@ def write_results(definitions_file):
 
 
 def show_markers():
-    import os
-    import pytest
-    from io import StringIO
-    from contextlib import redirect_stdout
-
+    """ Returns the list of supported markers.
+    Returns:
+        marker_list (list): supported markers list.
+    """
     inbuilt_list = [")",
                     "'",
                     "trylast",
@@ -183,6 +190,9 @@ def main():
 
         if args.input:
             input_spreadsheet(vane.config.DEFINITIONS_FILE)
+
+        if args.environment:
+            vane.config.ENVIRONMENT = args.environment
 
         run_tests(vane.config.DEFINITIONS_FILE, vane.config.DUTS_FILE)
         write_results(vane.config.DEFINITIONS_FILE)

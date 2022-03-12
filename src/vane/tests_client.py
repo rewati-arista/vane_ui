@@ -120,13 +120,18 @@ class TestsClient:
         self._set_test_parameters()
 
         logging.info(f"Starting Test with parameters: {self.test_parameters}")
+        print("Starting test with command: pytest %s\n" %
+              (" ".join(self.test_parameters)))
+
         pytest_result = pytest.main(self.test_parameters)
-        
+
         if pytest_result == ExitCode.NO_TESTS_COLLECTED:
-            print("No tests collected with pytest command: pytest %s" % (" ".join(self.test_parameters)))
+            print("No tests collected with pytest command: pytest %s" %
+                  (" ".join(self.test_parameters)))
             sys.exit(1)
         elif pytest_result == ExitCode.USAGE_ERROR:
-            print("Pytest usage error with parameters: pytest %s" % (" ".join(self.test_parameters)))
+            print("Pytest usage error with parameters: pytest %s" %
+                  (" ".join(self.test_parameters)))
             sys.exit(1)
 
     def _init_parameters(self):
@@ -179,7 +184,6 @@ class TestsClient:
         else:
             logging.warning(f"Disable pytest output {parameter}")
 
-
     def _set_test_cases(self):
         """Set test cases for test run"""
 
@@ -192,7 +196,6 @@ class TestsClient:
             pass
         else:
             self.test_parameters.append(f"-k {test_cases}")
-
 
     def _set_html_report(self, report_dir):
         """Set html_report for test run"""
@@ -247,8 +250,9 @@ class TestsClient:
     def _get_markers(self):
         config = configparser.ConfigParser()
         config.read(self.get_pytest_file)
-        markers = config.get('pytest','markers')
-        markers = list(filter(None, [marker.split(":")[0] for marker in markers.split("\n")]))
+        markers = config.get('pytest', 'markers')
+        markers = list(filter(None, [marker.split(":")[0]
+                       for marker in markers.split("\n")]))
         return markers
 
     def _set_mark(self):
@@ -260,7 +264,8 @@ class TestsClient:
         self._set_cmdline_input(mark, "-m")
 
     def _set_junit(self, report_dir):
-        self.test_parameters.append("--junit-xml=" + report_dir + "/report.xml")
+        self.test_parameters.append(
+            "--junit-xml=" + report_dir + "/report.xml")
 
     def _set_test_dirs(self, test_dirs):
         for test_dir in test_dirs:
