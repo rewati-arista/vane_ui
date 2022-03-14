@@ -22,8 +22,6 @@ stages:
   - build
   - static analysis
   - test
-# Need to get systests working then can enable deploy stage & pages job
-#  - deploy
 
 # build container locally for unit and system tests
 ci_build:
@@ -106,6 +104,7 @@ system_tests:
     - make systest
     # - docker exec -i ${DEV_CNAME} bash -c "cd /project/vane/bin && ./vane.py"
 
+# Need to get systests working then can enable deploy stage & pages job
 pages:
   stage: deploy
   script:
