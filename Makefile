@@ -28,7 +28,7 @@ NAME = "vane"
 PYTHON=python3
 COVERAGE=coverage
 
-VERSION := $(shell awk '/__version__/{print $$NF}' src/vane/__init__.py | sed "s/'//g")
+VERSION := $(shell awk '/__version__/{print $$NF}' vane/__init__.py | sed "s/'//g")
 
 RPMSPECDIR = $(TOPDIR)
 RPMSPEC = $(RPMSPECDIR)/$(NAME).spec
@@ -71,24 +71,23 @@ clean:
 
 .PHONY: pycodestyle
 pycodestyle:
-	-pycodestyle -r --ignore=$(PEP8_IGNORE) src/ tests/
+	-pycodestyle -r --ignore=$(PEP8_IGNORE) vane/ tests/
 
 .PHONY: flake8
 flake8:
-	flake8 --ignore=$(PEP8_IGNORE)  src/ tests/
+	flake8 --ignore=$(PEP8_IGNORE)  vane/ tests/
 
 .PHONY: pylint
 pylint:
-	pylint src/ tests/
+	pylint vane/ tests/
 
 .PHONY: systest
 systest: clean
-	echo "There are no system tests."
+	echo "---> Modify to run one or more a test case repo(s) <---"
 
 .PHONY: unittest
 unittest: clean
-	pytest --cov-report html --cov=/project/src/vane/bin tests
-	pytest -vs --cov=/project/src/vane/bin tests
+	echo "---> There are no unit tests <---"
 
 .PHONY: coverage_report
 coverage_report:
@@ -99,7 +98,7 @@ tests: unittest systest coverage_report
 
 .PHONY: install
 install:
-	$(PYTHON) src/setup.py install
+	$(PYTHON) setup.py install
 
 .PHONY: exec
 exec:
@@ -107,11 +106,11 @@ exec:
 
 .PHONY: format
 format:
-	docker exec -it $(CONTAINER_NAME) bash -c "black -l 80 /project/src/vane/bin/*py"
+	docker exec -it $(CONTAINER_NAME) bash -c "black -l 80 /project/vane/bin/*py"
 
 .PHONY: hints
 hints:
-	docker exec -it $(CONTAINER_NAME) bash -c "mypy /project/src/vane/bin/*py"
+	docker exec -it $(CONTAINER_NAME) bash -c "mypy /project/vane/bin/*py"
 
 .PHONY: dev
 docker_build:

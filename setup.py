@@ -1,17 +1,15 @@
 import setuptools
 
+from vane import __version__, __author__
+
 setuptools.setup(
     name="vane",
-    version="1.0.0",
-    author="Arista",
+    version=__version__,
+    author=__author__,
     author_email="Arista",
-    description="Test framework for Arista EOS+",
-    long_description="Test framework for Arista EOS+",
+    description="Network Certification Tool",
+    long_description="Network Certification Tool",
     long_description_content_type="text/markdown",
-    url="https://gitlab-gslab.act.arista.com/gslab-dev/vane",
-    project_urls={
-        "Bug Tracker": "https://gitlab-gslab.act.arista.com/gslab-dev/vane/issues",
-    },
     classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
@@ -34,6 +32,7 @@ setuptools.setup(
         'pytest-html',
         'pytest-json',
         'pytest-cache',
+        'pytest-sugar',
         'pytest-cov'
     ],
     python_requires=">=3.6",
