@@ -22,7 +22,8 @@ stages:
   - build
   - static analysis
   - test
-  - deploy
+# Need to get systests working then can enable deploy stage & pages job
+#  - deploy
 
 # build container locally for unit and system tests
 ci_build:
