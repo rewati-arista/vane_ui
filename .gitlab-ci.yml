@@ -42,7 +42,7 @@ ci_build:
       --cap-add=NET_ADMIN
       --device /dev/net/tun:/dev/net/tun
       -t -d --rm
-      --name ${DEV_CNAME} ${DEV_CNAME}:latest
+      --name ${DEV_CNAME} ${DEV_REPOSITORY_URL}
     - docker exec -i ${DEV_CNAME} bash -c "apt update"
     - docker exec -u 0 -i ${DEV_CNAME} bash -c "apt-get -y install openvpn unzip"
     - docker exec -u 0 -i ${DEV_CNAME} bash -c "apt-get -y install iputils-ping"
