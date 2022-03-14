@@ -83,12 +83,11 @@ pylint:
 
 .PHONY: systest
 systest: clean
-	echo "There are no system tests."
+	echo "---> Modify to run one or more a test case repo(s) <---"
 
 .PHONY: unittest
 unittest: clean
-	pytest --cov-report html --cov=/project/vane/bin tests
-	pytest -vs --cov=/project/vane/bin tests
+	echo "---> There are no unit tests <---"
 
 .PHONY: coverage_report
 coverage_report:

@@ -31,18 +31,18 @@ ci_build:
     - docker:dind
   script:
     - if [ "$( docker container inspect -f '{{.State.Running}}' vane-dev )" == "true" ]; then docker stop ${DEV_CNAME}; fi
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - >
-      docker build .
-      -t ${DEV_CNAME}:latest
+      docker build .  -t ${DEV_REPOSITORY_URL}
       --build-arg UID=$(id -u)
       --build-arg GID=$(id -g)
+    - docker push ${DEV_REPOSITORY_URL}
     - >
       docker run
       --cap-add=NET_ADMIN
       --device /dev/net/tun:/dev/net/tun
       -t -d --rm
       --name ${DEV_CNAME} ${DEV_CNAME}:latest
-    - docker push ${DEV_REPOSITORY_URL}:latest
     - docker exec -i ${DEV_CNAME} bash -c "apt update"
     - docker exec -u 0 -i ${DEV_CNAME} bash -c "apt-get -y install openvpn unzip"
     - docker exec -u 0 -i ${DEV_CNAME} bash -c "apt-get -y install iputils-ping"
