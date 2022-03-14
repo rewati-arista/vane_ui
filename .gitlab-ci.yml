@@ -104,12 +104,12 @@ system_tests:
     - make systest
     # - docker exec -i ${DEV_CNAME} bash -c "cd /project/vane/bin && ./vane.py"
 
-# Need to get systests working then can enable deploy stage & pages job
-pages:
-  stage: deploy
-  script:
-    - mv htmlcov/ public/
-  artifacts:
-    paths:
-      - public
-    expire_in: 30 days
+# Need to get systests working then can enable deploy stage and pages job
+#pages:
+#  stage: deploy
+#  script:
+#    - mv htmlcov/ public/
+#  artifacts:
+#    paths:
+#      - public
+#    expire_in: 30 days
