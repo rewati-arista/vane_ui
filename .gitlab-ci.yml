@@ -48,7 +48,7 @@ ci_build:
     - docker exec -u 0 -i ${DEV_CNAME} bash -c "apt-get -y install iputils-ping"
     - docker exec -u 0 -i ${DEV_CNAME} bash -c "openvpn --config ovpn_profiles/eosplus-act.ovpn --daemon"
     - docker exec -u 0 -i ${DEV_CNAME} bash -c "ping 10.255.74.38 -c 5"
-    - docker exec -i ${DEV_CNAME} bash -c "python3 setup.py install;pip3 freeze;cd vane"
+    - docker exec -i ${DEV_CNAME} bash -c "make install;cd vane; vane"
 
 
 # build container for registry and distribution
