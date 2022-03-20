@@ -90,6 +90,7 @@ system_tests:
     - docker:dind
   before_script:
     - if [ "$( docker container inspect -f '{{.State.Running}}' vane-dev )" == "true" ]; then docker stop ${DEV_CNAME}; fi
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - >
       docker run
       --cap-add=NET_ADMIN
