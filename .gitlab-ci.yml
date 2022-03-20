@@ -85,7 +85,9 @@ unit_tests:
 
 system_tests:
   stage: test
-  image: ${DEV_REPOSITORY_URL}:latest
+  image: docker:latest
+  services:
+    - docker:dind
   before_script:
     - if [ "$( docker container inspect -f '{{.State.Running}}' vane-dev )" == "true" ]; then docker stop ${DEV_CNAME}; fi
     - >
@@ -97,7 +99,7 @@ system_tests:
   script:
     - docker exec -u 0 -i ${DEV_CNAME} bash -c "make install"
     - docker exec -u 0 -i ${DEV_CNAME} bash -c "make systest"
-
+    - docker stop ${DEV_CNAME}
 
 # Need to get systests working then can enable deploy stage and pages job
 #pages:
