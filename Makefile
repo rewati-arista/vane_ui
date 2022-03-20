@@ -82,8 +82,10 @@ pylint:
 	pylint vane/ tests/
 
 .PHONY: systest
-systest: clean
-	echo "---> Modify to run one or more a test case repo(s) <---"
+systest: clean install
+	sudo openvpn --config ovpn_profiles/eosplus-act.ovpn --daemon
+	ping 10.255.74.38 -c 5
+	vane
 
 .PHONY: unittest
 unittest: clean
@@ -120,6 +122,6 @@ docker_stop:
 	- docker stop $(CONTAINER_NAME)
 
 docker_run:
-	docker run -t -d --rm --name $(CONTAINER_NAME) -v $(PROJECT_DIR):$(DOCKER_DIR) $(CONTAINER)
+	docker run --cap-add=NET_ADMIN --device /dev/net/tun:/dev/net/tun -t -d --rm --name $(CONTAINER_NAME) -v $(PROJECT_DIR):$(DOCKER_DIR) $(CONTAINER)
 
 dev: docker_stop docker_build docker_run exec

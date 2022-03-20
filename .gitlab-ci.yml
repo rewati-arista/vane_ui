@@ -30,26 +30,12 @@ ci_build:
   services:
     - docker:dind
   script:
-    - if [ "$( docker container inspect -f '{{.State.Running}}' vane-dev )" == "true" ]; then docker stop ${DEV_CNAME}; fi
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - >
       docker build .  -t ${DEV_REPOSITORY_URL}
       --build-arg UID=$(id -u)
       --build-arg GID=$(id -g)
     - docker push ${DEV_REPOSITORY_URL}
-    - >
-      docker run
-      --cap-add=NET_ADMIN
-      --device /dev/net/tun:/dev/net/tun
-      -t -d --rm
-      --name ${DEV_CNAME} ${DEV_REPOSITORY_URL}
-    - docker exec -i ${DEV_CNAME} bash -c "apt update"
-    - docker exec -u 0 -i ${DEV_CNAME} bash -c "apt-get -y install openvpn unzip"
-    - docker exec -u 0 -i ${DEV_CNAME} bash -c "apt-get -y install iputils-ping"
-    - docker exec -u 0 -i ${DEV_CNAME} bash -c "openvpn --config ovpn_profiles/eosplus-act.ovpn --daemon"
-    - docker exec -u 0 -i ${DEV_CNAME} bash -c "ping 10.255.74.38 -c 5"
-    - docker exec -i ${DEV_CNAME} bash -c "make install;cd vane; vane"
-
 
 # build container for registry and distribution
 runtime_build:
@@ -99,10 +85,22 @@ unit_tests:
 
 system_tests:
   stage: test
-  image: ${DEV_REPOSITORY_URL}:latest
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - if [ "$( docker container inspect -f '{{.State.Running}}' vane-dev )" == "true" ]; then docker stop ${DEV_CNAME}; fi
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - >
+      docker run
+      --cap-add=NET_ADMIN
+      --device /dev/net/tun:/dev/net/tun
+      -t -d --rm
+      --name ${DEV_CNAME} ${DEV_REPOSITORY_URL}
   script:
-    - make systest
-    # - docker exec -i ${DEV_CNAME} bash -c "cd /project/vane/bin && ./vane.py"
+    - docker exec -u 0 -i ${DEV_CNAME} bash -c "make install"
+    - docker exec -u 0 -i ${DEV_CNAME} bash -c "make systest"
+    - docker stop ${DEV_CNAME}
 
 # Need to get systests working then can enable deploy stage and pages job
 #pages:

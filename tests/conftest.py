@@ -31,7 +31,7 @@
 
 
 import pytest
-import vane.bin.xcel_client as xcel_client
+import vane.xcel_client as xcel_client
 
 
 @pytest.fixture
