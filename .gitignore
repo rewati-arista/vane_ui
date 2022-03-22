@@ -35,7 +35,6 @@ rpmbuild
 .cache/*
 .*.docx
 */.ipynb_checkpoints/*
-reports/results/*
 *.DS_Store
 
 # Project files
@@ -59,6 +58,6 @@ sdist/*
 docs/api/*
 docs/_build/*
 cover/*
-report/*
+reports/*
 MANIFEST
 venv
