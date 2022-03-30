@@ -82,7 +82,7 @@ pylint:
 	pylint vane/ tests/
 
 .PHONY: systest
-systest: clean install
+systest: clean
 	sudo openvpn --config ovpn_profiles/eosplus-act.ovpn --daemon
 	ping 10.255.74.38 -c 5
 	vane
