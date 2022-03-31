@@ -1,3 +1,39 @@
+#!/usr/bin/env python3
+#
+# Copyright (c) 2022, Arista Networks EOS+
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+# * Redistributions of source code must retain the above copyright notice, this
+#   list of conditions and the following disclaimer.
+#
+# * Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+#
+# * Neither the name of the Arista nor the names of its
+#   contributors may be used to endorse or promote products derived from
+#   this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+
+"""Device connection drivers - two types of drivers
+   1. EAPI driver - uses pyeapi package
+   2. ssh driver - uses Netmiko package
+"""
+
 import configparser
 import pyeapi
 from netmiko.ssh_autodetect import SSHDetect
@@ -80,24 +116,23 @@ class NetmikoConn(DeviceConn):
         self._config.read(conf_file)
 
     def set_up_conn(self, device_name):
-        print(device_name)
         name = 'connection:{}'.format(device_name)
         if not self._config.has_section(name):
             raise AttributeError('connection profile not found')
 
         device_attributes = dict(self._config.items(name)) 
 
-        print(device_attributes)
+        default_device_type = 'arista_eos'
         remote_device = {
-                'device_type': 'autodetect',
+                'device_type': device_attributes.get('device_type', default_device_type),
                 'host': device_attributes['host'],
                 'username': device_attributes['username'],
                 'password': device_attributes['password'],
                 'secret': device_attributes.get('enable_mode_secret', ""),
                 }
-        guesser = SSHDetect(**remote_device)
-        best_match = guesser.autodetect()
-        remote_device['device_type'] = 'arista_eos'
+        if remote_device['device_type'] == 'autodetect':
+            guesser = SSHDetect(**remote_device)
+            remote_device['device_type'] = guesser.autodetect()
         self._connection = Netmiko(**remote_device)
 
     def send_commands(self, cmds, encoding='json', send_enable=True, **kwargs):
@@ -106,6 +141,8 @@ class NetmikoConn(DeviceConn):
         if send_enable == True:
             self._connection.enable()
         if encoding == 'json':
+            """for json encoding, lets try to run cmds
+            using |json"""
             if type(cmds) is list:
                 local_cmds = cmds.copy()
                 for i,cmd in enumerate(local_cmds):
@@ -128,6 +165,9 @@ class NetmikoConn(DeviceConn):
                     raise CommandError(err_msg, cmds)
 
                 if encoding == 'text':
+                    """ for text encoding, creating the 
+                    format similar to one returned by
+                    eapi format"""
                     text_ob = {"output": output}
                     cmds_op.append(text_ob)
                 else:

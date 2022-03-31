@@ -51,6 +51,7 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 
+default_eos_conn = "eapi"
 
 def init_show_log(test_parameters):
     """Open log file for logging test show commands
@@ -198,7 +199,7 @@ def login_duts(test_parameters, test_duts):
         logins.append({})
         login_ptr = logins[login_index]
         logging.info(f"Connecting to switch: {name} using parameters: {dut}")
-        eos_conn = test_parameters["parameters"]["eos_conn"]
+        eos_conn = test_parameters["parameters"].get("eos_conn", default_eos_conn)
         if eos_conn == 'eapi':
             pyeapi_conn = device_interface.PyeapiConn()
             pyeapi_conn.set_conn_params(eapi_file)
