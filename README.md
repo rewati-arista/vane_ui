@@ -83,6 +83,43 @@ Contributed pull requests are gladly welcomed for this project.
     python3 vane.py
 ```
 
+### Testing Vane Package
+
+Testing can be run from a the docker development container or from python
+virtual environments.
+
+Build and run the docker development container using:
+```
+    make dev
+    ...
+    project # 
+```
+
+Running the unit tests:
+```
+    project # make unittest
+```
+
+The system tests require virtual or physical EOS switches to test on. For
+testing the Vane package we typically use vEOS devices. The default Makefile
+uses the Arista Cloud Test environment for testing.
+
+Running the system tests:
+```
+    project # make systest
+```
+
+Running the unit and system tests together.
+```
+    project # make tests
+```
+
+The coverage report is printed after running the unittest or systest. You can
+run the coverage report at any time after running the tests.
+```
+    project # make coverage_report
+```
+
 ### Build Docker Container
 
 The docker container approach for development can be used to ensure that

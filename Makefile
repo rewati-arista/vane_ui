@@ -85,18 +85,19 @@ pylint:
 systest: 
 	sudo openvpn --config ovpn_profiles/eosplus-act.ovpn --daemon
 	ping 10.255.74.38 -c 5
-	vane
+	coverage run --source /project/vane -m vane.vane_cli --definitions_file tests/systests/fixtures/definitions.yaml --duts_file tests/fixtures/duts.yaml
+	coverage report -m /project/vane/*.py
 
 .PHONY: unittest
-unittest: clean
-	echo "---> There are no unit tests <---"
+unittest:
+	pytest --cov-report term-missing --cov=/project/vane tests/unittests
 
 .PHONY: coverage_report
 coverage_report:
-	$(COVERAGE) report --rcfile=".coveragerc"
+	$(COVERAGE) report -m
 
 .PHONY: tests
-tests: unittest systest coverage_report
+tests: unittest systest
 
 .PHONY: install
 install:

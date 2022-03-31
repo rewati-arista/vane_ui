@@ -1,7 +1,7 @@
-import vane.bin.xcel_client as xcel_client
+import vane.xcel_client as xcel_client
 import os
 
-DEFINITIONS = '/project/vane/bin/definitions.yaml'
+DEFINITIONS = 'tests/unittests/fixtures/definitions.yaml'
 XC = xcel_client.XcelClient(DEFINITIONS)
 
 def test_assert():
@@ -53,7 +53,7 @@ def test_import_no_spreadsheet_exist():
 def test_import_corrupt_spreadsheet():
 
     try:
-        XC.definitions['parameters']['spreadsheet'] = "/project/vane/bin/spreadsheets/corrupt_spreadsheet.xls"
+        XC.definitions['parameters']['spreadsheet'] = "tests/unittests/fixtures/spreadsheets/corrupt_spreadsheet.xls"
         XC.import_spreadsheet()
     except:
         assert True
@@ -63,7 +63,7 @@ def test_import_no_definitions():
     """
 
     try:
-        definitions = '/project/vane/bin/no_definitions.yaml'
+        definitions = 'no_definitions.yaml'
         xc = xcel_client.XcelClient(definitions)
     except:
         assert True
@@ -80,7 +80,7 @@ def test_import_bad_definitions():
     00---
     """
 
-    bad_definition = '/project/vane/bin/bad_definitions.yaml'
+    bad_definition = 'tests/unittests/fixtures/bad_definitions.yaml'
 
     with open(bad_definition, 'w') as out_file:
         out_file.write(bad_data)

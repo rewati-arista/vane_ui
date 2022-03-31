@@ -1,10 +1,11 @@
-import vane.bin.tests_client as tests_client
+import vane.tests_client as tests_client
 import os
 import configparser
 import time
 
-DEFINITIONS = '/project/vane/bin/definitions.yaml'
-TC = tests_client.TestsClient(DEFINITIONS)
+DEFINITIONS = 'tests/unittests/fixtures/definitions.yaml'
+DUTS = 'tests/fixtures/duts.yaml'
+TC = tests_client.TestsClient(DEFINITIONS, DUTS)
 
 def test_assert():
     assert True
@@ -160,7 +161,7 @@ def test_import_bad_definitions():
     00---
     """
 
-    bad_definition = '/project/vane/bin/bad_definitions.yaml'
+    bad_definition = 'tests/unittests/fixtures/bad_definitions.yaml'
 
     with open(bad_definition, 'w') as out_file:
         out_file.write(bad_data)

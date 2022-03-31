@@ -1,10 +1,10 @@
-import vane.bin.report_client as report_client
+import vane.report_client as report_client
 import os
 import time
 import datetime
 
 
-DEFINITIONS = '/project/vane/bin/definitions.yaml'
+DEFINITIONS = 'tests/unittests/fixtures/definitions.yaml'
 RC = report_client.ReportClient(DEFINITIONS)
 
 def test_assert():

@@ -1,0 +1,75 @@
+actual_output:
+- up
+- up
+comment: "TEST if interface |Ethernet1| link prootocol statuses on |BL1|.\nGIVEN interface\
+  \ status is |up|.\nWHEN interface status is |up|.\nTHEN test case result is |True|.\n\
+  \nTEST if interface |Ethernet2| link prootocol statuses on |BL1|.\nGIVEN interface\
+  \ status is |up|.\nWHEN interface status is |up|.\nTHEN test case result is |True|.\n\
+  \nOUTPUT of |show interfaces status| is :\n\nPort       Name                   \
+  \      Status       Vlan     Duplex Speed  Type            Flags Encapsulation\n\
+  Et1        P2P_LINK_TO_DCBB1_Ethernet1  connected    routed   full   unconf EbraTestPhyPort\
+  \                    \nEt2        P2P_LINK_TO_DCBB2_Ethernet1  connected    routed\
+  \   full   unconf EbraTestPhyPort                    \nEt3        P2P_LINK_TO_DCBB3_Ethernet1\
+  \  connected    routed   full   unconf EbraTestPhyPort                    \nEt4\
+  \        P2P_LINK_TO_DCBB4_Ethernet1  connected    routed   full   unconf EbraTestPhyPort\
+  \                    \nEt5        P2P_LINK_TO_SPINE1_Ethernet1 connected    routed\
+  \   full   unconf EbraTestPhyPort                    \nEt6        P2P_LINK_TO_SPINE2_Ethernet1\
+  \ connected    routed   full   unconf EbraTestPhyPort                    \nEt7 \
+  \       P2P_LINK_TO_SPINE3_Ethernet1 connected    routed   full   unconf EbraTestPhyPort\
+  \                    \nEt8        P2P_LINK_TO_SPINE4_Ethernet1 connected    routed\
+  \   full   unconf EbraTestPhyPort                    \nEt9        P2P_LINK_TO_SPINE5_Ethernet1\
+  \ connected    routed   full   unconf EbraTestPhyPort                    \nEt10\
+  \       P2P_LINK_TO_SPINE6_Ethernet1 connected    routed   full   unconf EbraTestPhyPort\
+  \                    \nEt11                                    connected    1  \
+  \      full   unconf EbraTestPhyPort                    \nEt12                 \
+  \                   connected    1        full   unconf EbraTestPhyPort        \
+  \            \nEt13                                    connected    1        full\
+  \   unconf EbraTestPhyPort                    \nEt14                           \
+  \         connected    1        full   unconf EbraTestPhyPort                  \
+  \  \nEt15                                    connected    1        full   unconf\
+  \ EbraTestPhyPort                    \nEt16                                    connected\
+  \    1        full   unconf EbraTestPhyPort                    \nEt17          \
+  \                          connected    1        full   unconf EbraTestPhyPort \
+  \                   \nEt18                                    connected    1   \
+  \     full   unconf EbraTestPhyPort                    \nEt19                  \
+  \                  connected    1        full   unconf EbraTestPhyPort         \
+  \           \nEt20                                    connected    1        full\
+  \   unconf EbraTestPhyPort                    \nEt21                           \
+  \         connected    1        full   unconf EbraTestPhyPort                  \
+  \  \nEt22                                    connected    1        full   unconf\
+  \ EbraTestPhyPort                    \nEt23                                    connected\
+  \    1        full   unconf EbraTestPhyPort                    \nEt24          \
+  \                          connected    1        full   unconf EbraTestPhyPort \
+  \                   \nEt25                                    connected    1   \
+  \     full   unconf EbraTestPhyPort                    \nEt26                  \
+  \                  connected    1        full   unconf EbraTestPhyPort         \
+  \           \nEt27                                    connected    1        full\
+  \   unconf EbraTestPhyPort                    \nEt28                           \
+  \         connected    1        full   unconf EbraTestPhyPort                  \
+  \  \nEt29                                    connected    1        full   unconf\
+  \ EbraTestPhyPort                    \nEt30                                    connected\
+  \    1        full   unconf EbraTestPhyPort                    \nEt31          \
+  \                          connected    1        full   unconf EbraTestPhyPort \
+  \                   \nEt32                                    connected    1   \
+  \     full   unconf EbraTestPhyPort                    \nMa1        oob_management\
+  \               connected    routed   a-full a-1G   10/100/1000                \
+  \        \n\n.\n"
+description: Verify the interfaces of interest protocol statuses are connected
+dut: BL1
+expected_output:
+- up
+- up
+fail_reason: ''
+name: test_if_intf_protocol_status_is_connected_on_
+output_msg: 'On interface |Ethernet1|: interface link line protocol status is set
+  to: |up|, correct state is |up|.
+
+
+  On interface |Ethernet2|: interface link line protocol status is set to: |up|, correct
+  state is |up|.
+
+
+  '
+show_cmd: show interfaces status
+test_result: true
+test_suite: test_interface.py

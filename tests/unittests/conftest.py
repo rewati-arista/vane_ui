@@ -124,7 +124,7 @@ def xc():
     """ create xcel_client object
     """
 
-    definitions = '/project/vane/bin/definitions.yaml'
+    definitions = 'tests/unittests/fixtures/definitions.yaml'
     xc = xcel_client.XcelClient(definitions)
 
     return xc
