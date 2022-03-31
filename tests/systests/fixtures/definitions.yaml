@@ -13,6 +13,7 @@ parameters:
   show_log: show_output.log
   stdout: false
   test_cases: All
+  eos_conn: ssh
   test_dirs: 
   - tests/systests
   test_definitions: tests_definitions.yaml

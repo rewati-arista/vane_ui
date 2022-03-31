@@ -79,8 +79,6 @@ class CrashTests(TestsBase):
             ".\n"
         )
 
-        print(f"{tops.output_msg}\n{tops.comment}")
-
         tops.post_testcase()
 
         assert tops.actual_output <= tops.expected_output
