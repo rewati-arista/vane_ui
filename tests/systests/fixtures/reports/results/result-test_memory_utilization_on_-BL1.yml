@@ -1,0 +1,21 @@
+actual_output: 70.75653271147458
+comment: "TEST if memory utilization is less than specified value on  |BL1|.\nGIVEN\
+  \ memory utilization is less than |80|.\nWHEN  memory utilization is |70.75653271147458|.\n\
+  THEN test case result is |True|.\nOUTPUT of |show version| is:\n\n vEOS\nHardware\
+  \ version:      \nSerial number:         \nHardware MAC address:  d40e.13c9.79dd\n\
+  System MAC address:    d40e.13c9.79dd\n\nSoftware image version: 4.24.2F\nArchitecture:\
+  \           i686\nInternal build version: 4.24.2F-18436385.4242F\nInternal build\
+  \ ID:      03cdce3a-550e-46a8-88e5-4b27656fd2e5\n\nUptime:                 5 weeks,\
+  \ 0 days, 7 hours and 2 minutes\nTotal memory:           4006912 kB\nFree memory:\
+  \            2834936 kB\n\n"
+description: Verify memory is not exceeding high utlization
+dut: BL1
+expected_output: 80
+fail_reason: ''
+name: test_memory_utilization_on_
+output_msg: On router |BL1| memory utilization percent is |70.75653271147458%| and
+  should be under |80%|
+result: true
+show_cmd: show version
+test_result: true
+test_suite: test_memory.py

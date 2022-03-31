@@ -83,10 +83,7 @@ Contributed pull requests are gladly welcomed for this project.
     python3 vane.py
 ```
 
-### Testing Vane Package
-
-Testing can be run from a the docker development container or from python
-virtual environments.
+### Testing Vane Package using Docker development container
 
 Build and run the docker development container using:
 ```
@@ -131,6 +128,38 @@ The coverage report is printed after running the unittest or systest. You can
 run the coverage report at any time after running the tests.
 ```
     project # make coverage_report
+```
+
+### Testing Vane Package using python virtual env
+
+Build and run the docker development container using:
+```
+    python3.9 -m venv venv
+    source bin/venv/activate
+    ...
+    (venv) $ 
+```
+
+First step is to install Vane. If you are just running tests and will not be
+modifying the source, running in a pipeline, then use the following command:
+```
+    (venv) $ pip3.9 install -r requirements.txt
+    (venv) $ make install
+```
+Running the unit tests:
+```
+    (venv) $ pytest --cov-report term-missing --cov=vane tests/unittests
+```
+
+Running the system tests:
+```
+    (venv) $ vane --definitions_file tests/systests/fixtures/definitions.yaml --duts_file tests/fixtures/duts.yaml
+```
+
+The coverage report is printed after running the unittest or systest. You can
+run the coverage report at any time after running the tests.
+```
+   (venv) $ make coverage_report
 ```
 
 ### Test Directory Hierarchy

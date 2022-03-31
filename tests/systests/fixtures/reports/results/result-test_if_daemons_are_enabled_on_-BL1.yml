@@ -1,0 +1,42 @@
+actual_output:
+- true
+comment: 'TEST is TerminAttr daemon enabled on |BL1|.
+
+  GIVEN expected TerminAttr enabled state: |True|.
+
+  WHEN TerminAttr device enabled state is |True|.
+
+  THEN test case result is |True|.
+
+  OUTPUT of |show daemon| is :
+
+
+  Process: TerminAttr (running with PID 2094)
+
+  Uptime: 35 days, 7:00:53 (Start time: Thu Feb 24 15:24:33 2022)
+
+  No configuration options stored.
+
+
+  No status data stored.
+
+
+  .
+
+  '
+daemons:
+- TerminAttr
+description: Verify a list of daemons are enabled on DUT
+dut: BL1
+expected_output:
+- true
+fail_reason: ''
+name: test_if_daemons_are_enabled_on_
+output_msg: '
+
+  On router |BL1|, daemon enabled state is |True| correct state is |True|.
+
+  '
+show_cmd: show daemon
+test_result: true
+test_suite: test_daemon.py
