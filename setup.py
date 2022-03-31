@@ -33,7 +33,8 @@ setuptools.setup(
         'pytest-json',
         'pytest-cache',
         'pytest-sugar',
-        'pytest-cov'
+        'pytest-cov',
+        'netmiko'
     ],
     python_requires=">=3.6",
     keywords=['vane', 'pytest'],

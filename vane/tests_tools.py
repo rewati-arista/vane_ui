@@ -41,6 +41,7 @@ import inspect
 import pyeapi
 import yaml
 import subprocess
+from vane import device_interface
 
 
 logging.basicConfig(
@@ -190,14 +191,21 @@ def login_duts(test_parameters, test_duts):
     logging.info("Using eapi to connect to Arista switches for testing")
     duts = test_duts["duts"]
     logins = []
-    pyeapi.load_config(test_parameters["parameters"]["eapi_file"])
+    eapi_file = test_parameters["parameters"]["eapi_file"]
     for dut in duts:
         name = dut["name"]
         login_index = len(logins)
         logins.append({})
         login_ptr = logins[login_index]
         logging.info(f"Connecting to switch: {name} using parameters: {dut}")
-        login_ptr["connection"] = pyeapi.connect_to(name)
+        pyeapi_conn = device_interface.PyeapiConn()
+        pyeapi_conn.set_conn_params(eapi_file)
+        pyeapi_conn.set_up_conn(name)
+        logging.info("netmiko")
+        netmiko_conn = device_interface.NetmikoConn()
+        netmiko_conn.set_conn_params(eapi_file)
+        netmiko_conn.set_up_conn(name)
+        login_ptr["connection"] = netmiko_conn
         login_ptr["name"] = name
         login_ptr["mgmt_ip"] = dut["mgmt_ip"]
         login_ptr["username"] = dut["username"]
@@ -223,9 +231,9 @@ def send_cmds(show_cmds, conn, encoding):
             f"List of show commands in show_cmds with encoding {encoding}: {show_cmds}"
         )
         if encoding == "json":
-            show_cmd_list = conn.run_commands(show_cmds)
+            show_cmd_list = conn.send_commands(show_cmds)
         elif encoding == "text":
-            show_cmd_list = conn.run_commands(show_cmds, encoding="text")
+            show_cmd_list = conn.send_commands(show_cmds, encoding="text")
         logging.info(
             f"ran all show cmds with encoding {encoding}: {show_cmds}")
 
@@ -348,21 +356,20 @@ def return_show_cmd(show_cmd, dut, test_name, test_parameters):
         f"log text output for {show_cmd} with connnection {conn}"
     )
 
-    show_output = conn.enable(show_cmd)
-    logging.info(f"Raw json output of {show_cmd} on dut {name}: {show_output}")
-
+    show_output = []
+    show_output_text = [] 
+    raw_text = ""
     try:
-        show_output_text = conn.run_commands(show_cmd, encoding="text")
-        raw_text = show_output_text[0]["output"]
+        show_output = conn.send_commands(show_cmd, encoding="json")
     except Exception as e:
         logging.error(f"Missed on commmand {show_cmd}")
         logging.error(f"Error msg {e}")
         time.sleep(1)
-        show_output_text = conn.run_commands(show_cmd, encoding="text")
+        show_output_text = conn.send_commands(show_cmd, encoding="text")
         logging.error(f"new value of show_output_text  {show_output_text}")
         raw_text = show_output_text[0]["output"]
     logging.info(
-        f"Raw text output of {show_cmd} on dut {name}: " f"{show_output_text}"
+        f"Raw text output of {show_cmd} on dut {name}: " f"{show_output}"
     )
 
     export_logs(test_name, name, raw_text, test_parameters)
@@ -842,13 +849,7 @@ class TestOps:
         )
 
         try:
-            show_output = conn.enable(show_cmd)
-            self.show_output = show_output[0]["result"]
-            logging.info(
-                f"Raw json output of {show_cmd} on dut {name}: {self.show_output}"
-            )
-
-            show_output_text = conn.run_commands(show_cmd, encoding="text")
+            show_output_text = conn.send_commands(show_cmd, encoding="text")
             logging.info(
                 f"Raw text output of {show_cmd} on dut {name}: "
                 f"{self.show_cmd_txt}"

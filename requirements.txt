@@ -3,6 +3,7 @@ jinja2
 pyeapi
 python-docx
 openpyxl
+netmiko
 
 # Dev
 pylint
