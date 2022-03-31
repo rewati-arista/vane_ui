@@ -67,6 +67,8 @@ clean:
 	@echo "Cleaning up byte compiled python stuff"
 	find . -type f -regex ".*\.py[co]$$" -delete
 	find . -type d -name __pycache__ | xargs rm -fr
+	@echo "Cleaning up generated test files"
+	rm -fr tests/systests/fixtures/reports/*
 
 .PHONY: pycodestyle
 pycodestyle:
