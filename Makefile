@@ -63,7 +63,6 @@ check:
 clean:
 	@echo "Cleaning up distutils stuff"
 	rm -rf MANIFEST build dist rpmbuild rpms
-	rm -rf *.egg-info
 	rm -rf $(SDIST) $(TMPDIR)
 	@echo "Cleaning up byte compiled python stuff"
 	find . -type f -regex ".*\.py[co]$$" -delete

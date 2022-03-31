@@ -95,6 +95,19 @@ Build and run the docker development container using:
     project # 
 ```
 
+First step is to install Vane. If you are just running tests and will not be
+modifying the source, running in a pipeline, then use the following command:
+```
+    project # make install
+```
+
+If you are debugging and modifying the source then use the following command to
+install from source. You can use 'pip list' to check if vane was installed.
+ONLY USE ONE OF THE INSTALLATION APPROACHES.
+```
+    project # pip install -e .
+```
+
 Running the unit tests:
 ```
     project # make unittest
@@ -119,6 +132,46 @@ run the coverage report at any time after running the tests.
 ```
     project # make coverage_report
 ```
+
+### Test Directory Hierarchy
+
+```
+tests
+├── fixtures
+│   ├── spreadsheets
+│   └── templates
+├── systests
+│   ├── aaa
+│   ├── api
+│   ├── cpu
+│   ├── daemon
+│   ├── dns
+│   ├── environment
+│   ├── extension
+│   ├── filesystem
+│   ├── fixtures
+│   │   └── reports
+│   │       ├── assets
+│   │       └── results
+│   ├── host
+│   ├── interface
+│   ├── lldp
+│   ├── log
+│   ├── memory
+│   ├── ntp
+│   ├── system
+│   ├── tacacs
+│   ├── users
+│   └── ztp
+└── unittests
+    └── fixtures
+        ├── reports
+        │   └── results
+        └── spreadsheets
+```
+
+The tests/fixtures file contains fixtures that are used by both the unittest
+and the systest.
 
 ### Build Docker Container
 

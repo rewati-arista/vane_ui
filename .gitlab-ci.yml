@@ -73,6 +73,7 @@ unit_tests:
   stage: test
   image: ${DEV_REPOSITORY_URL}:latest
   script:
+    - make install
     - make unittest
 #  coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
 #  artifacts:
