@@ -42,9 +42,6 @@
     - Excel report: Tabular representation of results. """
 
 # from pprint import pprint
-import pathlib
-import json
-import re
 import stat
 import os
 import sys
@@ -53,7 +50,6 @@ import pytest
 import yaml
 import jinja2
 import configparser
-from vane import tests_tools
 from pytest import ExitCode
 
 
@@ -257,7 +253,7 @@ class TestsClient:
 
     def _set_mark(self):
         mark = self.data_model["parameters"]["mark"]
-        if not mark in self._get_markers():
+        if mark and mark not in self._get_markers():
             print(
                 "Marker %s is not supported. Update marker parameter in definition file" % (mark))
             sys.exit(0)

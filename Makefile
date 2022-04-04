@@ -49,7 +49,7 @@ PROJECT_DIR = $(shell pwd)
 DOCKER_DIR = "/project"
 REPO = "registry.gitlab.aristanetworks.com/arista-eosplus/vane"
 
-PEP8_IGNORE = E302,E203,E261,W503,C0209
+PEP8_IGNORE = E302,E203,E261,W503,C0209,E501
 ########################################################
 
 # Removed 'check' target as we need to work out the MANEFEST.IN issues
@@ -69,6 +69,7 @@ clean:
 	find . -type d -name __pycache__ | xargs rm -fr
 	@echo "Cleaning up generated test files"
 	rm -fr tests/systests/fixtures/reports/*
+	rm -rf mkdir tests/unittests/fixtures/reports/results
 
 .PHONY: pycodestyle
 pycodestyle:
@@ -91,6 +92,7 @@ systest:
 
 .PHONY: unittest
 unittest:
+	mkdir -p tests/unittests/fixtures/reports/results
 	pytest --cov-report term-missing --cov=/project/vane tests/unittests
 
 .PHONY: coverage_report

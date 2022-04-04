@@ -59,7 +59,6 @@ class MemoryTests(TestsBase):
 
         memory_total = dut["output"][tops.show_cmd]["json"]["memTotal"]
         memory_free = dut["output"][tops.show_cmd]["json"]["memFree"]
-        memory_percent = 0.00
         tops.actual_output = (float(memory_free) / float(memory_total)) * 100
         tops.test_result = tops.actual_output < tops.expected_output
 

@@ -1,6 +1,4 @@
 import vane.report_client as report_client
-import os
-import time
 import datetime
 
 
@@ -12,7 +10,7 @@ def test_assert():
 
 
 def test_object(rc_methods, rc_variables):
-    """ Verify instance of TestsClient Object can be created 
+    """ Verify instance of TestsClient Object can be created
     """
 
     # Test for known methods in object
@@ -34,7 +32,7 @@ def test_date_creation():
     format_date, file_date = RC._return_date()
 
     assert old_file_date == file_date
-    assert old_file_date < format_date
+    assert old_format_date == format_date
 
 def test_formating_test_case(test_names, report_names):
     """ Verify object can format a test case name correctly
@@ -101,4 +99,3 @@ def test_if_keys_in_dict(duts_dict):
         total = RC._totals(duts, question)
 
         assert total == answer
-

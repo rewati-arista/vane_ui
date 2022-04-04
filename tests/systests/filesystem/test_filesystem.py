@@ -31,7 +31,7 @@
 
 """ Tests to validate base feature status."""
 
-import inspect
+import json
 import pytest
 from vane import tests_tools
 from vane.tests_base import TestsBase
@@ -67,7 +67,10 @@ class FileSystemTests(TestsBase):
             show_output, show_cmd_txt = tests_tools.return_show_cmd(
                 show_cmd, dut, tops.test_case, LOG_FILE
             )
-            tops.actual_output = show_output[0]["result"]["isDir"]
+            if show_output:
+                tops.actual_output = show_output[0]["isDir"]
+            elif show_cmd_txt:
+                tops.actual_output = json.loads(show_cmd_txt[0]["output"])["isDir"]
 
             tops.output_msg += (
                 f"\nOn router |{tops.dut_name}|: {file_name} file isDir "

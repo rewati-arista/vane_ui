@@ -31,8 +31,6 @@
 
 """ Tests to validate base feature status."""
 
-import inspect
-import logging
 import pytest
 from vane import tests_tools
 from vane.tests_base import TestsBase
@@ -78,8 +76,6 @@ class CrashTests(TestsBase):
             f"OUTPUT of |{tops.show_cmd}| is:\n{tops.show_cmd_txt}"
             ".\n"
         )
-
-        print(f"{tops.output_msg}\n{tops.comment}")
 
         tops.post_testcase()
 
