@@ -69,6 +69,7 @@ clean:
 	find . -type d -name __pycache__ | xargs rm -fr
 	@echo "Cleaning up generated test files"
 	rm -fr tests/systests/fixtures/reports/*
+	rm -rf mkdir tests/unittests/fixtures/reports/results
 
 .PHONY: pycodestyle
 pycodestyle:
@@ -91,6 +92,7 @@ systest:
 
 .PHONY: unittest
 unittest:
+	mkdir -p tests/unittests/fixtures/reports/results
 	pytest --cov-report term-missing --cov=/project/vane tests/unittests
 
 .PHONY: coverage_report
