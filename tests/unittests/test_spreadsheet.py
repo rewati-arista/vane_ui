@@ -27,7 +27,7 @@ def test_import_definitions():
     """ Validate that a YAML file can be inputted
     """
 
-    parameters = ['parameters', 'duts']
+    parameters = ['parameters']
 
     # Test if imported YAML is a dict
     assert True == (isinstance(XC.definitions, dict))

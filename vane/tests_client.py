@@ -257,7 +257,7 @@ class TestsClient:
 
     def _set_mark(self):
         mark = self.data_model["parameters"]["mark"]
-        if not mark in self._get_markers():
+        if mark and not mark in self._get_markers():
             print(
                 "Marker %s is not supported. Update marker parameter in definition file" % (mark))
             sys.exit(0)

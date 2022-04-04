@@ -31,7 +31,7 @@ def test_import_definitions():
     """ Validate that a YAML file can be inputted
     """
 
-    parameters = ['parameters', 'duts']
+    parameters = ['parameters']
 
     # Test if imported YAML is a dict
     assert True == (isinstance(TC.data_model, dict))
@@ -129,7 +129,9 @@ def test_test_parameters_not_set():
     definitions = ['verbose', 'stdout', 'test_cases', 'html_report', 
                    'excel_report', 'json_report', 'processes', 'mark',
                    'setup_show']
-    tc = tests_client.TestsClient(DEFINITIONS)
+    duts_file = 'tests/fixtures/duts.yaml'
+
+    tc = tests_client.TestsClient(DEFINITIONS, duts_file)
 
     for definition in definitions:
         _ = tc.data_model['parameters'].pop(definition, 1)
@@ -197,7 +199,7 @@ def test_eapi_cfg_data():
     """
 
     eapi_file = TC.data_model['parameters']['eapi_file']
-    duts = TC.data_model['duts']
+    duts = TC.duts_model['duts']
 
     TC._render_eapi_cfg()
 
@@ -236,32 +238,11 @@ def test_no_eapi_template():
 
     assert new_file_life == file_life
 
-def test_not_able_to_write_file():
-    """ Verify an exception is created when eapi.conf file is unable to write
-    """
-
-    test_data = """[connection:kg-topology-CloudEosRR1]
-host: 3.129.242.29
-username: kgrozis
-password: arista123
-transport: https
-    """
-
-    tc = tests_client.TestsClient(DEFINITIONS)
-    tc.data_model['parameters']['eapi_file'] = '/no/such/dir/.eapi.conf'
-
-    try:
-        #tc._write_file(test_data)
-        pass
-
-    except Exception as e:
-        assert True
-
 def test_remove_result_files():
     """ Verify files are removed from results directory
     """
 
-    tc = tests_client.TestsClient(DEFINITIONS)
+    tc = tests_client.TestsClient(DEFINITIONS, DUTS)
     results_dir = tc.data_model['parameters']['results_dir']
 
     if not os.path.exists(results_dir):
@@ -273,7 +254,7 @@ def test_remove_result_files():
         with open(file_name, 'w') as results_file:
             results_file.write('test 1 2 3...')
 
-    tc = tests_client.TestsClient(DEFINITIONS)
+    tc = tests_client.TestsClient(DEFINITIONS, DUTS)
     tc._remove_result_files()
     results_files = os.listdir(results_dir)
 

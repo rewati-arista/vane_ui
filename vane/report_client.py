@@ -776,7 +776,7 @@ class ReportClient:
         """
 
         logging.info(f"Test case name is {tc_name}")
-        tc_name = " ".join(tc_name.split("_"))
+        tc_name = " ".join(tc_name.split("_"))[:-3]
         tc_name = tc_name.replace("intf", "interface")
         tc_name = tc_name.capitalize()
         logging.info(f"Formattted test case name is {tc_name}")
