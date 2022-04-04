@@ -32,7 +32,7 @@ def test_date_creation():
     format_date, file_date = RC._return_date()
 
     assert old_file_date == file_date
-    assert old_format_date < format_date
+    assert old_format_date == format_date
 
 def test_formating_test_case(test_names, report_names):
     """ Verify object can format a test case name correctly

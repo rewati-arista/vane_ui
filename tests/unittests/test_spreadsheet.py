@@ -46,7 +46,7 @@ def test_import_no_spreadsheet_exist():
     try:
         XC.definitions['parameters']['spreadsheet'] = "no_spreadsheet"
         XC.import_spreadsheet()
-    except Exception:
+    except: # noqa: E722
         assert True
 
 def test_import_corrupt_spreadsheet():
@@ -54,7 +54,7 @@ def test_import_corrupt_spreadsheet():
     try:
         XC.definitions['parameters']['spreadsheet'] = "tests/unittests/fixtures/spreadsheets/corrupt_spreadsheet.xls"
         XC.import_spreadsheet()
-    except Exception:
+    except: # noqa: E722
         assert True
 
 def test_import_no_definitions():
@@ -64,7 +64,7 @@ def test_import_no_definitions():
     try:
         definitions = 'no_definitions.yaml'
         _ = xcel_client.XcelClient(definitions)
-    except Exception:
+    except: # noqa: E722
         assert True
 
 def test_import_bad_definitions():
@@ -86,7 +86,7 @@ def test_import_bad_definitions():
 
     try:
         _ = xcel_client.XcelClient(bad_definition)
-    except Exception:
+    except: # noqa: E722
         if os.path.exists(bad_definition):
             os.remove(bad_definition)
 

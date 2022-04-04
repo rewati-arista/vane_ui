@@ -232,7 +232,7 @@ def test_no_eapi_template():
 
         assert False
 
-    except Exception:
+    except: # noqa: E722
         new_file_life = os.path.getmtime(eapi_file)
 
     assert new_file_life == file_life
