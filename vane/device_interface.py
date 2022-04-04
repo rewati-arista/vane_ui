@@ -43,7 +43,7 @@ import json
 error_responses = [
     '% This is an unconverted command\n{\n    "errors": [\n        "This is an unconverted command"\n    ]\n}',
     '% Invalid input',
-    ]
+]
 
 class CommandError(Exception):
     """Base exception raised for command errors
@@ -85,6 +85,7 @@ class DeviceConn:
     def set_conn_params(self, conf_file):
         """Set the Device connection parameters"""
         pass
+
     def set_up_conn(self, device_name: str):
         """Connect to the mentioned device"""
         pass
@@ -101,7 +102,7 @@ class PyeapiConn(DeviceConn):
         pyeapi.load_config(conf_file)
 
     def set_up_conn(self, device_name):
-        self._connection =  pyeapi.connect_to(device_name)
+        self._connection = pyeapi.connect_to(device_name)
 
     def send_commands(self, cmds, encoding='json', send_enable=True, **kwargs):
         output = self._connection.run_commands(cmds, encoding, send_enable)
@@ -120,16 +121,16 @@ class NetmikoConn(DeviceConn):
         if not self._config.has_section(name):
             raise AttributeError('connection profile not found')
 
-        device_attributes = dict(self._config.items(name)) 
+        device_attributes = dict(self._config.items(name))
 
         default_device_type = 'arista_eos'
         remote_device = {
-                'device_type': device_attributes.get('device_type', default_device_type),
-                'host': device_attributes['host'],
-                'username': device_attributes['username'],
-                'password': device_attributes['password'],
-                'secret': device_attributes.get('enable_mode_secret', ""),
-                }
+            'device_type': device_attributes.get('device_type', default_device_type),
+            'host': device_attributes['host'],
+            'username': device_attributes['username'],
+            'password': device_attributes['password'],
+            'secret': device_attributes.get('enable_mode_secret', ""),
+        }
         if remote_device['device_type'] == 'autodetect':
             guesser = SSHDetect(**remote_device)
             remote_device['device_type'] = guesser.autodetect()
@@ -138,14 +139,14 @@ class NetmikoConn(DeviceConn):
     def send_commands(self, cmds, encoding='json', send_enable=True, **kwargs):
         output = ''
         local_cmds = []
-        if send_enable == True:
+        if send_enable:
             self._connection.enable()
         if encoding == 'json':
             """for json encoding, lets try to run cmds
             using |json"""
             if type(cmds) is list:
                 local_cmds = cmds.copy()
-                for i,cmd in enumerate(local_cmds):
+                for i, cmd in enumerate(local_cmds):
                     local_cmds[i] = cmd + ' | json'
             elif type(cmds) is str:
                 cmds = cmds + ' | json'
@@ -156,16 +157,16 @@ class NetmikoConn(DeviceConn):
         if type(cmds) is list:
             for i, cmd in enumerate(local_cmds):
                 output = self._connection.send_command(cmd)
-                if not output in error_responses:
+                if output not in error_responses:
                     if encoding == 'json':
                         output = json.loads(output)
                 else:
                     err_msg = ('Could not execute %s. '
-                            'Got error: %s' %(cmds[i], output))
+                               'Got error: %s' % (cmds[i], output))
                     raise CommandError(err_msg, cmds)
 
                 if encoding == 'text':
-                    """ for text encoding, creating the 
+                    """ for text encoding, creating the
                     format similar to one returned by
                     eapi format"""
                     text_ob = {"output": output}
@@ -174,12 +175,12 @@ class NetmikoConn(DeviceConn):
                     cmds_op.append(output)
         elif type(cmds) is str:
             output = self._connection.send_command(cmds)
-            if not output in error_responses :
+            if output not in error_responses :
                 if encoding == 'json':
                     output = json.loads(output)
             else:
                 err_msg = ('Could not execute %s. '
-                        'Got error: %s' %(cmds[i], output))
+                           'Got error: %s' % (cmds[i], output))
                 raise CommandError(err_msg, cmds)
 
             if encoding == 'text':

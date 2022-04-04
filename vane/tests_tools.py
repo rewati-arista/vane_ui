@@ -38,7 +38,6 @@ import sys
 import logging
 import os
 import inspect
-import pyeapi
 import yaml
 import subprocess
 from vane import device_interface
@@ -211,7 +210,7 @@ def login_duts(test_parameters, test_duts):
             netmiko_conn.set_up_conn(name)
             login_ptr["connection"] = netmiko_conn
         else:
-            raise ValueError("Invalid EOS conn type [%s] specified" %eos_conn)
+            raise ValueError("Invalid EOS conn type [%s] specified" % eos_conn)
         login_ptr["name"] = name
         login_ptr["mgmt_ip"] = dut["mgmt_ip"]
         login_ptr["username"] = dut["username"]
@@ -231,7 +230,7 @@ def send_cmds(show_cmds, conn, encoding):
         conn (obj): connection
     """
 
-    logging.info(f"In send_cmds")
+    logging.info("In send_cmds")
     try:
         logging.info(
             f"List of show commands in show_cmds with encoding {encoding}: {show_cmds}"
@@ -363,7 +362,7 @@ def return_show_cmd(show_cmd, dut, test_name, test_parameters):
     )
 
     show_output = []
-    show_output_text = [] 
+    show_output_text = []
     raw_text = ""
     try:
         show_output = conn.send_commands(show_cmd, encoding="json")
@@ -599,7 +598,7 @@ def yaml_io(yaml_file, io_type, yaml_data=None):
                     yaml.dump(yaml_data, yaml_out, default_flow_style=False)
                     fcntl.flock(yaml_out, fcntl.LOCK_UN)
                     break
-        except:
+        except Exception:
             time.sleep(0.05)
 
     return yaml_data
@@ -701,13 +700,13 @@ def subprocess_ping(definition_file, dut_name, loopback_ip, repeat_ping):
         process: instance of the subprocess
     """
     process = subprocess.Popen(['python',
-                        '/'.join(__file__.split("/")[:-1]) + '/test_ping.py',
-                        definition_file,
-                        dut_name,
-                        loopback_ip,
-                        repeat_ping], 
-                        stdout=subprocess.PIPE, 
-                        universal_newlines=True)
+                                '/'.join(__file__.split("/")[:-1]) + '/test_ping.py',
+                                definition_file,
+                                dut_name,
+                                loopback_ip,
+                                repeat_ping],
+                               stdout=subprocess.PIPE,
+                               universal_newlines=True)
     return process
 
 class TestOps:
@@ -744,6 +743,7 @@ class TestOps:
         self.output_msg = ""
         self.actual_results = []
         self.expected_results = []
+
     def _verify_show_cmd(self, show_cmd, dut):
         """Verify if show command was successfully executed on dut
 
@@ -786,9 +786,8 @@ class TestOps:
         self._write_results()
 
     def _write_results(self):
-        """"""
 
-        logging.info(f"Preparing to write results")
+        logging.info("Preparing to write results")
         test_suite = self.test_parameters["test_suite"]
         test_suite = test_suite.split("/")[-1]
         dut_name = self.test_parameters["dut"]

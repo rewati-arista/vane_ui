@@ -41,11 +41,11 @@ def test_names():
     Returns: [list]: Names of tests
     """
 
-    return ['test_5_min_cpu_utilization_on_', 
+    return ['test_5_min_cpu_utilization_on_',
             'test_if_intf_protocol_status_is_connected_on_',
             'test_if_system_environment_cooling_is_in_spec_on_',
             'test_dut_on_',
-            'test_cmd_on_',]
+            'test_cmd_on_']
 
 
 @pytest.fixture
@@ -59,7 +59,7 @@ def report_names():
             'Test if interface protocol status is connected ',
             'Test if system environment cooling is in spec ',
             'Test dut ',
-            'Test cmd ',]
+            'Test cmd ']
 
 
 @pytest.fixture
@@ -84,19 +84,19 @@ def test_suites():
     """
 
     return {'input' : ['test_api.py', 'test_daemon.py', 'test_interface.py',
-                       'test_tacacs.py','test_environment.py',],
+                       'test_tacacs.py', 'test_environment.py'],
             'result' : ['Api', 'Daemon', 'Interface', 'Tacacs', 'Environment']}
 
 
 @pytest.fixture
 def rc_methods():
-    return ['_compile_yaml_data', '_reconcile_results', '_import_yaml', 
+    return ['_compile_yaml_data', '_reconcile_results', '_import_yaml',
             'write_result_doc', '_return_date', '_write_title_page',
-            '_write_toc_page', '_write_summary_report', 
-            '_write_summary_results', '_write_dut_summary_results', 
+            '_write_toc_page', '_write_summary_report',
+            '_write_summary_results', '_write_dut_summary_results',
             '_write_suite_summary_results', '_compile_test_results',
             '_parse_testcases', '_totals', '_write_tests_case_report',
-            '_write_detail_report', '_write_detail_major_section', 
+            '_write_detail_report', '_write_detail_major_section',
             '_write_detail_minor_section', '_write_detail_dut_section',
             '_add_dut_table_row', '_compile_suite_results',
             '_compile_testcase_results', '_format_ts_name', '_format_tc_name',
@@ -114,10 +114,10 @@ def duts_dict():
     """ represents a dut_dict
     """
 
-    return {'duts' : {'leaf01' : 3, 'leaf02' : 5, 'leaf03' : 7, 
+    return {'duts' : {'leaf01' : 3, 'leaf02' : 5, 'leaf03' : 7,
                       'spine01' : 2, 'spine02': 4},
             'questions' : ['leaf01', 'spine01', 'dci'],
-            'answers' : ['3', '2', '0'],}
+            'answers' : ['3', '2', '0']}
 
 @pytest.fixture
 def xc():
@@ -134,10 +134,10 @@ def table():
     """ represents a spreadsheet table
     """
 
-    return { 'row1' : {'value1': 1, 'value2': 2, 'value3': 3},
-             'row2' : {'value1': None, 'value2': 2, 'value3': 3},
-             'row3' : {'value1': None, 'value2': None, 'value3': None},
-           }
+    return {'row1' : {'value1': 1, 'value2': 2, 'value3': 3},
+            'row2' : {'value1': None, 'value2': 2, 'value3': 3},
+            'row3' : {'value1': None, 'value2': None, 'value3': None},
+            }
 
 @pytest.fixture
 def columns():
@@ -149,14 +149,14 @@ def columns():
         'end_row': 5,      # last row
         'start_col': 1,  # first col
         'end_col' : 10,     # last col
-        'header_row' : 1, 
-        'interval' : 3,   
+        'header_row' : 1,
+        'interval' : 3,
         'seed_col' : 3,
         'multiplier' : 2,
         'device_start' : 0,
-    }    
+    }
     multi_cols = 2
 
-    return { 'table_dimensions' : table_dimensions,
-             'multi_cols' : multi_cols,
-           }
+    return {'table_dimensions' : table_dimensions,
+            'multi_cols' : multi_cols,
+            }

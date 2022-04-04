@@ -112,7 +112,7 @@ class XcelClient:
             logging.info(
                 f"Successfully importted spreadsheet {spreadsheet_path}"
             )
-        except:
+        except IOError:
             logging.error(f"Error opening spreadsheet {spreadsheet_path}")
             print(f"ERROR OPENING SPREADSHEET {spreadsheet_path}")
             sys.exit(1)
@@ -310,11 +310,11 @@ class XcelClient:
         worksheets = self.xcel_defs["worksheets"]
         ws_data = [x for x in worksheets if ws_name == x["name"]]
         device_row = ws_data[0]["device_row"]
-        device_start = ws_data[0]["device_row"]["start_row"]
-        interval = ws_data[0]["device_row"]["interval"]
-        multiplier = ws_data[0]["device_row"]["multiplier"]
-        seed_col = ws_data[0]["device_row"]["column"]
-        header_row = ws_data[0]["device_row"]["header_row"]
+        device_start = device_row["start_row"]
+        interval = device_row["interval"]
+        multiplier = device_row["multiplier"]
+        seed_col = device_row["column"]
+        header_row = device_row["header_row"]
 
         int_col = header_row["Interface Number"]["column"]
         start_row = header_row["Interface Number"]["start_row"]
@@ -361,7 +361,7 @@ class XcelClient:
             for key in table_values:
                 value = table_values[key]
 
-                if value != None and key != "device":
+                if value is not None and key != "device":
                     none_flag = False
 
             if not none_flag:

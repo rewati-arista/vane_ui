@@ -63,7 +63,6 @@ class AAATests(TestsBase):
             tests_definitions, TEST_SUITE, test_case
         )
 
-        expected_output = test_parameters["expected_output"]
         dut_name = dut["name"]
 
         show_cmd = test_parameters["show_cmd"]
@@ -87,10 +86,6 @@ class AAATests(TestsBase):
         logging.info(
             f"WHEN {auth_allowed_2} authentication counters at " "time 2"
         )
-
-        actual_output = f"Authroization Allowed Message Time 1: \
-                        {auth_allowed_1} \nAuthorization Allowed Message \
-                        Time 2: {auth_allowed_2}"
 
         if auth_allowed_1 < auth_allowed_2:
             print(

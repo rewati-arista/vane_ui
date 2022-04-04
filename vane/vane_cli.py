@@ -153,7 +153,7 @@ def show_markers():
 
     temp_stdout = StringIO()
     with redirect_stdout(temp_stdout):
-        result = pytest.main(["--markers"])
+        _ = pytest.main(["--markers"])
     stdout_str = temp_stdout.getvalue()
     marker_list = []
     for i in stdout_str.split('\n'):

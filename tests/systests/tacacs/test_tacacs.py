@@ -60,7 +60,6 @@ class TacacsTests(TestsBase):
             tests_definitions, TEST_SUITE, test_case
         )
 
-        expected_output = test_parameters["expected_output"]
         dut_name = dut["name"]
 
         show_cmd = test_parameters["show_cmd"]
@@ -86,10 +85,6 @@ class TacacsTests(TestsBase):
             logging.info(
                 f"WHEN {eos_messages_sent_2} TACACS messages sent " "at time 2"
             )
-
-            actual_output = f"TACACS Sent Message Time 1: \
-                            {eos_messages_sent_1} \nTACACS Sent Message \
-                            Time 2: {eos_messages_sent_2}"
 
             if eos_messages_sent_1 < eos_messages_sent_2:
                 print(
@@ -128,7 +123,6 @@ class TacacsTests(TestsBase):
             tests_definitions, TEST_SUITE, test_case
         )
 
-        expected_output = test_parameters["expected_output"]
         dut_name = dut["name"]
 
         show_cmd = test_parameters["show_cmd"]
@@ -159,10 +153,6 @@ class TacacsTests(TestsBase):
                 f"WHEN {eos_messages_received_2} TACACS messages "
                 "sent at time 2"
             )
-
-            actual_output = f"TACACS Sent Message Time 1: \
-                            {eos_messages_received_1} \nTACACS Sent Message \
-                            Time 2: {eos_messages_received_2}"
 
             if eos_messages_received_1 < eos_messages_received_2:
                 print(

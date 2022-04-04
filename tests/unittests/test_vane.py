@@ -9,4 +9,4 @@ def test_object_creation():
     """ Verify spreadsheet can be inputted
     """
 
-    tc = tests_client.TestsClient(DEFINITIONS, DUTS)
+    _ = tests_client.TestsClient(DEFINITIONS, DUTS)

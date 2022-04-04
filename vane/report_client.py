@@ -116,7 +116,6 @@ class ReportClient:
         test_suite = test_suite.split("/")[-1]
         dut_name = test_parameters["dut"]
         test_case = test_parameters["name"]
-        yaml_data = self._results_datamodel
 
         if not self._results_datamodel:
             self._results_datamodel = {
@@ -282,7 +281,6 @@ class ReportClient:
         r_element.append(instr_text)
         r_element.append(fld_char2)
         r_element.append(fld_char4)
-        p_element = paragraph._p
 
         self._document.add_page_break()
 
@@ -377,7 +375,7 @@ class ReportClient:
 
         logging.info("Create Suite summary results table")
         self._document.add_heading(
-                f"{self._major_section }.3 Summary Totals " "for Test Suites", 2
+            f"{self._major_section }.3 Summary Totals " "for Test Suites", 2
         )
         suite_results = self._compile_suite_results()
         if not suite_results:

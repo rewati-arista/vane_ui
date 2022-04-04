@@ -31,7 +31,6 @@
 
 """ Tests to validate base feature status."""
 
-import inspect
 import json
 import pytest
 from vane import tests_tools

@@ -49,7 +49,7 @@ PROJECT_DIR = $(shell pwd)
 DOCKER_DIR = "/project"
 REPO = "registry.gitlab.aristanetworks.com/arista-eosplus/vane"
 
-PEP8_IGNORE = E302,E203,E261,W503,C0209
+PEP8_IGNORE = E302,E203,E261,W503,C0209,E501
 ########################################################
 
 # Removed 'check' target as we need to work out the MANEFEST.IN issues
