@@ -40,7 +40,7 @@ import os
 import inspect
 import yaml
 import subprocess
-from vane import device_interface
+from vane import config, device_interface
 
 
 logging.basicConfig(
@@ -708,6 +708,51 @@ def subprocess_ping(definition_file, dut_name, loopback_ip, repeat_ping):
                                stdout=subprocess.PIPE,
                                universal_newlines=True)
     return process
+
+def create_duts_file(topology_file, inventory_file):
+    dut_file = {}
+    dut_properties = []
+    server_properties = []
+    topology_file = import_yaml(topology_file)
+    inventory_file = import_yaml(inventory_file)
+    try:
+        if not topology_file.get("nodes", None):
+            inventory_file, topology_file = topology_file, inventory_file
+        for node in topology_file["nodes"]:
+            name, topology_details = list(node.items())[0]
+            if "cvp" in name:
+                continue
+            # Create hash to append
+            prop = {"mgmt_ip": inventory_details["ansible_host"],
+                    "name": name, "neighbors": topology_details["neighbors"],
+                    "password": inventory_details["ansible_ssh_pass"],
+                    "transport": "https",
+                    'username': inventory_details["ansible_user"],
+                    "role": topology_details.get("role", "unknown")}
+            if name in inventory_file["all"]["children"]["VEOS"]["hosts"]:
+                inventory_details = \
+                    inventory_file["all"]["children"]["VEOS"]["hosts"][name]
+                dut_properties.append(prop)
+            elif name in inventory_file["all"]["children"]["GENERIC"]["hosts"]:
+                inventory_details = \
+                    inventory_file["all"]["children"]["GENERIC"]["hosts"][name]
+                server_properties.append(prop)
+            else:
+                continue
+        if dut_properties or server_properties:
+            dut_file.update({"duts": dut_properties,
+                             "servers": server_properties})
+            with open(vane.config.DUTS_FILE, "w") as yamlfile:
+                yaml.dump(dut_file, yamlfile, sort_keys=False)
+                return vane.config.DUTS_FILE
+        else:
+            raise Exception
+    except Exception as excep:
+            logging.error("Error occured while creating DUTs file: %s",
+                          str(excep))
+            logging.error("EXITING TEST RUNNER")
+            print(">>> ERROR While creating duts file")
+            sys.exit(1)
 
 class TestOps:
     """Common testcase operations and variables"""
