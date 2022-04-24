@@ -788,6 +788,8 @@ class TestOps:
         self.output_msg = ""
         self.actual_results = []
         self.expected_results = []
+        self.actual_output = ""
+        self.test_result = False
 
     def _verify_show_cmd(self, show_cmd, dut):
         """Verify if show command was successfully executed on dut
