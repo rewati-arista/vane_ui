@@ -795,6 +795,7 @@ class TestOps:
         self.expected_results = []
         self.actual_output = ""
         self.test_result = False
+        self.test_id = self.test_parameters.get("test_id", None)
 
     def _verify_show_cmd(self, show_cmd, dut):
         """Verify if show command was successfully executed on dut
@@ -830,6 +831,7 @@ class TestOps:
         self.test_parameters["actual_output"] = self.actual_output
         self.test_parameters["dut"] = self.dut_name
         self.test_parameters["show_cmd"] = self.show_cmd
+        self.test_parameters["test_id"] = self.test_id
 
         self.test_parameters["fail_or_skip_reason"] = ""
         if not self.test_parameters["test_result"]:
