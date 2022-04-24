@@ -876,7 +876,7 @@ class TestOps:
         """
         self.output_msg = (
             f"\nOn switch |{dut_name}| The actual output is "
-            f"|{output}%| and the expected output is "
+            f"|{self.actual_output}%| and the expected output is "
             f"|{self.expected_output}%|"
         )
         self.comment = (
