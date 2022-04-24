@@ -612,7 +612,7 @@ class ReportClient:
         self._add_dut_table_row("expected_output", dut, table)
         self._add_dut_table_row("actual_output", dut, table)
         self._add_dut_table_row("test_result", dut, table)
-        self._add_dut_table_row("fail_reason", dut, table)
+        self._add_dut_table_row("fail_or_skip_reason", dut, table)
         self._add_dut_table_row("comment", dut, table)
 
     def _add_dut_table_row(self, test_field, dut, table):
@@ -680,6 +680,8 @@ class ReportClient:
 
                     if dut["test_result"] and dut["test_result"] == "Skipped":
                         suite_result["total_skip"] += 1
+                        dut["fail_or_skip_reason"] = dut.get("actual_output",
+                                                             "")
                     elif dut["test_result"] and dut["test_result"] != "Skipped":
                         suite_result["total_pass"] += 1
                     else:
@@ -715,12 +717,13 @@ class ReportClient:
                     testcase_result = {}
 
                     dut_name = dut["dut"]
-                    fail_reason = dut["fail_reason"]
+                    fail_reason = dut["fail_or_skip_reason"]
                     logging.info(f"Compiling results for DUT/s {dut_name}")
                     testcase_id = dut["test_id"]
 
                     if dut["test_result"] and dut["test_result"] == "Skipped":
                         test_result = "SKIP"
+                        fail_reason = dut.get("actual_output", "")
                     elif dut["test_result"] and dut["test_result"] != "Skipped":
                         test_result = "PASS"
                     else:
@@ -731,7 +734,7 @@ class ReportClient:
                     testcase_result["test_id"] = testcase_id
                     testcase_result["dut"] = dut_name
                     testcase_result["results"] = test_result
-                    testcase_result["fail_reason"] = fail_reason
+                    testcase_result["fail_or_skip_reason"] = fail_reason
                     logging.info(f"Compiled results: {testcase_result}")
 
                     testcase_results.append(testcase_result)
