@@ -195,7 +195,6 @@ def main():
             )
             vane.config.DUTS_FILE = args.duts_file
 
-
         if args.generate_duts_file:
             vane.config.DUTS_FILE = \
                 tests_tools.create_duts_file(args.generate_duts_file[0],

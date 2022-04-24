@@ -722,37 +722,42 @@ def create_duts_file(topology_file, inventory_file):
             name, topology_details = list(node.items())[0]
             if "cvp" in name:
                 continue
-            # Create hash to append
-            prop = {"mgmt_ip": inventory_details["ansible_host"],
-                    "name": name, "neighbors": topology_details["neighbors"],
-                    "password": inventory_details["ansible_ssh_pass"],
-                    "transport": "https",
-                    'username': inventory_details["ansible_user"],
-                    "role": topology_details.get("role", "unknown")}
             if name in inventory_file["all"]["children"]["VEOS"]["hosts"]:
                 inventory_details = \
                     inventory_file["all"]["children"]["VEOS"]["hosts"][name]
-                dut_properties.append(prop)
+                dut_properties.append(
+                    {"mgmt_ip": inventory_details["ansible_host"],
+                     "name": name, "neighbors": topology_details["neighbors"],
+                     "password": inventory_details["ansible_ssh_pass"],
+                     "transport": "https",
+                     'username': inventory_details["ansible_user"],
+                     "role": topology_details.get("role", "unknown")})
             elif name in inventory_file["all"]["children"]["GENERIC"]["hosts"]:
                 inventory_details = \
                     inventory_file["all"]["children"]["GENERIC"]["hosts"][name]
-                server_properties.append(prop)
+                server_properties.append(
+                    {"mgmt_ip": inventory_details["ansible_host"],
+                     "name": name, "neighbors": topology_details["neighbors"],
+                     "password": inventory_details["ansible_ssh_pass"],
+                     "transport": "https",
+                     'username': inventory_details["ansible_user"],
+                     "role": topology_details.get("role", "unknown")})
             else:
                 continue
         if dut_properties or server_properties:
             dut_file.update({"duts": dut_properties,
                              "servers": server_properties})
-            with open(vane.config.DUTS_FILE, "w") as yamlfile:
+            with open(config.DUTS_FILE, "w") as yamlfile:
                 yaml.dump(dut_file, yamlfile, sort_keys=False)
-                return vane.config.DUTS_FILE
+                return config.DUTS_FILE
         else:
             raise Exception
     except Exception as excep:
-            logging.error("Error occured while creating DUTs file: %s",
-                          str(excep))
-            logging.error("EXITING TEST RUNNER")
-            print(">>> ERROR While creating duts file")
-            sys.exit(1)
+        logging.error("Error occured while creating DUTs file: %s",
+                      str(excep))
+        logging.error("EXITING TEST RUNNER")
+        print(">>> ERROR While creating duts file")
+        sys.exit(1)
 
 class TestOps:
     """Common testcase operations and variables"""
