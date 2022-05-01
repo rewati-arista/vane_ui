@@ -764,8 +764,7 @@ class ReportClient:
 
         logging.info(f"Test suite name is {ts_name}")
         ts_name = ts_name.split(".")[0]
-        ts_name = ts_name.split("_")
-        ts_name = ' '.join(ts_name).capitalize
+        ts_name = ts_name.split("_")[1].capitalize()
         logging.info(f"Formatted test suite name is {ts_name}")
 
         return ts_name
