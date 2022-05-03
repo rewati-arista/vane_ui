@@ -106,7 +106,7 @@ def rc_methods():
 @pytest.fixture
 def rc_variables():
     return ['data_model', '_summary_results', '_results_datamodel',
-            '_document', '_major_section', '_test_id']
+            '_document', '_major_section', '_test_no']
 
 
 @pytest.fixture

@@ -42,6 +42,7 @@ import pytest
 from vane import tests_client
 from vane import report_client
 from vane import xcel_client
+from vane import tests_tools
 import vane.config
 
 logging.basicConfig(
@@ -93,6 +94,12 @@ def parse_cli():
         "--environment",
         default=vane.config.ENVIRONMENT,
         help="Specify the test execution environment",
+    )
+    parser.add_argument(
+        "--generate_duts_file",
+        help='Create a duts file from topology and inventory file',
+        nargs=2,
+        metavar=("topology_file", "inventory_file")
     )
     args = parser.parse_args()
 
@@ -187,6 +194,11 @@ def main():
                 "Changing DUTS file name to " f"{args.duts_file}"
             )
             vane.config.DUTS_FILE = args.duts_file
+
+        if args.generate_duts_file:
+            vane.config.DUTS_FILE = \
+                tests_tools.create_duts_file(args.generate_duts_file[0],
+                                             args.generate_duts_file[1])
 
         if args.input:
             input_spreadsheet(vane.config.DEFINITIONS_FILE)

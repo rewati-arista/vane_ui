@@ -252,7 +252,7 @@ class TestsClient:
         return markers
 
     def _set_mark(self):
-        mark = self.data_model["parameters"]["mark"]
+        mark = self.data_model["parameters"].get("mark")
         if mark and mark not in self._get_markers():
             print(
                 "Marker %s is not supported. Update marker parameter in definition file" % (mark))

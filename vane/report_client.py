@@ -78,7 +78,7 @@ class ReportClient:
 
         self._document = docx.Document()
         self._major_section = 1
-        self._test_id = 1
+        self._test_no = 1
 
     def _compile_yaml_data(self, yaml_dir, yaml_file):
         """[summary]
@@ -495,28 +495,30 @@ class ReportClient:
             logging.info("Skipping the summary testcase report")
             return
 
-        table = self._document.add_table(rows=1, cols=6)
+        table = self._document.add_table(rows=1, cols=7)
         table.style = "Table Grid"
         test_num = 1
 
         hdr_cells = table.rows[0].cells
-        hdr_cells[0].text = "Test Id"
-        hdr_cells[1].text = "Test Suite"
-        hdr_cells[2].text = "Test Case"
-        hdr_cells[3].text = "DUT"
-        hdr_cells[4].text = "Result"
-        hdr_cells[5].text = "Failure Reason"
+        hdr_cells[0].text = "Serial No"
+        hdr_cells[1].text = "Test Id"
+        hdr_cells[2].text = "Test Suite"
+        hdr_cells[3].text = "Test Case"
+        hdr_cells[4].text = "DUT/s"
+        hdr_cells[5].text = "Result"
+        hdr_cells[6].text = "Failure or Skip Reason"
         if not testcase_results:
             logging.info("Skipping the summary testcase report")
             return
         for testcase_result in testcase_results:
             row_cells = table.add_row().cells
             row_cells[0].text = str(test_num)
-            row_cells[1].text = str(testcase_result["test_suite"])
-            row_cells[2].text = str(testcase_result["test_case"])
-            row_cells[3].text = str(testcase_result["dut"])
-            row_cells[4].text = str(testcase_result["results"])
-            row_cells[5].text = str(testcase_result["fail_reason"])
+            row_cells[1].text = str(testcase_result["test_id"])
+            row_cells[2].text = str(testcase_result["test_suite"])
+            row_cells[3].text = str(testcase_result["test_case"])
+            row_cells[4].text = str(testcase_result["dut"])
+            row_cells[5].text = str(testcase_result["results"])
+            row_cells[6].text = str(testcase_result["fail_or_skip_reason"])
 
             test_num += 1
 
@@ -610,7 +612,7 @@ class ReportClient:
         self._add_dut_table_row("expected_output", dut, table)
         self._add_dut_table_row("actual_output", dut, table)
         self._add_dut_table_row("test_result", dut, table)
-        self._add_dut_table_row("fail_reason", dut, table)
+        self._add_dut_table_row("fail_or_skip_reason", dut, table)
         self._add_dut_table_row("comment", dut, table)
 
     def _add_dut_table_row(self, test_field, dut, table):
@@ -629,15 +631,15 @@ class ReportClient:
             row_cells = table.add_row().cells
             row_cells[0].text = test_field
             row_cells[1].text = str(test_value)
-        elif test_field == "test_id":
-            test_value = self._test_id
+        elif test_field == "Serial No":
+            test_value = self._test_no
             test_field = self._format_test_field(test_field)
 
             row_cells = table.add_row().cells
             row_cells[0].text = test_field
             row_cells[1].text = str(test_value)
 
-            self._test_id += 1
+            self._test_no += 1
 
     def _compile_suite_results(self):
         """Compile test suite results and return them
@@ -678,6 +680,8 @@ class ReportClient:
 
                     if dut["test_result"] and dut["test_result"] == "Skipped":
                         suite_result["total_skip"] += 1
+                        dut["fail_or_skip_reason"] = dut.get("actual_output",
+                                                             "")
                     elif dut["test_result"] and dut["test_result"] != "Skipped":
                         suite_result["total_pass"] += 1
                     else:
@@ -713,11 +717,13 @@ class ReportClient:
                     testcase_result = {}
 
                     dut_name = dut["dut"]
-                    fail_reason = dut["fail_reason"]
+                    fail_reason = dut["fail_or_skip_reason"]
                     logging.info(f"Compiling results for DUT/s {dut_name}")
+                    testcase_id = dut["test_id"]
 
                     if dut["test_result"] and dut["test_result"] == "Skipped":
                         test_result = "SKIP"
+                        fail_reason = dut.get("actual_output", "")
                     elif dut["test_result"] and dut["test_result"] != "Skipped":
                         test_result = "PASS"
                     else:
@@ -725,9 +731,10 @@ class ReportClient:
 
                     testcase_result["test_suite"] = ts_name
                     testcase_result["test_case"] = tc_name
+                    testcase_result["test_id"] = testcase_id
                     testcase_result["dut"] = dut_name
                     testcase_result["results"] = test_result
-                    testcase_result["fail_reason"] = fail_reason
+                    testcase_result["fail_or_skip_reason"] = fail_reason
                     logging.info(f"Compiled results: {testcase_result}")
 
                     testcase_results.append(testcase_result)

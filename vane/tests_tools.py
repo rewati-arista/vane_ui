@@ -40,7 +40,7 @@ import os
 import inspect
 import yaml
 import subprocess
-from vane import device_interface
+from vane import config, device_interface
 
 
 logging.basicConfig(
@@ -709,6 +709,56 @@ def subprocess_ping(definition_file, dut_name, loopback_ip, repeat_ping):
                                universal_newlines=True)
     return process
 
+def create_duts_file(topology_file, inventory_file):
+    dut_file = {}
+    dut_properties = []
+    server_properties = []
+    topology_file = import_yaml(topology_file)
+    inventory_file = import_yaml(inventory_file)
+    try:
+        if not topology_file.get("nodes", None):
+            inventory_file, topology_file = topology_file, inventory_file
+        for node in topology_file["nodes"]:
+            name, topology_details = list(node.items())[0]
+            if "cvp" in name:
+                continue
+            if name in inventory_file["all"]["children"]["VEOS"]["hosts"]:
+                inventory_details = \
+                    inventory_file["all"]["children"]["VEOS"]["hosts"][name]
+                dut_properties.append(
+                    {"mgmt_ip": inventory_details["ansible_host"],
+                     "name": name, "neighbors": topology_details["neighbors"],
+                     "password": inventory_details["ansible_ssh_pass"],
+                     "transport": "https",
+                     'username': inventory_details["ansible_user"],
+                     "role": topology_details.get("role", "unknown")})
+            elif name in inventory_file["all"]["children"]["GENERIC"]["hosts"]:
+                inventory_details = \
+                    inventory_file["all"]["children"]["GENERIC"]["hosts"][name]
+                server_properties.append(
+                    {"mgmt_ip": inventory_details["ansible_host"],
+                     "name": name, "neighbors": topology_details["neighbors"],
+                     "password": inventory_details["ansible_ssh_pass"],
+                     "transport": "https",
+                     'username': inventory_details["ansible_user"],
+                     "role": topology_details.get("role", "unknown")})
+            else:
+                continue
+        if dut_properties or server_properties:
+            dut_file.update({"duts": dut_properties,
+                             "servers": server_properties})
+            with open(config.DUTS_FILE, "w") as yamlfile:
+                yaml.dump(dut_file, yamlfile, sort_keys=False)
+                return config.DUTS_FILE
+        else:
+            raise Exception
+    except Exception as excep:
+        logging.error("Error occured while creating DUTs file: %s",
+                      str(excep))
+        logging.error("EXITING TEST RUNNER")
+        print(">>> ERROR While creating duts file")
+        sys.exit(1)
+
 class TestOps:
     """Common testcase operations and variables"""
 
@@ -743,6 +793,9 @@ class TestOps:
         self.output_msg = ""
         self.actual_results = []
         self.expected_results = []
+        self.actual_output = ""
+        self.test_result = False
+        self.test_id = self.test_parameters.get("test_id", None)
 
     def _verify_show_cmd(self, show_cmd, dut):
         """Verify if show command was successfully executed on dut
@@ -778,10 +831,11 @@ class TestOps:
         self.test_parameters["actual_output"] = self.actual_output
         self.test_parameters["dut"] = self.dut_name
         self.test_parameters["show_cmd"] = self.show_cmd
+        self.test_parameters["test_id"] = self.test_id
 
-        self.test_parameters["fail_reason"] = ""
+        self.test_parameters["fail_or_skip_reason"] = ""
         if not self.test_parameters["test_result"]:
-            self.test_parameters["fail_reason"] = self.output_msg
+            self.test_parameters["fail_or_skip_reason"] = self.output_msg
 
         self._write_results()
 
@@ -876,7 +930,7 @@ class TestOps:
         """
         self.output_msg = (
             f"\nOn switch |{dut_name}| The actual output is "
-            f"|{output}%| and the expected output is "
+            f"|{self.actual_output}%| and the expected output is "
             f"|{self.expected_output}%|"
         )
         self.comment = (
