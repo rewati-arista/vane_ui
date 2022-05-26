@@ -1,0 +1,423 @@
+test_suites:
+- name: test_interface.py
+  testcases:
+  - description: Verify the interfaces of interest protocol statuses are connected
+    expected_output: up
+    name: test_if_intf_protocol_status_is_connected_on_
+    show_cmd: show interfaces status
+  - description: Verify the interfaces of interest link statuses are connected
+    expected_output: connected
+    name: test_if_intf_link_status_is_connected_on_
+    show_cmd: show interfaces status
+  - description: Verify the interfaces of interest link statuses are connected
+    expected_output: linkUp
+    name: test_if_intf_phy_status_connected_on_
+    show_cmd: show interfaces phy detail
+  - description: Verify the interfaces of interest does not have input errors
+    expected_output: 0
+    name: test_if_intf_counters_has_input_errors_on_
+    show_cmd: show interfaces counters errors
+  - description: Verify the interfaces of interest does not have outut errors
+    expected_output: 0
+    name: test_if_intf_counters_has_output_errors_on_
+    show_cmd: show interfaces counters errors
+  - description: Verify the interfaces of interest have no frameTooShorts errors
+    expected_output: 0
+    name: test_if_intf_counters_has_frame_too_short_errors_on_
+    show_cmd: show interfaces counters errors
+  - description: Verify the interfaces of interest have no frameTooLong errors
+    expected_output: 0
+    name: test_if_intf_counters_has_frame_too_long_errors_on_
+    show_cmd: show interfaces counters errors
+  - description: Verify the interfaces of interest have no fcsErrors errors
+    expected_output: 0
+    name: test_if_intf_counters_has_fcs_errors_on_
+    show_cmd: show interfaces counters errors
+  - description: Verify the interfaces of interest have no fcsErrors errors
+    expected_output: 0
+    name: test_if_intf_counters_has_fcs_errors_on_
+    show_cmd: show interfaces counters errors
+  - description: Verify the interfaces of interest have no alignmentErrors errors
+    expected_output: 0
+    name: test_if_intf_counters_has_alignment_errors_on_
+    show_cmd: show interfaces counters errors
+  - description: Verify the interfaces of interest have no symbolErrors errors
+    expected_output: 0
+    name: test_if_intf_counters_has_symbol_errors_on_
+    show_cmd: show interfaces counters errors
+  - description: Verify the interfaces of interest have no outDiscards
+    expected_output: 0
+    name: test_if_intf_out_counters_are_discarding_on_
+    show_cmd: show interfaces counters discards
+  - description: Verify the interfaces of interest have no inDiscards
+    expected_output: 0
+    name: test_if_intf_in_counters_are_discarding_on_
+    show_cmd: show interfaces counters discards
+  - description: Verify the interfaces of interest have no inDiscards
+    expected_output: 0
+    name: test_if_intf_in_counters_are_discarding_on_
+    show_cmd: show interfaces counters discards
+  - description: Verify the interfaces of interest MTU
+    expected_output: 10178
+    name: test_if_intf_mtu_is_correct_on_
+    show_cmd: show interfaces
+  - description: Verifies interfaces L1 errors (Rx, Giants, Tx, Runts, FCS, Align)
+    expected_output: 0
+    name: test_if_interface_errors_on_
+    show_cmd: show interfaces
+  - description: Verifies interfaces L1 errors (Rx, Giants, Tx, Runts, FCS, Align)
+    expected_output: 70
+    name: test_interface_utilization_on_
+    show_cmd: show interfaces
+- name: test_host.py
+  testcases:
+  - description: Verify hostname is set on device is correct
+    expected_output: null
+    name: test_if_hostname_is_correcet_on_
+    show_cmd: show hostname
+- name: test_extension.py
+  testcases:
+  - description: Verify a list of extension are installed on a DUT
+    expected_output: installed
+    extensions:
+    - awslogs.swix
+    - awsha.rpm
+    - twamp.rpm
+    name: test_if_extensions_are_installed_on_
+    show_cmd: show extensions
+  - description: Verify a list of extension are not erroring on a DUT
+    expected_output: false
+    extensions:
+    - awslogs.swix
+    - awsha.rpm
+    name: test_if_extensions_are_erroring_on_
+    show_cmd: show extensions
+- name: test_memory.py
+  testcases:
+  - comment: null
+    description: Verify memory is not exceeding high utlization
+    expected_output: 80
+    name: test_memory_utilization_on_
+    result: true
+    show_cmd: show version
+- name: test_cpu.py
+  testcases:
+  - description: Verify 1 second CPU % is under specificied value
+    expected_output: 1
+    name: test_1_sec_cpu_utlization_on_
+    show_cmd: show processes
+  - description: Verify 1 minute CPU % is under specificied value
+    expected_output: 10
+    name: test_1_min_cpu_utlization_on_
+    show_cmd: show processes
+  - description: Verify 5 minute CPU % is under specificied value
+    expected_output: 10
+    name: test_5_min_cpu_utlization_on_
+    show_cmd: show processes
+- name: test_ztp.py
+  testcases:
+  - description: Verify local log messages
+    expected_output: disabled
+    name: test_if_zerotouch_is_disabled_on_
+    show_cmd: show zerotouch
+  - description: Verify zerotoucn-config file is on flash
+    expected_output: true
+    name: test_for_zerotouch_config_file_on_
+    show_cmd: dir flash:zerotouch-config
+- name: test_lldp.py
+  testcases:
+  - description: Verify LLDP receive is enabled on interesting interfaces
+    expected_output: true
+    name: test_if_lldp_rx_is_enabled_on_
+    show_cmd: show lldp
+  - description: Verify LLDP transmit is enabled on interesting interfaces
+    expected_output: true
+    name: test_if_lldp_tx_is_enabled_on_
+    show_cmd: show lldp
+  - description: Verify show lldp local-info hostname is the system's name
+    expected_output: null
+    name: test_if_lldp_system_name_is_correct_on_
+    show_cmd: show lldp local-info
+  - description: Verify show lldp local-info maxFrameSize is correct
+    expected_output: 10200
+    name: test_if_lldp_max_frame_size_is_correct_on_
+    show_cmd: show lldp local-info
+  - description: Verify show lldp local-info interfaceIdType is correct
+    expected_output: interfaceName
+    name: test_if_lldp_interface_id_is_correct_on_
+    show_cmd: show lldp local-info
+- name: test_filesystem.py
+  testcases:
+  - description: Verify filesystem is correct and expected files are present
+    expected_output: false
+    files:
+    - flash:startup-config
+    - flash:veos-config
+    - flash:zerotouch-config
+    name: test_if_files_on_
+    show_cmd: null
+- name: test_aaa.py
+  testcases:
+  - comment: null
+    description: Verify AAA counters are working correctly
+    expected_output: null
+    name: test_if_authentication_counters_are_incrementing_on_
+    result: true
+    show_cmd: show aaa counters
+  - comment: null
+    description: Verify AAA session logging is working by identifying eapi connection
+    expected_output: commandApi
+    name: test_if_aaa_session_logging_is_working_on_
+    result: true
+    show_cmd: show users detail
+  - cmd_auth:
+    - none
+    comment: null
+    description: Verify AAA command authorization are method-lists set correct
+    expected_output: null
+    name: test_if_commands_authorization_methods_set_on_
+    result: true
+    show_cmd: show aaa methods all
+  - comment: null
+    description: Verify AAA exec authorization are method-lists set correct
+    exec_auth:
+    - none
+    expected_output: null
+    name: test_if_exec_authorization_methods_set_on_
+    result: true
+    show_cmd: show aaa methods all
+  - comment: null
+    description: Verify AAA default login authentication are method-lists set correct
+    expected_output: null
+    login_auth:
+    - local
+    name: test_if_default_login_authentication_methods_set_on_
+    result: true
+    show_cmd: show aaa methods all
+  - comment: null
+    description: AAA login authentication are method-lists set correct
+    expected_output: null
+    login_auth: null
+    name: test_if_login_authentication_methods_set_on_
+    result: true
+    show_cmd: show aaa methods all
+  - comment: null
+    description: Verify AAA dot1x authentication are method-lists set correct
+    dot1x_auth: []
+    expected_output: null
+    name: test_if_dot1x_authentication_methods_set_on_
+    result: true
+    show_cmd: show aaa methods all
+  - actual_output: null
+    comment: null
+    description: Verify AAA enable authentication are method-lists set correct
+    enable_auth:
+    - local
+    expected_output: true
+    name: test_if_enable_authentication_methods_set_on_
+    result: true
+    show_cmd: show aaa methods all
+  - comment: null
+    console_acct: []
+    default_acct: []
+    description: Verify AAA system accounting method-lists are set correct
+    expected_output: null
+    name: test_if_system_accounting_methods_set_on_
+    result: true
+    show_cmd: show aaa methods all
+  - comment: null
+    console_acct: []
+    default_acct: []
+    description: Verify AAA exec accounting method-lists are set correct
+    expected_output: null
+    name: test_if_exec_accounting_methods_set_on_
+    result: true
+    show_cmd: show aaa methods all
+  - comment: null
+    console_acct: []
+    default_acct: []
+    description: Verify AAA priviledge accounting method-lists are set correct
+    expected_output: null
+    name: test_if_priviledge_accounting_methods_set_on_
+    result: true
+    show_cmd: show aaa methods all
+  - comment: null
+    console_acct: []
+    default_acct: []
+    description: Verify AAA dot1x accounting method-lists are set correct
+    expected_output: null
+    name: test_if_dot1x_accounting_methods_set_on_
+    result: true
+    show_cmd: show aaa methods all
+- name: test_ntp.py
+  testcases:
+  - description: Verify ntp is setup and working correctly
+    expected_output: synchronised
+    name: test_if_ntp_is_synchronized_on_
+    show_cmd: show ntp status
+  - description: Verify ntp peers are correct
+    expected_output: 1
+    name: test_if_ntp_associated_with_peers_on_
+    show_cmd: show ntp associations
+  - description: Verify processes are running
+    expected_output: 1
+    name: test_if_process_is_running_on_
+    processes:
+    - ntpd
+    show_cmd: show processes
+  - description: Verifies NTP configuration matches the recommended practices
+    expected_output: true
+    name: test_ntp_configuration_on_
+    ntp_intf: null
+    ntp_servers:
+    - 169.254.169.123
+    ntp_vrf: null
+    show_cmd: null
+  - description: Verifies NTP servers are reachable via ping
+    expected_output: true
+    name: test_if_ntp_servers_are_reachable_on_
+    ntp_servers:
+    - 169.254.169.123
+    ntp_vrf: null
+    show_cmd: null
+- name: test_system.py
+  testcases:
+  - description: Verifies the agents logs crash is empty
+    expected_output: 0
+    name: test_if_there_is_agents_have_crashed_on_
+    show_cmd: null
+  - description: Verifies EOS version running on the device
+    expected_output: 4.24.2F
+    name: test_if_eos_version_is_correct_on_
+    show_cmd: show version
+- name: test_daemon.py
+  testcases:
+  - daemons:
+    - TerminAttr
+    description: Verify a list of daemons are running on DUT
+    expected_output: true
+    name: test_if_daemons_are_running_on_
+    show_cmd: show daemon
+  - daemons:
+    - TerminAttr
+    description: Verify a list of daemons are enabled on DUT
+    expected_output: true
+    name: test_if_daemons_are_enabled_on_
+    show_cmd: show daemon
+- name: test_users.py
+  testcases:
+  - description: Verify username is set correctly
+    expected_output: true
+    name: test_if_usernames_are_configured_on_
+    show_cmd: show running-config section username
+    usernames:
+    - admin
+- name: test_environment.py
+  testcases:
+  - description: Verify system temperature environmentals are functional within spec
+    expected_output: temperatureOk
+    name: test_if_system_environment_temp_is_in_spec_on_
+    show_cmd: null
+  - description: Verify system temperature sensors environmentals are functional within
+      spec
+    expected_output: false
+    name: test_if_sensors_temp_is_in_spec_on_
+    show_cmd: null
+  - description: Verify system power environmentals are functional within spec
+    expected_output: ok
+    name: test_if_system_environment_power_are_in_spec_on_
+    show_cmd: null
+  - description: Verify system cooling environmentals are functional within spec
+    expected_output: coolingOk
+    name: test_if_system_environment_cooling_is_in_spec_on_
+    show_cmd: show system environment cooling
+  - description: Verify fan modules are functioning correctly
+    expected_output: ok
+    name: test_if_fan_status_is_in_spec_on_
+    show_cmd: show system environment cooling
+- name: test_api.py
+  testcases:
+  - comment: null
+    description: Verify management api https server is running
+    expected_output: true
+    name: test_if_management_https_api_server_is_running_on_
+    result: true
+    show_cmd: show management api http-commands
+  - comment: null
+    description: Verify https server is enabled on port 443
+    expected_output: 443
+    name: test_if_management_https_api_server_port_is_correct_on_
+    result: true
+    show_cmd: show management api http-commands
+  - comment: null
+    description: Verify management api https server is enabled
+    expected_output: true
+    name: test_if_management_https_api_server_is_enabled_on_
+    result: true
+    show_cmd: show management api http-commands
+  - comment: null
+    description: Verify management api http server is not running
+    expected_output: false
+    name: test_if_management_http_api_server_is_running_on_
+    result: true
+    show_cmd: show management api http-commands
+  - comment: null
+    description: Verify management api local httpserver is not running
+    expected_output: false
+    name: test_if_management_local_http_api_server_is_running_on_
+    result: true
+    show_cmd: show management api http-commands
+- name: test_logging.py
+  testcases:
+  - comment: null
+    description: Verify local log messages
+    expected_output: false
+    name: test_if_log_messages_appear_on_
+    result: true
+    show_cmd: show logging
+    sys_msgs:
+    - critical
+    - warning
+    - ECC
+    - servers errors
+    - parity
+- name: test_dns.py
+  testcases:
+  - description: Verify DNS is running by performing pings and verifying name resolution
+    expected_output: true
+    name: test_if_dns_resolves_on_
+    show_cmd: show management api http-commands
+    urls:
+    - google.com
+    - cnn.com
+    - arista.com
+  - description: Verifies DNS servers are reachable via ping
+    dns_servers:
+    - 11.201.12.2
+    dns_vrf: null
+    expected_output: true
+    name: test_if_dns_servers_are_reachable_on_
+    show_cmd: null
+  - description: Verifies DNS configuration matches the recommended practices
+    dn_name: null
+    dns_intf: null
+    dns_servers:
+    - 11.201.12.2
+    dns_vrf: default
+    expected_output: true
+    name: test_dns_configuration_on_
+    show_cmd: null
+- name: test_tacacs.py
+  testcases:
+  - comment: null
+    description: Verify tacacs messages are sending correctly
+    expected_output: null
+    name: test_if_tacacs_is_sending_messages_on_
+    result: true
+    show_cmd: show tacacs
+  - comment: null
+    description: Verify tacacs messages are received correctly
+    expected_output: null
+    name: test_if_tacacs_is_receiving_messages_on_
+    result: true
+    show_cmd: show tacacs

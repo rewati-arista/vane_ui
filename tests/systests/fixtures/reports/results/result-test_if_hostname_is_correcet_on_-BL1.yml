@@ -1,0 +1,28 @@
+actual_output: BL1
+comment: 'TEST is hostname correct.
+
+  GIVEN hostname |BL1|.
+
+  WHEN hostname is |BL1|.
+
+  THEN test case result is |True|.
+
+  OUTPUT of |show hostname| is :
+
+
+  Hostname: BL1
+
+  FQDN:     BL1
+
+  '
+description: Verify hostname is set on device is correct
+dut: BL1
+expected_output: BL1
+fail_or_skip_reason: ''
+name: test_if_hostname_is_correcet_on_
+output_msg: On router |BL1| the configured hostname is |BL1| and the correct hostname
+  is |BL1|
+show_cmd: show hostname
+test_id: null
+test_result: true
+test_suite: test_host.py

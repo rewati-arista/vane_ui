@@ -39,6 +39,7 @@ import pyeapi
 from netmiko.ssh_autodetect import SSHDetect
 from netmiko import Netmiko
 import json
+from vane.utils import make_iterable
 
 error_responses = [
     '% This is an unconverted command\n{\n    "errors": [\n        "This is an unconverted command"\n    ]\n}',
@@ -90,8 +91,20 @@ class DeviceConn:
         """Connect to the mentioned device"""
         pass
 
-    def send_commands(self, cmds, encoding, send_enable, **kwargs):
+    def run_commands(self, cmds, encoding, send_enable, **kwargs):
         """Send commands over the device conn"""
+        pass
+
+    def get_config(self, config, params, as_string):
+        """Retrieves the config from device"""
+        pass
+
+    def enable(self, commands, encoding, strict, send_enable, **kwargs):
+       """Send the array of commands to the node in enable mode"""
+       pass
+
+    def config(self, commands, **kwargs):
+        """Configures the node with the specified commands"""
         pass
 
 class PyeapiConn(DeviceConn):
@@ -104,9 +117,23 @@ class PyeapiConn(DeviceConn):
     def set_up_conn(self, device_name):
         self._connection = pyeapi.connect_to(device_name)
 
-    def send_commands(self, cmds, encoding='json', send_enable=True, **kwargs):
+    def run_commands(self, cmds, encoding='json', send_enable=True, **kwargs):
         output = self._connection.run_commands(cmds, encoding, send_enable)
         return output
+
+    def get_config(self, config='running-config', params=None,
+                   as_string=False):
+        output = self._connection.get_config(config, params, as_string)
+        return output
+
+    def enable(self, commands, encoding='json', strict=False,
+               send_enable=True, **kwargs):
+       output = self._connection.enable(commands, encoding, strict, send_enable, **kwargs)
+       return output
+
+    def config(self, commands, **kwargs):
+       output = self._connection.config(commands, **kwargs)
+       return output
 
 class NetmikoConn(DeviceConn):
     def connection(self):
@@ -136,7 +163,7 @@ class NetmikoConn(DeviceConn):
             remote_device['device_type'] = guesser.autodetect()
         self._connection = Netmiko(**remote_device)
 
-    def send_commands(self, cmds, encoding='json', send_enable=True, **kwargs):
+    def run_commands(self, cmds, encoding='json', send_enable=True, **kwargs):
         output = ''
         local_cmds = []
         if send_enable:
@@ -190,3 +217,79 @@ class NetmikoConn(DeviceConn):
                 cmds_op.append(output)
 
         return cmds_op
+
+    def get_config(self, config='running-config', params=None,
+                   as_string=False):
+        if config not in ['startup-config', 'running-config']:
+            raise TypeError('invalid config name specified')
+        command = 'show %s' % config
+        if params:
+            command += ' %s' % params
+
+        result = self.run_commands(command, 'text')
+        if as_string:
+            return str(result[0]['output']).strip()
+
+        return str(result[0]['output']).split('\n')
+
+    def enable(self, commands, encoding='json', strict=False,
+               send_enable=True, **kwargs):
+        commands = make_iterable(commands)
+
+        if 'configure' in commands:
+            raise TypeError('config mode commands not supported')
+
+        results = list()
+        if strict:
+            responses = self.run_commands(
+                                          commands,
+                                          encoding,
+                                          send_enable,
+                                          **kwargs)
+            for index, response in enumerate(responses):
+                results.append(dict(command=commands[index],
+                                    result=response,
+                                    response=response,
+                                    encoding=encoding))
+        else:
+            for command in commands:
+                try:
+                    resp = self.run_commands(
+                            command,
+                            encoding,
+                            send_enable,
+                            **kwargs)
+                    results.append(dict(command=command,
+                                        result=resp[0],
+                                        encoding=encoding))
+                except CommandError as exc:
+                    if exc.error_code == 1003:
+                        resp = self.run_commands(
+                                command,
+                                'text',
+                                send_enable,
+                                **kwargs)
+                        results.append(dict(command=command,
+                                            result=resp[0],
+                                            encoding='text'))
+                    else:
+                        raise
+        return results
+
+    def config(self, commands, **kwargs):
+        commands = make_iterable(commands)
+        commands = list(commands)
+
+        # push the configure command onto the command stack
+        commands.insert(0, 'configure terminal')
+        response = self.run_commands(commands, **kwargs)
+
+        if self.autorefresh:
+            self.refresh()
+
+        # pop the configure command output off the stack
+        response.pop(0)
+
+        return response
+
+

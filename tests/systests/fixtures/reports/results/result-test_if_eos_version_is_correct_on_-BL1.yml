@@ -1,0 +1,19 @@
+actual_output: 4.24.2F
+comment: "TEST EOS version running on the device on |BL1|.\nGIVEN version is |4.24.2F|.\n\
+  WHEN version is |4.24.2F|.\nTHEN test case result is |True|.\nOUTPUT of |show version|\
+  \ is:\n\n vEOS\nHardware version:      \nSerial number:         \nHardware MAC address:\
+  \  d40e.13c9.79dd\nSystem MAC address:    d40e.13c9.79dd\n\nSoftware image version:\
+  \ 4.24.2F\nArchitecture:           i686\nInternal build version: 4.24.2F-18436385.4242F\n\
+  Internal build ID:      03cdce3a-550e-46a8-88e5-4b27656fd2e5\n\nUptime:        \
+  \         13 weeks, 0 days, 7 hours and 6 minutes\nTotal memory:           4006912\
+  \ kB\nFree memory:            2619148 kB\n\n"
+description: Verifies EOS version running on the device
+dut: BL1
+expected_output: 4.24.2F
+fail_or_skip_reason: ''
+name: test_if_eos_version_is_correct_on_
+output_msg: On router |BL1| EOS version is |4.24.2F%|, version should be |4.24.2F%|
+show_cmd: show version
+test_id: null
+test_result: true
+test_suite: test_system.py

@@ -217,6 +217,7 @@ def login_duts(test_parameters, test_duts):
         login_ptr["role"] = dut["role"]
         login_ptr["neighbors"] = dut["neighbors"]
         login_ptr["results_dir"] = test_parameters["parameters"]["results_dir"]
+        login_ptr["eapi_file"] = eapi_file
 
     logging.info(f"Returning duts logins: {logins}")
     return logins
@@ -236,9 +237,9 @@ def send_cmds(show_cmds, conn, encoding):
             f"List of show commands in show_cmds with encoding {encoding}: {show_cmds}"
         )
         if encoding == "json":
-            show_cmd_list = conn.send_commands(show_cmds)
+            show_cmd_list = conn.run_commands(show_cmds)
         elif encoding == "text":
-            show_cmd_list = conn.send_commands(show_cmds, encoding="text")
+            show_cmd_list = conn.run_commands(show_cmds, encoding="text")
         logging.info(
             f"ran all show cmds with encoding {encoding}: {show_cmds}")
 
@@ -365,12 +366,12 @@ def return_show_cmd(show_cmd, dut, test_name, test_parameters):
     show_output_text = []
     raw_text = ""
     try:
-        show_output = conn.send_commands(show_cmd, encoding="json")
+        show_output = conn.run_commands(show_cmd, encoding="json")
     except Exception as e:
         logging.error(f"Missed on commmand {show_cmd}")
         logging.error(f"Error msg {e}")
         time.sleep(1)
-        show_output_text = conn.send_commands(show_cmd, encoding="text")
+        show_output_text = conn.run_commands(show_cmd, encoding="text")
         logging.error(f"new value of show_output_text  {show_output_text}")
         raw_text = show_output_text[0]["output"]
     logging.info(
@@ -908,7 +909,7 @@ class TestOps:
         )
 
         try:
-            show_output_text = conn.send_commands(show_cmd, encoding="text")
+            show_output_text = conn.run_commands(show_cmd, encoding="text")
             logging.info(
                 f"Raw text output of {show_cmd} on dut {name}: "
                 f"{self.show_cmd_txt}"

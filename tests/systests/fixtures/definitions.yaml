@@ -1,6 +1,7 @@
 parameters:
   eapi_file: tests/unittests/fixtures/eapi.conf
   eapi_template: tests/fixtures/templates/eapi.conf.j2
+  eos_conn: eapi
   excel_report: null
   html_report: tests/systests/fixtures/reports/report
   json_report: tests/systests/fixtures/reports/report

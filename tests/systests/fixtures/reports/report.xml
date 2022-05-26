@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="21" time="11.735" timestamp="2022-05-26T16:29:59.665314" hostname="sagarwal"><testcase classname="tests.systests.api.test_api.APITests" name="test_if_management_https_api_server_is_running_on_[BL1]" time="0.492" /><testcase classname="tests.systests.api.test_api.APITests" name="test_if_management_https_api_server_port_is_correct_on_[BL1]" time="0.211" /><testcase classname="tests.systests.api.test_api.APITests" name="test_if_management_https_api_server_is_enabled_on_[BL1]" time="0.117" /><testcase classname="tests.systests.api.test_api.APITests" name="test_if_management_http_api_server_is_running_on_[BL1]" time="0.106" /><testcase classname="tests.systests.api.test_api.APITests" name="test_if_management_local_http_api_server_is_running_on_[BL1]" time="0.242" /><testcase classname="tests.systests.cpu.test_cpu.CPUTests" name="test_1_sec_cpu_utlization_on_[BL1]" time="0.138" /><testcase classname="tests.systests.cpu.test_cpu.CPUTests" name="test_1_min_cpu_utlization_on_[BL1]" time="0.137" /><testcase classname="tests.systests.cpu.test_cpu.CPUTests" name="test_5_min_cpu_utlization_on_[BL1]" time="0.131" /><testcase classname="tests.systests.daemon.test_daemon.DaemonTests" name="test_if_daemons_are_running_on_[BL1]" time="0.102" /><testcase classname="tests.systests.daemon.test_daemon.DaemonTests" name="test_if_daemons_are_enabled_on_[BL1]" time="0.135" /><testcase classname="tests.systests.filesystem.test_filesystem.FileSystemTests" name="test_if_files_on_[BL1]" time="0.553" /><testcase classname="tests.systests.host.test_host.HostTests" name="test_if_hostname_is_correcet_on_[BL1]" time="0.104" /><testcase classname="tests.systests.interface.test_interface.InterfaceStatusTests" name="test_if_intf_protocol_status_is_connected_on_[BL1]" time="0.122" /><testcase classname="tests.systests.interface.test_interface.InterfaceStatusTests" name="test_if_intf_link_status_is_connected_on_[BL1]" time="0.101" /><testcase classname="tests.systests.log.test_logging.LoggingTests" name="test_if_log_messages_appear_on_[BL1]" time="0.111" /><testcase classname="tests.systests.memory.test_memory.MemoryTests" name="test_memory_utilization_on_[BL1]" time="0.118" /><testcase classname="tests.systests.system.test_system.CrashTests" name="test_if_there_is_agents_have_crashed_on_[BL1]" time="0.428"><failure message="assert 469 &lt;= 0&#10; +  where 469 = &lt;vane.tests_tools.TestOps object at 0x111c89880&gt;.actual_output&#10; +  and   0 = &lt;vane.tests_tools.TestOps object at 0x111c89880&gt;.expected_output">self = &lt;systests.system.test_system.CrashTests object at 0x111b41670&gt;
+dut = {'connection': &lt;vane.device_interface.PyeapiConn object at 0x1119d45e0&gt;, 'eapi_file': 'tests/unittests/fixtures/eapi.conf', 'mgmt_ip': '10.255.74.38', 'name': 'BL1', ...}
+tests_definitions = {'test_suites': [{'name': 'test_interface.py', 'testcases': [{'description': 'Verify the interfaces of interest protoc...xpected_output': True, 'name': 'test_for_zerotouch_config_file_on_', 'show_cmd': 'dir flash:zerotouch-config'}]}, ...]}
+
+    def test_if_there_is_agents_have_crashed_on_(self, dut, tests_definitions):
+        """Verifies the agents logs crash is empty
+    
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
+        """
+    
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        tops.return_show_cmd("show agent logs crash")
+        lines = tops.show_cmd_txt.split("\n")
+        tops.actual_output = len(lines) - 1
+    
+        tops.test_result = tops.actual_output &lt;= tops.expected_output
+    
+        tops.output_msg = (
+            f"\nOn router |{tops.dut_name}| has "
+            f"|{tops.actual_output}| agent crashes"
+            " correct number of agent crashes is "
+            f"|{tops.expected_output}|.\n"
+        )
+        tops.comment = (
+            f"TEST number of agent crashes on |{tops.dut_name}|.\n"
+            f"GIVEN |{tops.expected_output}| agent crashes.\n"
+            f"WHEN |{tops.actual_output}| agent crashes.\n"
+            f"THEN test case result is |{tops.test_result}|.\n"
+            f"OUTPUT of |{tops.show_cmd}| is:\n{tops.show_cmd_txt}"
+            ".\n"
+        )
+    
+        tops.post_testcase()
+    
+&gt;       assert tops.actual_output &lt;= tops.expected_output
+E       assert 469 &lt;= 0
+E        +  where 469 = &lt;vane.tests_tools.TestOps object at 0x111c89880&gt;.actual_output
+E        +  and   0 = &lt;vane.tests_tools.TestOps object at 0x111c89880&gt;.expected_output
+
+tests/systests/system/test_system.py:82: AssertionError</failure></testcase><testcase classname="tests.systests.system.test_system.SystemTests" name="test_if_eos_version_is_correct_on_[BL1]" time="0.104" /><testcase classname="tests.systests.users.test_users.UsersTests" name="test_if_usernames_are_configured_on_[BL1]" time="0.147" /><testcase classname="tests.systests.ztp.test_ztp.ZTPTests" name="test_if_zerotouch_is_disabled_on_[BL1]" time="0.107" /><testcase classname="tests.systests.ztp.test_ztp.ZTPTests" name="test_for_zerotouch_config_file_on_[BL1]" time="0.101" /></testsuite></testsuites>
