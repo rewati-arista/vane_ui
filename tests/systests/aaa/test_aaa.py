@@ -34,8 +34,9 @@
 import inspect
 import logging
 import pytest
+from vane.fixtures import dut, tests_definitions
 from vane import tests_tools
-from vane.tests_base import TestsBase
+
 
 TEST_SUITE = __file__
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
@@ -44,7 +45,7 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.nrfu
 @pytest.mark.base_feature
 @pytest.mark.aaa
-class AAATests(TestsBase):
+class AAATests:
     """AAA Test Suite"""
 
     @pytest.mark.skip(reason="No AAA setup on DUTs")
@@ -63,6 +64,7 @@ class AAATests(TestsBase):
             tests_definitions, TEST_SUITE, test_case
         )
 
+        expected_output = test_parameters["expected_output"]
         dut_name = dut["name"]
 
         show_cmd = test_parameters["show_cmd"]
@@ -86,6 +88,10 @@ class AAATests(TestsBase):
         logging.info(
             f"WHEN {auth_allowed_2} authentication counters at " "time 2"
         )
+
+        actual_output = f"Authroization Allowed Message Time 1: \
+                        {auth_allowed_1} \nAuthorization Allowed Message \
+                        Time 2: {auth_allowed_2}"
 
         if auth_allowed_1 < auth_allowed_2:
             print(

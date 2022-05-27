@@ -31,9 +31,12 @@
 
 """ Tests to validate base feature status."""
 
+import inspect
+import logging
 import pytest
 from vane import tests_tools
-from vane.tests_base import TestsBase
+from vane.fixtures import dut, tests_definitions
+
 
 TEST_SUITE = __file__
 
@@ -45,7 +48,7 @@ TEST_SUITE = __file__
 @pytest.mark.virtual
 @pytest.mark.physical
 @pytest.mark.eos424
-class CrashTests(TestsBase):
+class CrashTests:
     """Crash Test Suite"""
 
     def test_if_there_is_agents_have_crashed_on_(self, dut, tests_definitions):
@@ -89,7 +92,7 @@ class CrashTests(TestsBase):
 @pytest.mark.virtual
 @pytest.mark.physical
 @pytest.mark.eos424
-class SystemTests(TestsBase):
+class SystemTests:
     """System Test Suite"""
 
     def test_if_eos_version_is_correct_on_(self, dut, tests_definitions):
@@ -118,8 +121,6 @@ class SystemTests(TestsBase):
             f"THEN test case result is |{tops.test_result}|.\n"
             f"OUTPUT of |{tops.show_cmd}| is:\n\n{tops.show_cmd_txt}"
         )
-
-        print(f"{tops.output_msg}\n{tops.comment}")
 
         tops.post_testcase()
 

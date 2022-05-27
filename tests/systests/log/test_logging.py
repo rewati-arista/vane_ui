@@ -31,9 +31,12 @@
 
 """ Tests to validate base feature status."""
 
+import inspect
+import logging
 import pytest
 from vane import tests_tools
-from vane.tests_base import TestsBase
+from vane.fixtures import dut, tests_definitions
+
 
 TEST_SUITE = __file__
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
@@ -47,7 +50,7 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.virtual
 @pytest.mark.physical
 @pytest.mark.eos424
-class LoggingTests(TestsBase):
+class LoggingTests:
     """Logging Test Suite"""
 
     def test_if_log_messages_appear_on_(self, dut, tests_definitions):

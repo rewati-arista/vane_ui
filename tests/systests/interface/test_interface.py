@@ -32,8 +32,9 @@
 """ Tests to validate base feature status."""
 
 import pytest
+from vane.fixtures import dut, tests_definitions
 from vane import tests_tools
-from vane.tests_base import TestsBase
+
 
 TEST_SUITE = __file__
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
@@ -43,7 +44,7 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.nrfu
 @pytest.mark.interface_baseline_health
 @pytest.mark.interface
-class InterfaceStatusTests(TestsBase):
+class InterfaceStatusTests:
     """Interface Status Test Suite"""
 
     @pytest.mark.virtual
@@ -152,7 +153,7 @@ class InterfaceStatusTests(TestsBase):
 @pytest.mark.nrfu
 @pytest.mark.interface_baseline_health
 @pytest.mark.interface
-class InterfacePhyTests(TestsBase):
+class InterfacePhyTests:
     """Interface Status Test Suite"""
 
     @pytest.mark.physical
@@ -173,7 +174,7 @@ class InterfacePhyTests(TestsBase):
 
             for interface in tops.interface_list:
                 interface_name = interface["interface_name"].replace(" ", "")
-                int_ptr = dut["output"][tops.show_cmd]["json"][
+                int_ptr = dut["output"][show_cmd]["json"][
                     "interfacePhyStatuses"
                 ]
                 raw_output = int_ptr[interface_name]["phyStatuses"][0]["text"]
@@ -231,7 +232,7 @@ class InterfacePhyTests(TestsBase):
 @pytest.mark.nrfu
 @pytest.mark.interface_baseline_health
 @pytest.mark.interface
-class InterfaceCountersTests(TestsBase):
+class InterfaceCountersTests:
     """Interface Status Test Suite"""
 
     @pytest.mark.virtual
@@ -612,7 +613,7 @@ class InterfaceCountersTests(TestsBase):
 @pytest.mark.nrfu
 @pytest.mark.interface_baseline_health
 @pytest.mark.interface
-class InterfaceDiscardTests(TestsBase):
+class InterfaceDiscardTests:
     """Interface Discard Test Suite"""
 
     @pytest.mark.virtual
@@ -722,7 +723,7 @@ class InterfaceDiscardTests(TestsBase):
 @pytest.mark.nrfu
 @pytest.mark.interface_baseline_health
 @pytest.mark.interface
-class InterfaceMtuTests(TestsBase):
+class InterfaceMtuTests:
     """Interface MTU Test Suite"""
 
     @pytest.mark.virtual
@@ -772,6 +773,13 @@ class InterfaceMtuTests(TestsBase):
         tops.post_testcase()
 
         assert tops.actual_results == tops.expected_results
+
+
+@pytest.mark.nrfu
+@pytest.mark.interface_baseline_health
+@pytest.mark.interface
+class InterfaceCountersTests:
+    """Interface Errors Test Suite"""
 
     @pytest.mark.virtual
     @pytest.mark.physical

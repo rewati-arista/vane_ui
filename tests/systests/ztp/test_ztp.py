@@ -31,9 +31,12 @@
 
 """ Tests to validate base feature status."""
 
+import inspect
+import logging
 import pytest
 from vane import tests_tools
-from vane.tests_base import TestsBase
+from vane.fixtures import dut, tests_definitions
+
 
 TEST_SUITE = __file__
 
@@ -44,7 +47,7 @@ TEST_SUITE = __file__
 @pytest.mark.virtual
 @pytest.mark.physical
 @pytest.mark.eos424
-class ZTPTests(TestsBase):
+class ZTPTests:
     """Zero Touch Provisioning Test Suite"""
 
     def test_if_zerotouch_is_disabled_on_(self, dut, tests_definitions):

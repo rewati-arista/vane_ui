@@ -35,7 +35,8 @@ import inspect
 import logging
 import pytest
 from vane import tests_tools
-from vane.tests_base import TestsBase
+from vane.fixtures import dut, tests_definitions
+
 
 TEST_SUITE = __file__
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
@@ -44,7 +45,7 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.nrfu
 @pytest.mark.base_feature
 @pytest.mark.tacacs
-class TacacsTests(TestsBase):
+class TacacsTests:
     """AAA TACACS Test Suite"""
 
     def test_if_tacacs_is_sending_messages_on_(self, dut, tests_definitions):
@@ -60,6 +61,7 @@ class TacacsTests(TestsBase):
             tests_definitions, TEST_SUITE, test_case
         )
 
+        expected_output = test_parameters["expected_output"]
         dut_name = dut["name"]
 
         show_cmd = test_parameters["show_cmd"]
@@ -85,6 +87,10 @@ class TacacsTests(TestsBase):
             logging.info(
                 f"WHEN {eos_messages_sent_2} TACACS messages sent " "at time 2"
             )
+
+            actual_output = f"TACACS Sent Message Time 1: \
+                            {eos_messages_sent_1} \nTACACS Sent Message \
+                            Time 2: {eos_messages_sent_2}"
 
             if eos_messages_sent_1 < eos_messages_sent_2:
                 print(
@@ -123,6 +129,7 @@ class TacacsTests(TestsBase):
             tests_definitions, TEST_SUITE, test_case
         )
 
+        expected_output = test_parameters["expected_output"]
         dut_name = dut["name"]
 
         show_cmd = test_parameters["show_cmd"]
@@ -153,6 +160,10 @@ class TacacsTests(TestsBase):
                 f"WHEN {eos_messages_received_2} TACACS messages "
                 "sent at time 2"
             )
+
+            actual_output = f"TACACS Sent Message Time 1: \
+                            {eos_messages_received_1} \nTACACS Sent Message \
+                            Time 2: {eos_messages_received_2}"
 
             if eos_messages_received_1 < eos_messages_received_2:
                 print(

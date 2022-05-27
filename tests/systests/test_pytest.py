@@ -33,11 +33,10 @@
 
 import logging
 import pytest
-from vane.tests_base import TestsBase
 
 
 @pytest.mark.pytest
-class PyTestTests(TestsBase):
+class PyTestTests():
     """ PyTest Test Suite
     """
 

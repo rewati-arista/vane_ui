@@ -33,7 +33,8 @@
 
 import pytest
 from vane import tests_tools
-from vane.tests_base import TestsBase
+from vane.fixtures import dut, tests_definitions
+
 
 TEST_SUITE = __file__
 
@@ -43,7 +44,7 @@ TEST_SUITE = __file__
 @pytest.mark.virtual
 @pytest.mark.physical
 @pytest.mark.eos424
-class DNSTests(TestsBase):
+class DNSTests:
     """DNS Test Suite"""
 
     def test_if_dns_resolves_on_(self, dut, tests_definitions):

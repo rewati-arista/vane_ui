@@ -31,9 +31,11 @@
 
 """ Tests to validate base feature status."""
 
+import inspect
 import pytest
 from vane import tests_tools
-from vane.tests_base import TestsBase
+from vane.fixtures import dut, tests_definitions
+
 
 TEST_SUITE = __file__
 
@@ -43,7 +45,7 @@ TEST_SUITE = __file__
 @pytest.mark.virtual
 @pytest.mark.physical
 @pytest.mark.eos424
-class LldpTests(TestsBase):
+class LldpTests:
     """LLDP Test Suite"""
 
     def test_if_lldp_rx_is_enabled_on_(self, dut, tests_definitions):
@@ -149,7 +151,7 @@ class LldpTests(TestsBase):
 @pytest.mark.virtual
 @pytest.mark.physical
 @pytest.mark.eos424
-class LldpLocalInfoTests(TestsBase):
+class LldpLocalInfoTests:
     """LLDP Local-Info Test Suite"""
 
     def test_if_lldp_system_name_is_correct_on_(self, dut, tests_definitions):
