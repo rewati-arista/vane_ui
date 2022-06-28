@@ -60,3 +60,4 @@ docs/_build/*
 cover/*
 MANIFEST
 venv
+tests/systests/fixtures/reports/*
