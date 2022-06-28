@@ -199,15 +199,16 @@ def login_duts(test_parameters, test_duts):
         login_ptr = logins[login_index]
         logging.info(f"Connecting to switch: {name} using parameters: {dut}")
         eos_conn = test_parameters["parameters"].get("eos_conn", default_eos_conn)
+        netmiko_conn = device_interface.NetmikoConn()
+        netmiko_conn.set_conn_params(eapi_file)
+        netmiko_conn.set_up_conn(name)
+        login_ptr["ssh_conn"] = netmkio_conn
         if eos_conn == 'eapi':
             pyeapi_conn = device_interface.PyeapiConn()
             pyeapi_conn.set_conn_params(eapi_file)
             pyeapi_conn.set_up_conn(name)
             login_ptr["connection"] = pyeapi_conn
         elif eos_conn == 'ssh':
-            netmiko_conn = device_interface.NetmikoConn()
-            netmiko_conn.set_conn_params(eapi_file)
-            netmiko_conn.set_up_conn(name)
             login_ptr["connection"] = netmiko_conn
         else:
             raise ValueError("Invalid EOS conn type [%s] specified" % eos_conn)
