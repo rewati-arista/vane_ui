@@ -35,7 +35,6 @@ import inspect
 import logging
 import pytest
 from vane import tests_tools
-from vane.fixtures import dut, tests_definitions
 
 
 TEST_SUITE = __file__

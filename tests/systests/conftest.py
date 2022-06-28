@@ -34,6 +34,7 @@
 import re
 import pytest
 from py.xml import html
+from vane.fixtures import dut, tests_definitions, select_leaf_dut, duts, setup_dut
 
 
 def pytest_addoption(parser):
@@ -123,3 +124,4 @@ def pytest_runtest_makereport(item, call):
         report.description = str(item.function.__doc__)
     else:
         report.description = "No Description"
+

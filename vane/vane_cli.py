@@ -115,6 +115,22 @@ def input_spreadsheet(definitions_file):
     sys.exit(0)
 
 
+def setup_vane():
+    """ Do tasks to setup test suite """
+
+    logging.info("Starting Test Suite setup")
+
+    vane.config.test_duts = tests_tools.import_yaml(vane.config.DUTS_FILE)
+    vane.config.test_parameters = tests_tools.import_yaml(vane.config.DEFINITIONS_FILE)
+    tests_tools.init_show_log(vane.config.test_parameters)
+
+    logging.info("Discovering show commands from definitions")
+    vane.config.test_defs = tests_tools.return_test_defs(vane.config.test_parameters)
+    show_cmds = tests_tools.return_show_cmds(vane.config.test_defs)
+    vane.config.dut_objs = tests_tools.init_duts(show_cmds, vane.config.test_parameters, vane.config.test_duts)
+
+    logging.info(f"Return to test suites: \nduts: {vane.config.dut_objs}")
+
 def run_tests(definitions_file, duts_file):
     """Make request to test client to run tests
 
@@ -206,6 +222,7 @@ def main():
         if args.environment:
             vane.config.ENVIRONMENT = args.environment
 
+        setup_vane()
         run_tests(vane.config.DEFINITIONS_FILE, vane.config.DUTS_FILE)
         write_results(vane.config.DEFINITIONS_FILE)
 

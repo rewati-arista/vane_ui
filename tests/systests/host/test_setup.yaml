@@ -1,0 +1,3 @@
+BL1: |
+  bash timeout 2
+  mkdir /mnt/flash/temp1 

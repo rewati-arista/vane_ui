@@ -32,7 +32,6 @@
 """ Tests to validate base feature status."""
 
 import pytest
-from vane.fixtures import dut, tests_definitions
 from vane import tests_tools
 
 

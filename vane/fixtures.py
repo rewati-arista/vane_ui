@@ -1,36 +1,8 @@
 import pytest
 import logging
 from vane import tests_tools
-from vane.config import DEFINITIONS_FILE, DUTS_FILE
-
-def return_duts():
-    """ Do tasks to setup test suite """
-
-    logging.info("Starting Test Suite setup")
-
-    test_duts = tests_tools.import_yaml(DUTS_FILE)
-    test_parameters = tests_tools.import_yaml(DEFINITIONS_FILE)
-    tests_tools.init_show_log(test_parameters)
-
-    logging.info("Discovering show commands from definitions")
-    test_defs = tests_tools.return_test_defs(test_parameters)
-    show_cmds = tests_tools.return_show_cmds(test_defs)
-    duts = tests_tools.init_duts(show_cmds, test_parameters, test_duts)
-
-    logging.info(f"Return to test suites: \nduts: {duts}")
-    return duts
-
-
-def return_duts_names():
-    """ Do tasks to setup test suite """
-
-    logging.info("Starting Test Suite setup")
-    test_parameters = tests_tools.import_yaml(DUTS_FILE)
-    duts_names = tests_tools.return_dut_list(test_parameters)
-
-    logging.info(f"Return to test suites: \nduts_lists: {duts_names}")
-    return duts_names
-
+import os
+from vane.config import dut_objs, test_defs, test_duts
 
 def idfn(val):
     """id function for the current fixture data
@@ -44,8 +16,7 @@ def idfn(val):
     return val['name']
 
 
-@pytest.fixture(params=return_duts(), ids=idfn,
-                scope="session")
+@pytest.fixture(scope="session", params=dut_objs, ids=idfn)
 def dut(request):
     """Parameterize each dut for a test case
 
@@ -59,7 +30,6 @@ def dut(request):
     dut = request.param
     yield dut
 
-
 @pytest.fixture(scope="session")
 def duts():
     """Returns all the duts under test
@@ -68,10 +38,10 @@ def duts():
         [dict]: a list of duts
     """
     logging.info("Invoking fixture to get list of duts")
-    duts = {}
-    for dut in return_duts():
-        duts[dut['name']] = dut
-    return duts
+    duts_dict = {}
+    for dut in dut_objs:
+        duts_dict[dut['name']] = dut
+    return duts_dict
 
 @pytest.fixture()
 def tests_definitions():
@@ -84,5 +54,30 @@ def tests_definitions():
         [dict]: Return test definitions to test case
     """
 
-    test_parameters = tests_tools.import_yaml(DEFINITIONS_FILE)
-    yield tests_tools.return_test_defs(test_parameters)
+    yield test_defs
+
+@pytest.fixture(autouse=True, scope="class")
+def setup_dut(request, duts):
+    testname = request.node.fspath
+    test_suites = test_defs['test_suites']
+    setup_config = []
+    for s in test_suites:
+        tests = s['testcases']
+        for t in tests:
+            if s['name'] == os.path.basename(testname):
+                setup_config_file = t.get('test_setup', "")
+                if setup_config_file != "":
+                    setup_config = tests_tools.import_yaml(f"{s['dir_path']}/{setup_config_file}")
+                for dev_name in setup_config:
+                    dut = duts[dev_name]
+                    config = setup_config[dev_name].splitlines()
+                    gold_config = ['copy running-config flash:gold-config', 'write memory']
+                    dut['connection'].enable(gold_config)
+                    dut['connection'].config(config)
+    yield
+    for dev_name in setup_config:
+        dut = duts[dev_name]
+        restore_config = ['copy flash:gold-config running-config', 'write memory']
+        dut['connection'].config(restore_config)
+
+

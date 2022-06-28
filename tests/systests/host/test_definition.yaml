@@ -5,3 +5,7 @@ testcases:
     # DUT name is taken from the definitions file
     expected_output: null
     show_cmd: show hostname
+    devices: 
+      - BL1
+      - BL2  
+    test_setup: test_setup.yaml 

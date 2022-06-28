@@ -108,7 +108,7 @@ def import_yaml(yaml_file):
                 logging.error("EXITING TEST RUNNER")
                 sys.exit(1)
     except OSError as err:
-        print(">>> YAML FILE MISSING")
+        print(f">>> {yaml_file} YAML FILE MISSING")
         logging.error(f"ERROR YAML FILE: {yaml_file} NOT " f"FOUND. {err}")
         logging.error("EXITING TEST RUNNER")
         sys.exit(1)
@@ -655,6 +655,7 @@ def return_test_defs(test_parameters):
                 if file_name == "test_definition.yaml":
                     file_path = f"{dir_path}/{file_name}"
                     test_def = import_yaml(file_path)
+                    test_def['dir_path'] = f"{dir_path}"
                     test_defs["test_suites"].append(test_def)
 
     export_yaml(report_dir + "/tests_definitions.yaml", test_defs)
@@ -684,7 +685,7 @@ def export_yaml(yaml_file, yaml_data):
                 logging.error("EXITING TEST RUNNER")
                 sys.exit(1)
     except OSError as err:
-        print(">>> YAML FILE MISSING")
+        print(f">>> {yaml_file} YAML FILE MISSING")
         logging.error(f"ERROR YAML FILE: {yaml_file} NOT " f"FOUND. {err}")
         logging.error("EXITING TEST RUNNER")
         sys.exit(1)

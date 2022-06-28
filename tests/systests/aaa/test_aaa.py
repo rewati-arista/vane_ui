@@ -34,7 +34,6 @@
 import inspect
 import logging
 import pytest
-from vane.fixtures import dut, tests_definitions
 from vane import tests_tools
 
 
@@ -50,7 +49,7 @@ class AAATests:
 
     @pytest.mark.skip(reason="No AAA setup on DUTs")
     def test_if_authentication_counters_are_incrementing_on_(
-        self, dut, tests_definitions
+        self, return_global_data, dut, tests_definitions
     ):
         """Verify AAA counters are working correctly
 

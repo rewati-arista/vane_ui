@@ -1,5 +1,7 @@
 import sys
+import subprocess
 import collections
+import logging
 
 
 def make_iterable(value):
@@ -27,3 +29,12 @@ def make_iterable(value):
 
     return value
 
+def run_script(path_to_run, py_file):
+    args = ["python{}".format(python_version), "{}{}".format(path_to_run, py_file)]
+    res = subprocess.Popen(args, stdout=subprocess.PIPE)
+    output, error_ = res.communicate()
+
+    if not error_:
+        logging.info(f"Output for run_script {file}: {output}")
+    else:
+        logging.error(f"Error in run_script {py_file}: {error_}")
