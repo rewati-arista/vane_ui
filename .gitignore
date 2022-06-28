@@ -58,6 +58,5 @@ sdist/*
 docs/api/*
 docs/_build/*
 cover/*
-tests/systests/fixture/reports/*
 MANIFEST
 venv

@@ -1,0 +1,47 @@
+actual_output:
+- true
+comment: 'TEST is TerminAttr daemon running on |BL2|.
+
+  GIVEN expected TerminAttr running state: |[True]|.
+
+  WHEN TerminAttr device running state is |True|.
+
+  THEN test case result is |False|.
+
+  OUTPUT of |show daemon| is :
+
+
+  Process: TerminAttr (running with PID 2072)
+
+  Uptime: 111 days, 20:02:01 (Start time: Tue Mar 08 22:24:21 2022)
+
+  No configuration options stored.
+
+
+  No status data stored.
+
+
+  .
+
+  '
+daemons:
+- TerminAttr
+description: Verify a list of daemons are running on DUT
+dut: BL2
+expected_output:
+- - true
+fail_or_skip_reason: '
+
+  On router |BL2|, daemon running state is |True| correct state is |[True]|.
+
+  '
+name: test_if_daemons_are_running_on_
+output_msg: '
+
+  On router |BL2|, daemon running state is |True| correct state is |[True]|.
+
+  '
+show_cmd: show daemon
+test_id: null
+test_result: false
+test_suite: test_daemon.py

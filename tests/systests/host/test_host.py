@@ -47,7 +47,7 @@ TEST_SUITE = __file__
 class HostTests:
     """Host status Test Suite"""
 
-    def test_if_hostname_is_correcet_on_(self, select_leaf_dut, duts, tests_definitions):
+    def test_if_hostname_is_correcet_on_(self, dut, tests_definitions):
         """Verify hostname is set on device is correct
 
         Args:
@@ -55,10 +55,12 @@ class HostTests:
           tests_definitions (dict): Test parameters
         """
 
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, duts[select_leaf_dut])
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
         tops.expected_output = tops.dut_name
-        tops.actual_output = duts[select_leaf_dut]["output"][tops.show_cmd]["json"]["hostname"]
+        tops.actual_output = dut["connection"].run_commands(tops.show_cmd, "json")[0]["hostname"]
+        print(tops.actual_output)
+        #["json"]["hostname"]
         tops.test_result = tops.actual_output == tops.expected_output
 
         tops.output_msg = (

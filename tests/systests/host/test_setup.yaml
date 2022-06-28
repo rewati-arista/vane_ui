@@ -1,3 +1,4 @@
 BL1: |
-  bash timeout 2
-  mkdir /mnt/flash/temp1 
+  hostname bl1
+BL2: |
+  hostname bl2

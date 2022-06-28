@@ -140,6 +140,8 @@ def run_tests(definitions_file, duts_file):
 
     logging.info("Using class TestsClient to create vane_tests_client object")
     vane_tests_client = tests_client.TestsClient(definitions_file, duts_file)
+    vane_tests_client.setup_test_runner()
+    setup_vane()
     vane_tests_client.test_runner()
 
 
@@ -222,7 +224,6 @@ def main():
         if args.environment:
             vane.config.ENVIRONMENT = args.environment
 
-        setup_vane()
         run_tests(vane.config.DEFINITIONS_FILE, vane.config.DUTS_FILE)
         write_results(vane.config.DEFINITIONS_FILE)
 

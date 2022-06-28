@@ -107,13 +107,16 @@ class TestsClient:
             )
             sys.exit(1)
 
-    def test_runner(self):
-        """Run tests"""
+    def setup_test_runner(self):
+        """Setup eapi cfg, remove result files, set test params"""
 
-        logging.info("Start test setup")
+        logging.info("Starting test setup")
         self._render_eapi_cfg()
         self._remove_result_files()
         self._set_test_parameters()
+
+    def test_runner(self):
+        """Run tests"""
 
         logging.info(f"Starting Test with parameters: {self.test_parameters}")
         print("Starting test with command: pytest %s\n" %

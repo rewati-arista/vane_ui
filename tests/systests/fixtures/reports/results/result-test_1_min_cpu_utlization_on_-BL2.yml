@@ -1,0 +1,297 @@
+actual_output: 0.25
+comment: "TEST if 1 minute CPU utilization is less than specified value on |BL2|.\n\
+  GIVEN CPU utilization is less than |10|.\nWHEN CPU utilization is |0.25|.\nTHEN\
+  \ test case result is |True|.\nOUTPUT of |show processes| is :\n\n 18:26:21 up 111\
+  \ days, 20:03,  0 users,  load average: 0.41, 0.25, 0.20\n  PID %CPU %MEM TT   \
+  \    STAT  STARTED     TIME CMD\n 2072  1.0  2.6 ?        Sl     Mar 08 1-03:51:41\
+  \ /usr/bin/TerminAttr -ingestgrpcurl=192.168.0.5:9910 -cvcompression=gzip -ingestauth=key,1a38fe7df56879d685e51b6f0ff86327\
+  \ -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent\
+  \ -taillogs\n 2219  0.4  3.2 ?        S      Mar 08 11:14:15 Etba\n 1702  0.3  0.6\
+  \ ?        S      Mar 08 09:15:01 ProcMgr-worker\n31614  0.2  0.9 ?        S<Ll\
+  \   May 18 02:39:23 ovs-vswitchd unix:/var/run/openvswitch/db.sock -vconsole:emer\
+  \ -vsyslog:err -vfile:info --mlockall --no-chdir --log-file=/var/log/openvswitch/ovs-vswitchd.log\
+  \ --pidfile=/var/run/openvswitch/ovs-vswitchd.pid --detach --monitor\n 1884  0.1\
+  \  8.6 ?        Sl     Mar 08 05:10:22 ConfigAgent\n 2115  0.1  2.1 ?        S \
+  \     Mar 08 03:37:21 StpTxRx\n 2127  0.1  1.7 ?        S      Mar 08 03:25:46 AgentMonitor\n\
+  \ 2170  0.1  2.3 ?        S      Mar 08 04:51:54 Fhrp\n 2223  0.1  2.1 ?       \
+  \ S      Mar 08 04:31:25 PhyEthtool\n    1  0.0  0.1 ?        Ss     Mar 08 00:01:33\
+  \ /sbin/init\n    2  0.0  0.0 ?        S      Mar 08 00:00:00 [kthreadd]\n    3\
+  \  0.0  0.0 ?        S      Mar 08 00:01:29 [ksoftirqd/0]\n    5  0.0  0.0 ?   \
+  \     S<     Mar 08 00:00:00 [kworker/0:0H]\n    7  0.0  0.0 ?        S      Mar\
+  \ 08 00:18:41 [rcu_preempt]\n    8  0.0  0.0 ?        S      Mar 08 00:00:00 [rcu_sched]\n\
+  \    9  0.0  0.0 ?        S      Mar 08 00:00:00 [rcu_bh]\n   10  0.0  0.0 ?   \
+  \     S      Mar 08 00:00:30 [migration/0]\n   11  0.0  0.0 ?        S<     Mar\
+  \ 08 00:00:00 [lru-add-drain]\n   12  0.0  0.0 ?        S      Mar 08 00:00:00 [watchdog/0]\n\
+  \   13  0.0  0.0 ?        S      Mar 08 00:00:00 [cpuhp/0]\n   14  0.0  0.0 ?  \
+  \      S      Mar 08 00:00:00 [cpuhp/1]\n   15  0.0  0.0 ?        S      Mar 08\
+  \ 00:00:00 [watchdog/1]\n   16  0.0  0.0 ?        S      Mar 08 00:00:30 [migration/1]\n\
+  \   17  0.0  0.0 ?        S      Mar 08 00:00:40 [ksoftirqd/1]\n   19  0.0  0.0\
+  \ ?        S<     Mar 08 00:00:00 [kworker/1:0H]\n   20  0.0  0.0 ?        S   \
+  \   Mar 08 00:00:00 [kdevtmpfs]\n   21  0.0  0.0 ?        S<     Mar 08 00:00:00\
+  \ [netns]\n   22  0.0  0.0 ?        S      Mar 08 00:00:00 [xenwatch]\n   23  0.0\
+  \  0.0 ?        S      Mar 08 00:00:00 [xenbus]\n   25  0.0  0.0 ?        S    \
+  \  Mar 08 00:00:00 [khungtaskd]\n   26  0.0  0.0 ?        S      Mar 08 00:03:42\
+  \ [khungtaskd2]\n   27  0.0  0.0 ?        S      Mar 08 00:00:00 [oom_reaper]\n\
+  \   28  0.0  0.0 ?        S<     Mar 08 00:00:00 [writeback]\n   29  0.0  0.0 ?\
+  \        S      Mar 08 00:00:00 [kcompactd0]\n   30  0.0  0.0 ?        S<     Mar\
+  \ 08 00:00:00 [crypto]\n   31  0.0  0.0 ?        S<     Mar 08 00:00:00 [kintegrityd]\n\
+  \   32  0.0  0.0 ?        S<     Mar 08 00:00:00 [bioset]\n   33  0.0  0.0 ?   \
+  \     S<     Mar 08 00:00:00 [kblockd]\n   34  0.0  0.0 ?        S<     Mar 08 00:00:00\
+  \ [ata_sff]\n   35  0.0  0.0 ?        S<     Mar 08 00:00:00 [edac-poller]\n   36\
+  \  0.0  0.0 ?        S      Mar 08 00:00:00 [dst_gc_task]\n   37  0.0  0.0 ?   \
+  \     S<     Mar 08 00:00:00 [watchdogd]\n   39  0.0  0.0 ?        S      Mar 08\
+  \ 00:00:00 [arp_cache-prd]\n   40  0.0  0.0 ?        S      Mar 08 00:00:23 [icmp_unreachabl]\n\
+  \   41  0.0  0.0 ?        S<     Mar 08 00:00:00 [rpciod]\n   42  0.0  0.0 ?   \
+  \     S<     Mar 08 00:00:00 [xprtiod]\n   43  0.0  0.0 ?        S      Mar 08 00:00:00\
+  \ [kswapd0]\n   44  0.0  0.0 ?        S<     Mar 08 00:00:00 [vmstat]\n   45  0.0\
+  \  0.0 ?        S<     Mar 08 00:00:00 [nfsiod]\n   54  0.0  0.0 ?        S<   \
+  \  Mar 08 00:00:00 [pcielwd]\n   55  0.0  0.0 ?        S<     Mar 08 00:00:00 [bioset]\n\
+  \   56  0.0  0.0 ?        S<     Mar 08 00:00:00 [bioset]\n   57  0.0  0.0 ?   \
+  \     S<     Mar 08 00:00:00 [bioset]\n   58  0.0  0.0 ?        S<     Mar 08 00:00:00\
+  \ [bioset]\n   59  0.0  0.0 ?        S<     Mar 08 00:00:00 [bioset]\n   60  0.0\
+  \  0.0 ?        S<     Mar 08 00:00:00 [bioset]\n   61  0.0  0.0 ?        S<   \
+  \  Mar 08 00:00:00 [bioset]\n   62  0.0  0.0 ?        S<     Mar 08 00:00:00 [bioset]\n\
+  \   63  0.0  0.0 ?        S<     Mar 08 00:00:00 [nvme]\n   64  0.0  0.0 ?     \
+  \   S      Mar 08 00:00:00 [scsi_eh_0]\n   65  0.0  0.0 ?        S<     Mar 08 00:00:00\
+  \ [scsi_tmf_0]\n   66  0.0  0.0 ?        S      Mar 08 00:00:00 [scsi_eh_1]\n  \
+  \ 67  0.0  0.0 ?        S<     Mar 08 00:00:00 [scsi_tmf_1]\n   70  0.0  0.0 ? \
+  \       S      Mar 08 00:00:00 [ndisc_cache-prd]\n   71  0.0  0.0 ?        S<  \
+  \   Mar 08 00:00:00 [ipv6_addrconf]\n   72  0.0  0.0 ?        S<     Mar 08 00:00:00\
+  \ [ecc_log_wq]\n   73  0.0  0.0 ?        S<     Mar 08 00:00:00 [bioset]\n  146\
+  \  0.0  0.0 ?        S      Mar 08 00:00:04 [jbd2/xvda1-8]\n  147  0.0  0.0 ?  \
+  \      S<     Mar 08 00:00:00 [ext4-rsv-conver]\n  248  0.0  0.0 ?        S<   \
+  \  Mar 08 00:00:00 [kworker/0:1H]\n  298  0.0  0.0 ?        S<     Mar 08 00:00:00\
+  \ [kworker/1:1H]\n  337  0.0  0.0 ?        S<     Mar 08 00:00:00 [loop0]\n  446\
+  \  0.0  0.0 ?        Ss     Mar 08 00:00:00 /usr/lib/systemd/systemd-udevd\n  517\
+  \  0.0  0.0 ?        Ss     Mar 08 00:00:00 /usr/sbin/lvmetad -f\n  805  0.0  0.0\
+  \ ?        Ss     Mar 08 00:00:00 /usr/sbin/mcelog --ignorenodev --daemon --foreground\n\
+  \  808  0.0  0.0 ?        Ss     Mar 08 00:00:05 /usr/lib/systemd/systemd-logind\n\
+  \  809  0.0  0.0 ?        Ss     Mar 08 00:03:41 /usr/bin/ProcMonitor\n  813  0.0\
+  \  0.2 ?        Ss     Mar 08 00:00:00 /usr/bin/dbus-daemon --system --address=systemd:\
+  \ --nofork --nopidfile --systemd-activation\n  849  0.0  0.0 ?        Ss     Mar\
+  \ 08 00:00:00 /usr/sbin/xinetd -stayalive -pidfile /var/run/xinetd.pid\n  969  0.0\
+  \  0.0 ?        Ss     Mar 08 00:00:55 /usr/sbin/crond -n\n  985  0.0  0.0 ?   \
+  \     S<s    Mar 08 00:02:43 /usr/bin/wdogdev -t 100\n 1047  0.0  0.0 ?        Ss\
+  \     Mar 08 00:00:00 /usr/bin/SaveFossil --dedup --compress --priority Sysdb --maxFiles\
+  \ 1000 /var/tmp/Fossil /mnt/flash/Fossil\n 1051  0.0  0.1 ?        S      Mar 08\
+  \ 00:00:00 python /usr/bin/inotifyrun -c pax -x sv4cpio -O -w -f /mnt/flash/persist/local.new\
+  \ . && mv /mnt/flash/persist/local.new /mnt/flash/persist/local || logger -t SetupPersist\
+  \ Failed to update /mnt/flash/persist/local --daemon --logfile=/var/log/inotifyrun-local.log\
+  \ --pidfile=/var/run/inotifyrun-local.pid /persist/local\n 1052  0.0  0.0 pts/0\
+  \    Ss+    Mar 08 00:00:00 inotifywait -m -r -e modify -e create -e delete -e attrib\
+  \ -e move .\n 1062  0.0  0.1 ?        S      Mar 08 00:00:16 python /usr/bin/inotifyrun\
+  \ -c pax -x sv4cpio -O -w -f /mnt/flash/persist/sys.new . && mv /mnt/flash/persist/sys.new\
+  \ /mnt/flash/persist/sys || logger -t SetupPersist Failed to update /mnt/flash/persist/sys\
+  \ --daemon --logfile=/var/log/inotifyrun-sys.log --pidfile=/var/run/inotifyrun-sys.pid\
+  \ /persist/sys\n 1064  0.0  0.0 pts/1    Ss+    Mar 08 00:00:03 inotifywait -m -r\
+  \ -e modify -e create -e delete -e attrib -e move .\n 1078  0.0  0.1 ?        S\
+  \      Mar 08 00:00:00 python /usr/bin/inotifyrun -c pax -x sv4cpio -O -w -f /mnt/flash/persist/secure.new\
+  \ . && sync && ( mv /mnt/flash/persist/secure /mnt/flash/persist/secure.old; mv\
+  \ /mnt/flash/persist/secure.new /mnt/flash/persist/secure; sync ) && ( scrub --no-signature\
+  \ /mnt/flash/persist/secure.old; rm /mnt/flash/persist/secure.old ) || logger -t\
+  \ SetupPersist Failed to update /mnt/flash/persist/secure --daemon --logfile=/var/log/inotifyrun-secure.log\
+  \ --pidfile=/var/run/inotifyrun-secure.pid /persist/secure\n 1079  0.0  0.0 pts/2\
+  \    Ss+    Mar 08 00:00:00 inotifywait -m -r -e modify -e create -e delete -e attrib\
+  \ -e move .\n 1106  0.0  0.0 ?        Ss     Mar 08 00:00:00 /bin/bash /usr/sbin/core_annotate_util\
+  \ daemon\n 1131  0.0  0.0 ?        S      Mar 08 00:00:00 inotifywait -e modify\
+  \ /var/lib/rpm\n 1151  0.0  0.0 ?        Ss     Mar 08 00:10:47 /mnt/flash/dropbear\
+  \ -R -B -p 0.0.0.0:50001\n 1640  0.0  0.4 ?        S      Mar 08 00:00:00 netnsd-watcher\
+  \  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so --daemonize\n\
+  \ 1642  0.0  0.4 ?        S      Mar 08 00:00:00 netnsd-server   -d -i --dlopen\
+  \ -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so --daemonize\n 1701\
+  \  0.0  1.5 ?        S      Mar 08 00:00:00 ProcMgr-master\n 1816  0.0  0.0 ?  \
+  \      S      Mar 08 00:43:34 /usr/bin/EosOomAdjust\n 1829  0.0  0.0 ?        S\
+  \      Mar 08 00:03:04 [rbfd_vrf_cleanu]\n 1844  0.0  0.0 ?        Ss     Mar 08\
+  \ 00:00:00 /usr/sbin/acpid\n 1882  0.0  2.0 ?        S      Mar 08 00:03:26 StageMgr\n\
+  \ 1883  0.0  0.0 ?        S      Mar 08 00:14:04 /usr/bin/SlabMonitor\n 1885  0.0\
+  \  2.4 ?        S      Mar 08 00:04:09 Fru\n 1886  0.0  4.1 ?        S      Mar\
+  \ 08 01:42:17 Sysdb\n 1887  0.0  2.6 ?        S      Mar 08 00:03:32 Launcher\n\
+  \ 2062  0.0  0.0 ?        S      Mar 08 00:00:00 netns --agenttitle=Lldp --dlopen\
+  \ procmgr /usr/bin/Lldp\n 2064  0.0  0.0 ?        S      Mar 08 00:00:00 netns --agenttitle=McastCommon\
+  \ --dlopen procmgr /usr/bin/McastCommon\n 2065  0.0  0.3 ?        Ss     Mar 08\
+  \ 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr\
+  \ libProcMgrSetup.so --daemonize\n 2067  0.0  0.3 ?        Ss     Mar 08 00:00:00\
+  \ netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so\
+  \ --daemonize\n 2068  0.0  2.1 ?        S      Mar 08 00:07:50 McastCommon\n 2069\
+  \  0.0  2.1 ?        S      Mar 08 00:52:22 Lldp\n 2071  0.0  0.0 ?        S   \
+  \   Mar 08 00:00:00 netns --agenttitle=PortSec --dlopen procmgr /usr/bin/PortSec\n\
+  \ 2074  0.0  0.3 ?        Ss     Mar 08 00:00:00 netnsd-session  -d -i --dlopen\
+  \ -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so --daemonize\n 2075\
+  \  0.0  0.0 ?        S      Mar 08 00:00:00 netns --agenttitle=Bfd --dlopen procmgr\
+  \ /usr/bin/Bfd\n 2079  0.0  0.3 ?        Ss     Mar 08 00:00:00 netnsd-session \
+  \ -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so --daemonize\n\
+  \ 2081  0.0  0.0 ?        S      Mar 08 00:00:00 netns --agenttitle=Lag --dlopen\
+  \ procmgr /usr/bin/Lag\n 2082  0.0  2.0 ?        S      Mar 08 00:05:28 PortSec\n\
+  \ 2083  0.0  2.4 ?        S      Mar 08 00:10:36 Bfd\n 2084  0.0  3.9 ?        S\
+  \      Mar 08 02:27:11 SuperServer\n 2085  0.0  0.3 ?        Ss     Mar 08 00:00:00\
+  \ netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so\
+  \ --daemonize\n 2087  0.0  2.3 ?        S      Mar 08 00:46:56 Lag\n 2089  0.0 \
+  \ 0.0 ?        S      Mar 08 00:00:00 netns --agenttitle=Ira --dlopen procmgr /usr/bin/Ira\n\
+  \ 2090  0.0  0.0 ?        S      Mar 08 00:00:00 netns --agenttitle=LedPolicy --dlopen\
+  \ procmgr /usr/bin/LedPolicy\n 2092  0.0  0.3 ?        Ss     Mar 08 00:00:00 netnsd-session\
+  \  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so --daemonize\n\
+  \ 2094  0.0  0.3 ?        Ss     Mar 08 00:00:00 netnsd-session  -d -i --dlopen\
+  \ -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so --daemonize\n 2095\
+  \  0.0  0.0 ?        S      Mar 08 00:00:00 netns --agenttitle=Vxlan --dlopen procmgr\
+  \ /usr/bin/Vxlan\n 2097  0.0  2.6 ?        S      Mar 08 00:07:49 Ira\n 2098  0.0\
+  \  2.0 ?        S      Mar 08 00:14:48 LedPolicy\n 2099  0.0  0.3 ?        Ss  \
+  \   Mar 08 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
+  \ procmgr libProcMgrSetup.so --daemonize\n 2101  0.0  2.3 ?        S      Mar 08\
+  \ 00:07:07 Vxlan\n 2102  0.0  0.0 ?        S      Mar 08 00:00:00 netns --agenttitle=EventMgr\
+  \ --dlopen procmgr /usr/bin/EventMgr\n 2104  0.0  0.3 ?        Ss     Mar 08 00:00:00\
+  \ netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so\
+  \ --daemonize\n 2105  0.0  0.0 ?        S      Mar 08 00:00:00 netns --agenttitle=CapiApp\
+  \ --dlopen procmgr /usr/bin/CapiApp --ini /etc/uwsgi/CapiApp.ini\n 2107  0.0  0.3\
+  \ ?        Ss     Mar 08 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
+  \ procmgr libProcMgrSetup.so --daemonize\n 2108  0.0  2.2 ?        S      Mar 08\
+  \ 00:21:43 EventMgr\n 2110  0.0  2.1 ?        Sl     Mar 08 00:03:23 CapiApp   \
+  \      -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so\
+  \ --daemonize\n 2112  0.0  0.0 ?        S      Mar 08 00:00:00 netns --agenttitle=StpTxRx\
+  \ --dlopen procmgr /usr/bin/StpTxRx\n 2113  0.0  0.3 ?        Ss     Mar 08 00:00:00\
+  \ netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so\
+  \ --daemonize\n 2116  0.0  0.0 ?        S      Mar 08 00:00:00 netns --agenttitle=StandbyCpld\
+  \ --dlopen procmgr /usr/bin/StandbyCpld\n 2119  0.0  0.0 ?        S      Mar 08\
+  \ 00:00:00 netns --agenttitle=AgentMonitor --dlopen procmgr /usr/bin/AgentMonitor\n\
+  \ 2120  0.0  0.3 ?        Ss     Mar 08 00:00:00 netnsd-session  -d -i --dlopen\
+  \ -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so --daemonize\n 2123\
+  \  0.0  1.8 ?        S      Mar 08 00:03:38 StandbyCpld\n 2125  0.0  0.3 ?     \
+  \   Ss     Mar 08 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
+  \ procmgr libProcMgrSetup.so --daemonize\n 2126  0.0  0.0 ?        S      Mar 08\
+  \ 00:00:00 netns --agenttitle=Tunnel --dlopen procmgr /usr/bin/Tunnel\n 2130  0.0\
+  \  0.3 ?        Ss     Mar 08 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l\
+  \ libLoadDynamicLibs.so procmgr libProcMgrSetup.so --daemonize\n 2131  0.0  0.0\
+  \ ?        S      Mar 08 00:00:00 netns --agenttitle=Arp --dlopen procmgr /usr/bin/Arp\n\
+  \ 2132  0.0  2.0 ?        S      Mar 08 00:05:26 Tunnel\n 2133  0.0  2.3 ?     \
+  \   Sl     Mar 08 00:03:59 Aaa\n 2135  0.0  0.3 ?        Ss     Mar 08 00:00:00\
+  \ netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so\
+  \ --daemonize\n 2136  0.0  2.5 ?        Sl     Mar 08 00:32:07 Arp\n 2138  0.0 \
+  \ 0.0 ?        S      Mar 08 00:00:00 netns --agenttitle=StpTopology --dlopen procmgr\
+  \ /usr/bin/StpTopology\n 2141  0.0  0.3 ?        Ss     Mar 08 00:00:00 netnsd-session\
+  \  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so --daemonize\n\
+  \ 2142  0.0  2.0 ?        S      Mar 08 00:07:54 StpTopology\n 2144  0.0  0.0 ?\
+  \        S      Mar 08 00:00:00 netns --agenttitle=Acl --dlopen procmgr /usr/bin/Acl\n\
+  \ 2147  0.0  0.3 ?        Ss     Mar 08 00:00:00 netnsd-session  -d -i --dlopen\
+  \ -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so --daemonize\n 2148\
+  \  0.0  0.0 ?        S      Mar 08 00:00:00 netns --agenttitle=Stp --dlopen procmgr\
+  \ /usr/bin/Stp\n 2149  0.0  2.3 ?        S      Mar 08 00:50:14 Acl\n 2151  0.0\
+  \  0.0 ?        S      Mar 08 00:00:00 netns --agenttitle=KernelNetworkInfo --dlopen\
+  \ procmgr /usr/bin/KernelNetworkInfo\n 2152  0.0  0.3 ?        Ss     Mar 08 00:00:00\
+  \ netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so\
+  \ --daemonize\n 2153  0.0  0.3 ?        Ss     Mar 08 00:00:00 netnsd-session  -d\
+  \ -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so --daemonize\n\
+  \ 2155  0.0  2.0 ?        S      Mar 08 01:09:10 Stp\n 2156  0.0  0.0 ?        S\
+  \      Mar 08 00:00:00 netns --agenttitle=McastCommon6 --dlopen procmgr /usr/bin/McastCommon6\n\
+  \ 2157  0.0  1.8 ?        S      Mar 08 00:19:08 KernelNetworkInfo\n 2159  0.0 \
+  \ 0.0 ?        S      Mar 08 00:00:00 netns --agenttitle=LacpTxAgent --dlopen procmgr\
+  \ /usr/bin/LacpTxAgent\n 2160  0.0  0.3 ?        Ss     Mar 08 00:00:00 netnsd-session\
+  \  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so --daemonize\n\
+  \ 2161  0.0  2.0 ?        S      Mar 08 00:07:45 McastCommon6\n 2162  0.0  0.3 ?\
+  \        Ss     Mar 08 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
+  \ procmgr libProcMgrSetup.so --daemonize\n 2164  0.0  0.0 ?        S      Mar 08\
+  \ 00:00:00 netns --agenttitle=Fhrp --dlopen procmgr /usr/bin/Fhrp --scheduled\n\
+  \ 2165  0.0  2.1 ?        S      Mar 08 00:07:52 LacpTxAgent\n 2167  0.0  0.3 ?\
+  \        Ss     Mar 08 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
+  \ procmgr libProcMgrSetup.so --daemonize\n 2169  0.0  0.0 ?        S      Mar 08\
+  \ 00:00:00 netns --agenttitle=KernelFib --dlopen procmgr /usr/bin/KernelFib\n 2172\
+  \  0.0  0.3 ?        Ss     Mar 08 00:00:00 netnsd-session  -d -i --dlopen -p -f\
+  \  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so --daemonize\n 2174  0.0 \
+  \ 0.0 ?        S      Mar 08 00:00:00 netns --agenttitle=Qos --dlopen procmgr /usr/bin/Qos\n\
+  \ 2175  0.0  2.3 ?        S      Mar 08 00:10:56 KernelFib\n 2177  0.0  0.3 ?  \
+  \      Ss     Mar 08 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
+  \ procmgr libProcMgrSetup.so --daemonize\n 2178  0.0  0.0 ?        S      Mar 08\
+  \ 00:00:00 netns --agenttitle=Thermostat --dlopen procmgr /usr/bin/Thermostat\n\
+  \ 2179  0.0  2.1 ?        S      Mar 08 00:07:07 Qos\n 2181  0.0  0.3 ?        Ss\
+  \     Mar 08 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
+  \ procmgr libProcMgrSetup.so --daemonize\n 2182  0.0  0.0 ?        S      Mar 08\
+  \ 00:00:00 netns --agenttitle=L2Rib --dlopen procmgr /usr/bin/L2Rib\n 2183  0.0\
+  \  1.8 ?        S      Mar 08 00:07:47 Thermostat\n 2185  0.0  0.3 ?        Ss \
+  \    Mar 08 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
+  \ procmgr libProcMgrSetup.so --daemonize\n 2186  0.0  0.0 ?        S      Mar 08\
+  \ 00:00:00 netns --agenttitle=TopoAgent --dlopen procmgr /usr/bin/TopoAgent --scheduled\n\
+  \ 2187  0.0  2.0 ?        S      Mar 08 00:05:16 L2Rib\n 2189  0.0  0.3 ?      \
+  \  Ss     Mar 08 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
+  \ procmgr libProcMgrSetup.so --daemonize\n 2191  0.0  0.0 ?        S      Mar 08\
+  \ 00:00:00 netns --agenttitle=PowerFuse --dlopen procmgr /usr/bin/PowerFuse\n 2193\
+  \  0.0  1.9 ?        S      Mar 08 00:03:36 TopoAgent\n 2195  0.0  0.3 ?       \
+  \ Ss     Mar 08 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
+  \ procmgr libProcMgrSetup.so --daemonize\n 2196  0.0  0.0 ?        S      Mar 08\
+  \ 00:00:00 netns --agenttitle=VxlanSwFwd --dlopen procmgr /usr/bin/VxlanSwFwd\n\
+  \ 2197  0.0  1.8 ?        S      Mar 08 00:03:37 PowerFuse\n 2200  0.0  0.3 ?  \
+  \      Ss     Mar 08 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
+  \ procmgr libProcMgrSetup.so --daemonize\n 2201  0.0  0.0 ?        S      Mar 08\
+  \ 00:00:00 netns --agenttitle=Ebra --dlopen procmgr /usr/bin/Ebra\n 2202  0.0  2.3\
+  \ ?        S      Mar 08 00:10:13 VxlanSwFwd\n 2205  0.0  0.3 ?        Ss     Mar\
+  \ 08 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr\
+  \ libProcMgrSetup.so --daemonize\n 2206  0.0  0.0 ?        S      Mar 08 00:00:00\
+  \ netns --agenttitle=ReloadCauseAgent --dlopen procmgr /usr/bin/ReloadCauseAgent\n\
+  \ 2208  0.0  2.3 ?        S      Mar 08 00:13:22 Ebra\n 2209  0.0  0.3 ?       \
+  \ Ss     Mar 08 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
+  \ procmgr libProcMgrSetup.so --daemonize\n 2210  0.0  0.0 ?        S      Mar 08\
+  \ 00:00:00 netns --agenttitle=SharedSecretProfile --dlopen procmgr /usr/bin/SharedSecretProfile\n\
+  \ 2211  0.0  1.8 ?        S      Mar 08 00:03:47 ReloadCauseAgent\n 2213  0.0  0.3\
+  \ ?        Ss     Mar 08 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
+  \ procmgr libProcMgrSetup.so --daemonize\n 2215  0.0  2.5 ?        S      Mar 08\
+  \ 00:07:54 IgmpSnooping\n 2216  0.0  1.8 ?        S      Mar 08 00:03:48 SharedSecretProfile\n\
+  \ 2273  0.0  0.0 ?        S      Mar 08 00:00:00 netns --agenttitle=StaticRoute\
+  \ --dlopen procmgr /usr/bin/StaticRoute --scheduled\n 2277  0.0  0.3 ?        Ss\
+  \     Mar 08 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
+  \ procmgr libProcMgrSetup.so --daemonize\n 2278  0.0  0.0 ?        S      Mar 08\
+  \ 00:00:00 netns --agenttitle=IpRib --dlopen procmgr /usr/bin/IpRib --scheduled\n\
+  \ 2280  0.0  2.3 ?        S      Mar 08 00:07:53 StaticRoute\n 2285  0.0  0.3 ?\
+  \        Ss     Mar 08 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so\
+  \ procmgr libProcMgrSetup.so --daemonize\n 2286  0.0  2.3 ?        S      Mar 08\
+  \ 00:09:32 BgpCliHelper\n 2288  0.0  2.9 ?        S      Mar 08 00:18:17 IpRib\n\
+  \ 2290  0.0  0.0 ?        S      Mar 08 00:00:00 netns --agenttitle=ConnectedRoute\
+  \ --dlopen procmgr /usr/bin/ConnectedRoute\n 2293  0.0  0.3 ?        Ss     Mar\
+  \ 08 00:00:00 netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr\
+  \ libProcMgrSetup.so --daemonize\n 2295  0.0  2.2 ?        S      Mar 08 00:07:53\
+  \ ConnectedRoute\n 2297  0.0  0.0 ?        S      Mar 08 00:00:00 netns --agenttitle=RouteInput\
+  \ --dlopen procmgr /usr/bin/RouteInput\n 2301  0.0  0.3 ?        Ss     Mar 08 00:00:00\
+  \ netnsd-session  -d -i --dlopen -p -f  -l libLoadDynamicLibs.so procmgr libProcMgrSetup.so\
+  \ --daemonize\n 2302  0.0  2.0 ?        S      Mar 08 00:08:16 EvpnrtrEncap\n 2303\
+  \  0.0  2.3 ?        S      Mar 08 00:08:01 RouteInput\n 2307  0.0  4.1 ?      \
+  \  Sl     Mar 08 00:59:45 Bgp\n 2639  0.0  0.0 ?        Ss     Mar 08 00:00:00 nginx:\
+  \ master process /usr/sbin/nginx -c /etc/nginx/nginx.conf -g pid /var/run/nginx.pid;\n\
+  \ 2640  0.0  0.2 ?        S      Mar 08 00:00:05 nginx: worker process         \
+  \                                     \n 2729  0.0  0.0 ?        S      Mar 08 00:00:02\
+  \ /usr/sbin/dnsmasq\n 2734  0.0  0.1 ?        Ssl    Mar 08 00:00:20 /usr/sbin/rsyslogd\
+  \ -n\n 2967  0.0  0.2 ?        Ssl    Mar 08 00:07:19 ntpd -u ntp:ntp -g -p /var/run/ntpd.pid\n\
+  \ 3142  0.0  0.0 ?        S      Mar 08 00:00:00 /usr/bin/conlogd\n 3143  0.0  0.0\
+  \ ?        S      Mar 08 00:00:00 sh -c /usr/bin/tail -n 0 --retry --follow=name\
+  \ --pid=3142 /var/log/eos-console | sed 's/\\(.*\\)/\\1\\r/'\n 3144  0.0  0.0 ?\
+  \        S      Mar 08 00:02:15 /usr/bin/tail -n 0 --retry --follow=name --pid=3142\
+  \ /var/log/eos-console\n 3145  0.0  0.0 ?        S      Mar 08 00:00:00 sed s/\\\
+  (.*\\)/\\1\\r/\n 3146  0.0  0.0 ttyS0    Ss+    Mar 08 00:00:00 /sbin/mingetty --noclear\
+  \ /dev/ttyS0\n 3147  0.0  0.0 tty1     Ss+    Mar 08 00:00:00 /sbin/agetty --noclear\
+  \ tty1 linux\n 8722  0.0  0.0 ?        S    14:15:00 00:00:00 [kworker/1:1]\n17492\
+  \  0.0  0.0 ?        S    06:44:57 00:00:00 [kworker/u30:0]\n17691  0.0  0.0 ? \
+  \       S    17:27:01 00:00:00 [kworker/0:0]\n20623  0.0  0.0 ?        S    18:14:36\
+  \ 00:00:00 [kworker/0:1]\n21685  0.0  0.0 ?        S    18:21:01 00:00:00 [kworker/1:2]\n\
+  22864  0.0  0.0 ?        Rs   18:26:20 00:00:00 ps -e -o pid,pcpu,pmem,tt,stat,lstart,start,time,cmd\
+  \ --sort=-pcpu -ww\n24101  0.0  0.0 ?        S    09:09:57 00:00:00 [kworker/u30:1]\n\
+  31602  0.0  0.0 ?        S<s    May 18 00:00:00 ovsdb-server: monitoring pid 31603\
+  \ (healthy)                                                                    \
+  \                                                                              \
+  \                                                                              \
+  \                                                                              \
+  \                                   \n31603  0.0  0.1 ?        S<     May 18 00:45:59\
+  \ ovsdb-server /mnt/flash/ovs.db -vconsole:emer -vsyslog:err -vfile:info --remote=punix:/var/run/openvswitch/db.sock\
+  \ --private-key=db:Open_vSwitch,SSL,private_key --certificate=db:Open_vSwitch,SSL,certificate\
+  \ --bootstrap-ca-cert=db:Open_vSwitch,SSL,ca_cert --no-chdir --log-file=/var/log/openvswitch/ovsdb-server.log\
+  \ --pidfile=/var/run/openvswitch/ovsdb-server.pid --detach --monitor\n31613  0.0\
+  \  0.0 ?        S<s    May 18 00:00:00 ovs-vswitchd: monitoring pid 31614 (healthy)\
+  \                                                                              \
+  \                                                                              \
+  \                        \n.\n"
+description: Verify 1 minute CPU % is under specificied value
+dut: BL2
+expected_output: 10
+fail_or_skip_reason: ''
+name: test_1_min_cpu_utlization_on_
+output_msg: '
+
+  On router |BL2| 1 minute CPU load average is |0.25%| and should be under |10%|'
+show_cmd: show processes
+test_id: null
+test_result: true
+test_suite: test_cpu.py
