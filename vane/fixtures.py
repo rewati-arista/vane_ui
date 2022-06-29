@@ -3,6 +3,7 @@ import logging
 from vane import tests_tools
 import os
 from vane.config import dut_objs, test_defs, test_duts
+from jinja2 import Template
 
 def idfn(val):
     """id function for the current fixture data
@@ -68,9 +69,16 @@ def setup_dut(request, duts):
                 setup_config_file = t.get('test_setup', "")
                 if setup_config_file != "":
                     setup_config = tests_tools.import_yaml(f"{s['dir_path']}/{setup_config_file}")
+                    print(setup_config)
                 for dev_name in setup_config:
                     dut = duts[dev_name]
-                    config = setup_config[dev_name].splitlines()
+                    setup_schema = setup_config[dev_name]["schema"]
+                    if setup_schema is None:
+                        config = setup_config[dev_name]["template"].splitlines()
+                    else:
+                        setup_template = Template(setup_config[dev_name]["template"])
+                        config = setup_template.render(setup_schema).splitlines()
+                    print(config)
                     gold_config = ['copy running-config flash:gold-config', 'write memory']
                     dut['connection'].enable(gold_config)
                     dut['connection'].config(config)
