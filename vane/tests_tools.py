@@ -202,7 +202,7 @@ def login_duts(test_parameters, test_duts):
         netmiko_conn = device_interface.NetmikoConn()
         netmiko_conn.set_conn_params(eapi_file)
         netmiko_conn.set_up_conn(name)
-        login_ptr["ssh_conn"] = netmkio_conn
+        login_ptr["ssh_conn"] = netmiko_conn
         if eos_conn == 'eapi':
             pyeapi_conn = device_interface.PyeapiConn()
             pyeapi_conn.set_conn_params(eapi_file)
