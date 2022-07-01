@@ -38,8 +38,9 @@ import sys
 import logging
 import os
 import inspect
-import yaml
 import subprocess
+import re
+import yaml
 from vane import config, device_interface
 
 
@@ -51,6 +52,97 @@ logging.basicConfig(
 )
 
 default_eos_conn = "eapi"
+
+
+def filter_duts(duts, criteria="", dut_filter=""):
+    """Filter duts based on a user provided criteria and a filter
+
+    Args:
+        duts (dict): Full global duts dictionary
+        criteria (str, optional): Type of filtering required.  Valid options
+        are: name, role, regex, or names. Defaults to "".
+        dut_filter (str, optional): Filter for DUTs. Defaults to "".
+
+    Returns:
+        dict: Filtered subset of global dictionary
+    """
+
+    logging.info(f"Filter: {dut_filter} by criteria: {criteria}")
+
+    if criteria == "role":
+        subset_duts = [dut for dut in duts if dut_filter == dut["role"]]
+        dut_names = [dut["name"] for dut in duts if dut_filter == dut["role"]]
+    elif criteria == "name":
+        subset_duts = [dut for dut in duts if dut_filter == dut["name"]]
+        dut_names = [dut["name"] for dut in duts if dut_filter == dut["name"]]
+    elif criteria == "names":
+        subset_duts, dut_names = [], []
+        for name in dut_filter:
+            subset_duts = subset_duts + [
+                dut for dut in duts if name == dut["name"]
+            ]
+            dut_names = dut_names + [
+                dut["name"] for dut in duts if name == dut["name"]
+            ]
+    elif criteria == "regex":
+        subset_duts = [dut for dut in duts if re.match(dut_filter, dut["name"])]
+        dut_names = [
+            dut["name"] for dut in duts if re.match(dut_filter, dut["name"])
+        ]
+    else:
+        subset_duts = duts
+        dut_names = [dut["name"] for dut in duts]
+
+    return subset_duts, dut_names
+
+
+def parametrize_duts(test_fname, test_defs, dut_objs):
+    """Use a filter to create input variables for PyTest parametrize
+
+    Args:
+        test_fname (str): Test suite path and file name
+        test_defs (dict): Dictionary with global test definitions
+        dut_objs (dict): Full global dictionary duts dictionary
+
+    Returns:
+        dict: Dictionary with variables PyTest parametrize for each test case.
+    """
+
+    logging.info("Discover test suite name")
+    testsuite = test_fname.split("/")[-1]
+
+    logging.info(f"Filter test definitions by test suite name: {testsuite}")
+    subset_def = [
+        defs for defs in test_defs["test_suites"] if testsuite in defs["name"]
+    ]
+    testcases = subset_def[0]["testcases"]
+
+    logging.info("unpack testcases by defining dut and criteria")
+    dut_parameters = {}
+
+    for testcase in testcases:
+        if "name" in testcase:
+            testname = testcase["name"]
+
+            if "criteria" in testcase:
+                criteria = testcase["criteria"]
+            else:
+                criteria = ""
+
+            if "filter" in testcase:
+                dut_filter = testcase["filter"]
+            else:
+                dut_filter = ""
+
+            duts, ids = filter_duts(dut_objs, criteria, dut_filter)
+
+            logging.info("create dut parameters.  \nDuts: {duts} \nIds: {ids}")
+            dut_parameters[testname] = {}
+            dut_parameters[testname]["duts"] = duts
+            dut_parameters[testname]["ids"] = ids
+
+    return dut_parameters
+
 
 def init_show_log(test_parameters):
     """Open log file for logging test show commands
@@ -691,6 +783,7 @@ def export_yaml(yaml_file, yaml_data):
         logging.error("EXITING TEST RUNNER")
         sys.exit(1)
 
+
 def subprocess_ping(definition_file, dut_name, loopback_ip, repeat_ping):
     """Subprocess to run the continuous ping command
     Args:
@@ -711,6 +804,7 @@ def subprocess_ping(definition_file, dut_name, loopback_ip, repeat_ping):
                                stdout=subprocess.PIPE,
                                universal_newlines=True)
     return process
+
 
 def create_duts_file(topology_file, inventory_file):
     dut_file = {}
@@ -761,6 +855,7 @@ def create_duts_file(topology_file, inventory_file):
         logging.error("EXITING TEST RUNNER")
         print(">>> ERROR While creating duts file")
         sys.exit(1)
+
 
 class TestOps:
     """Common testcase operations and variables"""

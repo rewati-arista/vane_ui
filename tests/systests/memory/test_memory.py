@@ -33,9 +33,15 @@
 
 import pytest
 from vane import tests_tools
+from vane.config import dut_objs, test_defs
 
 
 TEST_SUITE = __file__
+
+dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
+test1_duts = dut_parameters["test_memory_utilization_on_"]["duts"]
+test1_ids = dut_parameters["test_memory_utilization_on_"]["ids"]
+
 
 @pytest.mark.demo
 @pytest.mark.nrfu
@@ -47,6 +53,7 @@ TEST_SUITE = __file__
 class MemoryTests:
     """Memory Test Suite"""
 
+    @pytest.mark.parametrize("dut", test1_duts, ids=test1_ids)
     def test_memory_utilization_on_(self, dut, tests_definitions):
         """Verify memory is not exceeding high utlization
 

@@ -33,10 +33,19 @@
 
 import pytest
 from vane import tests_tools
+from vane.config import dut_objs, test_defs
 
 
 TEST_SUITE = __file__
-LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
+
+dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
+test1_duts = dut_parameters["test_1_sec_cpu_utlization_on_"]["duts"]
+test1_ids = dut_parameters["test_1_sec_cpu_utlization_on_"]["ids"]
+test2_duts = dut_parameters["test_1_min_cpu_utlization_on_"]["duts"]
+test2_ids = dut_parameters["test_1_min_cpu_utlization_on_"]["ids"]
+test3_duts = dut_parameters["test_5_min_cpu_utlization_on_"]["duts"]
+test3_ids = dut_parameters["test_5_min_cpu_utlization_on_"]["ids"]
+
 
 @pytest.mark.demo
 @pytest.mark.nrfu
@@ -48,6 +57,7 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 class CPUTests:
     """CPU Test Suite"""
 
+    @pytest.mark.parametrize("dut", test1_duts, ids=test1_ids)
     def test_1_sec_cpu_utlization_on_(self, dut, tests_definitions):
         """Verify 1 second CPU % is under specificied value
 
@@ -81,6 +91,7 @@ class CPUTests:
 
         assert tops.actual_output < tops.expected_output
 
+    @pytest.mark.parametrize("dut", test2_duts, ids=test2_ids)
     def test_1_min_cpu_utlization_on_(self, dut, tests_definitions):
         """Verify 1 minute CPU % is under specificied value
 
@@ -114,6 +125,7 @@ class CPUTests:
 
         assert tops.actual_output < tops.expected_output
 
+    @pytest.mark.parametrize("dut", test3_duts, ids=test3_ids)
     def test_5_min_cpu_utlization_on_(self, dut, tests_definitions):
         """Verify 5 minute CPU % is under specificied value
 
