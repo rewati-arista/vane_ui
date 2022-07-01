@@ -70,19 +70,19 @@ def filter_duts(duts, criteria="", dut_filter=""):
     logging.info(f"Filter: {dut_filter} by criteria: {criteria}")
 
     if criteria == "role":
-        subset_duts = [dut for dut in duts if dut_filter in dut["role"]]
-        dut_names = [dut["name"] for dut in duts if dut_filter in dut["role"]]
+        subset_duts = [dut for dut in duts if dut_filter == dut["role"]]
+        dut_names = [dut["name"] for dut in duts if dut_filter == dut["role"]]
     elif criteria == "name":
-        subset_duts = [dut for dut in duts if dut_filter in dut["name"]]
-        dut_names = [dut["name"] for dut in duts if dut_filter in dut["name"]]
+        subset_duts = [dut for dut in duts if dut_filter == dut["name"]]
+        dut_names = [dut["name"] for dut in duts if dut_filter == dut["name"]]
     elif criteria == "names":
         subset_duts, dut_names = [], []
         for name in dut_filter:
             subset_duts = subset_duts + [
-                dut for dut in duts if name in dut["name"]
+                dut for dut in duts if name == dut["name"]
             ]
             dut_names = dut_names + [
-                dut["name"] for dut in duts if name in dut["name"]
+                dut["name"] for dut in duts if name == dut["name"]
             ]
     elif criteria == "regex":
         subset_duts = [dut for dut in duts if re.match(dut_filter, dut["name"])]
