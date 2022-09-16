@@ -135,7 +135,7 @@ run the coverage report at any time after running the tests.
 Build and run the docker development container using:
 ```
     python3.9 -m venv venv
-    source bin/venv/activate
+    source venv/bin/activate
     ...
     (venv) $ 
 ```
