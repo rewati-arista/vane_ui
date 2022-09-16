@@ -69,6 +69,11 @@ pylint:
   script:
     - make pylint
 
+lint-test:
+  stage: static analysis
+  script:
+    - pylint .
+
 unit_tests:
   stage: test
   image: ${DEV_REPOSITORY_URL}:latest
