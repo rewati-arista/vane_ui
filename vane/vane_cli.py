@@ -43,6 +43,7 @@ from vane import tests_client
 from vane import report_client
 from vane import xcel_client
 from vane import tests_tools
+from vane import test_step_client
 import vane.config
 
 logging.basicConfig(
@@ -156,6 +157,9 @@ def write_results(definitions_file):
         "Using class ReportClient to create vane_report_client object")
     vane_report_client = report_client.ReportClient(definitions_file)
     vane_report_client.write_result_doc()
+    if vane.config.test_parameters["parameters"]["report_test_steps"]:
+        vane_test_step_client = test_step_client.TestStepClient(vane.config.DEFINITIONS_FILE)
+        vane_test_step_client.write_test_steps()
 
 
 def show_markers():

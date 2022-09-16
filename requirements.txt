@@ -4,6 +4,7 @@ pyeapi
 python-docx
 openpyxl
 netmiko
+mdutils
 
 # Dev
 pylint
