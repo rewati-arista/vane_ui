@@ -30,6 +30,7 @@ ci_build:
   services:
     - docker:dind
   script:
+    - pwd
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - >
       docker build .  -t ${DEV_REPOSITORY_URL}
@@ -68,11 +69,6 @@ pylint:
   allow_failure: true
   script:
     - make pylint
-
-lint-test:
-  stage: static analysis
-  script:
-    - pylint .
 
 unit_tests:
   stage: test
