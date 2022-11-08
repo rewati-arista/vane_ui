@@ -806,6 +806,33 @@ def subprocess_ping(definition_file, dut_name, loopback_ip, repeat_ping):
     return process
 
 
+def generate_duts_file(dut, file, username, password):
+    """
+    Util function to take in an individual dut and print
+    its relevant data to a given file.
+    """
+    
+    dut_dict = {}
+    try:
+        for data in dut:
+            if dut[data]['node_type'] == 'veos':
+                dut_dict = [
+                    {
+                        'mgmt_ip' : dut[data]["ip_addr"],
+                        'name' : data,
+                        'neighbors': dut[data]['neighbors'],
+                        'password' : password,
+                        'transport' : 'https',
+                        'username' : username,
+                        'role' : ''
+                    }
+                ]
+        if dut_dict:
+            yaml.dump(dut_dict, file)
+    except:
+        print("DUTs creation for " + file + " failed.")
+
+
 def create_duts_file(topology_file, inventory_file):
     dut_file = {}
     dut_properties = []
