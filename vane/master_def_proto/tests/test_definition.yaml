@@ -1,0 +1,18 @@
+- name: bgp_tests
+  testcases:
+    - name: test_bgp_connected_redistribution_advertised
+      test_id:  TN9.5
+      description: Verify connected route prefix is being advertised in BGP
+      show_cmd: null
+      expected_output: 
+        loopback_in_bgp_route: True 
+        loopback_in_connected_routes: True
+        loopback_in_advertised_routes: True
+      comment: null
+      criteria: names
+      filter:
+        - DC1-LEAF1A
+      loopback_ip: "{{loopback_ip}}"
+      neighbor_ip: "{{neighbor_ip}}"
+      interface: Loopback
+    
