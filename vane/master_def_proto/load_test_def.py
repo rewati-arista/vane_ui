@@ -5,22 +5,7 @@ import sys
 class NullUndefined(Undefined):
   def __getattr__(self, key):
     return ''
-
-"""with open('test_definition.yaml') as file:
-    test_def = yaml.safe_load(file)
-
-with open('master_def.yaml') as file:
-    master_def = yaml.safe_load(file)
-
-test_template = Template(str(test_def), undefined=NullUndefined)
-master_template = Template(str(master_def), undefined=NullUndefined)
-replace_data = yaml.safe_load(master_template.render())
-
-new = test_template.render(replace_data)
-yaml_new = yaml.safe_load(new)
-
-with open('replaced_file.yaml', 'w') as file:
-    documents = yaml.safe_dump(yaml_new, file, sort_keys=False)"""
+    
 
 def main():
     print()
