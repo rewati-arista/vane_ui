@@ -49,6 +49,7 @@ import logging
 import pytest
 import yaml
 import jinja2
+from jinja2 import Template, Undefined
 import configparser
 from pytest import ExitCode
 
@@ -60,6 +61,9 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 
+class NullUndefined(Undefined):
+  def __getattr__(self, key):
+    return ''
 
 class TestsClient:
     """Creates an instance of the Test Client."""
@@ -106,6 +110,51 @@ class TestsClient:
                 f"Defintions file: {yaml_file} not " f"found. {err_data}"
             )
             sys.exit(1)
+
+    def generate_test_definitions(self):
+        """
+        Generates test_definition files using master test definition file
+        and template test definition files
+        """
+
+        try:
+            logging.info('Attempting to regenerate test definition files')
+            definitions = self.data_model["parameters"]
+
+            # Checks if generate_test_definitions is true
+            if definitions["generate_test_definitions"]:
+                # Inputs relevant test_definition files information
+                master_definitions = self._import_yaml(definitions["master_definitions"])
+                template_definitions = definitions["template_definitions"]
+                test_definitions = definitions["test_definitions"]
+
+                # Iterates through test directories
+                for test_dir in definitions["test_dirs"]:
+                    # Traverses given test directory
+                    for root, dirs, files in os.walk(test_dir):
+                        # Iterates over files in a given dir and checks if they
+                        # are a template test definition file
+                        for file in files:
+                            if file == template_definitions:
+                                # Inputs template yaml data
+                                template_file = self._import_yaml(os.path.join(root, file))
+                                
+                                # Uses Jinja2 templating to generate new test definition
+                                # file and replace the given templates
+                                test_template = Template(str(template_file), undefined=NullUndefined)
+                                master_template = Template(str(master_definitions), undefined=NullUndefined)
+                                replace_data = yaml.safe_load(master_template.render())
+
+                                new = test_template.render(replace_data)
+                                yaml_new = yaml.safe_load(new)
+
+                                new_file = os.path.join(root, test_definitions)
+                                with open(new_file, 'w') as file:
+                                    yaml.safe_dump(yaml_new, file, sort_keys=False)
+                                logging.info('Regenerared test definition files')
+        except OSError:
+            print('Unable to regenerate test definition files.')
+                                
 
     def setup_test_runner(self):
         """Setup eapi cfg, remove result files, set test params"""
