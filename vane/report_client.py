@@ -42,11 +42,12 @@ import docx
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
 
+FORMAT = "[%(asctime)s %(filename)s->%(funcName)s():%(lineno)s]%(levelname)s: %(message)s"
 logging.basicConfig(
     level=logging.INFO,
     filename="vane.log",
     filemode="w",
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    format=FORMAT,
 )
 
 
@@ -609,6 +610,7 @@ class ReportClient:
         self._add_dut_table_row("description", dut, table)
         self._add_dut_table_row("dut", dut, table)
         self._add_dut_table_row("show_cmd", dut, table)
+        self._add_dut_table_row("show_cmds", dut, table)
         self._add_dut_table_row("expected_output", dut, table)
         self._add_dut_table_row("actual_output", dut, table)
         self._add_dut_table_row("test_result", dut, table)
@@ -764,7 +766,9 @@ class ReportClient:
 
         logging.info(f"Test suite name is {ts_name}")
         ts_name = ts_name.split(".")[0]
-        ts_name = ts_name.split("_")[1].capitalize()
+        ts_name = ts_name.split("_")
+        if len(ts_name) > 1 :
+            ts_name = ts_name[1].capitalize()
         logging.info(f"Formatted test suite name is {ts_name}")
 
         return ts_name

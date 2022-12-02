@@ -4,6 +4,8 @@ from vane import tests_tools
 import os
 from vane.config import dut_objs, test_defs, test_duts
 from jinja2 import Template
+from vane.utils import get_current_fixture_testclass, get_current_fixture_testname
+import datetime
 
 def idfn(val):
     """id function for the current fixture data
@@ -57,35 +59,97 @@ def tests_definitions():
 
     yield test_defs
 
+def perform_setup(duts, test, setup_config):
+    date_obj = datetime.datetime.now()
+    gold_config_date = date_obj.strftime("%y%m%d%H%M")
+    checkpoint = f"{test}_{gold_config_date}"
+    logging.info(f"{test} : {setup_config}")
+    dev_ids = setup_config.get("key", "name")
+    if dev_ids == 'name':
+        for dev_name in setup_config:
+            dut = duts.get(dev_name, None)
+            if dut is None:
+                #add logging
+                continue
+            setup_schema = setup_config[dev_name]["schema"]
+            if setup_schema is None:
+                config = setup_config[dev_name]["template"].splitlines()
+            else:
+                setup_template = Template(setup_config[dev_name]["template"])
+                config = setup_template.render(setup_schema).splitlines()
+            checkpoint_cmd = f"configure checkpoint save {checkpoint}"
+            gold_config = [checkpoint_cmd]
+            dut['connection'].enable(gold_config)
+            dut['connection'].config(config)
+    elif dev_ids == 'role':
+        for role in setup_config:
+            for _, dut in duts.items():
+                if dut["role"] != role:
+                    #add logging
+                    continue
+                setup_schema = setup_config[role]["schema"]
+                if setup_schema is None:
+                    config = setup_config[role]["template"].splitlines()
+                else:
+                    setup_template = Template(setup_config[role]["template"])
+                    config = setup_template.render(setup_schema).splitlines()
+                checkpoint_cmd = f"configure checkpoint save {checkpoint}"
+                gold_config = [checkpoint_cmd]
+                dut['connection'].enable(gold_config)
+                dut['connection'].config(config)
+    return checkpoint
+
+def perform_teardown(duts, checkpoint, setup_config):
+    if checkpoint == "":
+        return
+    checkpoint_restore_cmd = f"configure replace checkpoint:{checkpoint} skip-checkpoint"
+    delete_checkpoint_cmd = f"delete checkpoint:{checkpoint}"
+    dev_ids = setup_config.get("key", "name")
+    if dev_ids == 'name':
+        for dev_name in setup_config:
+            dut = duts.get(dev_name, None)
+            if dut is None:
+                continue
+            restore_config = [checkpoint_restore_cmd, delete_checkpoint_cmd]
+            dut['connection'].config(restore_config)
+    elif dev_ids == 'role':
+        for role in setup_config:
+            for _, dut in duts.items():
+                if dut['role'] != role:
+                    #add logging
+                    continue
+                restore_config = [checkpoint_restore_cmd, delete_checkpoint_cmd]
+                dut['connection'].config(restore_config)
+
 @pytest.fixture(autouse=True, scope="class")
-def setup_dut(request, duts):
-    testname = request.node.fspath
+def setup_testsuite(request, duts):
+    testsuit = get_current_fixture_testclass(request)
     test_suites = test_defs['test_suites']
     setup_config = []
+    checkpoint = ""
+    for s in test_suites:
+        if s['name'] == testsuit:
+            setup_config_file = s.get('test_setup', "")
+            if setup_config_file != "":
+                setup_config = tests_tools.import_yaml(f"{s['dir_path']}/{setup_config_file}")
+                checkpoint = perform_setup(duts, testsuit, setup_config)
+    yield
+    perform_teardown(duts, checkpoint, setup_config)
+
+@pytest.fixture(autouse=True, scope="function")
+def setup_testcase(request, duts):
+    testname = get_current_fixture_testname(request)
+    test_suites = test_defs['test_suites']
+    setup_config = []
+    checkpoint = ""
     for s in test_suites:
         tests = s['testcases']
         for t in tests:
-            if s['name'] == os.path.basename(testname):
+            if t['name'] == testname:
                 setup_config_file = t.get('test_setup', "")
                 if setup_config_file != "":
                     setup_config = tests_tools.import_yaml(f"{s['dir_path']}/{setup_config_file}")
-                    print(setup_config)
-                for dev_name in setup_config:
-                    dut = duts[dev_name]
-                    setup_schema = setup_config[dev_name]["schema"]
-                    if setup_schema is None:
-                        config = setup_config[dev_name]["template"].splitlines()
-                    else:
-                        setup_template = Template(setup_config[dev_name]["template"])
-                        config = setup_template.render(setup_schema).splitlines()
-                    print(config)
-                    gold_config = ['copy running-config flash:gold-config', 'write memory']
-                    dut['connection'].enable(gold_config)
-                    dut['connection'].config(config)
+                    checkpoint = perform_setup(duts, testname, setup_config)
+
     yield
-    for dev_name in setup_config:
-        dut = duts[dev_name]
-        restore_config = ['copy flash:gold-config running-config', 'write memory']
-        dut['connection'].config(restore_config)
-
-
+    perform_teardown(duts, checkpoint, setup_config)

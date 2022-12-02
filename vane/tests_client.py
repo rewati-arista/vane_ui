@@ -53,11 +53,12 @@ import configparser
 from pytest import ExitCode
 
 
+FORMAT = "[%(asctime)s %(filename)s->%(funcName)s():%(lineno)s]%(levelname)s: %(message)s"
 logging.basicConfig(
     level=logging.INFO,
     filename="vane.log",
     filemode="w",
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    format=FORMAT,
 )
 
 

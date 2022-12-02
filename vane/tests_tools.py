@@ -31,6 +31,7 @@
 
 """Utilities for using PyTest in network testing"""
 
+import copy
 import concurrent.futures
 import time
 import fcntl
@@ -44,11 +45,12 @@ import yaml
 from vane import config, device_interface
 
 
+FORMAT = "[%(asctime)s %(filename)s->%(funcName)s():%(lineno)s]%(levelname)s: %(message)s"
 logging.basicConfig(
     level=logging.INFO,
     filename="vane.log",
     filemode="w",
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    format=FORMAT,
 )
 
 default_eos_conn = "eapi"
@@ -69,12 +71,15 @@ def filter_duts(duts, criteria="", dut_filter=""):
 
     logging.info(f"Filter: {dut_filter} by criteria: {criteria}")
 
-    if criteria == "role":
-        subset_duts = [dut for dut in duts if dut_filter == dut["role"]]
-        dut_names = [dut["name"] for dut in duts if dut_filter == dut["role"]]
-    elif criteria == "name":
-        subset_duts = [dut for dut in duts if dut_filter == dut["name"]]
-        dut_names = [dut["name"] for dut in duts if dut_filter == dut["name"]]
+    if criteria == "roles":
+        subset_duts, dut_names = [], []
+        for role in dut_filter:
+            subset_duts = subset_duts + [
+                dut for dut in duts if role == dut["role"]
+            ]
+            dut_names = dut_names + [
+                dut["name"] for dut in duts if role == dut["role"]
+            ]
     elif criteria == "names":
         subset_duts, dut_names = [], []
         for name in dut_filter:
@@ -142,6 +147,47 @@ def parametrize_duts(test_fname, test_defs, dut_objs):
             dut_parameters[testname]["ids"] = ids
 
     return dut_parameters
+
+def parametrize_inputs(test_fname, parameter_name, test_defs, dut_objs):
+    """Use a filter to create input variables for PyTest parametrize
+
+    Args:
+        test_fname (str): Test suite path and file name
+        parameter_name(str): Name of parameter whose values need to be picked
+        test_defs (dict): Dictionary with global test definitions
+        dut_objs (dict): Full global dictionary duts dictionary
+
+    Returns:
+        dict: Dictionary with variables PyTest parametrize for each test case.
+    """
+
+    logging.info("Discover test suite name")
+    testsuite = test_fname.split("/")[-1]
+
+    logging.info(f"Filter test definitions by test suite name: {testsuite}")
+    subset_def = [
+        defs for defs in test_defs["test_suites"] if testsuite in defs["name"]
+    ]
+    testcases = subset_def[0]["testcases"]
+
+    logging.info("""For each testcase in this testsuite,
+            pack up the value and ids for parameter_name""")
+    input_parameters = {}
+
+    for testcase in testcases:
+        if "name" in testcase:
+            testname = testcase["name"]
+
+            if parameter_name in testcase:
+                parameter_data = testcase[parameter_name]
+            else:
+                parameter_data = []
+
+            input_parameters[testname] = {}
+            input_parameters[testname]["data"] = [elem["data"] for elem in parameter_data]
+            input_parameters[testname]["ids"] = [elem["id"] for elem in parameter_data]
+
+    return input_parameters
 
 
 def init_show_log(test_parameters):
@@ -357,10 +403,19 @@ def remove_cmd(e, show_cmds):
 
     logging.info(f"remove_cmd: {e}")
     logging.info(f"remove_cmd show_cmds list: {show_cmds}")
+    longest_matching_cmd = ""
     for show_cmd in show_cmds:
         if show_cmd in str(e):
-            cmd_index = show_cmds.index(show_cmd)
-            show_cmds.pop(cmd_index)
+            if longest_matching_cmd in show_cmd:
+                longest_matching_cmd = show_cmd
+
+    """longest_matching_cmd is the one in error string,
+    lets bump it out
+    """
+    if longest_matching_cmd != "":
+        cmd_index = show_cmds.index(longest_matching_cmd)
+        show_cmds.pop(cmd_index)
+        logging.info(f"removed {longest_matching_cmd} because of {e}")
 
     return show_cmds
 
@@ -717,12 +772,21 @@ def return_show_cmds(test_parameters):
         logging.info(f"Find show commands in test suite: {test_suite}")
 
         for test_case in test_cases:
-            show_cmd = test_case["show_cmd"]
-            logging.info(f"Found show command {show_cmd}")
+            show_cmd = test_case.get("show_cmd", "")
+            if show_cmd:
+                logging.info(f"Found show command {show_cmd}")
 
-            if show_cmd not in show_cmds and show_cmd is not None:
-                logging.info(f"Adding Show command {show_cmd}")
-                show_cmds.append(show_cmd)
+                if show_cmd not in show_cmds :
+                    logging.info(f"Adding Show command {show_cmd}")
+                    show_cmds.append(show_cmd)
+            else:
+                test_show_cmds = test_case.get("show_cmds", [])
+                logging.info(f"Found show commands {test_show_cmds}")
+                for show_cmd in test_show_cmds:
+                    if show_cmd not in show_cmds :
+                        logging.info(f"Adding Show commands {show_cmd}")
+                        show_cmds.append(show_cmd)
+
 
     logging.info(
         "The following show commands are required for test cases: "
@@ -748,8 +812,9 @@ def return_test_defs(test_parameters):
                 if file_name == "test_definition.yaml":
                     file_path = f"{dir_path}/{file_name}"
                     test_def = import_yaml(file_path)
-                    test_def['dir_path'] = f"{dir_path}"
-                    test_defs["test_suites"].append(test_def)
+                    for test_suite in test_def:
+                        test_suite['dir_path'] = f"{dir_path}"
+                    test_defs["test_suites"] += test_def
 
     export_yaml(report_dir + "/tests_definitions.yaml", test_defs)
     logging.info(
@@ -906,13 +971,25 @@ class TestOps:
         self.dut_name = self.dut["name"]
         self.interface_list = self.dut["output"]["interface_list"]
         self.results_dir = self.dut["results_dir"]
+        self.show_cmds = []
+        self.show_cmd = ""
 
-        self.show_cmd = self.test_parameters["show_cmd"]
-        if self.show_cmd and self.dut:
-            self._verify_show_cmd(self.show_cmd, self.dut)
-            self.show_cmd_txt = self.dut["output"][self.show_cmd]["text"]
-        else:
-            self.show_cmd_txt = ""
+        try:
+            self.show_cmd = self.test_parameters["show_cmd"]
+            if self.show_cmd:
+                self.show_cmds.append(self.show_cmd)
+        except KeyError:
+            self.show_cmds = self.test_parameters["show_cmds"]
+            
+
+        self.show_cmd_txts = []
+        self.show_cmd_txt = ""
+        if len(self.show_cmds) > 0 and self.dut:
+            self._verify_show_cmd(self.show_cmds, self.dut)
+            if self.show_cmd:
+                self.show_cmd_txt = self.dut["output"][self.show_cmd]["text"]
+            for show_cmd in self.show_cmds:
+                self.show_cmd_txts.append(self.dut["output"][show_cmd]["text"])
 
         self.comment = ""
         self.output_msg = ""
@@ -922,7 +999,7 @@ class TestOps:
         self.test_result = False
         self.test_id = self.test_parameters.get("test_id", None)
 
-    def _verify_show_cmd(self, show_cmd, dut):
+    def _verify_show_cmd(self, show_cmds, dut):
         """Verify if show command was successfully executed on dut
 
         show_cmd (str): show command
@@ -931,20 +1008,21 @@ class TestOps:
 
         dut_name = dut["name"]
         logging.info(
-            f"Verify if show command |{show_cmd}| was successfully "
+            f"Verify if show command |{show_cmds}| were successfully "
             f"executed on {dut_name} dut"
         )
 
-        if show_cmd in dut["output"]:
-            logging.info(
-                f"Verified output for show command |{show_cmd}| on "
-                f"{dut_name}"
-            )
-        else:
-            logging.critical(
-                f"Show command |{show_cmd}| not executed on " f"{dut_name}"
-            )
-            assert False
+        for show_cmd in show_cmds:
+            if show_cmd and show_cmd in dut["output"]:
+                logging.info(
+                    f"Verified output for show command |{show_cmd}| on "
+                    f"{dut_name}"
+                )
+            else:
+                logging.critical(
+                    f"Show command |{show_cmd}| not executed on " f"{dut_name}"
+                )
+                assert False
 
     def post_testcase(self):
         """Do post processing for test case"""
@@ -952,8 +1030,8 @@ class TestOps:
         self.test_parameters["comment"] = self.comment
         self.test_parameters["test_result"] = self.test_result
         self.test_parameters["output_msg"] = self.output_msg
-        self.test_parameters["expected_output"] = self.expected_output
         self.test_parameters["actual_output"] = self.actual_output
+        self.test_parameters["expected_output"] = self.expected_output
         self.test_parameters["dut"] = self.dut_name
         self.test_parameters["show_cmd"] = self.show_cmd
         self.test_parameters["test_id"] = self.test_id
@@ -994,7 +1072,7 @@ class TestOps:
 
         logging.info(f"Return testcases for Test Suite: {test_suite}")
         suite_parameters = [
-            param
+            copy.deepcopy(param)
             for param in tests_parameters["test_suites"]
             if param["name"] == test_suite
         ]
@@ -1002,7 +1080,7 @@ class TestOps:
 
         logging.info(f"Return parameters for Test Case: {test_case}")
         case_parameters = [
-            param
+            copy.deepcopy(param)
             for param in suite_parameters[0]["testcases"]
             if param["name"] == test_case
         ]

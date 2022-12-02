@@ -1,3 +1,4 @@
+import os
 import sys
 import subprocess
 import collections
@@ -38,3 +39,18 @@ def run_script(path_to_run, py_file):
         logging.info(f"Output for run_script {file}: {output}")
     else:
         logging.error(f"Error in run_script {py_file}: {error_}")
+
+def get_current_testcase_class(request):
+    nodeid = request.node.nodeid.split("::")
+    test_class = nodeid[1] if len(nodeid) == 3 else None
+    return test_class
+
+def get_current_fixture_testclass(request):
+    nodeid = request.node.nodeid.split("::")
+    test_class = nodeid[1] if len(nodeid) >= 2 else None
+    return test_class
+
+def get_current_fixture_testname(request):
+    nodeid = request.node.nodeid.split("::")
+    test_name = nodeid[2] if len(nodeid) >= 3 else None
+    return test_name.split("[")[0]
