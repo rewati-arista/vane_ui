@@ -151,6 +151,7 @@ def run_tests(definitions_file, duts_file):
 
     logging.info("Using class TestsClient to create vane_tests_client object")
     vane_tests_client = tests_client.TestsClient(definitions_file, duts_file)
+    vane_tests_client.generate_test_definitions()
     vane_tests_client.setup_test_runner()
     setup_vane()
     vane_tests_client.test_runner()

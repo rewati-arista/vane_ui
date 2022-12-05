@@ -5,7 +5,7 @@ parameters:
   excel_report: null
   html_report: tests/systests/fixtures/reports/report
   json_report: tests/systests/fixtures/reports/report
-  mark: demo
+  mark:
   processes: null
   report_dir: tests/systests/fixtures/reports
   results_file: result.yml
@@ -17,7 +17,10 @@ parameters:
   test_cases: All
   test_dirs: 
   - tests
-  test_definitions: tests_definitions.yaml
+  generate_test_definitions: false
+  master_definitions: master_def.yaml
+  template_definitions: test_definition.yaml
+  test_definitions: new_test_definition.yaml
   verbose: true
   spreadsheet: tests/fixtures/spreadsheets/PS-LLD-Questionnaire-Template.xlsx
   xcel_definitions: tests/fixtures/spreadsheets/xcel_definitions.yaml
