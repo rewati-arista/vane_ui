@@ -13,10 +13,10 @@ parameters:
   report_test_steps: true
   setup_show: false
   show_log: show_output.log
-  stdout: true
+  stdout: false
   test_cases: All
   test_dirs: 
-  - tests/systests
+  - tests
   generate_test_definitions: true
   master_definitions: master_def.yaml
   template_definitions: test_definition.yaml
