@@ -1,0 +1,11 @@
+name: test_host.py
+testcases:
+  - name: test_if_hostname_is_correcet_on_
+    description: Verify hostname is set on device is correct
+    # DUT name is taken from the definitions file
+    expected_output: null
+    show_cmd: show hostname
+    devices: 
+      - BL1
+      - BL2  
+    test_setup: test_setup.yaml 

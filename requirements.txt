@@ -1,0 +1,26 @@
+pyyaml
+jinja2
+pyeapi
+python-docx
+openpyxl
+netmiko
+mdutils
+
+# Dev
+pylint
+flake8
+coverage
+coverage-badge
+black
+mypy
+
+# pytest plugins
+pytest
+pytest-excel
+pytest-xdist
+pytest-html
+pytest-json
+pytest-cache
+pytest-sugar
+#pytest-spec
+pytest-cov

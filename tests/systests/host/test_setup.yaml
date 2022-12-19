@@ -1,0 +1,9 @@
+BL1:
+  schema:
+    hostname: bl1
+  template: |
+    hostname {{hostname}}
+BL2:
+  schema:
+  template: |
+    hostname bl2
