@@ -383,7 +383,7 @@ class TestsClient:
                     f"render {eapi_file} file with parameters {duts}"
                 )
                 resource_file = (
-                    jinja2.Environment()
+                    jinja2.Environment(autoescape=True)
                     .from_string(jinja_template)
                     .render(duts=duts)
                 )
