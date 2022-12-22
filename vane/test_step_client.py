@@ -39,7 +39,7 @@ import logging
 from pathlib import Path
 import datetime
 import yaml
-import MdUtils
+from mdutils.mdutils import MdUtils
 
 logging.basicConfig(
     level=logging.INFO,

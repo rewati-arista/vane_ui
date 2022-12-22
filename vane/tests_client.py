@@ -41,7 +41,6 @@
 
     - Excel report: Tabular representation of results. """
 
-# from pprint import pprint
 import stat
 import os
 import sys

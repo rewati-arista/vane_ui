@@ -163,58 +163,77 @@ class NetmikoConn(DeviceConn):
             remote_device['device_type'] = guesser.autodetect()
         self._connection = Netmiko(**remote_device)
 
-    def run_commands(self, cmds, encoding='json', send_enable=True, **kwargs):
-        output = ''
-        local_cmds = []
-        if send_enable:
-            self._connection.enable()
-        if encoding == 'json':
-            """for json encoding, lets try to run cmds
-            using |json"""
-            if type(cmds) is list:
-                local_cmds = cmds.copy()
-                for i, cmd in enumerate(local_cmds):
-                    local_cmds[i] = cmd + ' | json'
-            elif type(cmds) is str:
-                cmds = cmds + ' | json'
-        elif encoding == 'text':
-            if type(cmds) is list:
-                local_cmds = cmds.copy()
-        cmds_op = []
-        if type(cmds) is list:
-            for i, cmd in enumerate(local_cmds):
-                output = self._connection.send_command(cmd)
-                if output not in error_responses:
-                    if encoding == 'json':
-                        output = json.loads(output)
-                else:
-                    err_msg = ('Could not execute %s. '
-                               'Got error: %s' % (cmds[i], output))
-                    raise CommandError(err_msg, cmds)
 
-                if encoding == 'text':
-                    """ for text encoding, creating the
-                    format similar to one returned by
-                    eapi format"""
-                    text_ob = {"output": output}
-                    cmds_op.append(text_ob)
-                else:
-                    cmds_op.append(output)
+    def get_cmds(self, cmds):
+        pipe_json = ' | json'
+
+        if type(cmds) is list:
+            local_cmds = cmds.copy()
+            for i, cmd in enumerate(local_cmds):
+                local_cmds[i] = cmd + pipe_json
+
         elif type(cmds) is str:
-            output = self._connection.send_command(cmds)
-            if output not in error_responses :
-                if encoding == 'json':
-                    output = json.loads(output)
+            cmds = cmds + pipe_json
+        return cmds, local_cmds
+    
+    def send_list_cmds(self, cmds, local_cmds, cmds_op, encoding='json'):
+        for i, cmd in enumerate(local_cmds):
+            output = self._connection.send_command(cmd)
+            if output not in error_responses and encoding == 'json':
+                output = json.loads(output)
             else:
                 err_msg = ('Could not execute %s. '
-                           'Got error: %s' % (cmds[i], output))
+                            'Got error: %s' % (cmds[i], output))
                 raise CommandError(err_msg, cmds)
 
             if encoding == 'text':
+                """ for text encoding, creating the
+                format similar to one returned by
+                eapi format"""
                 text_ob = {"output": output}
                 cmds_op.append(text_ob)
             else:
                 cmds_op.append(output)
+
+    def send_str_cmds(self, cmds, cmds_op, encoding='json'):
+        output = self._connection.send_command(cmds)
+
+        if output not in error_responses and encoding == 'json':
+            output = json.loads(output)
+        else:
+            err_msg = ('Could not execute %s. '
+                        'Got error: %s' % (cmds, output))
+            raise CommandError(err_msg, cmds)
+
+        if encoding == 'text':
+            text_ob = {"output": output}
+            cmds_op.append(text_ob)
+        else:
+            cmds_op.append(output)
+        
+        return cmds_op
+
+
+    def run_commands(self, cmds, encoding='json', send_enable=True, **kwargs):
+
+        local_cmds = []
+
+        if send_enable:
+            self._connection.enable()
+
+        if encoding == 'json':
+            """for json encoding, lets try to run cmds
+            using | json"""
+            cmds, local_cmds = self.get_cmds(cmds=cmds)
+
+        elif encoding == 'text' and type(cmds) is list:
+            local_cmds = cmds.copy()
+
+        cmds_op = []
+        if type(cmds) is list:
+            cmds_op = self.send_list_cmds(cmds=cmds, local_cmds=local_cmds, cmds_op=cmds_op)
+        elif type(cmds) is str:
+            cmds_op = self.send_str_cmds(cmds=cmds, cmds_op=cmds_op)
 
         return cmds_op
 
