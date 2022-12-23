@@ -405,9 +405,8 @@ def remove_cmd(e, show_cmds):
     logging.info(f"remove_cmd show_cmds list: {show_cmds}")
     longest_matching_cmd = ""
     for show_cmd in show_cmds:
-        if show_cmd in str(e):
-            if longest_matching_cmd in show_cmd:
-                longest_matching_cmd = show_cmd
+        if show_cmd in str(e) and longest_matching_cmd in show_cmd:
+            longest_matching_cmd = show_cmd
 
     """longest_matching_cmd is the one in error string,
     lets bump it out
@@ -782,10 +781,10 @@ def return_show_cmds(test_parameters):
             else:
                 test_show_cmds = test_case.get("show_cmds", [])
                 logging.info(f"Found show commands {test_show_cmds}")
-                for show_cmd in test_show_cmds:
-                    if show_cmd not in show_cmds :
-                        logging.info(f"Adding Show commands {show_cmd}")
-                        show_cmds.append(show_cmd)
+
+                for show_cmd in (show_cmd for show_cmd in test_show_cmds if show_cmd not in show_cmds):
+                    logging.info(f"Adding Show commands {show_cmd}")
+                    show_cmds.append(show_cmd)
 
 
     logging.info(
@@ -894,8 +893,8 @@ def generate_duts_file(dut, file, username, password):
                 ]
         if dut_dict:
             yaml.dump(dut_dict, file)
-    except:
-        print("DUTs creation for " + file + " failed.")
+    except yaml.YAMLError as err:
+        print(f"DUTs creation for {file} failed due to exception {err}")
 
 
 def create_duts_file(topology_file, inventory_file):
@@ -939,8 +938,6 @@ def create_duts_file(topology_file, inventory_file):
             with open(config.DUTS_FILE, "w") as yamlfile:
                 yaml.dump(dut_file, yamlfile, sort_keys=False)
                 return config.DUTS_FILE
-        else:
-            raise Exception
     except Exception as excep:
         logging.error("Error occured while creating DUTs file: %s",
                       str(excep))
