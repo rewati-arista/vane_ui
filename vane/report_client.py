@@ -260,22 +260,25 @@ class ReportClient:
 
     def _write_toc_page(self):
         """Write table of contents page"""
+        w_fldchar = "w:fldChar"
+        w_fldchar_type = "w:fldCharType"
+
         paragraph = self._document.add_paragraph()
         run = paragraph.add_run()
-        fld_char = OxmlElement("w:fldChar")
-        fld_char.set(qn("w:fldCharType"), "begin")
+        fld_char = OxmlElement(w_fldchar)
+        fld_char.set(qn(w_fldchar_type), "begin")
         instr_text = OxmlElement("w:instrText")
         instr_text.set(qn("xml:space"), "preserve")
         instr_text.text = 'TOC \\o "1-3" \\h \\z \\u'
 
-        fld_char2 = OxmlElement("w:fldChar")
-        fld_char2.set(qn("w:fldCharType"), "separate")
+        fld_char2 = OxmlElement(w_fldchar)
+        fld_char2.set(qn(w_fldchar_type), "separate")
         fld_char3 = OxmlElement("w:t")
         fld_char3.text = "Right-click to update field."
         fld_char2.append(fld_char3)
 
-        fld_char4 = OxmlElement("w:fldChar")
-        fld_char4.set(qn("w:fldCharType"), "end")
+        fld_char4 = OxmlElement(w_fldchar)
+        fld_char4.set(qn(w_fldchar_type), "end")
 
         r_element = run._r
         r_element.append(fld_char)
