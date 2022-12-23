@@ -50,6 +50,12 @@ logging.basicConfig(
     format=FORMAT,
 )
 
+TABLE_GRID = "Table Grid"
+TOTAL_TESTS = "Total Tests"
+TOTAL_PASSED = "Total Passed"
+TOTAL_FAILED = "Total Failed"
+TOTAL_SKIPPED = "Total Skipped"
+
 
 class ReportClient:
     """Creates an instance of the Report Client."""
@@ -216,7 +222,7 @@ class ReportClient:
                     sys.exit(1)
         except OSError as err_data:
             logging.error(
-                f"Defintions file: {yaml_file} not " f"found. {err_data}"
+                f"Defintions file: {yaml_file} not " + f"found. {err_data}"
             )
             sys.exit(1)
 
@@ -309,13 +315,13 @@ class ReportClient:
             f"{self._major_section}.1 Summary " "Results", 2
         )
         table = self._document.add_table(rows=1, cols=6)
-        table.style = "Table Grid"
+        table.style = TABLE_GRID
 
         hdr_cells = table.rows[0].cells
-        hdr_cells[0].text = "Total Tests"
-        hdr_cells[1].text = "Total Passed"
-        hdr_cells[2].text = "Total Failed"
-        hdr_cells[3].text = "Total Skipped"
+        hdr_cells[0].text = TOTAL_TESTS
+        hdr_cells[1].text = TOTAL_PASSED
+        hdr_cells[2].text = TOTAL_FAILED
+        hdr_cells[3].text = TOTAL_SKIPPED
         hdr_cells[4].text = "Total Errored"
         hdr_cells[5].text = "Total Duration"
 
@@ -346,14 +352,14 @@ class ReportClient:
         )
 
         table = self._document.add_table(rows=1, cols=6)
-        table.style = "Table Grid"
+        table.style = TABLE_GRID
 
         hdr_cells = table.rows[0].cells
         hdr_cells[0].text = "DUT"
-        hdr_cells[1].text = "Total Tests"
-        hdr_cells[2].text = "Total Passed"
-        hdr_cells[3].text = "Total Failed"
-        hdr_cells[4].text = "Total Skipped"
+        hdr_cells[1].text = TOTAL_TESTS
+        hdr_cells[2].text = TOTAL_PASSED
+        hdr_cells[3].text = TOTAL_FAILED
+        hdr_cells[4].text = TOTAL_SKIPPED
         hdr_cells[5].text = "Total Errored"
 
         duts = self._summary_results["duts"]
@@ -387,14 +393,14 @@ class ReportClient:
             return
 
         table = self._document.add_table(rows=1, cols=5)
-        table.style = "Table Grid"
+        table.style = TABLE_GRID
 
         hdr_cells = table.rows[0].cells
         hdr_cells[0].text = "Test Suite"
-        hdr_cells[1].text = "Total Tests"
-        hdr_cells[2].text = "Total Passed"
-        hdr_cells[3].text = "Total Failed"
-        hdr_cells[4].text = "Total Skipped"
+        hdr_cells[1].text = TOTAL_TESTS
+        hdr_cells[2].text = TOTAL_PASSED
+        hdr_cells[3].text = TOTAL_FAILED
+        hdr_cells[4].text = TOTAL_SKIPPED
         if not suite_results:
             logging.info("Skipping the test suite results")
             return
@@ -500,7 +506,7 @@ class ReportClient:
             return
 
         table = self._document.add_table(rows=1, cols=7)
-        table.style = "Table Grid"
+        table.style = TABLE_GRID
         test_num = 1
 
         hdr_cells = table.rows[0].cells
@@ -602,7 +608,7 @@ class ReportClient:
         )
 
         table = self._document.add_table(rows=1, cols=2)
-        table.style = "Table Grid"
+        table.style = TABLE_GRID
 
         hdr_cells = table.rows[0].cells
         hdr_cells[0].text = "Test Parameter"
