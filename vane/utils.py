@@ -14,10 +14,9 @@ def make_iterable(value):
     Returns:
         An iterable object of type list
     """
-    if sys.version_info <= (3, 0):
+    if sys.version_info <= (3, 0) and isinstance(value, unicode):
         # Convert unicode values to strings for Python 2
-        if isinstance(value, unicode):
-            value = str(value)
+        value = str(value)
     if isinstance(value, str) or isinstance(value, dict):
         value = [value]
 
@@ -31,7 +30,7 @@ def make_iterable(value):
     return value
 
 def run_script(path_to_run, py_file):
-    args = ["python{}".format(python_version), "{}{}".format(path_to_run, py_file)]
+    args = ["python{}".format(''), "{}{}".format(path_to_run, py_file)]
     res = subprocess.Popen(args, stdout=subprocess.PIPE)
     output, error_ = res.communicate()
 
