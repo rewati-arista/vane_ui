@@ -107,7 +107,7 @@ class TestsClient:
                     sys.exit(1)
         except OSError as err_data:
             logging.error(
-                f"Defintions file: {yaml_file} not " f"found. {err_data}"
+                f"Defintions file: {yaml_file} not " + f"found. {err_data}"
             )
             sys.exit(1)
 
