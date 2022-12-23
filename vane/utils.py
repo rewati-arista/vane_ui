@@ -35,7 +35,7 @@ def run_script(path_to_run, py_file):
     output, error_ = res.communicate()
 
     if not error_:
-        logging.info(f"Output for run_script {file}: {output}")
+        logging.info(f"Output for run_script {py_file}: {output}")
     else:
         logging.error(f"Error in run_script {py_file}: {error_}")
 
