@@ -850,7 +850,6 @@ def return_test_defs(test_parameters):
                 if file_name == test_definitions_file:
                     file_path = f"{dir_path}/{file_name}"
                     test_def = import_yaml(file_path)
-                    print(dir_path)
                     for test_suite in test_def:
                         test_suite['dir_path'] = f"{dir_path}"
                     test_defs["test_suites"] += test_def
