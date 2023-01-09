@@ -34,7 +34,8 @@
 import re
 import pytest
 from py.xml import html
-from vane.fixtures import dut, tests_definitions, duts, setup_dut
+
+pytest_plugins = ("vane.fixtures")
 
 
 def pytest_addoption(parser):

@@ -1,3 +1,4 @@
+#setup file
 BL1:
   schema:
     hostname: bl1
@@ -6,4 +7,5 @@ BL1:
 BL2:
   schema:
   template: |
+    #comment
     hostname bl2

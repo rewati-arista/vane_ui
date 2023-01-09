@@ -59,8 +59,6 @@ class HostTests:
 
         tops.expected_output = tops.dut_name
         tops.actual_output = dut["connection"].run_commands(tops.show_cmd, "json")[0]["hostname"]
-        print(tops.actual_output)
-        #["json"]["hostname"]
         tops.test_result = tops.actual_output == tops.expected_output
 
         tops.output_msg = (
