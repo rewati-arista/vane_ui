@@ -224,6 +224,43 @@ def init_show_log(test_parameters):
         sys.exit(1)
 
 
+def setup_import_yaml(yaml_file):
+    """Import YAML file as python data structure
+    Also remove lines starting from #
+    Args:
+        yaml_file (str): Name of YAML file
+
+    Returns:
+        yaml_data (dict): YAML data structure
+    """
+
+    logging.info(f"Opening {yaml_file} for read")
+    temp_file = yaml_file.split(".")[0]+"_temp."+yaml_file.split(".")[1]
+    try:
+        with open(yaml_file, "r") as input_yaml:
+            with open(temp_file, "w") as temp_yaml:
+                for line in input_yaml.readlines():
+                    if not (line.strip().startswith('#')):
+                        temp_yaml.write(line)
+            temp_yaml.close()
+
+        with open(temp_file, "r") as input_yaml:
+            try:
+                yaml_data = yaml.safe_load(input_yaml)
+                logging.info(f"Inputed the following yaml: " f"{yaml_data}")
+                return yaml_data
+            except yaml.YAMLError as err:
+                print(">>> ERROR IN YAML FILE")
+                logging.error(f"ERROR IN YAML FILE: {err}")
+                logging.error("EXITING TEST RUNNER")
+                sys.exit(1)
+    except OSError as err:
+        print(f">>> {yaml_file} YAML FILE MISSING")
+        logging.error(f"ERROR YAML FILE: {yaml_file} NOT " f"FOUND. {err}")
+        logging.error("EXITING TEST RUNNER")
+        sys.exit(1)
+    sys.exit(1)
+
 def import_yaml(yaml_file):
     """Import YAML file as python data structure
     Args:
@@ -805,18 +842,20 @@ def return_test_defs(test_parameters):
     test_defs = {"test_suites": []}
     test_dirs = test_parameters["parameters"]["test_dirs"]
     report_dir = test_parameters["parameters"]["report_dir"]
+    test_definitions_file = test_parameters["parameters"]["test_definitions"]
     for test_directory in test_dirs:
         tests_info = os.walk(test_directory)
         for dir_path, _, file_names in tests_info:
             for file_name in file_names:
-                if file_name == "test_definition.yaml":
+                if file_name == test_definitions_file:
                     file_path = f"{dir_path}/{file_name}"
                     test_def = import_yaml(file_path)
+                    print(dir_path)
                     for test_suite in test_def:
                         test_suite['dir_path'] = f"{dir_path}"
                     test_defs["test_suites"] += test_def
 
-    export_yaml(report_dir + "/tests_definitions.yaml", test_defs)
+    export_yaml(report_dir + "/"+ test_definitions_file, test_defs)
     logging.info(
         "Return the following test definitions data strcuture " f"{test_defs}"
     )
