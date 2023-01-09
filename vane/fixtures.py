@@ -130,9 +130,10 @@ def setup_testsuite(request, duts):
     for s in test_suites:
         if s['name'] == testsuit:
             setup_config_file = s.get('test_setup', "")
+            print(setup_config_file)
             if setup_config_file != "":
-
                 setup_config = tests_tools.setup_import_yaml(f"{s['dir_path']}/{setup_config_file}")
+                print(setup_config)
                 checkpoint = perform_setup(duts, testsuit, setup_config)
     yield
     perform_teardown(duts, checkpoint, setup_config)
@@ -148,8 +149,10 @@ def setup_testcase(request, duts):
         for t in tests:
             if t['name'] == testname:
                 setup_config_file = t.get('test_setup', "")
+                print(setup_config_file)
                 if setup_config_file != "":
                     setup_config = tests_tools.setup_import_yaml(f"{s['dir_path']}/{setup_config_file}")
+                    print(setup_config)
                     checkpoint = perform_setup(duts, testname, setup_config)
 
     yield

@@ -237,6 +237,8 @@ def setup_import_yaml(yaml_file):
     logging.info(f"Opening {yaml_file} for read")
     temp_file = yaml_file.split(".")[0]+"_temp."+yaml_file.split(".")[1]
     try:
+        # need to read the setup yaml file and filter out comments
+        # here a line is copied to temp file if it does not start with #
         with open(yaml_file, "r") as input_yaml:
             with open(temp_file, "w") as temp_yaml:
                 for line in input_yaml.readlines():
@@ -244,15 +246,24 @@ def setup_import_yaml(yaml_file):
                         temp_yaml.write(line)
             temp_yaml.close()
 
-        with open(temp_file, "r") as input_yaml:
+        # temp file is now used to load yaml
+        with open(temp_file, "r") as temp_yaml:
             try:
-                yaml_data = yaml.safe_load(input_yaml)
+                yaml_data = yaml.safe_load(temp_yaml)
                 logging.info(f"Inputed the following yaml: " f"{yaml_data}")
+                # closing the temp_file
+                temp_yaml.close()
+                # removing the temp_file
+                os.remove(temp_file)
                 return yaml_data
             except yaml.YAMLError as err:
                 print(">>> ERROR IN YAML FILE")
                 logging.error(f"ERROR IN YAML FILE: {err}")
                 logging.error("EXITING TEST RUNNER")
+                # closing the temp_file
+                temp_yaml.close()
+                # removing the temp_file
+                os.remove(temp_file)
                 sys.exit(1)
     except OSError as err:
         print(f">>> {yaml_file} YAML FILE MISSING")
