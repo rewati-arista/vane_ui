@@ -113,6 +113,14 @@ class TestsClient:
 
 
     def write_test_def_file(self, template_definitions, master_definitions, test_dir, test_definitions):
+        """ Reads templates and creates test definitions using master definitions 
+            Args:
+            template_definitions: template test definition file name 
+            master_definitions: master schema to used to render template
+            test_dir: the directory for which test definitons need to be generated
+            test_definitions: name of the test defnition file to be created
+        """ 
+
         # Traverses given test directory
         for root, dirs, files in os.walk(test_dir):
             # Iterates over files in a given dir and checks if they
@@ -121,7 +129,7 @@ class TestsClient:
             for file in files:
                 if file == template_definitions:
                     # Inputs template yaml data
-                    template_file = self._import_yaml(os.path.join(root, file))
+                    template_file = open(os.path.join(root, file), 'r').read()
                     
                     # Uses Jinja2 templating to generate new test definition
                     # file and replace the given templates

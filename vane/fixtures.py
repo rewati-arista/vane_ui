@@ -60,6 +60,8 @@ def tests_definitions():
     yield test_defs
 
 def setup_via_name(duts, setup_config, checkpoint):
+    """ Creates checkpoint on duts and then runs setup for
+        duts identified using the device name """
 
     for dev_name in setup_config:
         dut = duts.get(dev_name, None)
@@ -82,6 +84,9 @@ def setup_via_name(duts, setup_config, checkpoint):
         dut['connection'].config(config)
 
 def setup_via_role(duts, setup_config, checkpoint):
+    """ Creates checkpoint on duts and then runs setup for
+        duts identified using the device role """
+
     for role in setup_config:
         for _, dut in duts.items():
             if dut["role"] != role:
@@ -100,6 +105,7 @@ def setup_via_role(duts, setup_config, checkpoint):
 
 
 def perform_setup(duts, test, setup_config):
+    """ Creates checkpoints and then runs setup on duts """
 
     date_obj = datetime.datetime.now()
     gold_config_date = date_obj.strftime("%y%m%d%H%M")
@@ -117,6 +123,8 @@ def perform_setup(duts, test, setup_config):
 
 
 def teardown_via_name(duts, setup_config, checkpoint_restore_cmd, delete_checkpoint_cmd):
+    """ Restores the checkpoints on duts identified by their name """
+
     for dev_name in setup_config:
         dut = duts.get(dev_name, None)
         if dut is None:
@@ -126,6 +134,8 @@ def teardown_via_name(duts, setup_config, checkpoint_restore_cmd, delete_checkpo
         
 
 def teardown_via_role(duts, setup_config, checkpoint_restore_cmd, delete_checkpoint_cmd):
+    """ Restores the checkpoints on duts identified by their role """
+
     for role in setup_config:
         for _, dut in duts.items():
             if dut['role'] != role:
@@ -136,6 +146,7 @@ def teardown_via_role(duts, setup_config, checkpoint_restore_cmd, delete_checkpo
 
 
 def perform_teardown(duts, checkpoint, setup_config):
+    """ Restore and delete checkpoint """
     if checkpoint == "":
         return
 
@@ -152,6 +163,8 @@ def perform_teardown(duts, checkpoint, setup_config):
 
 @pytest.fixture(autouse=True, scope="class")
 def setup_testsuite(request, duts):
+    """ Setup the duts using the test suite(class) setup file """
+
     testsuit = get_current_fixture_testclass(request)
     test_suites = test_defs['test_suites']
     setup_config = []
@@ -167,6 +180,8 @@ def setup_testsuite(request, duts):
 
 @pytest.fixture(autouse=True, scope="function")
 def setup_testcase(request, duts):
+    """ Setup the duts using the test case(function) setup file """
+
     testname = get_current_fixture_testname(request)
     test_suites = test_defs['test_suites']
     setup_config = []
