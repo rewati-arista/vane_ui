@@ -137,12 +137,12 @@ class PyeapiConn(DeviceConn):
 
     def enable(self, commands, encoding='json', strict=False,
                send_enable=True, **kwargs):
-        """ wrapper around pyeapi enable func """
+       """ wrapper around pyeapi enable func """
        output = self._connection.enable(commands, encoding, strict, send_enable, **kwargs)
        return output
 
     def config(self, commands, **kwargs):
-        """ wrapper around pyeapi config func """
+       """ wrapper around pyeapi config func """
        output = self._connection.config(commands, **kwargs)
        return output
 
