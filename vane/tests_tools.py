@@ -1079,9 +1079,15 @@ class TestOps:
         self.test_parameters["actual_output"] = self.actual_output
         self.test_parameters["expected_output"] = self.expected_output
         self.test_parameters["dut"] = self.dut_name
-        self.test_parameters["show_cmd"] = self.show_cmd
-        self.test_parameters["test_id"] = self.test_id
 
+        show_cmd_and_output = self.show_cmd
+
+        if len(self.show_cmd_txt) > 0:
+            show_cmd_and_output = show_cmd_and_output + ":\n\n"+self.show_cmd_txt
+            
+        self.test_parameters["show_cmd"] = show_cmd_and_output
+        
+        self.test_parameters["test_id"] = self.test_id
         self.test_parameters["fail_or_skip_reason"] = ""
         if not self.test_parameters["test_result"]:
             self.test_parameters["fail_or_skip_reason"] = self.output_msg
