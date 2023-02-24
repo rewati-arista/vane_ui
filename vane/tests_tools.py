@@ -404,6 +404,7 @@ def login_duts(test_parameters, test_duts):
         login_ptr["role"] = dut["role"]
         login_ptr["neighbors"] = dut["neighbors"]
         login_ptr["results_dir"] = test_parameters["parameters"]["results_dir"]
+        login_ptr["test_results_dir"] = test_parameters["parameters"]["test_results_dir"]
         login_ptr["eapi_file"] = eapi_file
 
     logging.info(f"Returning duts logins: {logins}")
@@ -897,6 +898,31 @@ def export_yaml(yaml_file, yaml_data):
         sys.exit(1)
 
 
+def export_text(text_file, text_data):
+    """Export python data structure as a YAML file
+
+    Args:
+        yaml_file (str): Name of YAML file
+    """
+
+    logging.info(f"Opening {text_file} for write")
+    try:
+        with open(text_file, "w+") as text_out:
+            try:
+                logging.info(f"Output the following text file: " + f"{text_data}")
+                yaml.dump(text_data, text_out, default_flow_style=False)
+            except yaml.YAMLError as err:
+                print(">>> ERROR IN YAML FILE")
+                logging.error(f"ERROR IN YAML FILE: {err}")
+                logging.error("EXITING TEST RUNNER")
+                sys.exit(1)
+    except OSError as err:
+        print(f">>> {text_file} TEXT FILE MISSING")
+        logging.error(f"ERROR TEXT FILE: {text_file} NOT " + f"FOUND. {err}")
+        logging.error("EXITING TEST RUNNER")
+        sys.exit(1)
+
+
 def subprocess_ping(definition_file, dut_name, loopback_ip, repeat_ping):
     """Subprocess to run the continuous ping command
     Args:
@@ -1017,6 +1043,7 @@ class TestOps:
         self.dut_name = self.dut["name"]
         self.interface_list = self.dut["output"]["interface_list"]
         self.results_dir = self.dut["results_dir"]
+        self.test_results_dir = self.dut["test_results_dir"]
         self.show_cmds = []
         self.show_cmd = ""
 
@@ -1087,6 +1114,7 @@ class TestOps:
             self.test_parameters["fail_or_skip_reason"] = self.output_msg
 
         self._write_results()
+        self._write_text_results()
 
     def _write_results(self):
 
@@ -1101,6 +1129,26 @@ class TestOps:
         logging.info(f"Creating results file named {yaml_file}")
         yaml_data = self.test_parameters
         export_yaml(yaml_file, yaml_data)
+
+    def _write_text_results(self):
+        logging.info("Preparing to write show command output to yaml")
+
+
+        # assume results_dir is TEST REPORTS directory within reports directory
+
+        test_results_dir = self.test_results_dir
+        test_id = self.test_parameters["test_id"]
+        test_case = self.test_parameters["name"]
+        dut_name = self.test_parameters["dut"]
+
+        # text_file = f"{test_results_dir}/{test_id}-{test_case}/{test_id}-{dut_name}-Verification.yml"
+
+        text_file = f"{test_results_dir}/{test_id}-{dut_name}-Verification.yml"
+
+        logging.info(f"Creating test results file named {text_file}")
+        text_data = self.show_cmd +":\n\n"+self.show_cmd_txt
+        export_text(text_file, text_data)
+
 
     def _get_parameters(self, tests_parameters, test_suite, test_case):
         """Return test parameters for a test case
