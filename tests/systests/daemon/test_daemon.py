@@ -71,15 +71,6 @@ class DaemonTests:
                 f"state is |{tops.actual_output}| correct"
                 f" state is |{tops.expected_output}|.\n"
             )
-            tops.comment += (
-                f"TEST is {daemon} daemon running on "
-                f"|{tops.dut_name}|.\n"
-                f"GIVEN expected {daemon} running state: "
-                f"|{tops.expected_output}|.\n"
-                f"WHEN {daemon} device running state is "
-                f"|{tops.actual_output}|.\n"
-                f"THEN test case result is |{tops.test_result}|.\n"
-            )
 
             tops.actual_results.append(tops.actual_output)
             tops.expected_results.append(tops.expected_output)
@@ -117,15 +108,6 @@ class DaemonTests:
                 f"\nOn router |{tops.dut_name}|, daemon enabled "
                 f"state is |{tops.actual_output}| correct"
                 f" state is |{tops.expected_output}|.\n"
-            )
-            tops.comment += (
-                f"TEST is {daemon} daemon enabled on "
-                f"|{tops.dut_name}|.\n"
-                f"GIVEN expected {daemon} enabled state: "
-                f"|{tops.expected_output}|.\n"
-                f"WHEN {daemon} device enabled state is "
-                f"|{tops.actual_output}|.\n"
-                f"THEN test case result is |{tops.test_result}|.\n"
             )
 
             tops.actual_results.append(tops.actual_output)
