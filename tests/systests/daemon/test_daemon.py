@@ -75,9 +75,6 @@ class DaemonTests:
             tops.actual_results.append(tops.actual_output)
             tops.expected_results.append(tops.expected_output)
 
-        tops.comment += (
-            f"OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n"
-        )
         print(f"{tops.output_msg}\n{tops.comment}")
 
         tops.actual_output, tops.expected_output = (
@@ -112,10 +109,6 @@ class DaemonTests:
 
             tops.actual_results.append(tops.actual_output)
             tops.expected_results.append(tops.expected_output)
-
-        tops.comment += (
-            f"OUTPUT of |{tops.show_cmd}| is :\n\n{tops.show_cmd_txt}.\n"
-        )
         print(f"{tops.output_msg}\n{tops.comment}")
 
         tops.actual_output, tops.expected_output = (
