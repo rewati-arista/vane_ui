@@ -1182,12 +1182,6 @@ class TestOps:
             f"|{self.actual_output}%| and the expected output is "
             f"|{self.expected_output}%|"
         )
-        self.comment = (
-            "TEST is correct.\n"
-            f"GIVEN expected output is |{self.expected_output}|.\n"
-            f"WHEN actual output is |{self.actual_output}|.\n"
-            f'Final output of command executed on the device | \n {output} | .\n'
-        )
         print(f"{self.output_msg}\n{self.comment}")
 
         self.post_testcase()
