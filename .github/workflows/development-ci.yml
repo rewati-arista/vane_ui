@@ -41,4 +41,3 @@ jobs:
       # Run pylint
       - name: Lint with pylint
         run: pylint ./vane ./tests
-        continue-on-error: true
