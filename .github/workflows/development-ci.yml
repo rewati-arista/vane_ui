@@ -36,7 +36,6 @@ jobs:
       # Run flake8
       - name: Lint with flake8
         run: flake8 ./vane ./tests
-        continue-on-error: true
 
       # Run pylint
       - name: Lint with pylint
