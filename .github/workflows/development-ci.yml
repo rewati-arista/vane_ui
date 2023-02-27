@@ -31,7 +31,6 @@ jobs:
         # If any code needs reformatting, black returns an exit code of 1, which
         # fails the action
         run: black --check .
-        continue-on-error: true
 
       # Run flake8
       - name: Lint with flake8
