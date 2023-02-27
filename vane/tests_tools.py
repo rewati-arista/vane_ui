@@ -1081,6 +1081,7 @@ class TestOps:
         self.test_parameters["dut"] = self.dut_name
         self.test_parameters["show_cmd"] = self.show_cmd
         self.test_parameters["test_id"] = self.test_id
+        self.test_parameters["show_cmd_txts"] = self.show_cmd_txts
 
         self.test_parameters["fail_or_skip_reason"] = ""
         if not self.test_parameters["test_result"]:
