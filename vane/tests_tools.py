@@ -404,7 +404,7 @@ def login_duts(test_parameters, test_duts):
         login_ptr["role"] = dut["role"]
         login_ptr["neighbors"] = dut["neighbors"]
         login_ptr["results_dir"] = test_parameters["parameters"]["results_dir"]
-        login_ptr["test_results_dir"] = test_parameters["parameters"]["test_results_dir"]
+        login_ptr["report_dir"] = test_parameters["parameters"]["report_dir"]
         login_ptr["eapi_file"] = eapi_file
 
     logging.info(f"Returning duts logins: {logins}")
@@ -899,15 +899,19 @@ def export_yaml(yaml_file, yaml_data):
 
 
 def export_text(text_file, text_data):
-    """Export python data structure as a YAML file
+    """Export python data structure as a TEXT file
 
     Args:
-        yaml_file (str): Name of YAML file
+        text_file (str): Name of TEXT file
     """
 
     logging.info(f"Opening {text_file} for write")
+
+    # to create the sub-directory if it does not exist
+    # https://stackoverflow.com/questions/12517451/automatically-creating-directories-with-file-output
+    os.makedirs(os.path.dirname(text_file), exist_ok=True)
     try:
-        with open(text_file, "w+") as text_out:
+        with open(text_file, "w") as text_out:
             try:
                 logging.info(f"Output the following text file: " + f"{text_data}")
                 yaml.dump(text_data, text_out, default_flow_style=False)
@@ -1043,7 +1047,7 @@ class TestOps:
         self.dut_name = self.dut["name"]
         self.interface_list = self.dut["output"]["interface_list"]
         self.results_dir = self.dut["results_dir"]
-        self.test_results_dir = self.dut["test_results_dir"]
+        self.report_dir = self.dut["report_dir"]
         self.show_cmds = []
         self.show_cmd = ""
 
@@ -1131,23 +1135,28 @@ class TestOps:
         export_yaml(yaml_file, yaml_data)
 
     def _write_text_results(self):
-        logging.info("Preparing to write show command output to yaml")
+        
+        logging.info("Preparing to write show command output to text file")
 
-
-        # assume results_dir is TEST REPORTS directory within reports directory
-
-        test_results_dir = self.test_results_dir
+        report_dir = self.report_dir
         test_id = self.test_parameters["test_id"]
         test_case = self.test_parameters["name"]
         dut_name = self.test_parameters["dut"]
 
-        # text_file = f"{test_results_dir}/{test_id}-{test_case}/{test_id}-{dut_name}-Verification.yml"
-
-        text_file = f"{test_results_dir}/{test_id}-{dut_name}-Verification.yml"
+        text_file = f"{report_dir}/TEST RESULTS/{test_id} {test_case}/{test_id} {dut_name} Verification.yml"
 
         logging.info(f"Creating test results file named {text_file}")
+        
+        # format this data
+
+        text = dict()
+        text[dut_name+"# "+self.show_cmd] = "\n" + self.show_cmd_txt
+       
+
+        logging.info(f"COMMANDS{text}")
         text_data = self.show_cmd +":\n\n"+self.show_cmd_txt
-        export_text(text_file, text_data)
+
+        export_text(text_file, text)
 
 
     def _get_parameters(self, tests_parameters, test_suite, test_case):
