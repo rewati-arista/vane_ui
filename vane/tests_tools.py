@@ -1079,10 +1079,15 @@ class TestOps:
         self.test_parameters["actual_output"] = self.actual_output
         self.test_parameters["expected_output"] = self.expected_output
         self.test_parameters["dut"] = self.dut_name
+
         self.test_parameters["show_cmd"] = self.show_cmd
         self.test_parameters["test_id"] = self.test_id
         self.test_parameters["show_cmd_txts"] = self.show_cmd_txts
 
+        if str(self.show_cmd_txt):
+            self.test_parameters["show_cmd"] += ":\n\n"+self.show_cmd_txt
+        
+        self.test_parameters["test_id"] = self.test_id
         self.test_parameters["fail_or_skip_reason"] = ""
         if not self.test_parameters["test_result"]:
             self.test_parameters["fail_or_skip_reason"] = self.output_msg
@@ -1182,12 +1187,6 @@ class TestOps:
             f"\nOn switch |{dut_name}| The actual output is "
             f"|{self.actual_output}%| and the expected output is "
             f"|{self.expected_output}%|"
-        )
-        self.comment = (
-            "TEST is correct.\n"
-            f"GIVEN expected output is |{self.expected_output}|.\n"
-            f"WHEN actual output is |{self.actual_output}|.\n"
-            f'Final output of command executed on the device | \n {output} | .\n'
         )
         print(f"{self.output_msg}\n{self.comment}")
 
