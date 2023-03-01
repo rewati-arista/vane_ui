@@ -1081,6 +1081,8 @@ class TestOps:
         self.test_parameters["dut"] = self.dut_name
 
         self.test_parameters["show_cmd"] = self.show_cmd
+        self.test_parameters["test_id"] = self.test_id
+        self.test_parameters["show_cmd_txts"] = self.show_cmd_txts
 
         if str(self.show_cmd_txt):
             self.test_parameters["show_cmd"] += ":\n\n"+self.show_cmd_txt
