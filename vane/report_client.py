@@ -44,9 +44,7 @@ from docx.oxml import OxmlElement, parse_xml
 from docx.shared import Inches, Pt, RGBColor
 from vane.report_templates import REPORT_TEMPLATES
 
-FORMAT = (
-    "[%(asctime)s %(filename)s->%(funcName)s():%(lineno)s]%(levelname)s: %(message)s"
-)
+FORMAT = "[%(asctime)s %(filename)s->%(funcName)s():%(lineno)s]%(levelname)s: %(message)s"
 logging.basicConfig(
     level=logging.INFO,
     filename="vane.log",
@@ -98,9 +96,7 @@ class ReportClient:
             yaml_file ([type]): [description]
         """
 
-        logging.info(
-            f"yaml directory is {yaml_dir}\n yaml output file is {yaml_file}"
-        )
+        logging.info(f"yaml directory is {yaml_dir}\nyaml output file is {yaml_file}")
         yaml_files = os.listdir(yaml_dir)
         logging.info(f"yaml input files are {yaml_files}")
 
@@ -142,9 +138,7 @@ class ReportClient:
             f"{dut_name}\n\n\r"
         )
         logging.info(self._results_datamodel["test_suites"])
-        test_suites = [
-            param["name"] for param in self._results_datamodel["test_suites"]
-        ]
+        test_suites = [param["name"] for param in self._results_datamodel["test_suites"]]
 
         if test_suite in test_suites:
             suite_index = test_suites.index(test_suite)
@@ -161,16 +155,13 @@ class ReportClient:
         logging.info(f"Find Index for test case: {test_case} on duts {dut_name}")
         test_cases = [
             param["name"]
-            for param in self._results_datamodel["test_suites"][suite_index][
-                "test_cases"
-            ]
+            for param in self._results_datamodel["test_suites"][suite_index]["test_cases"]
         ]
 
         if test_case in test_cases:
             test_index = test_cases.index(test_case)
             logging.info(
-                f"Test case {test_case} exists in results file at index "
-                f"{test_index}"
+                f"Test case {test_case} exists in results file at index " f"{test_index}"
             )
         else:
             logging.info(f"Create test case {test_case} in results file")
@@ -179,8 +170,7 @@ class ReportClient:
                 test_stub
             )
             test_index = (
-                len(self._results_datamodel["test_suites"][suite_index]["test_cases"])
-                - 1
+                len(self._results_datamodel["test_suites"][suite_index]["test_cases"]) - 1
             )
 
         logging.info(f"Find Index for dut {dut_name}")
@@ -212,7 +202,7 @@ class ReportClient:
             with open(yaml_file, "r") as input_yaml:
                 try:
                     yaml_data = yaml.safe_load(input_yaml)
-                    logging.info(f"Inputed the following yaml: {yaml_data}")
+                    logging.info(f"Inputted the following yaml: {yaml_data}")
                     return yaml_data
                 except yaml.YAMLError as err_data:
                     logging.error(f"Error in YAML file. {err_data}")
@@ -695,7 +685,9 @@ class ReportClient:
             if "format" in report_template[report_field]:
                 report_format = report_template[report_field]["format"]
             else:
-                report_format = "string"
+                report_format = "missing"
+
+            logging.info(f"Format for {report_field} is set to {report_format}")
 
             if report_format == "string":
                 self._write_string(dut, para, report_field)
@@ -712,7 +704,12 @@ class ReportClient:
             elif report_format == "test_result":
                 self._write_test_result(dut, para, report_field)
             else:
-                self._write_string(dut, para, report_field)
+                run = para.add_run(
+                    "Please correctly set format in report template for "
+                    f"{report_field} field. Output cannot be displayed "
+                    "without this."
+                )
+                run.font.color.rgb = RGBColor(255, 0, 0)
 
     def _set_default_value(self, report_field, report_template, dut):
         """Uses default value in report template and sets it in dut
@@ -847,8 +844,10 @@ class ReportClient:
         if report_field in dut and "show_cmd" in dut:
             table = self._document.add_table(rows=1, cols=1, style="Table Grid")
             para = table.rows[0].cells[0].paragraphs[0]
-            # pylint: disable-next=consider-using-f-string
-            black = parse_xml(r'<w:shd {} w:fill="0A0A0A"/>'.format(nsdecls("w")))
+            black = parse_xml(
+                # pylint: disable-next=consider-using-f-string
+                r'<w:shd {} w:fill="0A0A0A"/>'.format(nsdecls("w"))
+            )
             # pylint: disable-next=protected-access
             table.rows[0].cells[0]._tc.get_or_add_tcPr().append(black)
             report_values = dut[report_field]
@@ -902,8 +901,7 @@ class ReportClient:
         """
 
         logging.info(
-            "The following test suites have been collected "
-            f"{self._results_datamodel}"
+            "The following test suites have been collected " f"{self._results_datamodel}"
         )
 
         if not self._results_datamodel:
@@ -991,12 +989,10 @@ class ReportClient:
 
                     testcase_results.append(testcase_result)
                     logging.info(
-                        "After testcase results struct appended: {testcase_results}"
+                        f"After testcase results struct appended: {testcase_results}"
                     )
 
-                logging.info(
-                    "Interim dut -- testcase results struct {testcase_results}"
-                )
+                logging.info(f"Interim dut -- testcase results struct {testcase_results}")
 
         logging.info(f"Returning testcase result {testcase_results}")
         return testcase_results
