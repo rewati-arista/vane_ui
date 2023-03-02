@@ -903,23 +903,19 @@ def export_text(text_file, text_data):
 
     Args:
         text_file (str): Name of TEXT file
+        text_data (dict): output of show command in python dictionary
     """
 
     logging.info(f"Opening {text_file} for write")
 
     # to create the sub-directory if it does not exist
-    # https://stackoverflow.com/questions/12517451/automatically-creating-directories-with-file-output
     os.makedirs(os.path.dirname(text_file), exist_ok=True)
+
     try:
         with open(text_file, "w") as text_out:
-            try:
-                logging.info(f"Output the following text file: " + f"{text_data}")
-                yaml.dump(text_data, text_out, default_flow_style=False)
-            except yaml.YAMLError as err:
-                print(">>> ERROR IN YAML FILE")
-                logging.error(f"ERROR IN YAML FILE: {err}")
-                logging.error("EXITING TEST RUNNER")
-                sys.exit(1)
+            logging.info(f"Output the following text file: " + f"{text_data}")
+            for key, value in text_data.items(): 
+                text_out.write('%s:%s\n' % (key, value))
     except OSError as err:
         print(f">>> {text_file} TEXT FILE MISSING")
         logging.error(f"ERROR TEXT FILE: {text_file} NOT " + f"FOUND. {err}")
@@ -1050,28 +1046,22 @@ class TestOps:
         self.show_cmds = []
         self.show_cmd = ""
 
-        logging.info(f"PARA {self.test_parameters}")
         try:
             self.show_cmd = self.test_parameters["show_cmd"]
             if self.show_cmd:
                 self.show_cmds.append(self.show_cmd)
         except KeyError:
-            logging.info(f"COMMANDSs")
             self.show_cmds = self.test_parameters["show_cmds"]
             
 
         self.show_cmd_txts = []
         self.show_cmd_txt = ""
         if len(self.show_cmds) > 0 and self.dut:
-            logging.info(f"COMMANDSs")
             self._verify_show_cmd(self.show_cmds, self.dut)
             if self.show_cmd:
-                logging.info(f"COMMANDSs")
                 self.show_cmd_txt = self.dut["output"][self.show_cmd]["text"]
             for show_cmd in self.show_cmds:
-                logging.info(f"COMMANDSs {show_cmd}")
                 self.show_cmd_txts.append(self.dut["output"][show_cmd]["text"])
-                logging.info(f"COMMANDSs { self.show_cmd_txts}")
 
         self.comment = ""
         self.output_msg = ""
@@ -1141,7 +1131,7 @@ class TestOps:
 
     def _write_text_results(self):
         
-        logging.info("Preparing to write show command output to text file")
+        # creating file path
 
         report_dir = self.report_dir
         test_id = self.test_parameters["test_id"]
@@ -1149,23 +1139,21 @@ class TestOps:
         dut_name = self.test_parameters["dut"]
 
         text_file = f"{report_dir}/TEST RESULTS/{test_id} {test_case}/{test_id} {dut_name} Verification.txt"
-
-        logging.info(f"Creating test results file named {text_file}")
     
         #formatting data
 
         text_data = dict()
 
-        # single show command
-        if str(self.show_cmd):
-            text_data[dut_name+"# "+self.show_cmd] = "\n" + self.show_cmd_txt 
-        
-        # multiple show commands
         for (command, text) in zip(self.show_cmds, self.show_cmd_txts):
-            text_data[dut_name+"# "+command] = "\n" + text
+            text_data[dut_name+"# "+command] = "\n\n" + text
 
-        export_text(text_file, text_data)
+        #exporting data to file
 
+        if (text_data):
+            logging.info(f"Preparing to write show command output to text file {text_file}")
+            export_text(text_file, text_data)
+        else:
+            logging.info(f"No show command output to display")
 
     def _get_parameters(self, tests_parameters, test_suite, test_case):
         """Return test parameters for a test case
@@ -1243,7 +1231,6 @@ class TestOps:
           dut_name: name of the device
           output: actual output
         """
-        logging.info(f"COMMANDSs{self.show_cmds}")
         self.output_msg = (
             f"\nOn switch |{dut_name}| The actual output is "
             f"|{self.actual_output}%| and the expected output is "
