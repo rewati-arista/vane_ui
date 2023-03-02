@@ -244,7 +244,7 @@ def setup_import_yaml(yaml_file):
         with open(temp_file, "r") as temp_yaml:
             try:
                 yaml_data = yaml.safe_load(temp_yaml)
-                logging.info(f"Inputed the following yaml: " f"{yaml_data}")
+                logging.info(f"Inputed the following yaml: {yaml_data}")
                 # closing the temp_file
                 temp_yaml.close()
                 # removing the temp_file
@@ -261,7 +261,7 @@ def setup_import_yaml(yaml_file):
                 sys.exit(1)
     except OSError as err:
         print(f">>> {yaml_file} YAML FILE MISSING")
-        logging.error(f"ERROR YAML FILE: {yaml_file} NOT " f"FOUND. {err}")
+        logging.error(f"ERROR YAML FILE: {yaml_file} NOT FOUND. {err}")
         logging.error("EXITING TEST RUNNER")
         sys.exit(1)
     sys.exit(1)
@@ -486,7 +486,7 @@ def dut_worker(dut, show_cmds, test_parameters):
 
     for show_cmd in show_cmds:
         function_def = f'test_{("_").join(show_cmd.split())}'
-        logging.info(f"Executing show command: {show_cmd} for test " + f"{function_def}")
+        logging.info(f"Executing show command: {show_cmd} for test {function_def}")
 
         logging.info(f"Adding output of {show_cmd} to duts data structure")
         dut["output"][show_cmd] = {}
@@ -559,7 +559,7 @@ def return_show_cmd(show_cmd, dut, test_name, test_parameters):
         show_output_text = conn.run_commands(show_cmd, encoding="text")
         logging.error(f"new value of show_output_text  {show_output_text}")
         raw_text = show_output_text[0]["output"]
-    logging.info(f"Raw text output of {show_cmd} on dut {name}: " + f"{show_output}")
+    logging.info(f"Raw text output of {show_cmd} on dut {name}: {show_output}")
 
     export_logs(test_name, name, raw_text, test_parameters)
 
@@ -620,7 +620,7 @@ def export_logs(test_name, hostname, output, test_parameters):
     show_log = test_parameters["parameters"]["show_log"]
 
     try:
-        logging.info(f"Opening file {show_log} and append show output: " + f"{output}")
+        logging.info(f"Opening file {show_log} and append show output: {output}")
         # pylint: disable-next=unspecified-encoding
         with open(show_log, "a") as log_file:
             log_file.write(f"\ntest_suite::{test_name}[{hostname}]:\n{output}")
@@ -677,9 +677,9 @@ def verify_show_cmd(show_cmd, dut):
     )
 
     if show_cmd in dut["output"]:
-        logging.info(f"Verified output for show command |{show_cmd}| on " + f"{dut_name}")
+        logging.info(f"Verified output for show command |{show_cmd}| on {dut_name}")
     else:
-        logging.critical(f"Show command |{show_cmd}| not executed on " + f"{dut_name}")
+        logging.critical(f"Show command |{show_cmd}| not executed on {dut_name}")
         assert False
 
 
@@ -718,7 +718,7 @@ def verify_veos(dut):
 
     veos_bool = False
     veos = dut["output"][show_cmd]["json"]["modelName"]
-    logging.info(f"Verify if {dut_name} DUT is a VEOS instance. " + f"Model is {veos}")
+    logging.info(f"Verify if {dut_name} DUT is a VEOS instance. Model is {veos}")
 
     if veos == "vEOS":
         veos_bool = True
@@ -812,7 +812,7 @@ def return_show_cmds(test_parameters):
                     show_cmds.append(show_cmd)
 
     logging.info(
-        "The following show commands are required for test cases: " f"{show_cmds}"
+        f"The following show commands are required for test cases: {show_cmds}"
     )
     return show_cmds
 
@@ -840,7 +840,7 @@ def return_test_defs(test_parameters):
                     test_defs["test_suites"] += test_def
 
     export_yaml(report_dir + "/" + test_definitions_file, test_defs)
-    logging.info("Return the following test definitions data strcuture " f"{test_defs}")
+    logging.info("Return the following test definitions data strcuture {test_defs}")
 
     return test_defs
 
@@ -1062,11 +1062,11 @@ class TestOps:
         for show_cmd in show_cmds:
             if show_cmd and show_cmd in dut["output"]:
                 logging.info(
-                    f"Verified output for show command |{show_cmd}| on " f"{dut_name}"
+                    f"Verified output for show command |{show_cmd}| on {dut_name}"
                 )
             else:
                 logging.critical(
-                    f"Show command |{show_cmd}| not executed on " + f"{dut_name}"
+                    f"Show command |{show_cmd}| not executed on {dut_name}"
                 )
                 assert False
 
@@ -1166,7 +1166,7 @@ class TestOps:
         try:
             show_output_text = conn.run_commands(show_cmd, encoding="text")
             logging.info(
-                f"Raw text output of {show_cmd} on dut {name}: " f"{self.show_cmd_txt}"
+                f"Raw text output of {show_cmd} on dut {name}: {self.show_cmd_txt}"
             )
             self.show_cmd_txt = show_output_text[0]["output"]
         # pylint: disable-next=broad-exception-caught
@@ -1201,7 +1201,7 @@ class TestOps:
         veos_bool = False
         veos = self.dut["output"][show_cmd]["json"]["modelName"]
         logging.info(
-            f"Verify if {self.dut_name} DUT is a VEOS instance. " f"Model is {veos}"
+            f"Verify if {self.dut_name} DUT is a VEOS instance. Model is {veos}"
         )
 
         if veos == "vEOS":
@@ -1209,7 +1209,7 @@ class TestOps:
             logging.info(f"{self.dut_name} is a VEOS instance so returning {veos_bool}")
         else:
             logging.info(
-                f"{self.dut_name} is not a VEOS instance so returning " f"{veos_bool}"
+                f"{self.dut_name} is not a VEOS instance so returning {veos_bool}"
             )
 
         return veos_bool
