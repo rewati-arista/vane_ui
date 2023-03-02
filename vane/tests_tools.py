@@ -1042,7 +1042,6 @@ class TestOps:
         )
 
         self.expected_output = self.test_parameters["expected_output"]
-
         self.dut = dut
         self.dut_name = self.dut["name"]
         self.interface_list = self.dut["output"]["interface_list"]
@@ -1051,22 +1050,28 @@ class TestOps:
         self.show_cmds = []
         self.show_cmd = ""
 
+        logging.info(f"PARA {self.test_parameters}")
         try:
             self.show_cmd = self.test_parameters["show_cmd"]
             if self.show_cmd:
                 self.show_cmds.append(self.show_cmd)
         except KeyError:
+            logging.info(f"COMMANDSs")
             self.show_cmds = self.test_parameters["show_cmds"]
             
 
         self.show_cmd_txts = []
         self.show_cmd_txt = ""
         if len(self.show_cmds) > 0 and self.dut:
+            logging.info(f"COMMANDSs")
             self._verify_show_cmd(self.show_cmds, self.dut)
             if self.show_cmd:
+                logging.info(f"COMMANDSs")
                 self.show_cmd_txt = self.dut["output"][self.show_cmd]["text"]
             for show_cmd in self.show_cmds:
+                logging.info(f"COMMANDSs {show_cmd}")
                 self.show_cmd_txts.append(self.dut["output"][show_cmd]["text"])
+                logging.info(f"COMMANDSs { self.show_cmd_txts}")
 
         self.comment = ""
         self.output_msg = ""
@@ -1143,20 +1148,23 @@ class TestOps:
         test_case = self.test_parameters["name"]
         dut_name = self.test_parameters["dut"]
 
-        text_file = f"{report_dir}/TEST RESULTS/{test_id} {test_case}/{test_id} {dut_name} Verification.yml"
+        text_file = f"{report_dir}/TEST RESULTS/{test_id} {test_case}/{test_id} {dut_name} Verification.txt"
 
         logging.info(f"Creating test results file named {text_file}")
+    
+        #formatting data
+
+        text_data = dict()
+
+        # single show command
+        if str(self.show_cmd):
+            text_data[dut_name+"# "+self.show_cmd] = "\n" + self.show_cmd_txt 
         
-        # format this data
+        # multiple show commands
+        for (command, text) in zip(self.show_cmds, self.show_cmd_txts):
+            text_data[dut_name+"# "+command] = "\n" + text
 
-        text = dict()
-        text[dut_name+"# "+self.show_cmd] = "\n" + self.show_cmd_txt
-       
-
-        logging.info(f"COMMANDS{text}")
-        text_data = self.show_cmd +":\n\n"+self.show_cmd_txt
-
-        export_text(text_file, text)
+        export_text(text_file, text_data)
 
 
     def _get_parameters(self, tests_parameters, test_suite, test_case):
@@ -1229,11 +1237,13 @@ class TestOps:
         return result, self.show_output, self.show_cmd_txt, error
 
     def generate_report(self, dut_name, output):
+
         """Utility to generate report
         Args:
           dut_name: name of the device
           output: actual output
         """
+        logging.info(f"COMMANDSs{self.show_cmds}")
         self.output_msg = (
             f"\nOn switch |{dut_name}| The actual output is "
             f"|{self.actual_output}%| and the expected output is "
