@@ -913,12 +913,12 @@ def export_text(text_file, text_data):
 
     try:
         with open(text_file, "w") as text_out:
-            logging.info(f"Output the following text file: " + f"{text_data}")
+            logging.info(f"Output the following text file: {text_data}")
             for key, value in text_data.items(): 
                 text_out.write('%s:%s\n' % (key, value))
     except OSError as err:
         print(f">>> {text_file} TEXT FILE MISSING")
-        logging.error(f"ERROR TEXT FILE: {text_file} NOT " + f"FOUND. {err}")
+        logging.error(f"ERROR TEXT FILE: {text_file} NOT FOUND. {err}")
         logging.error("EXITING TEST RUNNER")
         sys.exit(1)
 
@@ -1130,7 +1130,8 @@ class TestOps:
         export_yaml(yaml_file, yaml_data)
 
     def _write_text_results(self):
-        
+        """Write the text output of show command to a text file"""
+
         # creating file path
 
         report_dir = self.report_dir
@@ -1138,14 +1139,17 @@ class TestOps:
         test_case = self.test_parameters["name"]
         dut_name = self.test_parameters["dut"]
 
-        text_file = f"{report_dir}/TEST RESULTS/{test_id} {test_case}/{test_id} {dut_name} Verification.txt"
+        text_file = (
+            f"{report_dir}/TEST RESULTS/{test_id} {test_case}/"
+            f"{test_id} {dut_name} Verification.txt"
+        )
     
         #formatting data
 
         text_data = dict()
 
         for (command, text) in zip(self.show_cmds, self.show_cmd_txts):
-            text_data[dut_name+"# "+command] = "\n\n" + text
+            text_data[dut_name + "# " + command] = "\n\n" + text
 
         #exporting data to file
 
@@ -1153,7 +1157,7 @@ class TestOps:
             logging.info(f"Preparing to write show command output to text file {text_file}")
             export_text(text_file, text_data)
         else:
-            logging.info(f"No show command output to display")
+            logging.info("No show command output to display")
 
     def _get_parameters(self, tests_parameters, test_suite, test_case):
         """Return test parameters for a test case
@@ -1225,7 +1229,6 @@ class TestOps:
         return result, self.show_output, self.show_cmd_txt, error
 
     def generate_report(self, dut_name, output):
-
         """Utility to generate report
         Args:
           dut_name: name of the device
