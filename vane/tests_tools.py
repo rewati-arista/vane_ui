@@ -840,7 +840,7 @@ def return_test_defs(test_parameters):
                     test_defs["test_suites"] += test_def
 
     export_yaml(report_dir + "/" + test_definitions_file, test_defs)
-    logging.info("Return the following test definitions data strcuture {test_defs}")
+    logging.info(f"Return the following test definitions data structure {test_defs}")
 
     return test_defs
 
@@ -989,7 +989,7 @@ def create_duts_file(topology_file, inventory_file):
                 return config.DUTS_FILE
     # pylint: disable-next=broad-exception-caught
     except Exception as excep:
-        logging.error("Error occured while creating DUTs file: %s", str(excep))
+        logging.error(f"Error occured while creating DUTs file: {str(excep)}")
         logging.error("EXITING TEST RUNNER")
         print(">>> ERROR While creating duts file")
         sys.exit(1)
