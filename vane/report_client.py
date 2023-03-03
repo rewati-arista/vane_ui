@@ -28,6 +28,7 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
+# pylint: disable=too-many-lines
 
 """Utilities for using PyTest in network testing"""
 
@@ -854,15 +855,13 @@ class ReportClient:
             show_cmd = dut["show_cmd"]
             dut_name = dut["dut"]
 
+            logging.info(f"These are recorded report values: {report_values}")
             for report_value in report_values:
-                run = para.add_run(f"\n{dut_name}# {show_cmd}\n\n")
+                run = para.add_run(f"\n{dut_name}# {show_cmd.strip()}\n\n")
                 run.font.name = "Courier New"
                 run.font.size = Pt(10)
                 run.font.color.rgb = RGBColor(0, 255, 0)
-                run = para.add_run(f"{report_value.strip()}\n")
-                run.font.name = "Courier New"
-                run.font.size = Pt(10)
-                run.font.color.rgb = RGBColor(0, 255, 0)
+                logging.info(f"Adding value to report: {report_value.strip()}")
 
             para = self._document.add_paragraph()
             run = para.add_run()
@@ -893,6 +892,7 @@ class ReportClient:
 
             self._test_no += 1
 
+    # pylint: disable-next=inconsistent-return-statements
     def _compile_suite_results(self):
         """Compile test suite results and return them
 
@@ -943,6 +943,7 @@ class ReportClient:
         logging.info(f"Compiled suite results: {suite_results}")
         return suite_results
 
+    # pylint: disable-next=inconsistent-return-statements
     def _compile_testcase_results(self):
         """Compile test case results and return them"""
 
