@@ -725,7 +725,7 @@ def verify_veos(dut):
         logging.info(f"{dut_name} is a VEOS instance so returning {veos_bool}")
         logging.info(f"{dut_name} is a VEOS instance so test NOT valid")
     else:
-        logging.info(f"{dut_name} is not a VEOS instance so returning " + f"{veos_bool}")
+        logging.info(f"{dut_name} is not a VEOS instance so returning {veos_bool}")
 
     return veos_bool
 
