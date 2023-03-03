@@ -404,6 +404,7 @@ def login_duts(test_parameters, test_duts):
         login_ptr["role"] = dut["role"]
         login_ptr["neighbors"] = dut["neighbors"]
         login_ptr["results_dir"] = test_parameters["parameters"]["results_dir"]
+        login_ptr["report_dir"] = test_parameters["parameters"]["report_dir"]
         login_ptr["eapi_file"] = eapi_file
 
     logging.info(f"Returning duts logins: {logins}")
@@ -897,6 +898,31 @@ def export_yaml(yaml_file, yaml_data):
         sys.exit(1)
 
 
+def export_text(text_file, text_data):
+    """Export python data structure as a TEXT file
+
+    Args:
+        text_file (str): Name of TEXT file
+        text_data (dict): output of show command in python dictionary
+    """
+
+    logging.info(f"Opening {text_file} for write")
+
+    # to create the sub-directory if it does not exist
+    os.makedirs(os.path.dirname(text_file), exist_ok=True)
+
+    try:
+        with open(text_file, "w") as text_out:
+            logging.info(f"Output the following text file: {text_data}")
+            for key, value in text_data.items(): 
+                text_out.write('%s:%s\n' % (key, value))
+    except OSError as err:
+        print(f">>> {text_file} TEXT FILE MISSING")
+        logging.error(f"ERROR TEXT FILE: {text_file} NOT FOUND. {err}")
+        logging.error("EXITING TEST RUNNER")
+        sys.exit(1)
+
+
 def subprocess_ping(definition_file, dut_name, loopback_ip, repeat_ping):
     """Subprocess to run the continuous ping command
     Args:
@@ -1012,11 +1038,11 @@ class TestOps:
         )
 
         self.expected_output = self.test_parameters["expected_output"]
-
         self.dut = dut
         self.dut_name = self.dut["name"]
         self.interface_list = self.dut["output"]["interface_list"]
         self.results_dir = self.dut["results_dir"]
+        self.report_dir = self.dut["report_dir"]
         self.show_cmds = []
         self.show_cmd = ""
 
@@ -1093,6 +1119,7 @@ class TestOps:
             self.test_parameters["fail_or_skip_reason"] = self.output_msg
 
         self._write_results()
+        self._write_text_results()
 
     def _write_results(self):
 
@@ -1107,6 +1134,36 @@ class TestOps:
         logging.info(f"Creating results file named {yaml_file}")
         yaml_data = self.test_parameters
         export_yaml(yaml_file, yaml_data)
+
+    def _write_text_results(self):
+        """Write the text output of show command to a text file"""
+
+        # creating file path
+
+        report_dir = self.report_dir
+        test_id = self.test_parameters["test_id"]
+        test_case = self.test_parameters["name"]
+        dut_name = self.test_parameters["dut"]
+
+        text_file = (
+            f"{report_dir}/TEST RESULTS/{test_id} {test_case}/"
+            f"{test_id} {dut_name} Verification.txt"
+        )
+    
+        #formatting data
+
+        text_data = dict()
+
+        for (command, text) in zip(self.show_cmds, self.show_cmd_txts):
+            text_data[dut_name + "# " + command] = "\n\n" + text
+
+        #exporting data to file
+
+        if (text_data):
+            logging.info(f"Preparing to write show command output to text file {text_file}")
+            export_text(text_file, text_data)
+        else:
+            logging.info("No show command output to display")
 
     def _get_parameters(self, tests_parameters, test_suite, test_case):
         """Return test parameters for a test case
