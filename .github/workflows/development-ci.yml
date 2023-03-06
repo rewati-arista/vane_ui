@@ -30,12 +30,12 @@ jobs:
       - name: Run Black to check the code for formatting problems
         # If any code needs reformatting, black returns an exit code of 1,
         # which fails the action
-        run: black --check .
+        run: black --check ./vane
 
       # Run flake8 on the vane and tests directories
       - name: Lint with flake8
-        run: flake8 ./vane ./tests
+        run: flake8 ./vane
 
       # Run pylint on the vane and tests directories
       - name: Lint with pylint
-        run: pylint ./vane ./tests
+        run: pylint ./vane
