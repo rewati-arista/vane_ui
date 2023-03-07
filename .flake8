@@ -5,7 +5,7 @@
 #   vane/file2.py
 exclude =
 
-# List errors and wanrings to ignore (comma after error number, followed by short description)
+# List errors and warnings to ignore (comma after error number, followed by short description)
 ignore =
     E722,  # do not use bare 'except'
     F541,  # f-string missing placeholders
