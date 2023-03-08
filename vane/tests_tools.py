@@ -107,8 +107,9 @@ def parametrize_duts(test_fname, test_defs, dut_objs):
     logging.info("Discover test suite name")
     testsuite = test_fname.split("/")[-1]
 
-    logging.info(f"Filter test definitions by test suite name: {testsuite}")
-    subset_def = [defs for defs in test_defs["test_suites"] if testsuite in defs["name"]]
+    logging.info(f"Filter test definitions by test suite name: {testsuite} ")
+    subset_def = [defs for defs in test_defs["test_suites"] if testsuite == defs["name"]]
+    
     testcases = subset_def[0]["testcases"]
 
     logging.info("unpack testcases by defining dut and criteria")
