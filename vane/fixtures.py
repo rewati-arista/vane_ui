@@ -1,10 +1,46 @@
-import pytest
+#!/usr/bin/env python3
+#
+# Copyright (c) 2023, Arista Networks EOS+
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+# * Redistributions of source code must retain the above copyright notice, this
+#   list of conditions and the following disclaimer.
+#
+# * Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+#
+# * Neither the name of the Arista nor the names of its
+#   contributors may be used to endorse or promote products derived from
+#   this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+
+"""
+Fixture setup and teardown functions
+"""
+
+import datetime
 import logging
+import pytest
+
+from jinja2 import Template
 from vane import tests_tools
 from vane.config import dut_objs, test_defs
-from jinja2 import Template
 from vane.utils import get_current_fixture_testclass, get_current_fixture_testname
-import datetime
 
 
 def idfn(val):
@@ -30,8 +66,8 @@ def dut(request):
         [dict]: a single dut in duts data structure
     """
 
-    dut = request.param
-    yield dut
+    dutt = request.param
+    yield dutt
 
 
 @pytest.fixture(scope="session")
@@ -43,8 +79,8 @@ def duts():
     """
     logging.info("Invoking fixture to get list of duts")
     duts_dict = {}
-    for dut in dut_objs:
-        duts_dict[dut["name"]] = dut
+    for dutt in dut_objs:
+        duts_dict[dutt["name"]] = dutt
     return duts_dict
 
 
@@ -62,14 +98,14 @@ def tests_definitions():
     yield test_defs
 
 
-def setup_via_name(duts, setup_config, checkpoint):
+def setup_via_name(dutts, setup_config, checkpoint):
     """Creates checkpoint on duts and then runs setup for
     duts identified using the device name"""
 
     for dev_name in setup_config:
-        dut = duts.get(dev_name, None)
+        dutt = dutts.get(dev_name, None)
 
-        if dut is None:
+        if dutt is None:
             # add logging
             continue
         setup_schema = setup_config[dev_name]["schema"]
@@ -83,17 +119,17 @@ def setup_via_name(duts, setup_config, checkpoint):
 
         checkpoint_cmd = f"configure checkpoint save {checkpoint}"
         gold_config = [checkpoint_cmd]
-        dut["connection"].enable(gold_config)
-        dut["connection"].config(config)
+        dutt["connection"].enable(gold_config)
+        dutt["connection"].config(config)
 
 
-def setup_via_role(duts, setup_config, checkpoint):
+def setup_via_role(dutts, setup_config, checkpoint):
     """Creates checkpoint on duts and then runs setup for
     duts identified using the device role"""
 
     for role in setup_config:
-        for _, dut in duts.items():
-            if dut["role"] != role:
+        for _, dutt in dutts.items():
+            if dutt["role"] != role:
                 # add logging
                 continue
             setup_schema = setup_config[role]["schema"]
@@ -104,11 +140,11 @@ def setup_via_role(duts, setup_config, checkpoint):
                 config = setup_template.render(setup_schema).splitlines()
             checkpoint_cmd = f"configure checkpoint save {checkpoint}"
             gold_config = [checkpoint_cmd]
-            dut["connection"].enable(gold_config)
-            dut["connection"].config(config)
+            dutt["connection"].enable(gold_config)
+            dutt["connection"].config(config)
 
 
-def perform_setup(duts, test, setup_config):
+def perform_setup(dutts, test, setup_config):
     """Creates checkpoints and then runs setup on duts"""
 
     date_obj = datetime.datetime.now()
@@ -118,38 +154,38 @@ def perform_setup(duts, test, setup_config):
     dev_ids = setup_config.get("key", "name")
 
     if dev_ids == "name":
-        setup_via_name(duts=duts, setup_config=setup_config, checkpoint=checkpoint)
+        setup_via_name(dutts=dutts, setup_config=setup_config, checkpoint=checkpoint)
 
     elif dev_ids == "role":
-        setup_via_role(duts=duts, setup_config=setup_config, checkpoint=checkpoint)
+        setup_via_role(dutts=dutts, setup_config=setup_config, checkpoint=checkpoint)
 
     return checkpoint
 
 
-def teardown_via_name(duts, setup_config, checkpoint_restore_cmd, delete_checkpoint_cmd):
+def teardown_via_name(dutts, setup_config, checkpoint_restore_cmd, delete_checkpoint_cmd):
     """Restores the checkpoints on duts identified by their name"""
 
     for dev_name in setup_config:
-        dut = duts.get(dev_name, None)
-        if dut is None:
+        dutt = dutts.get(dev_name, None)
+        if dutt is None:
             continue
         restore_config = [checkpoint_restore_cmd, delete_checkpoint_cmd]
-        dut["connection"].config(restore_config)
+        dutt["connection"].config(restore_config)
 
 
-def teardown_via_role(duts, setup_config, checkpoint_restore_cmd, delete_checkpoint_cmd):
+def teardown_via_role(dutts, setup_config, checkpoint_restore_cmd, delete_checkpoint_cmd):
     """Restores the checkpoints on duts identified by their role"""
 
     for role in setup_config:
-        for _, dut in duts.items():
-            if dut["role"] != role:
+        for _, dutt in dutts.items():
+            if dutt["role"] != role:
                 # add logging
                 continue
             restore_config = [checkpoint_restore_cmd, delete_checkpoint_cmd]
-            dut["connection"].config(restore_config)
+            dutt["connection"].config(restore_config)
 
 
-def perform_teardown(duts, checkpoint, setup_config):
+def perform_teardown(dutts, checkpoint, setup_config):
     """Restore and delete checkpoint"""
     if checkpoint == "":
         return
@@ -160,7 +196,7 @@ def perform_teardown(duts, checkpoint, setup_config):
 
     if dev_ids == "name":
         teardown_via_name(
-            duts=duts,
+            dutts=dutts,
             setup_config=setup_config,
             checkpoint_restore_cmd=checkpoint_restore_cmd,
             delete_checkpoint_cmd=delete_checkpoint_cmd,
@@ -168,7 +204,7 @@ def perform_teardown(duts, checkpoint, setup_config):
 
     elif dev_ids == "role":
         teardown_via_role(
-            duts=duts,
+            dutts=dutts,
             setup_config=setup_config,
             checkpoint_restore_cmd=checkpoint_restore_cmd,
             delete_checkpoint_cmd=delete_checkpoint_cmd,
@@ -176,41 +212,43 @@ def perform_teardown(duts, checkpoint, setup_config):
 
 
 @pytest.fixture(autouse=True, scope="class")
-def setup_testsuite(request, duts):
+def setup_testsuite(request, dutts):
     """Setup the duts using the test suite(class) setup file"""
 
-    testsuit = get_current_fixture_testclass(request)
+    testsuite = get_current_fixture_testclass(request)
     test_suites = test_defs["test_suites"]
     setup_config = []
     checkpoint = ""
-    for s in test_suites:
-        if s["name"] == testsuit:
-            setup_config_file = s.get("test_setup", "")
+    for suite in test_suites:
+        if suite["name"] == testsuite:
+            setup_config_file = suite.get("test_setup", "")
             if setup_config_file != "":
-                setup_config = tests_tools.setup_import_yaml(f"{s['dir_path']}/{setup_config_file}")
-                checkpoint = perform_setup(duts, testsuit, setup_config)
+                setup_config = tests_tools.setup_import_yaml(
+                    f"{suite['dir_path']}/{setup_config_file}"
+                )
+                checkpoint = perform_setup(dutts, testsuite, setup_config)
     yield
-    perform_teardown(duts, checkpoint, setup_config)
+    perform_teardown(dutts, checkpoint, setup_config)
 
 
 @pytest.fixture(autouse=True, scope="function")
-def setup_testcase(request, duts):
+def setup_testcase(request, dutts):
     """Setup the duts using the test case(function) setup file"""
 
     testname = get_current_fixture_testname(request)
     test_suites = test_defs["test_suites"]
     setup_config = []
     checkpoint = ""
-    for s in test_suites:
-        tests = s["testcases"]
-        for t in tests:
-            if t["name"] == testname:
-                setup_config_file = t.get("test_setup", "")
+    for suite in test_suites:
+        tests = suite["testcases"]
+        for test in tests:
+            if test["name"] == testname:
+                setup_config_file = test.get("test_setup", "")
                 if setup_config_file != "":
                     setup_config = tests_tools.setup_import_yaml(
-                        f"{s['dir_path']}/{setup_config_file}"
+                        f"{suite['dir_path']}/{setup_config_file}"
                     )
-                    checkpoint = perform_setup(duts, testname, setup_config)
+                    checkpoint = perform_setup(dutts, testname, setup_config)
 
     yield
-    perform_teardown(duts, checkpoint, setup_config)
+    perform_teardown(dutts, checkpoint, setup_config)
