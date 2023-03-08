@@ -1,8 +1,7 @@
 import pytest
 import logging
 from vane import tests_tools
-import os
-from vane.config import dut_objs, test_defs, test_duts
+from vane.config import dut_objs, test_defs
 from jinja2 import Template
 from vane.utils import get_current_fixture_testclass, get_current_fixture_testname
 import datetime
