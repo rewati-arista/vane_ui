@@ -160,10 +160,11 @@ def inspect_csv_data(test_data, csv_reader):
         elif re.match(TEST_SUITE_HEADER, row[header_columns["case_name"]]):
             test_data_entry.append(row[header_columns["case_name"]])
             test_data.append(test_data_entry)
-        # parse csv fow for sub-section
-        elif (row[header_columns["tc_id"]] == "" and row[header_columns["tc_type"]] == "") and row[
-            header_columns["case_name"]
-        ] != "":
+        # parse csv row for sub-section
+        elif (
+            not row[header_columns["tc_id"]]
+            and not row[header_columns["tc_type"]]
+        ) and row[header_columns["case_name"]] != "":
             test_data_entry.append("")
             test_data_entry.append(row[header_columns["case_name"]])
             test_data.append(test_data_entry)
@@ -316,19 +317,27 @@ def write_data_row(table, test_data):
                 # Test Case Identifier cell
                 if counter == 0:
                     test_data_entry = format_test_id(test_data_entry)
-                    run = row_cells[counter].paragraphs[0].add_run(test_data_entry)
+                    run = (
+                        row_cells[counter]
+                        .paragraphs[0]
+                        .add_run(test_data_entry)
+                    )
                 # Test Case Pass/Fail cell
                 elif counter == 4:
                     format_pass_fail(row_cells, counter, test_data_entry)
                 # Cells not needing special formatting
                 else:
-                    run = row_cells[counter].paragraphs[0].add_run(test_data_entry)
+                    run = (
+                        row_cells[counter]
+                        .paragraphs[0]
+                        .add_run(test_data_entry)
+                    )
 
                 run.font.name = "Arial"
                 run.font.size = Pt(9)
 
         # identify test suite sub section
-        elif "" == test_case_entry[0]:
+        elif test_case_entry[0] == "":
             row_cells = table.add_row().cells
             row_cells[2].merge(row_cells[5])
 
