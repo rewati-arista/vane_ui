@@ -49,23 +49,26 @@ jobs:
           echo ""
           echo "All changed files:"
           git diff --name-only --diff-filter=ACMRT ${{ env.fork }} ${{ github.sha }}
-          echo "all=$(git diff --name-only --diff-filter=ACMRT ${{ env.fork }} ${{ github.sha }} | xargs)" >> $GITHUB_ENV
+          echo "all=$(git diff --name-only --diff-filter=ACMRT ${{ env.fork }} ${{ github.sha }} | xargs) || echo ''" >> $GITHUB_ENV
 
           echo ""
           echo "Changed python files:"
           git diff --name-only --diff-filter=ACMRT ${{ env.fork }} ${{ github.sha }} | grep .py$
-          echo "python=$(git diff --name-only --diff-filter=ACMRT ${{ env.fork }} ${{ github.sha }} | grep .py$ | xargs)" >> $GITHUB_ENV
+          echo "python=$(git diff --name-only --diff-filter=ACMRT ${{ env.fork }} ${{ github.sha }} | grep .py$ | xargs) || echo ''" >> $GITHUB_ENV
 
       # Run Black on the whole repo
       - name: Run Black to check the code for formatting problems
+        if: ${{ env.python }}
         # If any code needs reformatting, black returns an exit code of 1,
         # which fails the action
         run: black --check ${{ env.python }}
 
       # Run flake8 on the vane and tests directories
       - name: Lint with flake8
+        if: ${{ env.python }}
         run: flake8 ${{ env.python }}
 
       # Run pylint on the vane and tests directories
       - name: Lint with pylint
+        if: ${{ env.python }}
         run: pylint ${{ env.python }}
