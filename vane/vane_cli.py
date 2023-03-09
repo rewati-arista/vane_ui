@@ -138,6 +138,7 @@ def run_tests(definitions_file, duts_file):
 
     Args:
         definitions_file (str): Path and name of definition file
+        duts_file (str): Path and name of duts file
     """
     logging.info("Using class TestsClient to create vane_tests_client object")
 
@@ -208,6 +209,9 @@ def create_duts_from_topo(topology_file):
     Util function responsible for reading in topology file,
     calling on test tools to create duts file from the data
     gathered from the topo file.
+
+    Args:
+        topology_file (str): Path and name of topology file
     """
     # Open the topology file in read only
     try:
