@@ -46,14 +46,14 @@ jobs:
         run: |
           echo "Fork point hash: ${{ env.fork }}"
 
-          echo ""
+          echo -e "\n"
           echo "All changed files:"
-          git diff --name-only --diff-filter=ACMRT ${{ env.fork }} ${{ github.sha }} || echo ''
+          git diff --name-only --diff-filter=ACMRT ${{ env.fork }} ${{ github.sha }} || echo '<none>'
           echo "all=$(git diff --name-only --diff-filter=ACMRT ${{ env.fork }} ${{ github.sha }} | xargs)" >> $GITHUB_ENV
 
-          echo ""
+          echo -e "\n"
           echo "Changed python files:"
-          git diff --name-only --diff-filter=ACMRT ${{ env.fork }} ${{ github.sha }} | grep .py$ || echo ''
+          git diff --name-only --diff-filter=ACMRT ${{ env.fork }} ${{ github.sha }} | grep .py$ || echo '<none>'
           echo "python=$(git diff --name-only --diff-filter=ACMRT ${{ env.fork }} ${{ github.sha }} | grep .py$ | xargs)" >> $GITHUB_ENV
 
       # Run Black on the whole repo
