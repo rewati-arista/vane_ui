@@ -414,9 +414,7 @@ def send_cmds(show_cmds, conn, encoding):
 
     logging.info("In send_cmds")
     try:
-        logging.info(
-            f"List of show commands in show_cmds with encoding {encoding}: {show_cmds}"
-        )
+        logging.info(f"List of show commands in show_cmds with encoding {encoding}: {show_cmds}")
         if encoding == "json":
             show_cmd_list = conn.run_commands(show_cmds)
         elif encoding == "text":
@@ -494,9 +492,7 @@ def dut_worker(dut, show_cmds, test_parameters):
 
         if show_cmd in show_cmds_json:
             cmd_index = show_cmds_json.index(show_cmd)
-            logging.info(
-                f"found cmd: {show_cmd} at index {cmd_index} of {show_cmds_json}"
-            )
+            logging.info(f"found cmd: {show_cmd} at index {cmd_index} of {show_cmds_json}")
             logging.info(
                 f"length of cmds: {len(show_cmds_json)} vs length of "
                 f"output {len(show_cmd_json_list)}"
@@ -512,9 +508,7 @@ def dut_worker(dut, show_cmds, test_parameters):
             cmd_index = show_cmds_txt.index(show_cmd)
             show_output_txt = show_cmd_txt_list[cmd_index]
             dut["output"][show_cmd]["text"] = show_output_txt["output"]
-            logging.warning(
-                f"Adding text cmd {show_cmd} to dut and data {show_output_txt}"
-            )
+            logging.warning(f"Adding text cmd {show_cmd} to dut and data {show_output_txt}")
         else:
             dut["output"][show_cmd]["text"] = ""
             logging.warning(f"No text output for {show_cmd}")
@@ -579,9 +573,7 @@ def return_interfaces(hostname, test_parameters):
                              PS LLD spreadsheet
     """
 
-    logging.info(
-        "Parse test_parameters for interface connections and return them to test"
-    )
+    logging.info("Parse test_parameters for interface connections and return them to test")
     interface_list = []
     duts = test_parameters["duts"]
 
@@ -595,8 +587,7 @@ def return_interfaces(hostname, test_parameters):
             for neighbor in neighbors:
                 interface = {}
                 logging.info(
-                    f"Adding interface parameters: {neighbor} "
-                    f"neighbor for: {dut_name}"
+                    f"Adding interface parameters: {neighbor} " f"neighbor for: {dut_name}"
                 )
 
                 interface["hostname"] = dut_name
@@ -673,8 +664,7 @@ def verify_show_cmd(show_cmd, dut):
 
     dut_name = dut["name"]
     logging.info(
-        f"Verify if show command |{show_cmd}| was successfully "
-        f"executed on {dut_name} dut"
+        f"Verify if show command |{show_cmd}| was successfully " f"executed on {dut_name} dut"
     )
 
     if show_cmd in dut["output"]:
@@ -701,9 +691,7 @@ def verify_tacacs(dut):
     if tacacs_servers == 0:
         tacacs_bool = False
 
-    logging.info(
-        f"{tacacs_servers} tacacs serverws are configured so returning {tacacs_bool}"
-    )
+    logging.info(f"{tacacs_servers} tacacs serverws are configured so returning {tacacs_bool}")
 
     return tacacs_bool
 
@@ -812,9 +800,7 @@ def return_show_cmds(test_parameters):
                     logging.info(f"Adding Show commands {show_cmd}")
                     show_cmds.append(show_cmd)
 
-    logging.info(
-        f"The following show commands are required for test cases: {show_cmds}"
-    )
+    logging.info(f"The following show commands are required for test cases: {show_cmds}")
     return show_cmds
 
 
@@ -886,10 +872,10 @@ def export_text(text_file, text_data):
     os.makedirs(os.path.dirname(text_file), exist_ok=True)
 
     try:
-        with open(text_file, "w") as text_out:
+        with open(text_file, "w", encoding="utf-8") as text_out:
             logging.info(f"Output the following text file: {text_data}")
-            for key, value in text_data.items(): 
-                text_out.write('%s:%s\n' % (key, value))
+            for key, value in text_data.items():
+                text_out.write(f"{key}:{value}\n")
     except OSError as err:
         print(f">>> {text_file} TEXT FILE MISSING")
         logging.error(f"ERROR TEXT FILE: {text_file} NOT FOUND. {err}")
@@ -976,9 +962,7 @@ def create_duts_file(topology_file, inventory_file):
             if "cvp" in name:
                 continue
             if name in inventory_file["all"]["children"]["VEOS"]["hosts"]:
-                inventory_details = inventory_file["all"]["children"]["VEOS"]["hosts"][
-                    name
-                ]
+                inventory_details = inventory_file["all"]["children"]["VEOS"]["hosts"][name]
                 dut_properties.append(
                     {
                         "mgmt_ip": inventory_details["ansible_host"],
@@ -991,9 +975,7 @@ def create_duts_file(topology_file, inventory_file):
                     }
                 )
             elif name in inventory_file["all"]["children"]["GENERIC"]["hosts"]:
-                inventory_details = inventory_file["all"]["children"]["GENERIC"]["hosts"][
-                    name
-                ]
+                inventory_details = inventory_file["all"]["children"]["GENERIC"]["hosts"][name]
                 server_properties.append(
                     {
                         "mgmt_ip": inventory_details["ansible_host"],
@@ -1034,9 +1016,7 @@ class TestOps:
 
         test_case = inspect.stack()[1][3]
         self.test_case = test_case
-        self.test_parameters = self._get_parameters(
-            tests_definitions, test_suite, self.test_case
-        )
+        self.test_parameters = self._get_parameters(tests_definitions, test_suite, self.test_case)
 
         self.expected_output = self.test_parameters["expected_output"]
         self.dut = dut
@@ -1081,19 +1061,14 @@ class TestOps:
 
         dut_name = dut["name"]
         logging.info(
-            f"Verify if show command |{show_cmds}| were successfully "
-            f"executed on {dut_name} dut"
+            f"Verify if show command |{show_cmds}| were successfully " f"executed on {dut_name} dut"
         )
 
         for show_cmd in show_cmds:
             if show_cmd and show_cmd in dut["output"]:
-                logging.info(
-                    f"Verified output for show command |{show_cmd}| on {dut_name}"
-                )
+                logging.info(f"Verified output for show command |{show_cmd}| on {dut_name}")
             else:
-                logging.critical(
-                    f"Show command |{show_cmd}| not executed on {dut_name}"
-                )
+                logging.critical(f"Show command |{show_cmd}| not executed on {dut_name}")
                 assert False
 
     def post_testcase(self):
@@ -1149,17 +1124,17 @@ class TestOps:
             f"{report_dir}/TEST RESULTS/{test_id} {test_case}/"
             f"{test_id} {dut_name} Verification.txt"
         )
-    
-        #formatting data
 
-        text_data = dict()
+        # formatting data
 
-        for (command, text) in zip(self.show_cmds, self.show_cmd_txts):
+        text_data = {}
+
+        for command, text in zip(self.show_cmds, self.show_cmd_txts):
             text_data[dut_name + "# " + command] = "\n\n" + text
 
-        #exporting data to file
+        # exporting data to file
 
-        if (text_data):
+        if text_data:
             logging.info(f"Preparing to write show command output to text file {text_file}")
             export_text(text_file, text_data)
         else:
@@ -1222,9 +1197,7 @@ class TestOps:
 
         try:
             show_output_text = conn.run_commands(show_cmd, encoding="text")
-            logging.info(
-                f"Raw text output of {show_cmd} on dut {name}: {self.show_cmd_txt}"
-            )
+            logging.info(f"Raw text output of {show_cmd} on dut {name}: {self.show_cmd_txt}")
             self.show_cmd_txt = show_output_text[0]["output"]
         # pylint: disable-next=broad-exception-caught
         except Exception as err:
@@ -1257,17 +1230,13 @@ class TestOps:
 
         veos_bool = False
         veos = self.dut["output"][show_cmd]["json"]["modelName"]
-        logging.info(
-            f"Verify if {self.dut_name} DUT is a VEOS instance. Model is {veos}"
-        )
+        logging.info(f"Verify if {self.dut_name} DUT is a VEOS instance. Model is {veos}")
 
         if veos == "vEOS":
             veos_bool = True
             logging.info(f"{self.dut_name} is a VEOS instance so returning {veos_bool}")
         else:
-            logging.info(
-                f"{self.dut_name} is not a VEOS instance so returning {veos_bool}"
-            )
+            logging.info(f"{self.dut_name} is not a VEOS instance so returning {veos_bool}")
 
         return veos_bool
 
