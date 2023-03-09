@@ -8,11 +8,11 @@ exclude =
 # List errors and warnings to ignore (comma after error number, followed by short description)
 ignore =
     # do not use bare 'except'
-    E722, 
+    E722,
     # f-string missing placeholders
-    F541,  
+    F541,
     # line break before binary operator
-    W503, 
+    W503,
 
 # Set maximum line length
 max-line-length = 100
