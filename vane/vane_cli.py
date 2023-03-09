@@ -62,7 +62,6 @@ def parse_cli():
     Returns:
         args (obj): An object containing the CLI arguments.
     """
-
     parser = argparse.ArgumentParser(description="Network Certification Tool")
 
     parser.add_argument(
@@ -75,19 +74,6 @@ def parse_cli():
         "--duts-file",
         default=vane.config.DUTS_FILE,
         help="Specify the name of the duts file",
-    )
-
-    parser.add_argument(
-        "--markers",
-        help=("List of supported technology tests. " "Equivalent to pytest --markers"),
-        action="store_true",
-    )
-
-    parser.add_argument(
-        "--input",
-        action="store_true",
-        default=False,
-        help="Use spreadsheet for input",
     )
 
     parser.add_argument(
@@ -110,6 +96,19 @@ def parse_cli():
         metavar=("topology_file"),
     )
 
+    parser.add_argument(
+        "--input",
+        action="store_true",
+        default=False,
+        help="Use spreadsheet for input",
+    )
+
+    parser.add_argument(
+        "--markers",
+        help=("List of supported technology tests. " "Equivalent to pytest --markers"),
+        action="store_true",
+    )
+
     args = parser.parse_args()
 
     return args
@@ -117,7 +116,6 @@ def parse_cli():
 
 def setup_vane():
     """Do tasks to setup test suite"""
-
     logging.info("Starting Test Suite setup")
 
     vane.config.test_duts = tests_tools.import_yaml(vane.config.DUTS_FILE)
@@ -141,7 +139,6 @@ def run_tests(definitions_file, duts_file):
     Args:
         definitions_file (str): Path and name of definition file
     """
-
     logging.info("Using class TestsClient to create vane_tests_client object")
 
     vane_tests_client = tests_client.TestsClient(definitions_file, duts_file)
@@ -157,7 +154,6 @@ def write_results(definitions_file):
     Args:
         definitions_file (str): Path and name of definition file
     """
-
     logging.info("Using class ReportClient to create vane_report_client object")
 
     vane_report_client = report_client.ReportClient(definitions_file)
@@ -173,7 +169,6 @@ def show_markers():
     Returns:
         marker_list (list): supported markers list.
     """
-
     inbuilt_list = [
         ")",
         "'",
@@ -201,6 +196,7 @@ def show_markers():
         if "pytest" in i:
             marker_name = i.split(": ")[0].split(".")[2]
             marker_description = i.split(": ")[1]
+
             if marker_name not in inbuilt_list:
                 marker_list.append({"marker": marker_name, "description": marker_description})
 
@@ -213,7 +209,6 @@ def create_duts_from_topo(topology_file):
     calling on test tools to create duts file from the data
     gathered from the topo file.
     """
-
     # Open the topology file in read only
     try:
         with open(topology_file, "r", encoding="utf-8") as file:
@@ -237,13 +232,12 @@ def create_duts_from_topo(topology_file):
 
 def main():
     """main function"""
-
     logging.info("Accept input from command-line")
+
     args = parse_cli()
 
     if args.markers:
         print(f"{show_markers()}")
-
     else:
         if args.definitions_file:
             logging.warning("Changing Definitions file name to " f"{args.definitions_file}")
