@@ -35,6 +35,7 @@
     Input Variables:
         CSVFILES (list): List of path + file names for CSV input data
         DOCFILE (str): Path + file name for output Word doc
+        EOS (str): EOS version number
         TITLE_ROW (int): Title row in CSV
         HEADER_ROW (int): Header row in CSV
         TC_ID (str): CSV column name with test case ID
@@ -64,6 +65,8 @@ CSVFILES = [
     "../Arista Agora Test Plan V9.3 - CVA_CVP Test Items.csv",
 ]
 DOCFILE = "../test_summary_results.docx"
+# EOS version
+EOS = "4.29.1F-DPE"
 # Column name of interesting values
 TITLE_ROW = 0
 HEADER_ROW = 1
@@ -214,7 +217,7 @@ def write_header(document):
 
     # Header text
     doc_text = (
-        "\nTest Cases for Arista BAU Hardware & EOS 4.27.2F Certification. "
+        f"\nTest Cases for Arista BAU Hardware & EOS {EOS} Certification. "
         "Please note – for more details on test outputs please reference "
         "the test case output appendix docs.\n\n\n"
     )
