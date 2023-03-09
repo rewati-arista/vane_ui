@@ -42,7 +42,6 @@ import yaml
 import pytest
 from vane import tests_client
 from vane import report_client
-from vane import xcel_client
 from vane import tests_tools
 from vane import test_step_client
 import vane.config
@@ -116,15 +115,6 @@ def parse_cli():
     args = parser.parse_args()
 
     return args
-
-
-def input_spreadsheet(definitions_file):
-    """Input data from a spreadsheet"""
-
-    vane_xcel_client = xcel_client.XcelClient(definitions_file)
-    vane_xcel_client.import_spreadsheet()
-    vane_xcel_client.parse_spreadsheet()
-    sys.exit(0)
 
 
 def setup_vane():
@@ -271,9 +261,6 @@ def main():
             vane.config.DUTS_FILE = tests_tools.create_duts_file(
                 args.generate_duts_file[0], args.generate_duts_file[1]
             )
-
-        if args.input:
-            input_spreadsheet(vane.config.DEFINITIONS_FILE)
 
         if args.environment:
             vane.config.ENVIRONMENT = args.environment
