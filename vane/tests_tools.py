@@ -72,13 +72,12 @@ def filter_duts(duts, criteria="", dut_filter=""):
     """
     logging.info(f"Filter: {dut_filter} by criteria: {criteria}")
 
+    subset_duts, dut_names = [], []
     if criteria == "roles":
-        subset_duts, dut_names = [], []
         for role in dut_filter:
             subset_duts = subset_duts + [dut for dut in duts if role == dut["role"]]
             dut_names = dut_names + [dut["name"] for dut in duts if role == dut["role"]]
     elif criteria == "names":
-        subset_duts, dut_names = [], []
         for name in dut_filter:
             subset_duts = subset_duts + [dut for dut in duts if name == dut["name"]]
             dut_names = dut_names + [dut["name"] for dut in duts if name == dut["name"]]
@@ -119,15 +118,13 @@ def parametrize_duts(test_fname, test_defs, dut_objs):
     for testcase in testcases:
         if "name" in testcase:
             testname = testcase["name"]
+            criteria = ""
+            dut_filter = ""
 
             if "criteria" in testcase:
                 criteria = testcase["criteria"]
-            else:
-                criteria = ""
             if "filter" in testcase:
                 dut_filter = testcase["filter"]
-            else:
-                dut_filter = ""
 
             duts, ids = filter_duts(dut_objs, criteria, dut_filter)
 
@@ -164,17 +161,15 @@ def parametrize_inputs(test_fname, parameter_name, test_defs):
         """For each testcase in this testsuite,
             pack up the value and ids for parameter_name"""
     )
+
     input_parameters = {}
 
     for testcase in testcases:
         if "name" in testcase:
             testname = testcase["name"]
-
+            parameter_data = []
             if parameter_name in testcase:
                 parameter_data = testcase[parameter_name]
-            else:
-                parameter_data = []
-
             input_parameters[testname] = {}
             input_parameters[testname]["data"] = [elem["data"] for elem in parameter_data]
             input_parameters[testname]["ids"] = [elem["id"] for elem in parameter_data]
@@ -245,7 +240,7 @@ def setup_import_yaml(yaml_file):
             try:
                 yaml_data = yaml.safe_load(temp_yaml)
 
-                logging.info(f"Inputed the following yaml: {yaml_data}")
+                logging.info(f"Inputted the following yaml: {yaml_data}")
 
                 temp_yaml.close()
                 os.remove(temp_file)
@@ -280,19 +275,17 @@ def import_yaml(yaml_file):
         with open(yaml_file, "r", encoding="utf-8") as input_yaml:
             try:
                 yaml_data = yaml.safe_load(input_yaml)
-                logging.info(f"Inputed the following yaml: {yaml_data}")
+                logging.info(f"Inputted the following yaml: {yaml_data}")
                 return yaml_data
             except yaml.YAMLError as err:
                 print(">>> ERROR IN YAML FILE")
                 logging.error(f"ERROR IN YAML FILE: {err}")
                 logging.error("EXITING TEST RUNNER")
-
                 sys.exit(1)
     except OSError as err:
         print(f">>> {yaml_file} YAML FILE MISSING")
         logging.error(f"ERROR YAML FILE: {yaml_file} NOT " + f"FOUND. {err}")
         logging.error("EXITING TEST RUNNER")
-
         sys.exit(1)
 
 
@@ -314,7 +307,6 @@ def return_dut_list(test_parameters):
         print(">>> NO DUTS CONFIGURED")
         logging.error("NO DUTS CONFIGURED")
         logging.error("EXITING TEST RUNNER")
-
         sys.exit(1)
 
     logging.info(f"Returning duts: {duts}")
@@ -476,7 +468,7 @@ def remove_cmd(err, show_cmds):
             longest_matching_cmd = show_cmd
 
     # longest_matching_cmd is the one in error string, lets bump it out
-    if longest_matching_cmd != "":
+    if longest_matching_cmd:
         cmd_index = show_cmds.index(longest_matching_cmd)
         show_cmds.pop(cmd_index)
 
@@ -663,13 +655,13 @@ def export_logs(test_name, hostname, output, test_parameters):
 
     try:
         logging.info(f"Opening file {show_log} and append show output: {output}")
+
         with open(show_log, "a", encoding="utf-8") as log_file:
             log_file.write(f"\ntest_suite::{test_name}[{hostname}]:\n{output}")
     except OSError as error:
         print(f">>>  ERROR OPENING LOG FILE: {error}")
         logging.error(f"ERROR OPENING LOG FILE: {error}")
         logging.error("EXITING TEST RUNNER")
-
         sys.exit(1)
 
 
@@ -933,13 +925,11 @@ def export_yaml(yaml_file, yaml_data):
                 print(">>> ERROR IN YAML FILE")
                 logging.error(f"ERROR IN YAML FILE: {err}")
                 logging.error("EXITING TEST RUNNER")
-
                 sys.exit(1)
     except OSError as err:
         print(f">>> {yaml_file} YAML FILE MISSING")
         logging.error(f"ERROR YAML FILE: {yaml_file} NOT " + f"FOUND. {err}")
         logging.error("EXITING TEST RUNNER")
-
         sys.exit(1)
 
 
@@ -964,7 +954,6 @@ def export_text(text_file, text_data):
         print(f">>> {text_file} TEXT FILE MISSING")
         logging.error(f"ERROR TEXT FILE: {text_file} NOT FOUND. {err}")
         logging.error("EXITING TEST RUNNER")
-
         sys.exit(1)
 
 
@@ -1087,7 +1076,6 @@ def create_duts_file(topology_file, inventory_file):
         logging.error(f"Error occured while creating DUTs file: {str(excep)}")
         logging.error("EXITING TEST RUNNER")
         print(">>> ERROR While creating duts file")
-
         sys.exit(1)
 
     return None
