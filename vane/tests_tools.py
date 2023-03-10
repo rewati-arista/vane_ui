@@ -59,8 +59,7 @@ DEFAULT_EOS_CONN = "eapi"
 
 
 def filter_duts(duts, criteria="", dut_filter=""):
-    """
-    Filter duts based on a user provided criteria and a filter
+    """Filter duts based on a user provided criteria and a filter
 
     Args:
         duts (dict): Full global duts dictionary
@@ -94,8 +93,7 @@ def filter_duts(duts, criteria="", dut_filter=""):
 
 
 def parametrize_duts(test_fname, test_defs, dut_objs):
-    """
-    Use a filter to create input variables for PyTest parametrize
+    """Use a filter to create input variables for PyTest parametrize
 
     Args:
         test_fname (str): Test suite path and file name
@@ -143,8 +141,7 @@ def parametrize_duts(test_fname, test_defs, dut_objs):
 
 
 def parametrize_inputs(test_fname, parameter_name, test_defs):
-    """
-    Use a filter to create input variables for PyTest parametrize
+    """Use a filter to create input variables for PyTest parametrize
 
     Args:
         test_fname (str): Test suite path and file name
@@ -186,8 +183,7 @@ def parametrize_inputs(test_fname, parameter_name, test_defs):
 
 
 def init_show_log(test_parameters):
-    """
-    Open log file for logging test show commands
+    """Open log file for logging test show commands
 
     Args:
         test_parameters (dict): Abstraction of testing parameters
@@ -221,8 +217,7 @@ def init_show_log(test_parameters):
 
 
 def setup_import_yaml(yaml_file):
-    """
-    Import YAML file as python data structure
+    """Import YAML file as python data structure
     Also remove lines starting from #
 
     Args:
@@ -271,8 +266,7 @@ def setup_import_yaml(yaml_file):
 
 
 def import_yaml(yaml_file):
-    """
-    Import YAML file as python data structure
+    """Import YAML file as python data structure
 
     Args:
         yaml_file (str): Name of YAML file
@@ -303,8 +297,7 @@ def import_yaml(yaml_file):
 
 
 def return_dut_list(test_parameters):
-    """
-    Return a duts_list for specific test parameters
+    """Return a duts_list for specific test parameters
 
     Args:
         test_parameters (dict): Abstraction of testing parameters
@@ -330,8 +323,7 @@ def return_dut_list(test_parameters):
 
 
 def init_duts(show_cmds, test_parameters, test_duts):
-    """
-    Use PS LLD spreadsheet to find interesting duts and then execute
+    """Use PS LLD spreadsheet to find interesting duts and then execute
     inputted show commands on each dut.  Return structured data of
     dut's output data, hostname, and connection.  Using threading to
     make method more efficient.
@@ -371,8 +363,7 @@ def init_duts(show_cmds, test_parameters, test_duts):
 
 
 def login_duts(test_parameters, test_duts):
-    """
-    Use eapi to connect to Arista switches for testing
+    """Use eapi to connect to Arista switches for testing
 
     Args:
       test_parameters (dict): Abstraction of testing parameters
@@ -427,8 +418,7 @@ def login_duts(test_parameters, test_duts):
 
 
 def send_cmds(show_cmds, conn, encoding):
-    """
-    Send show commands to duts and recurse on failure
+    """Send show commands to duts and recurse on failure
 
     Args:
         show_cmds (list): List of pre-processed commands
@@ -467,8 +457,7 @@ def send_cmds(show_cmds, conn, encoding):
 
 
 def remove_cmd(err, show_cmds):
-    """
-    Remove command that is not supported by pyeapi
+    """Remove command that is not supported by pyeapi
 
     Args:
         err (str): Error string
@@ -497,8 +486,7 @@ def remove_cmd(err, show_cmds):
 
 
 def dut_worker(dut, show_cmds, test_parameters):
-    """
-    Execute inputted show commands on dut.  Update dut structured data
+    """Execute inputted show commands on dut.  Update dut structured data
     with show output.
 
     Args:
@@ -566,8 +554,7 @@ def dut_worker(dut, show_cmds, test_parameters):
 
 
 def return_show_cmd(show_cmd, dut, test_name, test_parameters):
-    """
-    Return model data and text output from show commands and log text output.
+    """Return model data and text output from show commands and log text output.
 
     Args:
       show_cmd (str): show command
@@ -619,8 +606,7 @@ def return_show_cmd(show_cmd, dut, test_name, test_parameters):
 
 
 def return_interfaces(hostname, test_parameters):
-    """
-    Parse test_parameters for interface connections and return them to test
+    """Parse test_parameters for interface connections and return them to test
 
     Args:
         hostname (str):  hostname of dut
@@ -663,8 +649,7 @@ def return_interfaces(hostname, test_parameters):
 
 
 def export_logs(test_name, hostname, output, test_parameters):
-    """
-    Open log file for logging test show commands
+    """Open log file for logging test show commands
 
     Args:
         test_name (str): test case name
@@ -689,8 +674,7 @@ def export_logs(test_name, hostname, output, test_parameters):
 
 
 def get_parameters(tests_parameters, test_suite, test_case=""):
-    """
-    Return test parameters for a test case
+    """Return test parameters for a test case
 
     Args:
         test_parameters (dict): Abstraction of testing parameters
@@ -730,8 +714,7 @@ def get_parameters(tests_parameters, test_suite, test_case=""):
 
 
 def verify_show_cmd(show_cmd, dut):
-    """
-    Verify if show command was successfully executed on dut
+    """Verify if show command was successfully executed on dut
 
     Args:
         show_cmd (str): show command
@@ -753,8 +736,7 @@ def verify_show_cmd(show_cmd, dut):
 
 
 def verify_tacacs(dut):
-    """
-    Verify if tacacs servers are configured
+    """Verify if tacacs servers are configured
 
     Args:
         dut (dict): data structure of dut parameters
@@ -779,8 +761,7 @@ def verify_tacacs(dut):
 
 
 def verify_veos(dut):
-    """
-    Verify if DUT is a VEOS instance
+    """Verify if DUT is a VEOS instance
 
     Args:
         dut (dict): data structure of dut parameters
@@ -807,8 +788,7 @@ def verify_veos(dut):
 
 
 def generate_interface_list(dut_name, test_definition):
-    """
-    Test_definition is used to create a interface_list for active
+    """Test_definition is used to create a interface_list for active
     DUT interfaces and attributes
 
     Args:
@@ -827,8 +807,7 @@ def generate_interface_list(dut_name, test_definition):
 
 
 def yaml_io(yaml_file, io_type, yaml_data=None):
-    """
-    Write test results to YAML file for post-processing
+    """Write test results to YAML file for post-processing
 
     Args:
         yaml_file (str): Name of YAML file
@@ -857,8 +836,7 @@ def yaml_io(yaml_file, io_type, yaml_data=None):
 
 
 def return_show_cmds(test_parameters):
-    """
-    Return show commands from the test_definitions
+    """Return show commands from the test_definitions
 
     Args:
         test_parameters (dict): Abstraction of testing parameters
@@ -905,8 +883,7 @@ def return_show_cmds(test_parameters):
 
 
 def return_test_defs(test_parameters):
-    """
-    Return test_definitions from the test_parameters
+    """Return test_definitions from the test_parameters
 
     Args:
         test_parameters (dict): Abstraction of testing parameters
@@ -938,8 +915,7 @@ def return_test_defs(test_parameters):
 
 
 def export_yaml(yaml_file, yaml_data):
-    """
-    Export python data structure as a YAML file
+    """Export python data structure as a YAML file
 
     Args:
         yaml_file (str): Name of YAML file
@@ -968,8 +944,7 @@ def export_yaml(yaml_file, yaml_data):
 
 
 def export_text(text_file, text_data):
-    """
-    Export python data structure as a TEXT file
+    """Export python data structure as a TEXT file
 
     Args:
         text_file (str): Name of TEXT file
@@ -994,8 +969,7 @@ def export_text(text_file, text_data):
 
 
 def subprocess_ping(definition_file, dut_name, loopback_ip, repeat_ping):
-    """
-    Subprocess to run the continuous ping command
+    """Subprocess to run the continuous ping command
 
     Args:
         definition_file: definitions.yaml file
@@ -1021,8 +995,7 @@ def subprocess_ping(definition_file, dut_name, loopback_ip, repeat_ping):
 
 
 def generate_duts_file(dut, file, username, password):
-    """
-    Util function to take in an individual dut and print
+    """Util function to take in an individual dut and print
     its relevant data to a given file.
 
     Args:
@@ -1052,8 +1025,7 @@ def generate_duts_file(dut, file, username, password):
 
 
 def create_duts_file(topology_file, inventory_file):
-    """
-    Automatically generate a DUTs file
+    """Automatically generate a DUTs file
 
     Args:
         topology_file (str): Name and path of topology file
@@ -1126,8 +1098,7 @@ class TestOps:
     """Common testcase operations and variables"""
 
     def __init__(self, tests_definitions, test_suite, dut):
-        """
-        Initializes TestOps Object
+        """Initializes TestOps Object
 
         Args:
             tests_definition (str): YAML representation of NRFU tests
@@ -1174,8 +1145,7 @@ class TestOps:
         self.test_id = self.test_parameters.get("test_id", None)
 
     def _verify_show_cmd(self, show_cmds, dut):
-        """
-        Verify if show command was successfully executed on dut
+        """Verify if show command was successfully executed on dut
 
         Args:
             show_cmds (str): show command
@@ -1259,8 +1229,7 @@ class TestOps:
             logging.info("No show command output to display")
 
     def _get_parameters(self, tests_parameters, test_suite, test_case):
-        """
-        Return test parameters for a test case
+        """Return test parameters for a test case
 
         Args:
             tests_parameters (dict): Abstraction of testing parameters
@@ -1304,8 +1273,7 @@ class TestOps:
         return case_parameters[0]
 
     def return_show_cmd(self, show_cmd):
-        """
-        Return model data and text output from show commands and log text output.
+        """Return model data and text output from show commands and log text output.
 
         Args:
           show_cmd (str): show command
@@ -1345,8 +1313,7 @@ class TestOps:
         return result, self.show_output, self.show_cmd_txt, error
 
     def generate_report(self, dut_name, output):
-        """
-        Utility to generate report
+        """Utility to generate report
 
         Args:
           dut_name: name of the device
@@ -1363,8 +1330,7 @@ class TestOps:
         self.post_testcase()
 
     def verify_veos(self):
-        """
-        Verify DUT is a VEOS instance
+        """Verify DUT is a VEOS instance
 
         Returns:
             veos_bool: boolean indicating whether DUT is VEOS instance or not
@@ -1385,8 +1351,7 @@ class TestOps:
         return veos_bool
 
     def parse_test_steps(self, func):
-        """
-        Returns a list of all the test_steps in the given function.
+        """Returns a list of all the test_steps in the given function.
         Inspects functions and finds statements with TS: and organizes
         them into a list.
 
