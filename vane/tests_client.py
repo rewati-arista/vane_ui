@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright (c) 2020, Arista Networks EOS+
+# Copyright (c) 2023, Arista Networks EOS+
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -61,12 +61,15 @@ logging.basicConfig(
     format=FORMAT,
 )
 
+
 class NullUndefined(Undefined):
-  def __getattr__(self, key):
-    return ''
+    def __getattr__(self, key):
+        return ""
+
 
 class TestsClient:
     """Creates an instance of the Test Client."""
+
     get_pytest_file = "pytest.ini"
 
     def __init__(self, test_definition, test_duts):
@@ -80,10 +83,7 @@ class TestsClient:
         self.data_model = self._import_yaml(test_definition)
         self.duts_model = self._import_yaml(test_duts)
 
-        logging.info(
-            "Internal test data-model initialized with value: "
-            f"{self.data_model}"
-        )
+        logging.info(f"Internal test data-model initialized with value: {self.data_model}")
         self.test_parameters = []
 
     def _import_yaml(self, yaml_file):
@@ -98,28 +98,26 @@ class TestsClient:
             with open(yaml_file, "r") as input_yaml:
                 try:
                     yaml_data = yaml.safe_load(input_yaml)
-                    logging.info(
-                        f"Inputed the following yaml: "
-                        f"{yaml_data}")
+                    logging.info(f"Inputted the following yaml: {yaml_data}")
                     return yaml_data
                 except yaml.YAMLError as err_data:
                     logging.error(f"Error in YAML file. {err_data}")
                     sys.exit(1)
         except OSError as err_data:
-            logging.error(
-                f"Defintions file: {yaml_file} not " + f"found. {err_data}"
-            )
+            logging.error(f"Definitions file: {yaml_file} not found. {err_data}")
             sys.exit(1)
 
+    def write_test_def_file(
+        self, template_definitions, master_definitions, test_dir, test_definitions
+    ):
+        """Reads templates and creates test definitions using master definitions
 
-    def write_test_def_file(self, template_definitions, master_definitions, test_dir, test_definitions):
-        """ Reads templates and creates test definitions using master definitions 
-            Args:
-            template_definitions: template test definition file name 
-            master_definitions: master schema to used to render template
-            test_dir: the directory for which test definitons need to be generated
-            test_definitions: name of the test defnition file to be created
-        """ 
+        Args:
+            template_definitions (str): template test definition file name
+            master_definitions (dict): master schema to used to render template
+            test_dir (str): the directory for which test definitons need to be generated
+            test_definitions (str): name of the test defnition file to be created
+        """
 
         # Traverses given test directory
         for root, dirs, files in os.walk(test_dir):
@@ -129,8 +127,8 @@ class TestsClient:
             for file in files:
                 if file == template_definitions:
                     # Inputs template yaml data
-                    template_file = open(os.path.join(root, file), 'r').read()
-                    
+                    template_file = open(os.path.join(root, file), "r").read()
+
                     # Uses Jinja2 templating to generate new test definition
                     # file and replace the given templates
                     test_template = Template(str(template_file), undefined=NullUndefined)
@@ -141,10 +139,9 @@ class TestsClient:
                     yaml_new = yaml.safe_load(new)
 
                     new_file = os.path.join(root, test_definitions)
-                    with open(new_file, 'w') as file:
+                    with open(new_file, "w") as file:
                         yaml.safe_dump(yaml_new, file, sort_keys=False)
-                    logging.info('Regenerared test definition files')
-
+                    logging.info("Regenerared test definition files")
 
     def generate_test_definitions(self):
         """
@@ -153,7 +150,7 @@ class TestsClient:
         """
 
         try:
-            logging.info('Attempting to regenerate test definition files')
+            logging.info("Attempting to regenerate test definition files")
             definitions = self.data_model["parameters"]
 
             # Checks if generate_test_definitions is true
@@ -165,11 +162,14 @@ class TestsClient:
 
                 # Iterates through test directories
                 for test_dir in definitions["test_dirs"]:
-                    self.write_test_def_file(template_definitions=template_definitions, master_definitions=master_definitions, \
-                        test_dir=test_dir, test_definitions=test_definitions)
+                    self.write_test_def_file(
+                        template_definitions=template_definitions,
+                        master_definitions=master_definitions,
+                        test_dir=test_dir,
+                        test_definitions=test_definitions,
+                    )
         except OSError:
-            print('Unable to regenerate test definition files.')
-                                
+            print("Unable to regenerate test definition files.")
 
     def setup_test_runner(self):
         """Setup eapi cfg, remove result files, set test params"""
@@ -183,18 +183,20 @@ class TestsClient:
         """Run tests"""
 
         logging.info(f"Starting Test with parameters: {self.test_parameters}")
-        print("Starting test with command: pytest %s\n" %
-              (" ".join(self.test_parameters)))
+        print("Starting test with command: pytest %s\n" % (" ".join(self.test_parameters)))
 
         pytest_result = pytest.main(self.test_parameters)
 
         if pytest_result == ExitCode.NO_TESTS_COLLECTED:
-            print("No tests collected with pytest command: pytest %s" %
-                  (" ".join(self.test_parameters)))
+            print(
+                "No tests collected with pytest command: pytest %s"
+                % (" ".join(self.test_parameters))
+            )
             sys.exit(1)
         elif pytest_result == ExitCode.USAGE_ERROR:
-            print("Pytest usage error with parameters: pytest %s" %
-                  (" ".join(self.test_parameters)))
+            print(
+                "Pytest usage error with parameters: pytest %s" % (" ".join(self.test_parameters))
+            )
             sys.exit(1)
 
     def _init_parameters(self):
@@ -236,7 +238,6 @@ class TestsClient:
         self._set_cmdline_no_input(setup_show, "--setup-show")
 
     def _set_cmdline_no_input(self, parameter, ext):
-
         if parameter and ext not in self.test_parameters:
             logging.info(f"Enable pytest output {parameter}")
             self.test_parameters.append(ext)
@@ -292,7 +293,6 @@ class TestsClient:
         self._set_cmdline_report(json_report, json_name, "--json")
 
     def _set_cmdline_report(self, parameter, report, ext):
-
         list_out = [x for x in self.test_parameters if ext in x]
 
         if parameter and report not in self.test_parameters:
@@ -306,36 +306,31 @@ class TestsClient:
             logging.warning(f"{ext} report will NOT be created")
 
     def _set_processes(self):
-
         processes = self.data_model["parameters"]["processes"]
         self._set_cmdline_input(processes, "-n")
 
     def _get_markers(self):
         config = configparser.ConfigParser()
         config.read(self.get_pytest_file)
-        markers = config.get('pytest', 'markers')
-        markers = list(filter(None, [marker.split(":")[0]
-                       for marker in markers.split("\n")]))
+        markers = config.get("pytest", "markers")
+        markers = list(filter(None, [marker.split(":")[0] for marker in markers.split("\n")]))
         return markers
 
     def _set_mark(self):
         mark = self.data_model["parameters"].get("mark")
         if mark and mark not in self._get_markers():
-            print(
-                "Marker %s is not supported. Update marker parameter in definition file" % (mark))
+            print(f"Marker {mark} is not supported. Update marker parameter in definition file")
             sys.exit(0)
         self._set_cmdline_input(mark, "-m")
 
     def _set_junit(self, report_dir):
-        self.test_parameters.append(
-            "--junit-xml=" + report_dir + "/report.xml")
+        self.test_parameters.append(f"--junit-xml={report_dir}/report.xml")
 
     def _set_test_dirs(self, test_dirs):
         for test_dir in test_dirs:
             self.test_parameters.append(test_dir)
 
     def _set_cmdline_input(self, parameter, ext):
-
         list_out = [x for x in self.test_parameters if ext in x]
 
         if parameter and len(list_out) == 0:
@@ -387,10 +382,7 @@ class TestsClient:
             logging.info(f"Open {eapi_template} Jinja2 template for reading")
 
             with open(eapi_template, "r") as jinja_file:
-                logging.info(
-                    f"Read and save contents of {eapi_template} "
-                    "Jinja2 template"
-                )
+                logging.info(f"Read and save contents of {eapi_template} Jinja2 template")
                 jinja_template = jinja_file.read()
                 logging.info(
                     f"Using {eapi_template} Jinja2 template to "
@@ -437,10 +429,7 @@ class TestsClient:
         """Remove pre-existing results file"""
 
         results_dir = self.data_model["parameters"]["results_dir"]
-        logging.info(
-            "Remove any existing results files in results directory "
-            f"{results_dir}"
-        )
+        logging.info(f"Remove any existing results files in results directory {results_dir}")
 
         if not os.path.exists(results_dir):
             os.makedirs(results_dir)
