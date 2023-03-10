@@ -244,11 +244,11 @@ def main():
         print(f"{show_markers()}")
     else:
         if args.definitions_file:
-            logging.warning("Changing Definitions file name to " f"{args.definitions_file}")
+            logging.warning(f"Changing Definitions file name to {args.definitions_file}")
             vane.config.DEFINITIONS_FILE = args.definitions_file
 
         if args.duts_file:
-            logging.warning("Changing DUTS file name to " f"{args.duts_file}")
+            logging.warning(f"Changing DUTS file name to {args.duts_file}")
             vane.config.DUTS_FILE = args.duts_file
 
         if args.generate_duts_file:
