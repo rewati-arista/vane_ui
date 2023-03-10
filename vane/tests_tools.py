@@ -59,7 +59,8 @@ DEFAULT_EOS_CONN = "eapi"
 
 
 def filter_duts(duts, criteria="", dut_filter=""):
-    """Filter duts based on a user provided criteria and a filter
+    """
+    Filter duts based on a user provided criteria and a filter
 
     Args:
         duts (dict): Full global duts dictionary
@@ -68,7 +69,7 @@ def filter_duts(duts, criteria="", dut_filter=""):
         dut_filter (str, optional): Filter for DUTs. Defaults to "".
 
     Returns:
-        dict: Filtered subset of global dictionary
+        subset_duts, dut_names (dict): Filtered subset of global dictionary of duts and dut names
     """
     logging.info(f"Filter: {dut_filter} by criteria: {criteria}")
 
@@ -93,7 +94,8 @@ def filter_duts(duts, criteria="", dut_filter=""):
 
 
 def parametrize_duts(test_fname, test_defs, dut_objs):
-    """Use a filter to create input variables for PyTest parametrize
+    """
+    Use a filter to create input variables for PyTest parametrize
 
     Args:
         test_fname (str): Test suite path and file name
@@ -101,7 +103,7 @@ def parametrize_duts(test_fname, test_defs, dut_objs):
         dut_objs (dict): Full global dictionary duts dictionary
 
     Returns:
-        dict: Dictionary with variables PyTest parametrize for each test case.
+        dut_parameters (dict): Dictionary with variables PyTest parametrize for each test case.
     """
     logging.info("Discover test suite name")
 
@@ -141,7 +143,8 @@ def parametrize_duts(test_fname, test_defs, dut_objs):
 
 
 def parametrize_inputs(test_fname, parameter_name, test_defs):
-    """Use a filter to create input variables for PyTest parametrize
+    """
+    Use a filter to create input variables for PyTest parametrize
 
     Args:
         test_fname (str): Test suite path and file name
@@ -149,7 +152,7 @@ def parametrize_inputs(test_fname, parameter_name, test_defs):
         test_defs (dict): Dictionary with global test definitions
 
     Returns:
-        dict: Dictionary with variables PyTest parametrize for each test case.
+        input_parameters (dict): Dictionary with variables PyTest parametrize for each test case.
     """
     logging.info("Discover test suite name")
 
@@ -183,7 +186,8 @@ def parametrize_inputs(test_fname, parameter_name, test_defs):
 
 
 def init_show_log(test_parameters):
-    """Open log file for logging test show commands
+    """
+    Open log file for logging test show commands
 
     Args:
         test_parameters (dict): Abstraction of testing parameters
@@ -217,8 +221,10 @@ def init_show_log(test_parameters):
 
 
 def setup_import_yaml(yaml_file):
-    """Import YAML file as python data structure
+    """
+    Import YAML file as python data structure
     Also remove lines starting from #
+
     Args:
         yaml_file (str): Name of YAML file
 
@@ -265,7 +271,9 @@ def setup_import_yaml(yaml_file):
 
 
 def import_yaml(yaml_file):
-    """Import YAML file as python data structure
+    """
+    Import YAML file as python data structure
+
     Args:
         yaml_file (str): Name of YAML file
 
@@ -295,8 +303,8 @@ def import_yaml(yaml_file):
 
 
 def return_dut_list(test_parameters):
-    """test_parameters to create a duts_list for a list of ids
-    that will identify individual test runs
+    """
+    Return a duts_list for specific test parameters
 
     Args:
         test_parameters (dict): Abstraction of testing parameters
@@ -322,7 +330,8 @@ def return_dut_list(test_parameters):
 
 
 def init_duts(show_cmds, test_parameters, test_duts):
-    """Use PS LLD spreadsheet to find interesting duts and then execute
+    """
+    Use PS LLD spreadsheet to find interesting duts and then execute
     inputted show commands on each dut.  Return structured data of
     dut's output data, hostname, and connection.  Using threading to
     make method more efficient.
@@ -330,9 +339,9 @@ def init_duts(show_cmds, test_parameters, test_duts):
     Args:
       show_cmds (str): list of interesting show commands
       test_parameters (dict): Abstraction of testing parameters
-      test_suite (str): test suite name
+      test_duts (dict): Dictionary of duts
 
-    return:
+    Returns:
       duts (dict): structured data of duts output data, hostname, and
                    connection
     """
@@ -362,13 +371,14 @@ def init_duts(show_cmds, test_parameters, test_duts):
 
 
 def login_duts(test_parameters, test_duts):
-    """Use eapi to connect to Arista switches for testing
+    """
+    Use eapi to connect to Arista switches for testing
 
     Args:
       test_parameters (dict): Abstraction of testing parameters
       test_duts (dict): Dictionary of duts
 
-    return:
+    Returns:
       logins (list): List of dictionaries with connection and name
                      of DUTs
     """
@@ -417,14 +427,15 @@ def login_duts(test_parameters, test_duts):
 
 
 def send_cmds(show_cmds, conn, encoding):
-    """Send show commands to duts and recurse on failure
+    """
+    Send show commands to duts and recurse on failure
 
     Args:
-        show_cmds (list): List of pre-process commands
+        show_cmds (list): List of pre-processed commands
         conn (obj): connection
         encoding (string): encoding type of show commands: either json or text
 
-    return:
+    Returns:
         show_cmd_list (list): list of show commands
     """
     logging.info("In send_cmds")
@@ -456,11 +467,15 @@ def send_cmds(show_cmds, conn, encoding):
 
 
 def remove_cmd(err, show_cmds):
-    """Remove command that is not supported by pyeapi
+    """
+    Remove command that is not supported by pyeapi
 
     Args:
         err (str): Error string
-        show_cmds (list): List of pre-process commands
+        show_cmds (list): List of pre-processed commands
+
+    Returns:
+        show_cmds (list): List of post-processed commands
     """
     logging.info(f"remove_cmd: {err}")
     logging.info(f"remove_cmd show_cmds list: {show_cmds}")
@@ -482,12 +497,14 @@ def remove_cmd(err, show_cmds):
 
 
 def dut_worker(dut, show_cmds, test_parameters):
-    """Execute inputted show commands on dut.  Update dut structured data
+    """
+    Execute inputted show commands on dut.  Update dut structured data
     with show output.
 
     Args:
       dut (dict): structured data of a dut output data, hostname, and
-      connection test_suite (str): test suite name
+      show_cmds (list): List of show commands
+      test_parameters (dict): Abstraction of testing parameters
     """
     name = dut["name"]
     conn = dut["connection"]
@@ -549,14 +566,16 @@ def dut_worker(dut, show_cmds, test_parameters):
 
 
 def return_show_cmd(show_cmd, dut, test_name, test_parameters):
-    """Return model data and text output from show commands and log text output.
+    """
+    Return model data and text output from show commands and log text output.
 
     Args:
       show_cmd (str): show command
       dut (dict): Dictionary containing dut name and connection
       test_name (str): test case name
+      test_parameters (dict): Abstraction of testing parameters
 
-    return:
+    Returns:
       show_output (dict): json output of cli command
       show_output_text (dict): plain-text output of cli command
     """
@@ -600,13 +619,14 @@ def return_show_cmd(show_cmd, dut, test_name, test_parameters):
 
 
 def return_interfaces(hostname, test_parameters):
-    """parse test_parameters for interface connections and return them to test
+    """
+    Parse test_parameters for interface connections and return them to test
 
     Args:
-        dut_name (str):      hostname of dut
-        xlsx_workbook (obj): Abstraction of spreadsheet,
+        hostname (str):  hostname of dut
+        test_parameters (dict): Abstraction of testing parameters
 
-    return:
+    Returns:
       interface_list (list): list of interesting interfaces based on
                              PS LLD spreadsheet
     """
@@ -643,10 +663,14 @@ def return_interfaces(hostname, test_parameters):
 
 
 def export_logs(test_name, hostname, output, test_parameters):
-    """Open log file for logging test show commands
+    """
+    Open log file for logging test show commands
 
     Args:
-      LOG_FILE (str): path and name of log file
+        test_name (str): test case name
+        hostname (str):  hostname of dut
+        output (str): output text of the show command
+        test_parameters (dict): Abstraction of testing parameters
     """
     logging.info("Open log file for logging test show commands")
 
@@ -665,10 +689,15 @@ def export_logs(test_name, hostname, output, test_parameters):
 
 
 def get_parameters(tests_parameters, test_suite, test_case=""):
-    """Return test parameters for a test case
+    """
+    Return test parameters for a test case
 
     Args:
-        tests_parameter
+        test_parameters (dict): Abstraction of testing parameters
+        test_suite (str): test suite of the test case
+
+    Returns:
+        case_parameters: test parameters for a test case
     """
     if not test_case:
         test_case = inspect.stack()[1][3]
@@ -701,10 +730,12 @@ def get_parameters(tests_parameters, test_suite, test_case=""):
 
 
 def verify_show_cmd(show_cmd, dut):
-    """Verify if show command was successfully executed on dut
+    """
+    Verify if show command was successfully executed on dut
 
-    show_cmd (str): show command
-    dut (dict): data structure of dut parameters
+    Args:
+        show_cmd (str): show command
+        dut (dict): data structure of dut parameters
     """
 
     dut_name = dut["name"]
@@ -722,9 +753,14 @@ def verify_show_cmd(show_cmd, dut):
 
 
 def verify_tacacs(dut):
-    """Verify if tacacs servers are configured
+    """
+    Verify if tacacs servers are configured
 
-    dut (dict): data structure of dut parameters
+    Args:
+        dut (dict): data structure of dut parameters
+
+    Returns:
+        tacacs_bool (bool): boolean representing if tacacs server(s) are configured or not
     """
     dut_name = dut["name"]
     show_cmd = "show tacacs"
@@ -743,9 +779,14 @@ def verify_tacacs(dut):
 
 
 def verify_veos(dut):
-    """Verify DUT is a VEOS instance
+    """
+    Verify if DUT is a VEOS instance
 
-    dut (dict): data structure of dut parameters
+    Args:
+        dut (dict): data structure of dut parameters
+
+    Returns:
+        veos_bool (bool): boolean representing if the dut is a VEOS instance or not.
     """
     dut_name = dut["name"]
     show_cmd = "show version"
@@ -766,8 +807,13 @@ def verify_veos(dut):
 
 
 def generate_interface_list(dut_name, test_definition):
-    """test_definition is used to createa a interface_list for active
+    """
+    Test_definition is used to create a interface_list for active
     DUT interfaces and attributes
+
+    Args:
+        dut_name (str): name of the dut
+        test_definition (dict):  test definition data
 
     Returns:
         interface_list (list): list of active DUT interfaces and attributes
@@ -781,11 +827,15 @@ def generate_interface_list(dut_name, test_definition):
 
 
 def yaml_io(yaml_file, io_type, yaml_data=None):
-    """Write test results to YAML file for post-processing
+    """
+    Write test results to YAML file for post-processing
 
     Args:
         yaml_file (str): Name of YAML file
         io (str): Read or write to YAML file
+
+    Returns:
+        yaml_data (obj): Python yaml object
     """
     while True:
         try:
@@ -807,10 +857,14 @@ def yaml_io(yaml_file, io_type, yaml_data=None):
 
 
 def return_show_cmds(test_parameters):
-    """Return show commands from the test_defintions
+    """
+    Return show commands from the test_definitions
 
     Args:
-        test_parameters (dict): Input DUT test definitions
+        test_parameters (dict): Abstraction of testing parameters
+
+    Returns:
+        show_cmds (list): show commands from the test_definitions
     """
     show_cmds = []
 
@@ -851,10 +905,14 @@ def return_show_cmds(test_parameters):
 
 
 def return_test_defs(test_parameters):
-    """Return show commands from the test_defintions
+    """
+    Return test_definitions from the test_parameters
 
     Args:
-        def_file (test_parameters): Name of definitions file
+        test_parameters (dict): Abstraction of testing parameters
+
+    Returns:
+        test_defs (dict): test definitions
     """
     test_defs = {"test_suites": []}
     test_dirs = test_parameters["parameters"]["test_dirs"]
@@ -880,10 +938,12 @@ def return_test_defs(test_parameters):
 
 
 def export_yaml(yaml_file, yaml_data):
-    """Export python data structure as a YAML file
+    """
+    Export python data structure as a YAML file
 
     Args:
         yaml_file (str): Name of YAML file
+        yaml_data (dict): Data to be written to yaml file
     """
     logging.info(f"Opening {yaml_file} for write")
 
@@ -908,7 +968,8 @@ def export_yaml(yaml_file, yaml_data):
 
 
 def export_text(text_file, text_data):
-    """Export python data structure as a TEXT file
+    """
+    Export python data structure as a TEXT file
 
     Args:
         text_file (str): Name of TEXT file
@@ -933,7 +994,9 @@ def export_text(text_file, text_data):
 
 
 def subprocess_ping(definition_file, dut_name, loopback_ip, repeat_ping):
-    """Subprocess to run the continuous ping command
+    """
+    Subprocess to run the continuous ping command
+
     Args:
         definition_file: definitions.yaml file
         dut_name: data structure of dut parameters
@@ -961,6 +1024,11 @@ def generate_duts_file(dut, file, username, password):
     """
     Util function to take in an individual dut and print
     its relevant data to a given file.
+
+    Args:
+        dut (dict): device structure
+        file (io): file to write duts data to
+        username, password (str): user credentials
     """
     dut_dict = {}
     try:
@@ -984,7 +1052,8 @@ def generate_duts_file(dut, file, username, password):
 
 
 def create_duts_file(topology_file, inventory_file):
-    """Automatically generate a DUTs file
+    """
+    Automatically generate a DUTs file
 
     Args:
         topology_file (str): Name and path of topology file
@@ -1057,11 +1126,13 @@ class TestOps:
     """Common testcase operations and variables"""
 
     def __init__(self, tests_definitions, test_suite, dut):
-        """Initializes TestOps Object
+        """
+        Initializes TestOps Object
 
         Args:
             tests_definition (str): YAML representation of NRFU tests
-            test_suite:
+            test_suite (str): name of test suite
+            dut (dict): device under test
         """
         test_case = inspect.stack()[1][3]
         self.test_case = test_case
@@ -1103,10 +1174,12 @@ class TestOps:
         self.test_id = self.test_parameters.get("test_id", None)
 
     def _verify_show_cmd(self, show_cmds, dut):
-        """Verify if show command was successfully executed on dut
+        """
+        Verify if show command was successfully executed on dut
 
-        show_cmds (str): show command
-        dut (dict): data structure of dut parameters
+        Args:
+            show_cmds (str): show command
+            dut (dict): data structure of dut parameters
         """
         dut_name = dut["name"]
 
@@ -1186,10 +1259,16 @@ class TestOps:
             logging.info("No show command output to display")
 
     def _get_parameters(self, tests_parameters, test_suite, test_case):
-        """Return test parameters for a test case
+        """
+        Return test parameters for a test case
 
         Args:
-            tests_parameter
+            tests_parameters (dict): Abstraction of testing parameters
+            test_suite (str): name of the test suite
+            test_case (str): name of the test case
+
+        Returns:
+            case_parameters: test parameters for a test case
         """
         if not test_case:
             test_case = inspect.stack()[1][3]
@@ -1225,10 +1304,17 @@ class TestOps:
         return case_parameters[0]
 
     def return_show_cmd(self, show_cmd):
-        """Return model data and text output from show commands and log text output.
+        """
+        Return model data and text output from show commands and log text output.
 
         Args:
           show_cmd (str): show command
+
+        Returns:
+            result (bool): boolean representing if there was a successful result or not
+            show_output (str): text output of running command
+            show_cmd_txt (str): text output of show command
+            error (str): error thrown by standard error while running command
         """
         self.show_cmd = show_cmd
         self.show_output = ""
@@ -1258,15 +1344,15 @@ class TestOps:
 
         return result, self.show_output, self.show_cmd_txt, error
 
-
     def generate_report(self, dut_name, output):
-        """Utility to generate report
+        """
+        Utility to generate report
+
         Args:
           dut_name: name of the device
-          output: output of the command after ssh connection
         """
         logging.info(f"Output on device {dut_name} after SSH connection is: {output}")
-        
+
         self.output_msg = (
             f"\nOn switch |{dut_name}| The actual output is "
             f"|{self.actual_output}%| and the expected output is "
@@ -1277,7 +1363,8 @@ class TestOps:
         self.post_testcase()
 
     def verify_veos(self):
-        """Verify DUT is a VEOS instance
+        """
+        Verify DUT is a VEOS instance
 
         Returns:
             veos_bool: boolean indicating whether DUT is VEOS instance or not
@@ -1298,9 +1385,10 @@ class TestOps:
         return veos_bool
 
     def parse_test_steps(self, func):
-        """Returns a list of all the test_steps in the given function.
-           Inspects functions and finds statements with TS: and organizes
-           them into a list.
+        """
+        Returns a list of all the test_steps in the given function.
+        Inspects functions and finds statements with TS: and organizes
+        them into a list.
 
         Args:
             func (obj): function reference with body to inspect for test steps
