@@ -97,15 +97,8 @@ def parse_cli():
     )
 
     parser.add_argument(
-        "--input",
-        action="store_true",
-        default=False,
-        help="Use spreadsheet for input",
-    )
-
-    parser.add_argument(
         "--markers",
-        help=("List of supported technology tests. " "Equivalent to pytest --markers"),
+        help=("List of supported technology tests. Equivalent to pytest --markers"),
         action="store_true",
     )
 
@@ -167,6 +160,7 @@ def write_results(definitions_file):
 
 def show_markers():
     """Returns the list of supported markers.
+    
     Returns:
         marker_list (list): supported markers list.
     """
