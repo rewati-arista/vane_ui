@@ -47,6 +47,7 @@ from vane import config, device_interface
 
 
 FORMAT = "[%(asctime)s %(filename)s->%(funcName)s():%(lineno)s]%(levelname)s: %(message)s"
+
 logging.basicConfig(
     level=logging.INFO,
     filename="vane.log",
@@ -69,7 +70,6 @@ def filter_duts(duts, criteria="", dut_filter=""):
     Returns:
         dict: Filtered subset of global dictionary
     """
-
     logging.info(f"Filter: {dut_filter} by criteria: {criteria}")
 
     if criteria == "roles":
@@ -103,15 +103,17 @@ def parametrize_duts(test_fname, test_defs, dut_objs):
     Returns:
         dict: Dictionary with variables PyTest parametrize for each test case.
     """
-
     logging.info("Discover test suite name")
+
     testsuite = test_fname.split("/")[-1]
 
     logging.info(f"Filter test definitions by test suite name: {testsuite}")
-    subset_def = [defs for defs in test_defs["test_suites"] if testsuite in defs["name"]]
+
+    subset_def = [defs for defs in test_defs["test_suites"] if testsuite == defs["name"]]
     testcases = subset_def[0]["testcases"]
 
     logging.info("unpack testcases by defining dut and criteria")
+
     dut_parameters = {}
 
     for testcase in testcases:
@@ -122,7 +124,6 @@ def parametrize_duts(test_fname, test_defs, dut_objs):
                 criteria = testcase["criteria"]
             else:
                 criteria = ""
-
             if "filter" in testcase:
                 dut_filter = testcase["filter"]
             else:
@@ -131,6 +132,7 @@ def parametrize_duts(test_fname, test_defs, dut_objs):
             duts, ids = filter_duts(dut_objs, criteria, dut_filter)
 
             logging.info("create dut parameters.  \nDuts: {duts} \nIds: {ids}")
+
             dut_parameters[testname] = {}
             dut_parameters[testname]["duts"] = duts
             dut_parameters[testname]["ids"] = ids
@@ -149,11 +151,12 @@ def parametrize_inputs(test_fname, parameter_name, test_defs):
     Returns:
         dict: Dictionary with variables PyTest parametrize for each test case.
     """
-
     logging.info("Discover test suite name")
+
     testsuite = test_fname.split("/")[-1]
 
     logging.info(f"Filter test definitions by test suite name: {testsuite}")
+
     subset_def = [defs for defs in test_defs["test_suites"] if testsuite in defs["name"]]
     testcases = subset_def[0]["testcases"]
 
@@ -185,7 +188,6 @@ def init_show_log(test_parameters):
     Args:
         test_parameters (dict): Abstraction of testing parameters
     """
-
     logging.info("Open log file for logging test show commands")
 
     if "parameters" in test_parameters:
@@ -203,9 +205,9 @@ def init_show_log(test_parameters):
         sys.exit(1)
 
     logging.info(f"Opening {log_file} for write")
+
     try:
-        # pylint: disable-next=unspecified-encoding
-        with open(log_file, "w"):
+        with open(log_file, "w", encoding="utf-8"):
             logging.info(f"Opened {log_file} for write")
     # pylint: disable-next=broad-exception-caught
     except BaseException as error:
@@ -224,39 +226,36 @@ def setup_import_yaml(yaml_file):
     Returns:
         yaml_data (dict): YAML data structure
     """
-
     logging.info(f"Opening {yaml_file} for read")
+
     temp_file = yaml_file.split(".")[0] + "_temp." + yaml_file.split(".")[1]
+
     try:
         # need to read the setup yaml file and filter out comments
         # here a line is copied to temp file if it does not start with #
-        # pylint: disable-next=unspecified-encoding
-        with open(yaml_file, "r") as input_yaml:
-            # pylint: disable-next=unspecified-encoding
-            with open(temp_file, "w") as temp_yaml:
+        with open(yaml_file, "r", encoding="utf-8") as input_yaml:
+            with open(temp_file, "w", encoding="utf-8") as temp_yaml:
                 for line in input_yaml.readlines():
                     if not line.strip().startswith("#"):
                         temp_yaml.write(line)
             temp_yaml.close()
 
         # temp file is now used to load yaml
-        # pylint: disable-next=unspecified-encoding
-        with open(temp_file, "r") as temp_yaml:
+        with open(temp_file, "r", encoding="utf-8") as temp_yaml:
             try:
                 yaml_data = yaml.safe_load(temp_yaml)
+
                 logging.info(f"Inputed the following yaml: {yaml_data}")
-                # closing the temp_file
+
                 temp_yaml.close()
-                # removing the temp_file
                 os.remove(temp_file)
                 return yaml_data
             except yaml.YAMLError as err:
                 print(">>> ERROR IN YAML FILE")
                 logging.error(f"ERROR IN YAML FILE: {err}")
                 logging.error("EXITING TEST RUNNER")
-                # closing the temp_file
+
                 temp_yaml.close()
-                # removing the temp_file
                 os.remove(temp_file)
                 sys.exit(1)
     except OSError as err:
@@ -264,7 +263,6 @@ def setup_import_yaml(yaml_file):
         logging.error(f"ERROR YAML FILE: {yaml_file} NOT FOUND. {err}")
         logging.error("EXITING TEST RUNNER")
         sys.exit(1)
-    sys.exit(1)
 
 
 def import_yaml(yaml_file):
@@ -275,11 +273,10 @@ def import_yaml(yaml_file):
     Returns:
         yaml_data (dict): YAML data structure
     """
-
     logging.info(f"Opening {yaml_file} for read")
+
     try:
-        # pylint: disable-next=unspecified-encoding
-        with open(yaml_file, "r") as input_yaml:
+        with open(yaml_file, "r", encoding="utf-8") as input_yaml:
             try:
                 yaml_data = yaml.safe_load(input_yaml)
                 logging.info(f"Inputed the following yaml: {yaml_data}")
@@ -288,13 +285,14 @@ def import_yaml(yaml_file):
                 print(">>> ERROR IN YAML FILE")
                 logging.error(f"ERROR IN YAML FILE: {err}")
                 logging.error("EXITING TEST RUNNER")
+
                 sys.exit(1)
     except OSError as err:
         print(f">>> {yaml_file} YAML FILE MISSING")
         logging.error(f"ERROR YAML FILE: {yaml_file} NOT " + f"FOUND. {err}")
         logging.error("EXITING TEST RUNNER")
+
         sys.exit(1)
-    sys.exit(1)
 
 
 def return_dut_list(test_parameters):
@@ -307,18 +305,20 @@ def return_dut_list(test_parameters):
     Returns:
         duts (list): List of DUT hostnames
     """
+    logging.info("Creating a list of duts from test definitions")
 
-    logging.info("Creating a list of duts from test defintions")
     if "duts" in test_parameters:
-        logging.info("Duts configured in test defintions")
+        logging.info("Duts configured in test definitions")
         duts = [dut["name"] for dut in test_parameters["duts"]]
     else:
         print(">>> NO DUTS CONFIGURED")
         logging.error("NO DUTS CONFIGURED")
         logging.error("EXITING TEST RUNNER")
+
         sys.exit(1)
 
     logging.info(f"Returning duts: {duts}")
+
     return duts
 
 
@@ -326,7 +326,7 @@ def init_duts(show_cmds, test_parameters, test_duts):
     """Use PS LLD spreadsheet to find interesting duts and then execute
     inputted show commands on each dut.  Return structured data of
     dut's output data, hostname, and connection.  Using threading to
-    make method more efficent.
+    make method more efficient.
 
     Args:
       show_cmds (str): list of interesting show commands
@@ -337,14 +337,15 @@ def init_duts(show_cmds, test_parameters, test_duts):
       duts (dict): structured data of duts output data, hostname, and
                    connection
     """
-
     logging.info(
         "Finding DUTs and then execute inputted show commands "
         "on each dut.  Return structured data of DUTs output "
         "data, hostname, and connection."
     )
+
     duts = login_duts(test_parameters, test_duts)
     workers = len(duts)
+
     logging.info(f"Duts login info: {duts} and create {workers} workers")
     logging.info(f"Passing the following show commands to workers: {show_cmds}")
 
@@ -353,6 +354,7 @@ def init_duts(show_cmds, test_parameters, test_duts):
         {executor.submit(dut_worker, dut, show_cmds, test_duts): dut for dut in duts}
 
     logging.info(f"Return duts data structure: {duts}")
+
     return duts
 
 
@@ -361,27 +363,32 @@ def login_duts(test_parameters, test_duts):
 
     Args:
       test_parameters (dict): Abstraction of testing parameters
+      test_duts (dict): Dictionary of duts
 
     return:
       logins (list): List of dictionaries with connection and name
                      of DUTs
     """
-
     logging.info("Using eapi to connect to Arista switches for testing")
+
     duts = test_duts["duts"]
     logins = []
     eapi_file = test_parameters["parameters"]["eapi_file"]
+
     for dut in duts:
         name = dut["name"]
         login_index = len(logins)
         logins.append({})
         login_ptr = logins[login_index]
+
         logging.info(f"Connecting to switch: {name} using parameters: {dut}")
+
         eos_conn = test_parameters["parameters"].get("eos_conn", DEFAULT_EOS_CONN)
         netmiko_conn = device_interface.NetmikoConn()
         netmiko_conn.set_conn_params(eapi_file)
         netmiko_conn.set_up_conn(name)
         login_ptr["ssh_conn"] = netmiko_conn
+
         if eos_conn == "eapi":
             pyeapi_conn = device_interface.PyeapiConn()
             pyeapi_conn.set_conn_params(eapi_file)
@@ -391,6 +398,7 @@ def login_duts(test_parameters, test_duts):
             login_ptr["connection"] = netmiko_conn
         else:
             raise ValueError(f"Invalid EOS conn type {eos_conn} specified")
+
         login_ptr["name"] = name
         login_ptr["mgmt_ip"] = dut["mgmt_ip"]
         login_ptr["username"] = dut["username"]
@@ -401,6 +409,7 @@ def login_duts(test_parameters, test_duts):
         login_ptr["eapi_file"] = eapi_file
 
     logging.info(f"Returning duts logins: {logins}")
+
     return logins
 
 
@@ -410,26 +419,36 @@ def send_cmds(show_cmds, conn, encoding):
     Args:
         show_cmds (list): List of pre-process commands
         conn (obj): connection
-    """
+        encoding (string): encoding type of show commands: either json or text
 
+    return:
+        show_cmd_list (list): list of show commands
+    """
     logging.info("In send_cmds")
+
     try:
         logging.info(f"List of show commands in show_cmds with encoding {encoding}: {show_cmds}")
+
         if encoding == "json":
             show_cmd_list = conn.run_commands(show_cmds)
         elif encoding == "text":
             show_cmd_list = conn.run_commands(show_cmds, encoding="text")
+
         logging.info(f"ran all show cmds with encoding {encoding}: {show_cmds}")
 
     # pylint: disable-next=broad-exception-caught
     except Exception as err:
         logging.error(f"error running all cmds: {err}")
+
         show_cmds = remove_cmd(err, show_cmds)
+
         logging.info(f"new show_cmds: {show_cmds}")
+
         show_cmd_list = send_cmds(show_cmds, conn, encoding)
         show_cmd_list = show_cmd_list[0]
 
     logging.info(f"return all show cmds: {show_cmd_list}")
+
     return show_cmd_list, show_cmds
 
 
@@ -440,10 +459,11 @@ def remove_cmd(err, show_cmds):
         err (str): Error string
         show_cmds (list): List of pre-process commands
     """
-
     logging.info(f"remove_cmd: {err}")
     logging.info(f"remove_cmd show_cmds list: {show_cmds}")
+
     longest_matching_cmd = ""
+
     for show_cmd in show_cmds:
         if show_cmd in str(err) and longest_matching_cmd in show_cmd:
             longest_matching_cmd = show_cmd
@@ -452,6 +472,7 @@ def remove_cmd(err, show_cmds):
     if longest_matching_cmd != "":
         cmd_index = show_cmds.index(longest_matching_cmd)
         show_cmds.pop(cmd_index)
+
         logging.info(f"removed {longest_matching_cmd} because of {err}")
 
     return show_cmds
@@ -465,7 +486,6 @@ def dut_worker(dut, show_cmds, test_parameters):
       dut (dict): structured data of a dut output data, hostname, and
       connection test_suite (str): test suite name
     """
-
     name = dut["name"]
     conn = dut["connection"]
     dut["output"] = {}
@@ -477,40 +497,49 @@ def dut_worker(dut, show_cmds, test_parameters):
 
     all_cmds_json = show_cmds.copy()
     show_cmd_json_list, show_cmds_json = send_cmds(all_cmds_json, conn, "json")
+
     logging.info(f"Returned from send_cmds_json {show_cmds_json}")
 
     all_cmds_txt = show_cmds.copy()
     show_cmd_txt_list, show_cmds_txt = send_cmds(all_cmds_txt, conn, "text")
+
     logging.info(f"Returned from send_cmds_txt {show_cmds_txt}")
 
     for show_cmd in show_cmds:
         function_def = f'test_{("_").join(show_cmd.split())}'
-        logging.info(f"Executing show command: {show_cmd} for test {function_def}")
 
+        logging.info(f"Executing show command: {show_cmd} for test {function_def}")
         logging.info(f"Adding output of {show_cmd} to duts data structure")
+
         dut["output"][show_cmd] = {}
 
         if show_cmd in show_cmds_json:
             cmd_index = show_cmds_json.index(show_cmd)
+
             logging.info(f"found cmd: {show_cmd} at index {cmd_index} of {show_cmds_json}")
             logging.info(
                 f"length of cmds: {len(show_cmds_json)} vs length of "
                 f"output {len(show_cmd_json_list)}"
             )
+
             show_output = show_cmd_json_list[cmd_index]
             dut["output"][show_cmd]["json"] = show_output
+
             logging.info(f"Adding cmd {show_cmd} to dut and data {show_output}")
         else:
             dut["output"][show_cmd]["json"] = ""
+
             logging.info(f"No json output for {show_cmd}")
 
         if show_cmd in show_cmds_txt:
             cmd_index = show_cmds_txt.index(show_cmd)
             show_output_txt = show_cmd_txt_list[cmd_index]
             dut["output"][show_cmd]["text"] = show_output_txt["output"]
+
             logging.warning(f"Adding text cmd {show_cmd} to dut and data {show_output_txt}")
         else:
             dut["output"][show_cmd]["text"] = ""
+
             logging.warning(f"No text output for {show_cmd}")
 
     logging.info(f"{name} updated with show output {dut}")
@@ -526,16 +555,17 @@ def return_show_cmd(show_cmd, dut, test_name, test_parameters):
 
     return:
       show_output (dict): json output of cli command
-      show_output (dict): plain-text output of cli command
+      show_output_text (dict): plain-text output of cli command
     """
-
     logging.info(
         f"Raw Input for return_show_cmd \nshow_cmd: {show_cmd}\ndut: "
         f"{dut} \ntest_name: {test_name} \ntest_parameters: "
         f"{test_parameters}"
     )
+
     conn = dut["connection"]
     name = dut["name"]
+
     logging.info(
         "Return model data and text output from show commands and "
         f"log text output for {show_cmd} with connnection {conn}"
@@ -544,16 +574,21 @@ def return_show_cmd(show_cmd, dut, test_name, test_parameters):
     show_output = []
     show_output_text = []
     raw_text = ""
+
     try:
         show_output = conn.run_commands(show_cmd, encoding="json")
     # pylint: disable-next=broad-exception-caught
     except Exception as err:
         logging.error(f"Missed on commmand {show_cmd}")
         logging.error(f"Error msg {err}")
+
         time.sleep(1)
         show_output_text = conn.run_commands(show_cmd, encoding="text")
+
         logging.error(f"new value of show_output_text  {show_output_text}")
+
         raw_text = show_output_text[0]["output"]
+
     logging.info(f"Raw text output of {show_cmd} on dut {name}: {show_output}")
 
     export_logs(test_name, name, raw_text, test_parameters)
@@ -572,8 +607,8 @@ def return_interfaces(hostname, test_parameters):
       interface_list (list): list of interesting interfaces based on
                              PS LLD spreadsheet
     """
-
     logging.info("Parse test_parameters for interface connections and return them to test")
+
     interface_list = []
     duts = test_parameters["duts"]
 
@@ -582,10 +617,12 @@ def return_interfaces(hostname, test_parameters):
 
         if dut_name == hostname:
             logging.info(f"Discovering interface parameters for: {hostname}")
+
             neighbors = dut["neighbors"]
 
             for neighbor in neighbors:
                 interface = {}
+
                 logging.info(
                     f"Adding interface parameters: {neighbor} " f"neighbor for: {dut_name}"
                 )
@@ -598,6 +635,7 @@ def return_interfaces(hostname, test_parameters):
                 interface_list.append(interface)
 
     logging.info(f"Returning interface list: {interface_list}")
+
     return interface_list
 
 
@@ -607,20 +645,20 @@ def export_logs(test_name, hostname, output, test_parameters):
     Args:
       LOG_FILE (str): path and name of log file
     """
-
     logging.info("Open log file for logging test show commands")
+
     show_log = test_parameters["parameters"]["show_log"]
 
     try:
         logging.info(f"Opening file {show_log} and append show output: {output}")
-        # pylint: disable-next=unspecified-encoding
-        with open(show_log, "a") as log_file:
+        with open(show_log, "a", encoding="utf-8") as log_file:
             log_file.write(f"\ntest_suite::{test_name}[{hostname}]:\n{output}")
     # pylint: disable-next=broad-exception-caught
     except BaseException as error:
         print(f">>>  ERROR OPENING LOG FILE: {error}")
         logging.error(f"ERROR OPENING LOG FILE: {error}")
         logging.error("EXITING TEST RUNNER")
+
         sys.exit(1)
 
 
@@ -630,24 +668,29 @@ def get_parameters(tests_parameters, test_suite, test_case=""):
     Args:
         tests_parameter
     """
-
     if not test_case:
         test_case = inspect.stack()[1][3]
+
         logging.info(f"Setting testcase name to {test_case}")
 
     logging.info("Identify test case and return parameters")
+
     test_suite = test_suite.split("/")[-1]
 
     logging.info(f"Return testcases for Test Suite: {test_suite}")
+
     suite_parameters = [
         param for param in tests_parameters["test_suites"] if param["name"] == test_suite
     ]
+
     logging.info(f"Suite_parameters: {suite_parameters}")
 
     logging.info(f"Return parameters for Test Case: {test_case}")
+
     case_parameters = [
         param for param in suite_parameters[0]["testcases"] if param["name"] == test_case
     ]
+
     logging.info(f"Case_parameters: {case_parameters[0]}")
 
     case_parameters[0]["test_suite"] = test_suite
@@ -663,6 +706,7 @@ def verify_show_cmd(show_cmd, dut):
     """
 
     dut_name = dut["name"]
+
     logging.info(
         f"Verify if show command |{show_cmd}| was successfully " f"executed on {dut_name} dut"
     )
@@ -671,6 +715,7 @@ def verify_show_cmd(show_cmd, dut):
         logging.info(f"Verified output for show command |{show_cmd}| on {dut_name}")
     else:
         logging.critical(f"Show command |{show_cmd}| not executed on {dut_name}")
+
         assert False
 
 
@@ -679,13 +724,12 @@ def verify_tacacs(dut):
 
     dut (dict): data structure of dut parameters
     """
-
     dut_name = dut["name"]
     show_cmd = "show tacacs"
-
     tacacs_bool = True
     tacacs = dut["output"][show_cmd]["json"]["tacacsServers"]
     tacacs_servers = len(tacacs)
+
     logging.info(f"Verify if tacacs server(s) are configured on {dut_name} dut")
 
     if tacacs_servers == 0:
@@ -701,16 +745,16 @@ def verify_veos(dut):
 
     dut (dict): data structure of dut parameters
     """
-
     dut_name = dut["name"]
     show_cmd = "show version"
-
     veos_bool = False
     veos = dut["output"][show_cmd]["json"]["modelName"]
+
     logging.info(f"Verify if {dut_name} DUT is a VEOS instance. Model is {veos}")
 
     if veos == "vEOS":
         veos_bool = True
+
         logging.info(f"{dut_name} is a VEOS instance so returning {veos_bool}")
         logging.info(f"{dut_name} is a VEOS instance so test NOT valid")
     else:
@@ -726,7 +770,6 @@ def generate_interface_list(dut_name, test_definition):
     Returns:
         interface_list (list): list of active DUT interfaces and attributes
     """
-
     dut_hostnames = [dut["name"] for dut in test_definition["duts"]]
     dut_index = dut_hostnames.index(dut_name)
     int_ptr = test_definition["duts"][dut_index]
@@ -742,18 +785,15 @@ def yaml_io(yaml_file, io_type, yaml_data=None):
         yaml_file (str): Name of YAML file
         io (str): Read or write to YAML file
     """
-
     while True:
         try:
             if io_type == "read":
-                # pylint: disable-next=unspecified-encoding
-                with open(yaml_file, "r") as yaml_in:
+                with open(yaml_file, "r", encoding="utf-8") as yaml_in:
                     fcntl.flock(yaml_in, fcntl.LOCK_EX | fcntl.LOCK_NB)
                     yaml_data = yaml.safe_load(yaml_in)
                     break
             else:
-                # pylint: disable-next=unspecified-encoding
-                with open(yaml_file, "w") as yaml_out:
+                with open(yaml_file, "w", encoding="utf-8") as yaml_out:
                     yaml.dump(yaml_data, yaml_out, default_flow_style=False)
                     fcntl.flock(yaml_out, fcntl.LOCK_UN)
                     break
@@ -770,16 +810,17 @@ def return_show_cmds(test_parameters):
     Args:
         test_parameters (dict): Input DUT test definitions
     """
-
     show_cmds = []
 
     logging.info(f"Discover the names of test suites from {test_parameters}")
+
     test_data = test_parameters["test_suites"]
     test_suites = [param["name"] for param in test_data]
 
     for test_suite in test_suites:
         test_index = test_suites.index(test_suite)
         test_cases = test_data[test_index]["testcases"]
+
         logging.info(f"Find show commands in test suite: {test_suite}")
 
         for test_case in test_cases:
@@ -789,6 +830,7 @@ def return_show_cmds(test_parameters):
 
                 if show_cmd not in show_cmds:
                     logging.info(f"Adding Show command {show_cmd}")
+
                     show_cmds.append(show_cmd)
             else:
                 test_show_cmds = test_case.get("show_cmds", [])
@@ -798,9 +840,11 @@ def return_show_cmds(test_parameters):
                     show_cmd for show_cmd in test_show_cmds if show_cmd not in show_cmds
                 ):
                     logging.info(f"Adding Show commands {show_cmd}")
+
                     show_cmds.append(show_cmd)
 
     logging.info(f"The following show commands are required for test cases: {show_cmds}")
+
     return show_cmds
 
 
@@ -810,11 +854,11 @@ def return_test_defs(test_parameters):
     Args:
         def_file (test_parameters): Name of definitions file
     """
-
     test_defs = {"test_suites": []}
     test_dirs = test_parameters["parameters"]["test_dirs"]
     report_dir = test_parameters["parameters"]["report_dir"]
     test_definitions_file = test_parameters["parameters"]["test_definitions"]
+
     for test_directory in test_dirs:
         tests_info = os.walk(test_directory)
         for dir_path, _, file_names in tests_info:
@@ -827,6 +871,7 @@ def return_test_defs(test_parameters):
                     test_defs["test_suites"] += test_def
 
     export_yaml(report_dir + "/" + test_definitions_file, test_defs)
+
     logging.info(f"Return the following test definitions data structure {test_defs}")
 
     return test_defs
@@ -838,23 +883,25 @@ def export_yaml(yaml_file, yaml_data):
     Args:
         yaml_file (str): Name of YAML file
     """
-
     logging.info(f"Opening {yaml_file} for write")
+
     try:
-        # pylint: disable-next=unspecified-encoding
-        with open(yaml_file, "w") as yaml_out:
+        with open(yaml_file, "w", encoding="utf-8") as yaml_out:
             try:
                 logging.info(f"Output the following yaml: {yaml_data}")
+
                 yaml.dump(yaml_data, yaml_out, default_flow_style=False)
             except yaml.YAMLError as err:
                 print(">>> ERROR IN YAML FILE")
                 logging.error(f"ERROR IN YAML FILE: {err}")
                 logging.error("EXITING TEST RUNNER")
+
                 sys.exit(1)
     except OSError as err:
         print(f">>> {yaml_file} YAML FILE MISSING")
         logging.error(f"ERROR YAML FILE: {yaml_file} NOT " + f"FOUND. {err}")
         logging.error("EXITING TEST RUNNER")
+
         sys.exit(1)
 
 
@@ -865,7 +912,6 @@ def export_text(text_file, text_data):
         text_file (str): Name of TEXT file
         text_data (dict): output of show command in python dictionary
     """
-
     logging.info(f"Opening {text_file} for write")
 
     # to create the sub-directory if it does not exist
@@ -880,6 +926,7 @@ def export_text(text_file, text_data):
         print(f">>> {text_file} TEXT FILE MISSING")
         logging.error(f"ERROR TEXT FILE: {text_file} NOT FOUND. {err}")
         logging.error("EXITING TEST RUNNER")
+
         sys.exit(1)
 
 
@@ -907,6 +954,7 @@ def subprocess_ping(definition_file, dut_name, loopback_ip, repeat_ping):
         stdout=subprocess.PIPE,
         universal_newlines=True,
     )
+
     return process
 
 
@@ -915,7 +963,6 @@ def generate_duts_file(dut, file, username, password):
     Util function to take in an individual dut and print
     its relevant data to a given file.
     """
-
     dut_dict = {}
     try:
         for data in dut:
@@ -948,12 +995,12 @@ def create_duts_file(topology_file, inventory_file):
     Returns:
         dict: duts data structure
     """
-
     dut_file = {}
     dut_properties = []
     server_properties = []
     topology_file = import_yaml(topology_file)
     inventory_file = import_yaml(inventory_file)
+
     try:
         if not topology_file.get("nodes", None):
             inventory_file, topology_file = topology_file, inventory_file
@@ -991,15 +1038,16 @@ def create_duts_file(topology_file, inventory_file):
                 continue
         if dut_properties or server_properties:
             dut_file.update({"duts": dut_properties, "servers": server_properties})
-            # pylint: disable-next=unspecified-encoding
-            with open(config.DUTS_FILE, "w") as yamlfile:
+            with open(config.DUTS_FILE, "w", encoding="utf-8") as yamlfile:
                 yaml.dump(dut_file, yamlfile, sort_keys=False)
+
                 return config.DUTS_FILE
     # pylint: disable-next=broad-exception-caught
     except Exception as excep:
         logging.error(f"Error occured while creating DUTs file: {str(excep)}")
         logging.error("EXITING TEST RUNNER")
         print(">>> ERROR While creating duts file")
+
         sys.exit(1)
 
 
@@ -1011,13 +1059,12 @@ class TestOps:
         """Initializes TestOps Object
 
         Args:
-            test_definition (str): YAML representation of NRFU tests
+            tests_definition (str): YAML representation of NRFU tests
+            test_suite: 
         """
-
         test_case = inspect.stack()[1][3]
         self.test_case = test_case
         self.test_parameters = self._get_parameters(tests_definitions, test_suite, self.test_case)
-
         self.expected_output = self.test_parameters["expected_output"]
         self.dut = dut
         self.dut_name = self.dut["name"]
@@ -1037,6 +1084,7 @@ class TestOps:
 
         self.show_cmd_txts = []
         self.show_cmd_txt = ""
+
         if len(self.show_cmds) > 0 and self.dut:
             self._verify_show_cmd(self.show_cmds, self.dut)
             if self.show_cmd:
@@ -1055,11 +1103,11 @@ class TestOps:
     def _verify_show_cmd(self, show_cmds, dut):
         """Verify if show command was successfully executed on dut
 
-        show_cmd (str): show command
+        show_cmds (str): show command
         dut (dict): data structure of dut parameters
         """
-
         dut_name = dut["name"]
+
         logging.info(
             f"Verify if show command |{show_cmds}| were successfully " f"executed on {dut_name} dut"
         )
@@ -1069,18 +1117,17 @@ class TestOps:
                 logging.info(f"Verified output for show command |{show_cmd}| on {dut_name}")
             else:
                 logging.critical(f"Show command |{show_cmd}| not executed on {dut_name}")
+
                 assert False
 
     def post_testcase(self):
         """Do post processing for test case"""
-
         self.test_parameters["comment"] = self.comment
         self.test_parameters["test_result"] = self.test_result
         self.test_parameters["output_msg"] = self.output_msg
         self.test_parameters["actual_output"] = self.actual_output
         self.test_parameters["expected_output"] = self.expected_output
         self.test_parameters["dut"] = self.dut_name
-
         self.test_parameters["show_cmd"] = self.show_cmd
         self.test_parameters["test_id"] = self.test_id
         self.test_parameters["show_cmd_txts"] = self.show_cmd_txts
@@ -1091,6 +1138,7 @@ class TestOps:
 
         self.test_parameters["test_id"] = self.test_id
         self.test_parameters["fail_or_skip_reason"] = ""
+
         if not self.test_parameters["test_result"]:
             self.test_parameters["fail_or_skip_reason"] = self.output_msg
 
@@ -1098,44 +1146,39 @@ class TestOps:
         self._write_text_results()
 
     def _write_results(self):
+        """Write the yaml output to a text file"""
         logging.info("Preparing to write results")
+
         test_suite = self.test_parameters["test_suite"]
         test_suite = test_suite.split("/")[-1]
         dut_name = self.test_parameters["dut"]
         test_case = self.test_parameters["name"]
         results_dir = self.results_dir
-
         yaml_file = f"{results_dir}/result-{test_case}-{dut_name}.yml"
+
         logging.info(f"Creating results file named {yaml_file}")
+
         yaml_data = self.test_parameters
         export_yaml(yaml_file, yaml_data)
 
     def _write_text_results(self):
         """Write the text output of show command to a text file"""
-
-        # creating file path
-
         report_dir = self.report_dir
         test_id = self.test_parameters["test_id"]
         test_case = self.test_parameters["name"]
         dut_name = self.test_parameters["dut"]
-
         text_file = (
             f"{report_dir}/TEST RESULTS/{test_id} {test_case}/"
             f"{test_id} {dut_name} Verification.txt"
         )
-
-        # formatting data
-
         text_data = {}
 
         for command, text in zip(self.show_cmds, self.show_cmd_txts):
             text_data[dut_name + "# " + command] = "\n\n" + text
 
-        # exporting data to file
-
         if text_data:
             logging.info(f"Preparing to write show command output to text file {text_file}")
+
             export_text(text_file, text_data)
         else:
             logging.info("No show command output to display")
@@ -1146,28 +1189,33 @@ class TestOps:
         Args:
             tests_parameter
         """
-
         if not test_case:
             test_case = inspect.stack()[1][3]
+
             logging.info(f"Setting testcase name to {test_case}")
 
         logging.info("Identify test case and return parameters")
+
         test_suite = test_suite.split("/")[-1]
 
         logging.info(f"Return testcases for Test Suite: {test_suite}")
+
         suite_parameters = [
             copy.deepcopy(param)
             for param in tests_parameters["test_suites"]
             if param["name"] == test_suite
         ]
+
         logging.info(f"Suite_parameters: {suite_parameters}")
 
         logging.info(f"Return parameters for Test Case: {test_case}")
+
         case_parameters = [
             copy.deepcopy(param)
             for param in suite_parameters[0]["testcases"]
             if param["name"] == test_case
         ]
+
         logging.info(f"Case_parameters: {case_parameters[0]}")
 
         case_parameters[0]["test_suite"] = test_suite
@@ -1180,16 +1228,18 @@ class TestOps:
         Args:
           show_cmd (str): show command
         """
-
         self.show_cmd = show_cmd
         # pylint: disable-next=attribute-defined-outside-init
         self.show_output = ""
         self.show_cmd_txt = ""
         result = True
         error = ""
+
         logging.info(f"Raw Input for return_show_cmd \nshow_cmd: {show_cmd}\n")
+
         conn = self.dut["connection"]
         name = self.dut["name"]
+
         logging.info(
             "Return model data and text output from show commands and "
             f"log text output for {show_cmd} with connnection {conn}"
@@ -1207,12 +1257,10 @@ class TestOps:
 
         return result, self.show_output, self.show_cmd_txt, error
 
-    # pylint: disable-next=unused-argument
-    def generate_report(self, dut_name, output):
+    def generate_report(self, dut_name):
         """Utility to generate report
         Args:
           dut_name: name of the device
-          output: actual output
         """
         self.output_msg = (
             f"\nOn switch |{dut_name}| The actual output is "
@@ -1224,16 +1272,20 @@ class TestOps:
         self.post_testcase()
 
     def verify_veos(self):
-        """Verify DUT is a VEOS instance"""
-
+        """Verify DUT is a VEOS instance
+        
+        Returns:
+            veos_bool: boolean indicating whether DUT is VEOS instance or not
+        """
         show_cmd = "show version"
-
         veos_bool = False
         veos = self.dut["output"][show_cmd]["json"]["modelName"]
+
         logging.info(f"Verify if {self.dut_name} DUT is a VEOS instance. Model is {veos}")
 
         if veos == "vEOS":
             veos_bool = True
+
             logging.info(f"{self.dut_name} is a VEOS instance so returning {veos_bool}")
         else:
             logging.info(f"{self.dut_name} is not a VEOS instance so returning {veos_bool}")
