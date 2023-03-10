@@ -209,8 +209,7 @@ def init_show_log(test_parameters):
     try:
         with open(log_file, "w", encoding="utf-8"):
             logging.info(f"Opened {log_file} for write")
-    # pylint: disable-next=broad-exception-caught
-    except BaseException as error:
+    except OSError as error:
         print(f">>>  ERROR OPENING LOG FILE: {error}")
         logging.error(f"ERROR OPENING LOG FILE: {error}")
         logging.error("EXITING TEST RUNNER")
@@ -350,8 +349,12 @@ def init_duts(show_cmds, test_parameters, test_duts):
     logging.info(f"Passing the following show commands to workers: {show_cmds}")
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
-        # pylint: disable-next=expression-not-assigned
-        {executor.submit(dut_worker, dut, show_cmds, test_duts): dut for dut in duts}
+        future_object = {
+            executor.submit(dut_worker, dut, show_cmds, test_duts): dut for dut in duts
+        }
+
+    if future_object:
+        logging.info("Future object generated successfully")
 
     logging.info(f"Return duts data structure: {duts}")
 
@@ -653,8 +656,7 @@ def export_logs(test_name, hostname, output, test_parameters):
         logging.info(f"Opening file {show_log} and append show output: {output}")
         with open(show_log, "a", encoding="utf-8") as log_file:
             log_file.write(f"\ntest_suite::{test_name}[{hostname}]:\n{output}")
-    # pylint: disable-next=broad-exception-caught
-    except BaseException as error:
+    except OSError as error:
         print(f">>>  ERROR OPENING LOG FILE: {error}")
         logging.error(f"ERROR OPENING LOG FILE: {error}")
         logging.error("EXITING TEST RUNNER")
@@ -941,8 +943,7 @@ def subprocess_ping(definition_file, dut_name, loopback_ip, repeat_ping):
     Returns:
         process: instance of the subprocess
     """
-    # pylint: disable-next=consider-using-with
-    process = subprocess.Popen(
+    return subprocess.Popen(
         [
             "python",
             "/".join(__file__.split("/")[:-1]) + "/test_ping.py",
@@ -954,8 +955,6 @@ def subprocess_ping(definition_file, dut_name, loopback_ip, repeat_ping):
         stdout=subprocess.PIPE,
         universal_newlines=True,
     )
-
-    return process
 
 
 def generate_duts_file(dut, file, username, password):
@@ -984,7 +983,6 @@ def generate_duts_file(dut, file, username, password):
         print(f"DUTs creation for {file} failed due to exception {err}")
 
 
-# pylint: disable-next=inconsistent-return-statements
 def create_duts_file(topology_file, inventory_file):
     """Automatically generate a DUTs file
 
@@ -1042,6 +1040,7 @@ def create_duts_file(topology_file, inventory_file):
                 yaml.dump(dut_file, yamlfile, sort_keys=False)
 
                 return config.DUTS_FILE
+
     # pylint: disable-next=broad-exception-caught
     except Exception as excep:
         logging.error(f"Error occured while creating DUTs file: {str(excep)}")
@@ -1049,6 +1048,8 @@ def create_duts_file(topology_file, inventory_file):
         print(">>> ERROR While creating duts file")
 
         sys.exit(1)
+
+    return None
 
 
 # pylint: disable-next=too-many-instance-attributes
@@ -1060,7 +1061,7 @@ class TestOps:
 
         Args:
             tests_definition (str): YAML representation of NRFU tests
-            test_suite: 
+            test_suite:
         """
         test_case = inspect.stack()[1][3]
         self.test_case = test_case
@@ -1071,6 +1072,7 @@ class TestOps:
         self.interface_list = self.dut["output"]["interface_list"]
         self.results_dir = self.dut["results_dir"]
         self.report_dir = self.dut["report_dir"]
+        self.show_output = ""
         self.show_cmds = []
         self.show_cmd = ""
         self.test_steps = []
@@ -1229,7 +1231,6 @@ class TestOps:
           show_cmd (str): show command
         """
         self.show_cmd = show_cmd
-        # pylint: disable-next=attribute-defined-outside-init
         self.show_output = ""
         self.show_cmd_txt = ""
         result = True
@@ -1257,11 +1258,15 @@ class TestOps:
 
         return result, self.show_output, self.show_cmd_txt, error
 
-    def generate_report(self, dut_name):
+
+    def generate_report(self, dut_name, output):
         """Utility to generate report
         Args:
           dut_name: name of the device
+          output: output of the command after ssh connection
         """
+        logging.info(f"Output on device {dut_name} after SSH connection is: {output}")
+        
         self.output_msg = (
             f"\nOn switch |{dut_name}| The actual output is "
             f"|{self.actual_output}%| and the expected output is "
@@ -1273,7 +1278,7 @@ class TestOps:
 
     def verify_veos(self):
         """Verify DUT is a VEOS instance
-        
+
         Returns:
             veos_bool: boolean indicating whether DUT is VEOS instance or not
         """
