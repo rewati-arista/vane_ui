@@ -6,7 +6,7 @@ on:
     # Do not run when merging into develop or master
     branches-ignore:
       - 'develop'
-      - 'master'
+      - 'main'
 
 jobs:
   validate:
