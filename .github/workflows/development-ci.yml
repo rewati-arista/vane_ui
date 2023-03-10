@@ -1,7 +1,12 @@
 name: development-ci
 run-name: ${{ github.actor }} CI development run
 
-on: [push]
+on:
+  push:
+    # Do not run when merging into develop or master
+    branches-ignore:
+      - 'develop'
+      - 'master'
 
 jobs:
   validate:
