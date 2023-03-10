@@ -27,7 +27,8 @@
 # CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#
+
+# pylint: disable=too-few-public-methods
 
 """ Uses Test Definition to run NRFU.  Results are recorded in JSON and the
     external interface transmits the results to Kafka Bus.
@@ -41,15 +42,17 @@
 
     - Excel report: Tabular representation of results. """
 
-import stat
-import os
-import sys
 import logging
+import os
+import stat
+import sys
+
+import configparser
+import jinja2
 import pytest
 import yaml
-import jinja2
+
 from jinja2 import Template, Undefined
-import configparser
 from pytest import ExitCode
 
 
@@ -63,6 +66,8 @@ logging.basicConfig(
 
 
 class NullUndefined(Undefined):
+    """NullUndefined Class"""
+
     def __getattr__(self, key):
         return ""
 
@@ -95,7 +100,7 @@ class TestsClient:
 
         logging.info(f"Opening {yaml_file} for read")
         try:
-            with open(yaml_file, "r") as input_yaml:
+            with open(yaml_file, "r", encoding="utf-8") as input_yaml:
                 try:
                     yaml_data = yaml.safe_load(input_yaml)
                     logging.info(f"Inputted the following yaml: {yaml_data}")
@@ -120,28 +125,29 @@ class TestsClient:
         """
 
         # Traverses given test directory
-        for root, dirs, files in os.walk(test_dir):
+        for root, _, files in os.walk(test_dir):
             # Iterates over files in a given dir and checks if they
             # are a template test definition file
 
             for file in files:
                 if file == template_definitions:
                     # Inputs template yaml data
-                    template_file = open(os.path.join(root, file), "r").read()
+                    with open(
+                        os.path.join(root, file), "r", encoding="utf-8"
+                    ).read() as template_file:
+                        # Uses Jinja2 templating to generate new test definition
+                        # file and replace the given templates
+                        test_template = Template(str(template_file), undefined=NullUndefined)
+                        master_template = Template(str(master_definitions), undefined=NullUndefined)
+                        replace_data = yaml.safe_load(master_template.render())
 
-                    # Uses Jinja2 templating to generate new test definition
-                    # file and replace the given templates
-                    test_template = Template(str(template_file), undefined=NullUndefined)
-                    master_template = Template(str(master_definitions), undefined=NullUndefined)
-                    replace_data = yaml.safe_load(master_template.render())
+                        new = test_template.render(replace_data)
+                        yaml_new = yaml.safe_load(new)
 
-                    new = test_template.render(replace_data)
-                    yaml_new = yaml.safe_load(new)
-
-                    new_file = os.path.join(root, test_definitions)
-                    with open(new_file, "w") as file:
-                        yaml.safe_dump(yaml_new, file, sort_keys=False)
-                    logging.info("Regenerared test definition files")
+                        new_file = os.path.join(root, test_definitions)
+                        with open(new_file, "w", encoding="utf-8") as file:
+                            yaml.safe_dump(yaml_new, file, sort_keys=False)
+                        logging.info("Regenerared test definition files")
 
     def generate_test_definitions(self):
         """
@@ -182,21 +188,17 @@ class TestsClient:
     def test_runner(self):
         """Run tests"""
 
+        joined_params = " ".join(self.test_parameters)
         logging.info(f"Starting Test with parameters: {self.test_parameters}")
-        print("Starting test with command: pytest %s\n" % (" ".join(self.test_parameters)))
+        print(f"Starting test with command: pytest {joined_params}\n")
 
         pytest_result = pytest.main(self.test_parameters)
 
         if pytest_result == ExitCode.NO_TESTS_COLLECTED:
-            print(
-                "No tests collected with pytest command: pytest %s"
-                % (" ".join(self.test_parameters))
-            )
+            print(f"No tests collected with pytest command: pytest {joined_params}")
             sys.exit(1)
         elif pytest_result == ExitCode.USAGE_ERROR:
-            print(
-                "Pytest usage error with parameters: pytest %s" % (" ".join(self.test_parameters))
-            )
+            print(f"Pytest usage error with parameters: pytest {joined_params}")
             sys.exit(1)
 
     def _init_parameters(self):
@@ -261,7 +263,7 @@ class TestsClient:
         else:
             self.test_parameters.append(f"-k {test_cases}")
 
-    def _set_html_report(self, report_dir):
+    def _set_html_report(self):
         """Set html_report for test run"""
 
         html_report = self.data_model["parameters"]["html_report"]
@@ -285,7 +287,7 @@ class TestsClient:
         excel_name = f"--excelreport={report_dir}/{excel_report}.xlsx"
         self._set_cmdline_report(excel_report, excel_name, "--excelreport")
 
-    def _set_json_report(self, report_dir):
+    def _set_json_report(self):
         """Set json_report for test run"""
 
         json_report = self.data_model["parameters"]["json_report"]
@@ -362,9 +364,9 @@ class TestsClient:
         self._set_stdout()
         self._set_setup_show()
         self._set_test_cases()
-        self._set_html_report(report_dir)
+        self._set_html_report()
         self._set_excel_report(report_dir)
-        self._set_json_report(report_dir)
+        self._set_json_report()
         self._set_processes()
         self._set_mark()
         self._set_junit(report_dir)
@@ -381,7 +383,7 @@ class TestsClient:
         try:
             logging.info(f"Open {eapi_template} Jinja2 template for reading")
 
-            with open(eapi_template, "r") as jinja_file:
+            with open(eapi_template, "r", encoding="utf-8") as jinja_file:
                 logging.info(f"Read and save contents of {eapi_template} Jinja2 template")
                 jinja_template = jinja_file.read()
                 logging.info(
@@ -414,7 +416,7 @@ class TestsClient:
         try:
             logging.info(f"Open {eapi_file} for writing")
 
-            with open(eapi_file, "w") as output_file:
+            with open(eapi_file, "w", encoding="utf-8") as output_file:
                 output_file.write(file_data)
         except (IOError, FileNotFoundError) as err_data:
             print(f">>> ERROR WRITING {eapi_file}: {err_data}")
