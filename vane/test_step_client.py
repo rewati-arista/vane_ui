@@ -61,10 +61,7 @@ class TestStepClient:
 
         logging.info("Convert yaml data-model to a python data structure")
         self.data_model = self._import_yaml(test_definition)
-        logging.info(
-            "Internal test data-model initialized with value: "
-            f"{self.data_model}"
-        )
+        logging.info("Internal test data-model initialized with value: {self.data_model}")
         self._test_dirs = self.data_model["parameters"]["test_dirs"]
 
     def write_test_steps(self):
@@ -89,9 +86,7 @@ class TestStepClient:
                     logging.error(f"Error in YAML file. {err_data}")
                     sys.exit(1)
         except OSError as err_data:
-            logging.error(
-                f"Defintions file: {yaml_file} not " + f"found. {err_data}"
-            )
+            logging.error(f"Defintions file: {yaml_file} not found. {err_data}")
             sys.exit(1)
 
     def walk_dir(self):
@@ -139,9 +134,7 @@ class TestStepClient:
         """
         for key in test_comments:
             # Creates file with original filename into json directory
-            with open(
-                f"{os.path.splitext(key)[0]}.json", "w+", encoding="utf_8"
-            ) as outfile:
+            with open(f"{os.path.splitext(key)[0]}.json", "w+", encoding="utf_8") as outfile:
                 json.dump({key: test_comments.get(key)}, outfile)
 
     def output_md(self, test_comments):
@@ -152,9 +145,7 @@ class TestStepClient:
         """
         for key in test_comments:
             steps = test_comments.get(key)
-            md_file = MdUtils(
-                file_name=f"{os.path.splitext(key)[0]}.md", title=Path(key).stem
-            )
+            md_file = MdUtils(file_name=f"{os.path.splitext(key)[0]}.md", title=Path(key).stem)
             md_file.new_line(f"Date generated: {steps[0]}")
             test_steps_list = []
             for step in steps:
