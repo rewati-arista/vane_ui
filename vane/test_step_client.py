@@ -61,7 +61,7 @@ class TestStepClient:
 
         logging.info("Convert yaml data-model to a python data structure")
         self.data_model = self._import_yaml(test_definition)
-        logging.info("Internal test data-model initialized with value: {self.data_model}")
+        logging.info(f"Internal test data-model initialized with value: {self.data_model}")
         self._test_dirs = self.data_model["parameters"]["test_dirs"]
 
     def write_test_steps(self):
