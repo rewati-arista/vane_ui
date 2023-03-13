@@ -137,7 +137,7 @@ def inspect_csv_data(test_data, csv_reader):
     """Inspect each row of CSV data and determine if its interesting
 
     Args:
-        test_data (list): List of interesting test data
+        test_data (list): Use CSV file to update list with interesting test data
         csv_reader (obj): CSV object to iterate through
     """
 
@@ -164,10 +164,9 @@ def inspect_csv_data(test_data, csv_reader):
             test_data_entry.append(row[header_columns["case_name"]])
             test_data.append(test_data_entry)
         # parse csv row for sub-section
-        elif (
-            not row[header_columns["tc_id"]]
-            and not row[header_columns["tc_type"]]
-        ) and row[header_columns["case_name"]] != "":
+        elif (not row[header_columns["tc_id"]] and not row[header_columns["tc_type"]]) and row[
+            header_columns["case_name"]
+        ] != "":
             test_data_entry.append("")
             test_data_entry.append(row[header_columns["case_name"]])
             test_data.append(test_data_entry)
@@ -320,21 +319,13 @@ def write_data_row(table, test_data):
                 # Test Case Identifier cell
                 if counter == 0:
                     test_data_entry = format_test_id(test_data_entry)
-                    run = (
-                        row_cells[counter]
-                        .paragraphs[0]
-                        .add_run(test_data_entry)
-                    )
+                    run = row_cells[counter].paragraphs[0].add_run(test_data_entry)
                 # Test Case Pass/Fail cell
                 elif counter == 4:
                     format_pass_fail(row_cells, counter, test_data_entry)
                 # Cells not needing special formatting
                 else:
-                    run = (
-                        row_cells[counter]
-                        .paragraphs[0]
-                        .add_run(test_data_entry)
-                    )
+                    run = row_cells[counter].paragraphs[0].add_run(test_data_entry)
 
                 run.font.name = "Arial"
                 run.font.size = Pt(9)
@@ -362,12 +353,12 @@ def shade_cell(cell_idx, table, count, shade):
         shade (str): hexadecimal color representation
     """
     cell = table.cell(count, cell_idx)
-    shading_blue = parse_xml(
+    color = parse_xml(
         # pylint: disable-next=consider-using-f-string
         r'<w:shd {} w:fill="{}"/>'.format(nsdecls("w"), shade)
     )
     # pylint: disable-next=protected-access
-    cell._tc.get_or_add_tcPr().append(shading_blue)
+    cell._tc.get_or_add_tcPr().append(color)
 
 
 def format_test_id(test_data_entry):
