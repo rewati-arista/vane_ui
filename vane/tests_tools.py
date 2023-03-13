@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright (c) 2019, Arista Networks EOS+
+# Copyright (c) 2023, Arista Networks EOS+
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -43,6 +43,7 @@ import inspect
 import subprocess
 import re
 import yaml
+
 from vane import config, device_interface
 
 
@@ -236,23 +237,10 @@ def setup_import_yaml(yaml_file):
             temp_yaml.close()
 
         # temp file is now used to load yaml
-        with open(temp_file, "r", encoding="utf-8") as temp_yaml:
-            try:
-                yaml_data = yaml.safe_load(temp_yaml)
+        yaml_data = yaml_read(temp_file)
+        os.remove(temp_file)
+        return yaml_data
 
-                logging.info(f"Inputted the following yaml: {yaml_data}")
-
-                temp_yaml.close()
-                os.remove(temp_file)
-                return yaml_data
-            except yaml.YAMLError as err:
-                print(">>> ERROR IN YAML FILE")
-                logging.error(f"ERROR IN YAML FILE: {err}")
-                logging.error("EXITING TEST RUNNER")
-
-                temp_yaml.close()
-                os.remove(temp_file)
-                sys.exit(1)
     except OSError as err:
         print(f">>> {yaml_file} YAML FILE MISSING")
         logging.error(f"ERROR YAML FILE: {yaml_file} NOT FOUND. {err}")
@@ -272,21 +260,35 @@ def import_yaml(yaml_file):
     logging.info(f"Opening {yaml_file} for read")
 
     try:
-        with open(yaml_file, "r", encoding="utf-8") as input_yaml:
-            try:
-                yaml_data = yaml.safe_load(input_yaml)
-                logging.info(f"Inputted the following yaml: {yaml_data}")
-                return yaml_data
-            except yaml.YAMLError as err:
-                print(">>> ERROR IN YAML FILE")
-                logging.error(f"ERROR IN YAML FILE: {err}")
-                logging.error("EXITING TEST RUNNER")
-                sys.exit(1)
+        yaml_data = yaml_read(yaml_file)
+        return yaml_data
     except OSError as err:
         print(f">>> {yaml_file} YAML FILE MISSING")
         logging.error(f"ERROR YAML FILE: {yaml_file} NOT " + f"FOUND. {err}")
         logging.error("EXITING TEST RUNNER")
         sys.exit(1)
+
+
+def yaml_read(yaml_file):
+    """Return a yaml data read from the yaml file
+
+    Args:
+        yaml_file (file): Input yaml file to be read
+
+    Returns:
+        yaml_data (dict):Yaml data read from the file
+    """
+    with open(yaml_file, "r", encoding="utf-8") as input_yaml:
+        try:
+            yaml_data = yaml.safe_load(input_yaml)
+            logging.info(f"Inputted the following yaml: {yaml_data}")
+            input_yaml.close()
+            return yaml_data
+        except yaml.YAMLError as err:
+            print(">>> ERROR IN YAML FILE")
+            logging.error(f"ERROR IN YAML FILE: {err}")
+            logging.error("EXITING TEST RUNNER")
+            sys.exit(1)
 
 
 def return_dut_list(test_parameters):
