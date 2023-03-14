@@ -143,6 +143,8 @@ def dut_worker(dut, show_cmds):
     Args:
       dut(dict): structured data of a dut output data, hostname, and
       connection
+      show_cmds: list of show_cmds to be run on dut. Output is added
+      to dut dict itself
     """
 
     eos = {
