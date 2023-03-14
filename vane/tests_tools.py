@@ -178,40 +178,6 @@ def parametrize_inputs(test_fname, parameter_name, test_defs):
     return input_parameters
 
 
-def init_show_log(test_parameters):
-    """Open log file for logging test show commands
-
-    Args:
-        test_parameters (dict): Abstraction of testing parameters
-    """
-    logging.info("Open log file for logging test show commands")
-
-    if "parameters" in test_parameters:
-        parameters_ptr = test_parameters["parameters"]
-        if "show_log" in parameters_ptr:
-            log_file = parameters_ptr["show_log"]
-        else:
-            print(">>>  ERROR IN DEFINITIONS FILE")
-            logging.error("NO SHOW_LOG CONFIGURED IN TEST DEFs")
-            logging.error("EXITING TEST RUNNER")
-            sys.exit(1)
-    else:
-        logging.error("NO PARAMETERS CONFIGURED IN TEST DEFs")
-        logging.error("EXITING TEST RUNNER")
-        sys.exit(1)
-
-    logging.info(f"Opening {log_file} for write")
-
-    try:
-        with open(log_file, "w", encoding="utf-8"):
-            logging.info(f"Opened {log_file} for write")
-    except OSError as error:
-        print(f">>>  ERROR OPENING LOG FILE: {error}")
-        logging.error(f"ERROR OPENING LOG FILE: {error}")
-        logging.error("EXITING TEST RUNNER")
-        sys.exit(1)
-
-
 def setup_import_yaml(yaml_file):
     """Import YAML file as python data structure
     Also remove lines starting from #
@@ -658,7 +624,7 @@ def export_logs(test_name, hostname, output, test_parameters):
     try:
         logging.info(f"Opening file {show_log} and append show output: {output}")
 
-        with open(show_log, "a", encoding="utf-8") as log_file:
+        with open(show_log, "w", encoding="utf-8") as log_file:
             log_file.write(f"\ntest_suite::{test_name}[{hostname}]:\n{output}")
     except OSError as error:
         print(f">>>  ERROR OPENING LOG FILE: {error}")

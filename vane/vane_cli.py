@@ -126,7 +126,6 @@ def setup_vane():
     vane.config.test_parameters = tests_tools.import_yaml(
         vane.config.DEFINITIONS_FILE
     )
-    tests_tools.init_show_log(vane.config.test_parameters)
 
     logging.info("Discovering show commands from definitions")
     vane.config.test_defs = tests_tools.return_test_defs(
