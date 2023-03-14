@@ -23,5 +23,4 @@ pytest-excel
 pytest-html
 pytest-json
 #pytest-spec
-pytest-sugar
 pytest-xdist
