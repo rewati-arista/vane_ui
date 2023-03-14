@@ -234,12 +234,13 @@ class TestsClient:
         self._set_cmdline_no_input(stdout, "-s")
 
     def _set_setup_show(self):
-        """Set stdout for test run"""
+        """Set setup-show for test run"""
 
         setup_show = self.data_model["parameters"]["setup_show"]
         self._set_cmdline_no_input(setup_show, "--setup-show")
 
     def _set_cmdline_no_input(self, parameter, ext):
+        """Set parameters for test run"""
         if parameter and ext not in self.test_parameters:
             logging.info(f"Enable pytest output {parameter}")
             self.test_parameters.append(ext)
@@ -295,6 +296,7 @@ class TestsClient:
         self._set_cmdline_report(json_report, json_name, "--json")
 
     def _set_cmdline_report(self, parameter, report, ext):
+        """Set report name for test run"""
         list_out = [x for x in self.test_parameters if ext in x]
 
         if parameter and report not in self.test_parameters:
@@ -308,10 +310,12 @@ class TestsClient:
             logging.warning(f"{ext} report will NOT be created")
 
     def _set_processes(self):
+        """Set processes for test run"""
         processes = self.data_model["parameters"]["processes"]
         self._set_cmdline_input(processes, "-n")
 
     def _get_markers(self):
+        """Get markers for test run"""
         config = configparser.ConfigParser()
         config.read(self.get_pytest_file)
         markers = config.get("pytest", "markers")
@@ -319,6 +323,7 @@ class TestsClient:
         return markers
 
     def _set_mark(self):
+        """Set mark for test run"""
         mark = self.data_model["parameters"].get("mark")
         if mark and mark not in self._get_markers():
             print(f"Marker {mark} is not supported. Update marker parameter in definition file")
@@ -326,13 +331,16 @@ class TestsClient:
         self._set_cmdline_input(mark, "-m")
 
     def _set_junit(self, report_dir):
+        """Set junit-xml for test run"""
         self.test_parameters.append(f"--junit-xml={report_dir}/report.xml")
 
     def _set_test_dirs(self, test_dirs):
+        """Append test dirs for test run"""
         for test_dir in test_dirs:
             self.test_parameters.append(test_dir)
 
     def _set_cmdline_input(self, parameter, ext):
+        """Set command line params for test run"""
         list_out = [x for x in self.test_parameters if ext in x]
 
         if parameter and len(list_out) == 0:
