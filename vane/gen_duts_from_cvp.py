@@ -41,6 +41,7 @@ Run: python3 gen_duts_from_cvp.py
 import argparse
 import sys
 import yaml
+import urllib3
 import pyeapi
 from cvprac.cvp_client import CvpClient
 from cvprac.cvp_client_errors import (
@@ -49,7 +50,6 @@ from cvprac.cvp_client_errors import (
     CvpRequestError,
     CvpSessionLogOutError,
 )
-import urllib3
 from requests.exceptions import HTTPError, ReadTimeout, Timeout, TooManyRedirects
 
 
