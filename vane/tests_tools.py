@@ -800,35 +800,6 @@ def generate_interface_list(dut_name, test_definition):
     return interface_list
 
 
-def yaml_io(yaml_file, io_type, yaml_data=None):
-    """Write test results to YAML file for post-processing
-
-    Args:
-        yaml_file (str): Name of YAML file
-        io (str): Read or write to YAML file
-
-    Returns:
-        yaml_data (obj): Python yaml object
-    """
-    while True:
-        try:
-            if io_type == "read":
-                with open(yaml_file, "r", encoding="utf-8") as yaml_in:
-                    fcntl.flock(yaml_in, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                    yaml_data = yaml.safe_load(yaml_in)
-                    break
-            else:
-                with open(yaml_file, "w", encoding="utf-8") as yaml_out:
-                    yaml.dump(yaml_data, yaml_out, default_flow_style=False)
-                    fcntl.flock(yaml_out, fcntl.LOCK_UN)
-                    break
-        # pylint: disable-next=broad-exception-caught
-        except Exception:
-            time.sleep(0.05)
-
-    return yaml_data
-
-
 def return_show_cmds(test_parameters):
     """Return show commands from the test_definitions
 
