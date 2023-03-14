@@ -29,6 +29,10 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
+# Ignore redefined-outer-name since the dut/duts methods are defined as fixtures
+# and are passed as parameters to other methods in this module
+# pylint: disable=redefined-outer-name
+
 """
 Fixture setup and teardown functions
 """
@@ -98,12 +102,12 @@ def tests_definitions():
     yield test_defs
 
 
-def setup_via_name(dutts, setup_config, checkpoint):
+def setup_via_name(duts, setup_config, checkpoint):
     """Creates checkpoint on duts and then runs setup for
     duts identified using the device name"""
 
     for dev_name in setup_config:
-        dutt = dutts.get(dev_name, None)
+        dutt = duts.get(dev_name, None)
 
         if dutt is None:
             # add logging
@@ -123,12 +127,12 @@ def setup_via_name(dutts, setup_config, checkpoint):
         dutt["connection"].config(config)
 
 
-def setup_via_role(dutts, setup_config, checkpoint):
+def setup_via_role(duts, setup_config, checkpoint):
     """Creates checkpoint on duts and then runs setup for
     duts identified using the device role"""
 
     for role in setup_config:
-        for _, dutt in dutts.items():
+        for _, dutt in duts.items():
             if dutt["role"] != role:
                 # add logging
                 continue
@@ -144,7 +148,7 @@ def setup_via_role(dutts, setup_config, checkpoint):
             dutt["connection"].config(config)
 
 
-def perform_setup(dutts, test, setup_config):
+def perform_setup(duts, test, setup_config):
     """Creates checkpoints and then runs setup on duts"""
 
     date_obj = datetime.datetime.now()
@@ -154,30 +158,30 @@ def perform_setup(dutts, test, setup_config):
     dev_ids = setup_config.get("key", "name")
 
     if dev_ids == "name":
-        setup_via_name(dutts=dutts, setup_config=setup_config, checkpoint=checkpoint)
+        setup_via_name(duts=duts, setup_config=setup_config, checkpoint=checkpoint)
 
     elif dev_ids == "role":
-        setup_via_role(dutts=dutts, setup_config=setup_config, checkpoint=checkpoint)
+        setup_via_role(duts=duts, setup_config=setup_config, checkpoint=checkpoint)
 
     return checkpoint
 
 
-def teardown_via_name(dutts, setup_config, checkpoint_restore_cmd, delete_checkpoint_cmd):
+def teardown_via_name(duts, setup_config, checkpoint_restore_cmd, delete_checkpoint_cmd):
     """Restores the checkpoints on duts identified by their name"""
 
     for dev_name in setup_config:
-        dutt = dutts.get(dev_name, None)
+        dutt = duts.get(dev_name, None)
         if dutt is None:
             continue
         restore_config = [checkpoint_restore_cmd, delete_checkpoint_cmd]
         dutt["connection"].config(restore_config)
 
 
-def teardown_via_role(dutts, setup_config, checkpoint_restore_cmd, delete_checkpoint_cmd):
+def teardown_via_role(duts, setup_config, checkpoint_restore_cmd, delete_checkpoint_cmd):
     """Restores the checkpoints on duts identified by their role"""
 
     for role in setup_config:
-        for _, dutt in dutts.items():
+        for _, dutt in duts.items():
             if dutt["role"] != role:
                 # add logging
                 continue
@@ -185,7 +189,7 @@ def teardown_via_role(dutts, setup_config, checkpoint_restore_cmd, delete_checkp
             dutt["connection"].config(restore_config)
 
 
-def perform_teardown(dutts, checkpoint, setup_config):
+def perform_teardown(duts, checkpoint, setup_config):
     """Restore and delete checkpoint"""
     if checkpoint == "":
         return
@@ -196,7 +200,7 @@ def perform_teardown(dutts, checkpoint, setup_config):
 
     if dev_ids == "name":
         teardown_via_name(
-            dutts=dutts,
+            duts=duts,
             setup_config=setup_config,
             checkpoint_restore_cmd=checkpoint_restore_cmd,
             delete_checkpoint_cmd=delete_checkpoint_cmd,
@@ -204,7 +208,7 @@ def perform_teardown(dutts, checkpoint, setup_config):
 
     elif dev_ids == "role":
         teardown_via_role(
-            dutts=dutts,
+            duts=duts,
             setup_config=setup_config,
             checkpoint_restore_cmd=checkpoint_restore_cmd,
             delete_checkpoint_cmd=delete_checkpoint_cmd,
@@ -212,7 +216,7 @@ def perform_teardown(dutts, checkpoint, setup_config):
 
 
 @pytest.fixture(autouse=True, scope="class")
-def setup_testsuite(request, dutts):
+def setup_testsuite(request, duts):
     """Setup the duts using the test suite(class) setup file"""
 
     testsuite = get_current_fixture_testclass(request)
@@ -226,13 +230,13 @@ def setup_testsuite(request, dutts):
                 setup_config = tests_tools.setup_import_yaml(
                     f"{suite['dir_path']}/{setup_config_file}"
                 )
-                checkpoint = perform_setup(dutts, testsuite, setup_config)
+                checkpoint = perform_setup(duts, testsuite, setup_config)
     yield
-    perform_teardown(dutts, checkpoint, setup_config)
+    perform_teardown(duts, checkpoint, setup_config)
 
 
 @pytest.fixture(autouse=True, scope="function")
-def setup_testcase(request, dutts):
+def setup_testcase(request, duts):
     """Setup the duts using the test case(function) setup file"""
 
     testname = get_current_fixture_testname(request)
@@ -248,7 +252,7 @@ def setup_testcase(request, dutts):
                     setup_config = tests_tools.setup_import_yaml(
                         f"{suite['dir_path']}/{setup_config_file}"
                     )
-                    checkpoint = perform_setup(dutts, testname, setup_config)
+                    checkpoint = perform_setup(duts, testname, setup_config)
 
     yield
-    perform_teardown(dutts, checkpoint, setup_config)
+    perform_teardown(duts, checkpoint, setup_config)
