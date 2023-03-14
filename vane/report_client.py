@@ -974,9 +974,8 @@ class ReportClient:
         """Write a generic string to Word doc
 
         Args:
-            dut (dict): Data structure with DUT specific data
             para (obj): Current Word paragraph object
-            report_field (string): Name of report field in dut to write
+            report_text (string): Name of report field in dut to write
         """
         para.add_run(report_text)
 
