@@ -52,6 +52,8 @@ logging.basicConfig(
     filemode="w",
     format=FORMAT,
 )
+
+
 # pylint: disable=too-few-public-methods
 class ReportClient:
     """Creates an instance of the Report Client."""
