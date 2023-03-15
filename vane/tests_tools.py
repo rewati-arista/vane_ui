@@ -1139,6 +1139,35 @@ class TestOps:
     def _write_text_results(self):
         """Write the text output of show command to a text file"""
 
+        # Run show clock and show version commands and append their outputs
+
+        clock_cmd = "show clock"
+        version_cmd = "show version"
+
+        clock_cmd_output = self.dut["connection"].enable(clock_cmd)[0]["result"]
+        version_cmd_output = self.dut["connection"].enable(version_cmd)[0]["result"]
+
+        self.show_cmds.insert(0, clock_cmd)
+        self.show_cmds.insert(1, version_cmd)
+
+        # Format outputs as needed before insertion
+
+        clock_cmd_formatted_output = ""
+        version_cmd_formatted_output = ""
+
+        for key, value in clock_cmd_output.items():
+            if key == "clockSource":
+                clock_cmd_formatted_output += key + ': ' + list(value.keys())[0] + ': ' + str(list(value.values())[0]) + '\n'
+            if key == "timezone":
+                clock_cmd_formatted_output += key + ': ' + value + '\n'
+
+        for key, value in version_cmd_output.items():
+            version_cmd_formatted_output += key + ': ' + str(value) + '\n'
+
+        self.show_cmd_txts.insert(0, clock_cmd_formatted_output)
+        self.show_cmd_txts.insert(1, version_cmd_formatted_output)
+
+
         # creating file path
 
         report_dir = self.report_dir
