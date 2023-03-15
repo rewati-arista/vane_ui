@@ -463,7 +463,7 @@ class ReportClient:
     def _write_tests_case_report(self):
         """Write summary test case report"""
 
-        self._document.add_heading(f"{self._major_section}. " "Test Case Results Summary", 1)
+        self._document.add_heading(f"{self._major_section}. Test Case Results Summary", 1)
         self._major_section += 1
 
         report_styles = REPORT_TEMPLATES.keys()
@@ -1124,7 +1124,7 @@ class ReportClient:
             suite_results (list): List of compiled test suite data
         """
 
-        logging.info("The following test suites have been collected {self._results_datamodel}")
+        logging.info(f"The following test suites have been collected {self._results_datamodel}")
 
         if not self._results_datamodel:
             logging.info("Skipping the compiled test suite result")
