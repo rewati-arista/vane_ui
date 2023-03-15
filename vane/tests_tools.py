@@ -68,7 +68,8 @@ def filter_duts(duts, criteria="", dut_filter=""):
         dut_filter (str, optional): Filter for DUTs. Defaults to "".
 
     Returns:
-        subset_duts (list(dict)), dut_names (list(str)): Filtered subset of global dictionary of duts and dut names
+        subset_duts (list(dict)), dut_names (list(str)): Filtered subset of
+        global dictionary of duts and dut names
     """
     logging.info(f"Filter: {dut_filter} by criteria: {criteria}")
 
