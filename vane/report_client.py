@@ -52,14 +52,7 @@ logging.basicConfig(
     filemode="w",
     format=FORMAT,
 )
-
-TABLE_GRID = "Table Grid"
-TOTAL_TESTS = "Total Tests"
-TOTAL_PASSED = "Total Passed"
-TOTAL_FAILED = "Total Failed"
-TOTAL_SKIPPED = "Total Skipped"
-
-
+# pylint: disable=too-few-public-methods
 class ReportClient:
     """Creates an instance of the Report Client."""
 
