@@ -1150,13 +1150,15 @@ class TestOps:
             f"{report_dir}/TEST RESULTS/{test_id} {test_case}/"
             f"{test_id} {dut_name} Verification.txt"
         )
-    
+
         #formatting data
 
         text_data = dict()
 
+        index = 1
         for (command, text) in zip(self.show_cmds, self.show_cmd_txts):
-            text_data[dut_name + "# " + command] = "\n\n" + text
+            text_data[str(index) + ". " + dut_name + "# " + command] = "\n\n" + text
+            index += 1
 
         #exporting data to file
 
@@ -1288,3 +1290,27 @@ class TestOps:
                 self.test_steps.append(match.group(1))
 
         logging.info(f"These are test steps {self.test_steps}")
+
+    def show_cmd_wrapper(self, show_cmds):
+        """Runs show clock and show commands and appends the 
+        commands and their respective output to the self.show_cmds and 
+        self.show_cmd_txts list respectively"""
+
+        conn = self.dut["connection"]
+        clock_and_show_cmds = ["show clock"]
+        clock_and_show_cmds.extend(show_cmds)
+
+        # execute the commands
+
+        cmd_outputs, cmds = send_cmds(clock_and_show_cmds, conn, "text")
+
+        #append the commands and the text outputs to respective variables
+
+        self.show_cmds.extend(cmds)
+        for cmd_output in cmd_outputs:
+            self.show_cmd_txts.append(cmd_output["output"])
+
+
+
+
+
