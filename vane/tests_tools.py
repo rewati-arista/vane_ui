@@ -35,7 +35,6 @@
 import copy
 import concurrent.futures
 import time
-import fcntl
 import sys
 import logging
 import os
