@@ -68,7 +68,7 @@ def filter_duts(duts, criteria="", dut_filter=""):
         dut_filter (str, optional): Filter for DUTs. Defaults to "".
 
     Returns:
-        subset_duts, dut_names (dict): Filtered subset of global dictionary of duts and dut names
+        subset_duts (list(dict)), dut_names (list(str)): Filtered subset of global dictionary of duts and dut names
     """
     logging.info(f"Filter: {dut_filter} by criteria: {criteria}")
 
@@ -128,7 +128,7 @@ def parametrize_duts(test_fname, test_defs, dut_objs):
 
             duts, ids = filter_duts(dut_objs, criteria, dut_filter)
 
-            logging.info("create dut parameters.  \nDuts: {duts} \nIds: {ids}")
+            logging.info(f"create dut parameters.  \nDuts: {duts} \nIds: {ids}")
 
             dut_parameters[testname] = {}
             dut_parameters[testname]["duts"] = duts
@@ -199,7 +199,6 @@ def setup_import_yaml(yaml_file):
                 for line in input_yaml.readlines():
                     if not line.strip().startswith("#"):
                         temp_yaml.write(line)
-            temp_yaml.close()
 
         # temp file is now used to load yaml
         yaml_data = yaml_read(temp_file)
@@ -247,7 +246,6 @@ def yaml_read(yaml_file):
         try:
             yaml_data = yaml.safe_load(input_yaml)
             logging.info(f"Inputted the following yaml: {yaml_data}")
-            input_yaml.close()
             return yaml_data
         except yaml.YAMLError as err:
             print(">>> ERROR IN YAML FILE")
@@ -591,9 +589,7 @@ def return_interfaces(hostname, test_parameters):
             for neighbor in neighbors:
                 interface = {}
 
-                logging.info(
-                    f"Adding interface parameters: {neighbor} " f"neighbor for: {dut_name}"
-                )
+                logging.info(f"Adding interface parameters: {neighbor} neighbor for: {dut_name}")
 
                 interface["hostname"] = dut_name
                 interface["interface_name"] = neighbor["port"]
@@ -682,9 +678,7 @@ def verify_show_cmd(show_cmd, dut):
 
     dut_name = dut["name"]
 
-    logging.info(
-        f"Verify if show command |{show_cmd}| was successfully " f"executed on {dut_name} dut"
-    )
+    logging.info(f"Verify if show command |{show_cmd}| was successfully executed on {dut_name} dut")
 
     if show_cmd in dut["output"]:
         logging.info(f"Verified output for show command |{show_cmd}| on {dut_name}")
@@ -1080,7 +1074,7 @@ class TestOps:
         dut_name = dut["name"]
 
         logging.info(
-            f"Verify if show command |{show_cmds}| were successfully " f"executed on {dut_name} dut"
+            f"Verify if show command |{show_cmds}| were successfully executed on {dut_name} dut"
         )
 
         for show_cmd in show_cmds:
@@ -1223,7 +1217,7 @@ class TestOps:
 
         logging.info(
             "Return model data and text output from show commands and "
-            f"log text output for {show_cmd} with connnection {conn}"
+            f"log text output for {show_cmd} with connection {conn}"
         )
 
         try:
