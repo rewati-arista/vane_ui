@@ -46,6 +46,7 @@ import logging
 import os
 import stat
 import sys
+import shutil
 
 import configparser
 import jinja2
@@ -183,6 +184,7 @@ class TestsClient:
         logging.info("Starting test setup")
         self._render_eapi_cfg()
         self._remove_result_files()
+        self._remove_test_results_dir()
         self._set_test_parameters()
 
     def test_runner(self):
@@ -454,3 +456,16 @@ class TestsClient:
                 os.remove(result_file)
             else:
                 logging.warning(f"Not removing file: {name}")
+
+    def _remove_test_results_dir(self):
+        """Removing the subdirectories and the files within them from TEST RESULTS dir"""
+
+        test_results_dir = "reports/TEST RESULTS"
+
+        if not os.path.exists(test_results_dir):
+            os.makedirs(test_results_dir)
+
+        # Deleting an non-empty folder
+        shutil.rmtree(test_results_dir, ignore_errors=True)
+        logging.info(f"Deleted {test_results_dir} directory successfully")
+
