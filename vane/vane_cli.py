@@ -43,7 +43,9 @@ from vane import tests_client
 from vane import report_client
 from vane import tests_tools
 from vane import test_step_client
+from datetime import datetime
 import vane.config
+import shutil
 
 FORMAT = "[%(asctime)s %(filename)s->%(funcName)s():%(lineno)s]%(levelname)s: %(message)s"
 
@@ -226,6 +228,18 @@ def create_duts_from_topo(topology_file):
             file.write("duts: \n")
             for node in topology["nodes"]:
                 tests_tools.generate_duts_file(node, file, username, password)
+    
+
+def download_test_results():
+
+    logging.info("Downloading a zip file of the TEST RESULTS folder")
+
+    now = datetime.now()
+    dt_string = now.strftime("%d-%m-%Y %H:%M:%S")
+
+    source = "reports/TEST RESULTS"
+    destination = "ZIP:TEST RESULT/" + dt_string
+    shutil.make_archive(destination, 'zip', source)
 
 
 def main():
@@ -258,6 +272,7 @@ def main():
 
         run_tests(vane.config.DEFINITIONS_FILE, vane.config.DUTS_FILE)
         write_results(vane.config.DEFINITIONS_FILE)
+        download_test_results()
 
         logging.info("\n\n!VANE has completed without errors!\n\n")
 
