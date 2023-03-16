@@ -777,14 +777,19 @@ def yaml_io(yaml_file, io_type, yaml_data=None):
     return yaml_data
 
 
-def return_show_cmds(test_parameters):
+def return_show_cmds(test_parameters, show_clock_flag):
     """Return show commands from the test_defintions
 
     Args:
         test_parameters (dict): Input DUT test definitions
+        show_clock_flag (bool): Flag indicating if show clock and show version
+        need to be appended to show commands
     """
 
-    show_cmds = ["show clock", "show version"]
+    show_cmds = []
+
+    if show_clock_flag:
+        show_cmds = ["show version", "show clock"]
 
     logging.info(f"Discover the names of test suites from {test_parameters}")
     test_data = test_parameters["test_suites"]
@@ -1045,7 +1050,14 @@ class TestOps:
         self.interface_list = self.dut["output"]["interface_list"]
         self.results_dir = self.dut["results_dir"]
         self.report_dir = self.dut["report_dir"]
-        self.show_cmds = ["show clock", "show version"]
+
+        parameters = import_yaml(config.DEFINITIONS_FILE)
+        show_clock_flag = parameters["parameters"]["show_clock"]
+
+        self.show_cmds = []
+        if show_clock_flag:
+            self.show_cmds = ["show version", "show clock"]
+
         self.show_cmd = ""
         self.test_steps = []
 

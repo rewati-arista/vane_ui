@@ -118,7 +118,8 @@ def setup_vane():
     logging.info("Discovering show commands from definitions")
 
     vane.config.test_defs = tests_tools.return_test_defs(vane.config.test_parameters)
-    show_cmds = tests_tools.return_show_cmds(vane.config.test_defs)
+    show_clock_flag = vane.config.test_parameters["parameters"]["show_clock"]
+    show_cmds = tests_tools.return_show_cmds(vane.config.test_defs, show_clock_flag)
     vane.config.dut_objs = tests_tools.init_duts(
         show_cmds, vane.config.test_parameters, vane.config.test_duts
     )
@@ -160,7 +161,7 @@ def write_results(definitions_file):
 
 def show_markers():
     """Returns the list of supported markers.
-    
+
     Returns:
         marker_list (list): supported markers list.
     """
