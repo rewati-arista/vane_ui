@@ -97,6 +97,16 @@ def parse_cli():
     )
 
     parser.add_argument(
+        "--generate-test-steps",
+        help=(
+            "Generate test steps for all the tests in"
+            " the test directory mentioned in the definitions file"
+        ),
+        nargs=1,
+        metavar=("test_dir"),
+    )
+
+    parser.add_argument(
         "--markers",
         help=("List of supported technology tests. Equivalent to pytest --markers"),
         action="store_true",
@@ -153,14 +163,19 @@ def write_results(definitions_file):
     vane_report_client = report_client.ReportClient(definitions_file)
     vane_report_client.write_result_doc()
 
-    if vane.config.test_parameters["parameters"]["report_test_steps"]:
-        vane_test_step_client = test_step_client.TestStepClient(vane.config.DEFINITIONS_FILE)
-        vane_test_step_client.write_test_steps()
+
+def write_test_steps(test_dir):
+    """Writes the test steps for the given test directory tests
+
+    Args: test_dir (str): Path and name of test directory"""
+
+    vane_test_step_client = test_step_client.TestStepClient(test_dir)
+    vane_test_step_client.write_test_steps()
 
 
 def show_markers():
     """Returns the list of supported markers.
-    
+
     Returns:
         marker_list (list): supported markers list.
     """
@@ -236,6 +251,10 @@ def main():
 
     if args.markers:
         print(f"{show_markers()}")
+
+    elif args.generate_test_steps:
+        write_test_steps(args.generate_test_steps)
+
     else:
         if args.definitions_file:
             logging.warning(f"Changing Definitions file name to {args.definitions_file}")
