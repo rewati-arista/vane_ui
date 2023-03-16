@@ -1291,9 +1291,9 @@ class TestOps:
 
         logging.info(f"These are test steps {self.test_steps}")
 
-    def show_cmd_wrapper(self, show_cmds):
-        """Runs show clock and show commands and appends the 
-        commands and their respective output to the self.show_cmds and 
+    def run_show_cmd(self, show_cmds):
+        """Runs show clock and show commands and appends the
+        commands and their respective output to the self.show_cmds and
         self.show_cmd_txts list respectively"""
 
         conn = self.dut["connection"]
@@ -1304,13 +1304,8 @@ class TestOps:
 
         cmd_outputs, cmds = send_cmds(clock_and_show_cmds, conn, "text")
 
-        #append the commands and the text outputs to respective variables
+        # append the commands and the text outputs to respective variables
 
         self.show_cmds.extend(cmds)
         for cmd_output in cmd_outputs:
             self.show_cmd_txts.append(cmd_output["output"])
-
-
-
-
-
