@@ -777,14 +777,14 @@ def yaml_io(yaml_file, io_type, yaml_data=None):
     return yaml_data
 
 
-def return_show_cmds(test_parameters, show_clock_flag):
+def return_show_cmds(test_parameters):
     """Return show commands from the test_defintions
 
     Args:
         test_parameters (dict): Input DUT test definitions
-        show_clock_flag (bool): Flag indicating if show clock and show version
-        need to be appended to show commands
     """
+
+    show_clock_flag = config.test_parameters["parameters"]["show_clock"]
 
     show_cmds = []
 
@@ -1051,7 +1051,7 @@ class TestOps:
         self.results_dir = self.dut["results_dir"]
         self.report_dir = self.dut["report_dir"]
 
-        parameters = import_yaml(config.DEFINITIONS_FILE)
+        parameters = config.test_parameters
         show_clock_flag = parameters["parameters"]["show_clock"]
 
         self.show_cmds = []
@@ -1303,13 +1303,18 @@ class TestOps:
 
         logging.info(f"These are test steps {self.test_steps}")
 
-    def run_show_cmd(self, show_cmds):
+    def run_show_cmds(self, show_cmds):
         """Runs show clock and show commands and appends the
         commands and their respective output to the self.show_cmds and
         self.show_cmd_txts list respectively"""
 
         conn = self.dut["connection"]
-        clock_and_show_cmds = ["show clock"]
+        show_clock_flag = config.test_parameters["parameters"]["show_clock"]
+        clock_and_show_cmds = []
+
+        if show_clock_flag:
+            clock_and_show_cmds = ["show clock"]
+
         clock_and_show_cmds.extend(show_cmds)
 
         # execute the commands
