@@ -769,7 +769,12 @@ def return_show_cmds(test_parameters):
     Returns:
         show_cmds (list): show commands from the test_definitions
     """
+    show_clock_flag = config.test_parameters["parameters"]["show_clock"]
+ 
     show_cmds = []
+
+    if show_clock_flag:
+        show_cmds = ["show version", "show clock"]
 
     logging.info(f"Discover the names of test suites from {test_parameters}")
 
@@ -1035,8 +1040,15 @@ class TestOps:
         self.interface_list = self.dut["output"]["interface_list"]
         self.results_dir = self.dut["results_dir"]
         self.report_dir = self.dut["report_dir"]
-        self.show_output = ""
+
+        parameters = config.test_parameters
+        show_clock_flag = parameters["parameters"]["show_clock"]
         self.show_cmds = []
+ 
+        if show_clock_flag:
+            self.show_cmds = ["show version", "show clock"]
+            
+        self.show_output = ""
         self.show_cmd = ""
         self.test_steps = []
 
@@ -1045,7 +1057,7 @@ class TestOps:
             if self.show_cmd:
                 self.show_cmds.append(self.show_cmd)
         except KeyError:
-            self.show_cmds = self.test_parameters["show_cmds"]
+            self.show_cmds.extend(self.test_parameters["show_cmds"])
 
         self.show_cmd_txts = []
         self.show_cmd_txt = ""
@@ -1137,10 +1149,13 @@ class TestOps:
             f"{report_dir}/TEST RESULTS/{test_id} {test_case}/"
             f"{test_id} {dut_name} Verification.txt"
         )
-        text_data = {}
 
+        text_data = {}
+        index = 1
+ 
         for command, text in zip(self.show_cmds, self.show_cmd_txts):
-            text_data[dut_name + "# " + command] = "\n\n" + text
+            text_data[str(index) + ". " + dut_name + "# " + command] = "\n\n" + text
+            index += 1
 
         if text_data:
             logging.info(f"Preparing to write show command output to text file {text_file}")
@@ -1287,3 +1302,27 @@ class TestOps:
                 self.test_steps.append(match.group(1))
 
         logging.info(f"These are test steps {self.test_steps}")
+
+    def run_show_cmds(self, show_cmds):
+        """Runs show clock and show commands and appends the
+        commands and their respective output to the self.show_cmds and
+        self.show_cmd_txts list respectively"""
+
+        conn = self.dut["connection"]
+        show_clock_flag = config.test_parameters["parameters"]["show_clock"]
+        clock_and_show_cmds = []
+
+        if show_clock_flag:
+            clock_and_show_cmds = ["show clock"]
+
+        clock_and_show_cmds.extend(show_cmds)
+
+        # execute the commands
+
+        cmd_outputs, cmds = send_cmds(clock_and_show_cmds, conn, "text")
+
+        # append the commands and the text outputs to respective variables
+
+        self.show_cmds.extend(cmds)
+        for cmd_output in cmd_outputs:
+            self.show_cmd_txts.append(cmd_output["output"])
