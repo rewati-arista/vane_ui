@@ -122,9 +122,7 @@ def setup_vane():
     logging.info("Starting Test Suite setup")
 
     vane.config.test_duts = tests_tools.import_yaml(vane.config.DUTS_FILE)
-    vane.config.test_parameters = tests_tools.import_yaml(
-        vane.config.DEFINITIONS_FILE
-    )
+    vane.config.test_parameters = tests_tools.import_yaml(vane.config.DEFINITIONS_FILE)
 
     logging.info("Discovering show commands from definitions")
 
