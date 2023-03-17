@@ -52,7 +52,7 @@ def create_configs_file(avd_sd_dir):
     config = {}
     for dir_path, _, avd_files in avd_info:
         for avd_file in avd_files:
-            if avd_file.endswith("debug-vars.yml"):
+            if avd_file.startswith(".") or avd_file.endswith("debug-vars.yml"):
                 continue
             file_path = f"{dir_path}/{avd_file}"
             # pylint: disable-next=unspecified-encoding
@@ -87,7 +87,7 @@ def add_lldp_neighbors_dict(config):
         device_info["lldp"] = {}
         device_info["lldp"]["neighbors"] = []
         for eth, eth_info in device_info["ethernet_interfaces"].items():
-            if not "peer" in eth_info or eth_info["peer"] == "unused_ports":
+            if "peer" not in eth_info or eth_info["peer"] == "unused_ports":
                 continue
             neighbor_entry = {
                 "neighborDevice": eth_info["peer"],
