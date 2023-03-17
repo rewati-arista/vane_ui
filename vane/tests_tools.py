@@ -373,9 +373,9 @@ def login_duts(test_parameters, test_duts):
     logins = []
     eapi_file = test_parameters["parameters"]["eapi_file"]
     network_configs = {}
-    if network_configs in test_parameters["parameters"]:
+    if "network_configs" in test_parameters["parameters"]:
         if test_parameters["parameters"]["network_configs"]:
-            network_configs = import_yaml(test_parameters["parameters"]["network_configs"]:
+            network_configs = import_yaml(test_parameters["parameters"]["network_configs"])
     for dut in duts:
         name = dut["name"]
         login_index = len(logins)
@@ -404,7 +404,7 @@ def login_duts(test_parameters, test_duts):
         login_ptr["results_dir"] = test_parameters["parameters"]["results_dir"]
         login_ptr["report_dir"] = test_parameters["parameters"]["report_dir"]
         login_ptr["eapi_file"] = eapi_file
-        if network_configs.has_key(name):
+        if name in network_configs:
             login_ptr["network_configs"] = network_configs[name]
 
     logging.info(f"Returning duts logins: {logins}")
