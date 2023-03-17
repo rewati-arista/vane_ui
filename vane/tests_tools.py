@@ -406,6 +406,7 @@ def login_duts(test_parameters, test_duts):
         login_ptr["eapi_file"] = eapi_file
         if network_configs.has_key(name):
             login_ptr["network_configs"] = network_configs[name]
+
     logging.info(f"Returning duts logins: {logins}")
     return logins
 
