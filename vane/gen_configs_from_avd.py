@@ -55,8 +55,7 @@ def create_configs_file(avd_sd_dir):
             if avd_file.startswith(".") or avd_file.endswith("debug-vars.yml"):
                 continue
             file_path = f"{dir_path}/{avd_file}"
-            # pylint: disable-next=unspecified-encoding
-            with open(file_path, "r") as input_yaml:
+            with open(file_path, "r", encoding="utf-8") as input_yaml:
                 full_config = yaml.safe_load(input_yaml)
             device_name = avd_file.split(".")[0]
             config[device_name] = {}
