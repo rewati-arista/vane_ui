@@ -770,7 +770,7 @@ def return_show_cmds(test_parameters):
         show_cmds (list): show commands from the test_definitions
     """
     show_clock_flag = config.test_parameters["parameters"]["show_clock"]
- 
+
     show_cmds = []
 
     if show_clock_flag:
@@ -887,7 +887,7 @@ def export_text(text_file, text_data):
         with open(text_file, "w", encoding="utf-8") as text_out:
             logging.info(f"Output the following text file: {text_data}")
             for key, value in text_data.items():
-                text_out.write(f"{key}:{value}\n")
+                text_out.write(f"{key}{value}\n")
     except OSError as err:
         print(f">>> {text_file} TEXT FILE MISSING")
         logging.error(f"ERROR TEXT FILE: {text_file} NOT FOUND. {err}")
@@ -1044,10 +1044,10 @@ class TestOps:
         parameters = config.test_parameters
         show_clock_flag = parameters["parameters"]["show_clock"]
         self.show_cmds = []
- 
+
         if show_clock_flag:
             self.show_cmds = ["show version", "show clock"]
-            
+
         self.show_output = ""
         self.show_cmd = ""
         self.test_steps = []
@@ -1152,7 +1152,7 @@ class TestOps:
 
         text_data = {}
         index = 1
- 
+
         for command, text in zip(self.show_cmds, self.show_cmd_txts):
             text_data[str(index) + ". " + dut_name + "# " + command] = "\n\n" + text
             index += 1
