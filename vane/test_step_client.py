@@ -34,11 +34,9 @@
 import os
 import json
 import re
-import sys
 import logging
 from pathlib import Path
 import datetime
-import yaml
 from mdutils.mdutils import MdUtils
 
 logging.basicConfig(
@@ -52,42 +50,19 @@ logging.basicConfig(
 class TestStepClient:
     """Creates instance of Test Step Client."""
 
-    def __init__(self, test_definition):
+    def __init__(self, test_dir):
         """Initializes the Test Step Client
 
         Args:
-            test_definition (str): YAML representation of NRFU tests
+            test_dir (str): directory of test cases for which to generate
+            test steps
         """
 
-        logging.info("Convert yaml data-model to a python data structure")
-        self.data_model = self._import_yaml(test_definition)
-        logging.info(f"Internal test data-model initialized with value: {self.data_model}")
-        self._test_dirs = self.data_model["parameters"]["test_dirs"]
+        self._test_dirs = test_dir
 
     def write_test_steps(self):
         """starts the execution of writing test steps"""
         self.walk_dir()
-
-    def _import_yaml(self, yaml_file):
-        """Import YAML file as python data structure
-
-        Args:
-            yaml_file (str): Name of YAML file
-        """
-
-        logging.info(f"Opening {yaml_file} for read")
-        try:
-            with open(yaml_file, "r", encoding="utf-8") as input_yaml:
-                try:
-                    yaml_data = yaml.safe_load(input_yaml)
-                    logging.info(f"Inputed the following yaml: {yaml_data}")
-                    return yaml_data
-                except yaml.YAMLError as err_data:
-                    logging.error(f"Error in YAML file. {err_data}")
-                    sys.exit(1)
-        except OSError as err_data:
-            logging.error(f"Defintions file: {yaml_file} not found. {err_data}")
-            sys.exit(1)
 
     def walk_dir(self):
         """Walks through each directory"""
