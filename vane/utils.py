@@ -45,7 +45,7 @@ def make_iterable(value):
     Returns:
         An iterable object of type list
     """
-    if sys.version_info <= (3, 0) and isinstance(value, unicode):
+    if sys.version_info <= (3, 0) and isinstance(value, str):
         # Convert unicode values to strings for Python 2
         value = str(value)
     if isinstance(value, (dict, str)):
@@ -65,6 +65,7 @@ def get_current_fixture_testclass(request):
     """
     Method to get the name of the Test Function's class
     from the request fixture.
+    Args: request - is the pytest request fixture
     Returns: Name of the test functions's class
     """
 
@@ -77,6 +78,7 @@ def get_current_fixture_testname(request):
     """
     Method to get the name of the Test Function
     from the request fixture.
+    Args: request - is the pytest request fixture
     Returns: Name of the test function
     """
 
