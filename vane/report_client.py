@@ -333,12 +333,12 @@ class ReportClient:
             _ = table.add_row().cells
             data_row = []
 
+            data_row.append(self._totals(dut, "name"))
             data_row.append(self._totals(dut, "TOTAL"))
             data_row.append(self._totals(dut, "PASS"))
             data_row.append(self._totals(dut, "FAIL"))
             data_row.append(self._totals(dut, "SKIP"))
             data_row.append(self._totals(dut, "ERROR"))
-            data_row.append(self._totals(dut, "name"))
 
             for column, cell_data in enumerate(data_row):
                 self._write_cell(table, cell_data, column, (row + 1), "Arial", 9)
@@ -510,7 +510,7 @@ class ReportClient:
         table = self._document.add_table(rows=1, cols=columns, style="Table Grid")
 
         self._create_header_row(table, summary_headers, report_template)
-        self._create_data_row(table, 1, testcase_results, report_template)
+        self._create_data_row(table, testcase_results, report_template)
 
     def _create_header_row(self, table, summary_headers, report_template):
         """Writes header row within Word doc table
@@ -537,19 +537,17 @@ class ReportClient:
         for column, header in enumerate(headers):
             self._write_cell(table, header.upper(), column, row, "Arial", 9, True, "00FFFF")
 
-    def _create_data_row(self, table, row, testcase_results, report_template):
+    def _create_data_row(self, table, testcase_results, report_template):
         """Writes a data row within Word doc table
 
         Args:
             table (obj): Word doc obj representing a tables
-            row (obj): Word doc obj representing a row in a table
             testcase_results (dict): Data structure with test case results
             report_template (dict): Data structure describing reports fields
         """
-        if row > 0:
-            _ = table.add_row().cells
 
-        for testcase_result in testcase_results:
+        for row, testcase_result in enumerate(testcase_results):
+            _ = table.add_row().cells
             for column, testcase_data in enumerate(testcase_result):
                 logging.info(
                     f"Writing test field: {testcase_data}"
@@ -563,7 +561,7 @@ class ReportClient:
                     table,
                     testcase_result[testcase_data],
                     column,
-                    row,
+                    (row + 1),
                     "Arial",
                     9,
                     data_format=data_format,
