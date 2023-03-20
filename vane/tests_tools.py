@@ -1310,26 +1310,48 @@ class TestOps:
 
         logging.info(f"These are test steps {self.test_steps}")
 
-    def run_show_cmds(self, show_cmds):
-        """Runs show clock and show commands and appends the
-        commands and their respective output to the self.show_cmds and
-        self.show_cmd_txts list respectively"""
+    def run_show_cmds(self, show_cmds, encoding='json'):
+        """ run_show_cmds is a wrapper which runs the 'show_cmds' using enable() pyeapi
+            method. It returns the output of these 'show_cmds' in the encoding requested.
+            Also it checks show_clock_flag
+            to see if 'show_clock' cmd needs to be run. It stores the text output for 
+            'show_cmds' list in 'show_cmds_txt' list. Also 'show_cmds' list is appended
+            to object's 'show_cmds' list.
+
+            Args: show_cmds: list of show commands to be run
+            encoding: json or text, with json being default
+
+            Returns: A dict object that includes the response for each command along
+            with the encoding
+        """
 
         conn = self.dut["connection"]
         show_clock_flag = config.test_parameters["parameters"]["show_clock"]
-        clock_and_show_cmds = []
 
+        #if encoding is json run the commands, store the results
+        if encoding == 'json':
+            json_results = conn.enable(show_cmds)
+
+        #run show clock if flag is set
         if show_clock_flag:
-            clock_and_show_cmds = ["show clock"]
+            show_clock_cmds = ["show clock"]
+            #run the show_clock_cmds
+            show_clock_op = conn.enable(show_clock_cmds, "text")
+            #add the show_clock_cmds to TestOps object's show_cmds list
+            #also add the o/p of show_clock_cmds to TestOps object's show_cmds_txts list
+            for result_dict in show_clock_op:
+                self.show_cmds.append(result_dict['command'])
+                self.show_cmd_txts.append(result_dict["result"]["output"])
+            
+        #run the commands in text mode
+        txt_results = conn.enable(show_cmds, "text")
+        #add the show_cmds to TestOps object's show_cmds list
+        #also add the o/p of show_cmds to TestOps object's show_cmds_txts list
+        for result_dict in txt_results:
+            self.show_cmds.append(result_dict['command'])
+            self.show_cmd_txts.append(result_dict["result"]["output"])
 
-        clock_and_show_cmds.extend(show_cmds)
-
-        # execute the commands
-
-        cmd_outputs, cmds = send_cmds(clock_and_show_cmds, conn, "text")
-
-        # append the commands and the text outputs to respective variables
-
-        self.show_cmds.extend(cmds)
-        for cmd_output in cmd_outputs:
-            self.show_cmd_txts.append(cmd_output["output"])
+        if encoding == "text":
+            return txt_results
+        
+        return json_results
