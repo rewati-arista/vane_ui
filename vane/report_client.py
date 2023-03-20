@@ -598,8 +598,14 @@ class ReportClient:
 
         if data_format == "numbered_list":
             logging.info("Formatting a numbered list")
-            for list_idx, list_entry in enumerate(text):
-                run = para.add_run(f"{list_idx+1}. {list_entry}\n")
+            if text:
+                for list_idx, list_entry in enumerate(text):
+                    run = para.add_run(f"{list_idx+1}. {list_entry}\n")
+            else:
+                logging.warning(
+                    f"Empty list has been found: {text}.  Resetting value to null string"
+                )
+                run = para.add_run("")
         elif data_format == "test_result":
             logging.info("Formatting a Test Result")
             if text:
