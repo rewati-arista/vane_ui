@@ -37,6 +37,7 @@ from vane import tests_tools
 
 TEST_SUITE = __file__
 
+
 @pytest.mark.demo
 @pytest.mark.nrfu
 @pytest.mark.platform_status
@@ -44,6 +45,7 @@ TEST_SUITE = __file__
 @pytest.mark.virtual
 @pytest.mark.physical
 @pytest.mark.eos424
+# pylint: disable=too-few-public-methods
 class HostTests:
     """Host status Test Suite"""
 
