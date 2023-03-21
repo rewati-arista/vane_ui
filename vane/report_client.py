@@ -43,9 +43,9 @@ from docx.oxml.ns import qn, nsdecls
 from docx.oxml import OxmlElement, parse_xml
 from docx.shared import Inches, Pt, RGBColor
 from vane.report_templates import REPORT_TEMPLATES
-from vane.tests_tools import yaml_read
+from vane.tests_tools import yaml_read, FORMAT
 
-FORMAT = "[%(asctime)s %(filename)s->%(funcName)s():%(lineno)s]%(levelname)s: %(message)s"
+# pylint: disable=duplicate-code
 logging.basicConfig(
     level=logging.INFO,
     filename="vane.log",
