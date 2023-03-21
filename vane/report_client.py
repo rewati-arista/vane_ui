@@ -446,15 +446,12 @@ class ReportClient:
         self._major_section += 1
 
         report_styles = REPORT_TEMPLATES.keys()
-        logging.info(f"Inputted the following report styles {report_styles}")
+        logging.info(f"Inputted the following report summary styles {report_styles}")
 
         if "report_summary_style" in self.data_model["parameters"]:
             report_style = self.data_model["parameters"]["report_summary_style"]
             logging.info(f"Summary style in parameters set to {report_style}")
-            if report_style == 1:
-                logging.info("report_summary_style is set to 1, default")
-                self._default_tc_report()
-            elif report_style in report_styles:
+            if report_style in report_styles:
                 logging.info(f"report_summary_style is set to {report_style}, custom")
                 report_template = REPORT_TEMPLATES[report_style]
                 self._custom_tc_report(report_template)
@@ -794,10 +791,7 @@ class ReportClient:
         logging.info(f"Inputted the following report styles {report_styles}")
 
         if "report_style" in dut:
-            if dut["report_style"] == 1:
-                logging.info(f"Report_style is set: {dut['report_style']}, default")
-                self._write_default_detail_dut_section(dut)
-            elif dut["report_style"] in report_styles:
+            if dut["report_style"] in report_styles:
                 logging.info(f"Report_style is set: {dut['report_style']}, custom")
                 self._write_custom_detail_dut_section(dut)
             else:
