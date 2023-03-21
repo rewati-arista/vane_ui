@@ -776,7 +776,10 @@ def return_show_cmds(test_parameters):
     Returns:
         show_cmds (list): show commands from the test_definitions
     """
-    show_clock_flag = config.test_parameters["parameters"]["show_clock"]
+    try:
+        show_clock_flag = config.test_parameters["parameters"]["show_clock"]
+    except KeyError:
+        show_clock_flag = False
 
     show_cmds = []
 
@@ -1049,10 +1052,15 @@ class TestOps:
         self.report_dir = self.dut["report_dir"]
 
         parameters = config.test_parameters
-        show_clock_flag = parameters["parameters"]["show_clock"]
+
+        try:
+            self.show_clock_flag = parameters["parameters"]["show_clock"]
+        except KeyError:
+            self.show_clock_flag = False
+
         self.show_cmds = []
 
-        if show_clock_flag:
+        if self.show_clock_flag:
             self.show_cmds = ["show version", "show clock"]
 
         self.show_output = ""
@@ -1327,14 +1335,13 @@ class TestOps:
         """
 
         conn = self.dut["connection"]
-        show_clock_flag = config.test_parameters["parameters"]["show_clock"]
 
         # if encoding is json run the commands, store the results
         if encoding == "json":
             json_results = conn.enable(show_cmds)
 
         # run show clock if flag is set
-        if show_clock_flag:
+        if self.show_clock_flag:
             show_clock_cmds = ["show clock"]
             # run the show_clock_cmds
             show_clock_op = conn.enable(show_clock_cmds, "text")
