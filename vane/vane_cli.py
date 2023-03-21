@@ -37,18 +37,20 @@ import argparse
 import logging
 from io import StringIO
 from contextlib import redirect_stdout
+from datetime import datetime
+import shutil
+import os
 import yaml
 import pytest
 from vane import tests_client
 from vane import report_client
 from vane import tests_tools
 from vane import test_step_client
-from datetime import datetime
 import vane.config
-import shutil
 
+
+# pylint: disable=duplicate-code
 FORMAT = "[%(asctime)s %(filename)s->%(funcName)s():%(lineno)s]%(levelname)s: %(message)s"
-
 logging.basicConfig(
     level=logging.INFO,
     filename="vane.log",
@@ -162,7 +164,7 @@ def write_results(definitions_file):
 
 def show_markers():
     """Returns the list of supported markers.
-    
+
     Returns:
         marker_list (list): supported markers list.
     """
@@ -228,18 +230,23 @@ def create_duts_from_topo(topology_file):
             file.write("duts: \n")
             for node in topology["nodes"]:
                 tests_tools.generate_duts_file(node, file, username, password)
-    
+
 
 def download_test_results():
-
+    """
+    function responsible for creating a zip of the
+    TEST RESULTS folder and storing it in ZIP:TEST RESULTS folder.
+    """
     logging.info("Downloading a zip file of the TEST RESULTS folder")
 
     now = datetime.now()
     dt_string = now.strftime("%d-%m-%Y %H:%M:%S")
 
     source = "reports/TEST RESULTS"
-    destination = "ZIP:TEST RESULT/" + dt_string
-    shutil.make_archive(destination, 'zip', source)
+    destination = "reports/TEST RESULTS ARCHIVES/" + dt_string
+
+    if os.path.exists(source):
+        shutil.make_archive(destination, "zip", source)
 
 
 def main():

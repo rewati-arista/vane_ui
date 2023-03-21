@@ -56,7 +56,7 @@ import yaml
 from jinja2 import Template, Undefined
 from pytest import ExitCode
 
-
+# pylint: disable=duplicate-code
 FORMAT = "[%(asctime)s %(filename)s->%(funcName)s():%(lineno)s]%(levelname)s: %(message)s"
 logging.basicConfig(
     level=logging.INFO,
@@ -458,14 +458,11 @@ class TestsClient:
                 logging.warning(f"Not removing file: {name}")
 
     def _remove_test_results_dir(self):
-        """Removing the subdirectories and the files within them from TEST RESULTS dir"""
+        """Removing the subdirectories and the files within them belonging to TEST RESULTS dir"""
 
         test_results_dir = "reports/TEST RESULTS"
 
-        if not os.path.exists(test_results_dir):
-            os.makedirs(test_results_dir)
-
-        # Deleting an non-empty folder
-        shutil.rmtree(test_results_dir, ignore_errors=True)
-        logging.info(f"Deleted {test_results_dir} directory successfully")
-
+        if os.path.exists(test_results_dir):
+            # Deleting a non-empty folder
+            shutil.rmtree(test_results_dir, ignore_errors=True)
+            logging.info(f"Deleted {test_results_dir} directory successfully")
