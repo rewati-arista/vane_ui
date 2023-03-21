@@ -32,7 +32,6 @@
 
 """Utilities for using PyTest in network testing"""
 
-import sys
 import logging
 import datetime
 import json
@@ -44,6 +43,7 @@ from docx.oxml.ns import qn, nsdecls
 from docx.oxml import OxmlElement, parse_xml
 from docx.shared import Inches, Pt, RGBColor
 from vane.report_templates import REPORT_TEMPLATES
+from vane.tests_tools import yaml_read
 
 FORMAT = "[%(asctime)s %(filename)s->%(funcName)s():%(lineno)s]%(levelname)s: %(message)s"
 logging.basicConfig(
@@ -72,7 +72,7 @@ class ReportClient:
         """
 
         logging.info("Convert yaml data-model to a python data structure")
-        self.data_model = self._import_yaml(test_definition)
+        self.data_model = yaml_read(test_definition)
         logging.info(f"Internal test data-model initialized with value: {self.data_model}")
         self._summary_results = self._compile_test_results()
         logging.info(f"Test Results: {self._summary_results}")
@@ -104,7 +104,7 @@ class ReportClient:
         for name in yaml_files:
             if "result-" in name:
                 yaml_file = f"{yaml_dir}/{name}"
-                yaml_data = self._import_yaml(yaml_file)
+                yaml_data = yaml_read(yaml_file)
 
                 self._reconcile_results(yaml_data)
             else:
@@ -176,27 +176,6 @@ class ReportClient:
             )
             yaml_ptr = self._results_datamodel["test_suites"][suite_index]
             yaml_ptr["test_cases"][test_index]["duts"].append(test_parameters)
-
-    def _import_yaml(self, yaml_file):
-        """Import YAML file as python data structure
-
-        Args:
-            yaml_file (str): Name of YAML file
-        """
-
-        logging.info(f"Opening {yaml_file} for read")
-        try:
-            with open(yaml_file, "r", encoding="utf-8") as input_yaml:
-                try:
-                    yaml_data = yaml.safe_load(input_yaml)
-                    logging.info(f"Inputted the following yaml: {yaml_data}")
-                    return yaml_data
-                except yaml.YAMLError as err_data:
-                    logging.error(f"Error in YAML file. {err_data}")
-                    sys.exit(1)
-        except OSError as err_data:
-            logging.error(f"Defintions file: {yaml_file} not found. {err_data}")
-            sys.exit(1)
 
     def write_result_doc(self):
         """Create MSFT docx with results"""
