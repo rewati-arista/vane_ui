@@ -1086,16 +1086,16 @@ class ReportClient:
             # pylint: disable-next=protected-access
             table.rows[0].cells[0]._tc.get_or_add_tcPr().append(black)
             report_values = dut[report_field]
-            show_cmd = dut["show_cmd"]
+            show_cmds = dut["show_cmds"]
             dut_name = dut["dut"]
 
             logging.info(f"These are recorded report values: {report_values}")
-            for report_value in report_values:
-                run = para.add_run(f"\n{dut_name}# {show_cmd.strip()}\n\n")
+            for index, report_value in enumerate(report_values):
+                run = para.add_run(f"\n{dut_name}# {show_cmds[index]}\n\n{report_value}\n")
+                logging.info(f"Adding value to report: {report_value.strip()}")
                 run.font.name = "Courier New"
                 run.font.size = Pt(10)
                 run.font.color.rgb = RGBColor(0, 255, 0)
-                logging.info(f"Adding value to report: {report_value.strip()}")
 
             para = self._document.add_paragraph()
             run = para.add_run()

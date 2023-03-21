@@ -336,7 +336,7 @@ def login_duts(test_parameters, test_duts):
     duts = test_duts["duts"]
     logins = []
     eapi_file = test_parameters["parameters"]["eapi_file"]
-    
+
     network_configs = {}
     if "network_configs" in test_parameters["parameters"]:
         if test_parameters["parameters"]["network_configs"]:
@@ -1117,6 +1117,7 @@ class TestOps:
         self.test_parameters["test_id"] = self.test_id
         self.test_parameters["show_cmd_txts"] = self.show_cmd_txts
         self.test_parameters["test_steps"] = self.test_steps
+        self.test_parameters["show_cmds"] = self.show_cmds
 
         if str(self.show_cmd_txt):
             self.test_parameters["show_cmd"] += ":\n\n" + self.show_cmd_txt
