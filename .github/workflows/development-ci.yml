@@ -110,5 +110,5 @@ jobs:
         continue-on-error: true
         run: |
           pip install -e .
-          pwd
+          mkdir -p $PWD/tests/unittests/fixtures/reports/results
           pytest --cov-report term-missing --cov=$PWD/vane $PWD/tests/unittests
