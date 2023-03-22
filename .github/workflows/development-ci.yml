@@ -14,8 +14,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Check out the repository
-      - uses: actions/checkout@v3
+
+      - name: Check out the repository
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -77,3 +78,33 @@ jobs:
       - name: Lint with pylint
         if: ${{ env.python }}
         run: pylint ${{ env.python }}
+
+  unittest:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Check out the repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          # architecture: 'x64' # The default
+
+      - name: Display the Python version
+        run: python -c "import sys; print(sys.version)"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run the unittests
+        continue-on-error: true
+        run: |
+          make unittest
