@@ -110,4 +110,5 @@ jobs:
         continue-on-error: true
         run: |
           pip install -e .
-          make unittest
+          pwd
+          pytest --cov-report term-missing --cov=$PWD/vane $PWD/tests/unittests
