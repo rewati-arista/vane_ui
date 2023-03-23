@@ -1,4 +1,4 @@
-name: pull-request-ci
+name: pull-request-merged-ci
 run-name: Pull request merge processing
 
 # Run the unittests when a pull request is merged, and post the coverage
@@ -7,7 +7,7 @@ run-name: Pull request merge processing
 on:
   pull_request:
     branches:
-      - gar-testing-merge
+      - develop
     types:
       - closed
 
