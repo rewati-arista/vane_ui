@@ -10,6 +10,10 @@ on:
 
 jobs:
   validate:
+    # Run validation checks on the code that has been changed,
+    # including checking formatting with Black, and linting checks
+    # with flake8 and pylint. Branches cannot be merged into develop
+    # unless the validate checks all pass.
 
     runs-on: ubuntu-latest
 
@@ -80,6 +84,11 @@ jobs:
         run: pylint ${{ env.python }}
 
   unittest:
+    # Run the Vane unittests
+    # Test coverage is compared with a 90% target goal and the check will fail
+    # if below that point, however the branch is allowed to be merged with
+    # develop regardless of the coverage score and whether the unittest check
+    # passes or fails.
 
     runs-on: ubuntu-latest
 
@@ -120,4 +129,4 @@ jobs:
           echo -e "\n----------------"
           echo "Coverage is ${cov_score}%"
           echo -e "----------------\n"
-          [ "${cov_score}" -ge "19" ]
+          [ "${cov_score}" -ge "90" ]
