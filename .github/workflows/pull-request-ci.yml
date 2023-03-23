@@ -7,7 +7,6 @@ run-name: Pull request merge processing
 on:
   pull_request:
     branches:
-      - develop
       - gar-testing-merge
     types:
       - closed
