@@ -44,15 +44,8 @@ from vane import report_client
 from vane import tests_tools
 from vane import test_step_client
 import vane.config
+from vane.vane_logging import logging
 
-FORMAT = "[%(asctime)s %(filename)s->%(funcName)s():%(lineno)s]%(levelname)s: %(message)s"
-
-logging.basicConfig(
-    level=logging.INFO,
-    filename="vane.log",
-    filemode="w",
-    format=FORMAT,
-)
 logging.info("Starting vane.log file")
 
 

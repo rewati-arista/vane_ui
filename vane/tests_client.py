@@ -54,15 +54,7 @@ import yaml
 
 from jinja2 import Template, Undefined
 from pytest import ExitCode
-
-
-FORMAT = "[%(asctime)s %(filename)s->%(funcName)s():%(lineno)s]%(levelname)s: %(message)s"
-logging.basicConfig(
-    level=logging.INFO,
-    filename="vane.log",
-    filemode="w",
-    format=FORMAT,
-)
+from vane.vane_logging import logging
 
 
 class NullUndefined(Undefined):
