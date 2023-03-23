@@ -116,4 +116,7 @@ jobs:
         # Get the coverage score and return success if the value is >= 90
         run: |
           cov_score=$(coverage report | awk '$1 == "TOTAL" {print $NF+0}')
+          echo "\n----------------"
+          echo "Coverage is ${cov_score}%"
+          echo "----------------\n"
           [ "${cov_score}" -ge "90" ]
