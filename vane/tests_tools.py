@@ -39,7 +39,6 @@ import sys
 import logging
 import os
 import inspect
-import subprocess
 import re
 import yaml
 
