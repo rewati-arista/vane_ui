@@ -110,5 +110,10 @@ jobs:
         continue-on-error: true
         run: |
           pip install -e .
-          mkdir -p $PWD/tests/unittests/fixtures/reports/results
           pytest --cov-report term-missing --cov=$PWD/vane $PWD/tests/unittests
+
+      - name: Report the coverage
+        # Get the coverage score and return success if the value is >= 90
+        run: |
+          cov_score=$(coverage report | awk '$1 == "TOTAL" {print $NF+0}')
+          [ "${cov_score}" -ge "90" ]
