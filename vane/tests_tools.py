@@ -902,32 +902,6 @@ def export_text(text_file, text_data):
         sys.exit(1)
 
 
-def subprocess_ping(definition_file, dut_name, loopback_ip, repeat_ping):
-    """Subprocess to run the continuous ping command
-
-    Args:
-        definition_file: definitions.yaml file
-        dut_name: data structure of dut parameters
-        loopback_ip: loopback ip on device
-        repeat_ping: number of pings to flow the traffic
-
-    Returns:
-        process: instance of the subprocess
-    """
-    return subprocess.Popen(
-        [
-            "python",
-            "/".join(__file__.split("/")[:-1]) + "/test_ping.py",
-            definition_file,
-            dut_name,
-            loopback_ip,
-            repeat_ping,
-        ],
-        stdout=subprocess.PIPE,
-        universal_newlines=True,
-    )
-
-
 def generate_duts_file(dut, file, username, password):
     """Util function to take in an individual dut and print
     its relevant data to a given file.
