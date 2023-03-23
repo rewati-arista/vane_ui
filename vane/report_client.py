@@ -795,9 +795,7 @@ class ReportClient:
                 logging.info(f"Report_style is set: {dut['report_style']}, custom")
                 self._write_custom_detail_dut_section(dut)
             else:
-                logging.info(
-                    f"Report_style is incorrect: {dut['report_style']}. Set to default."
-                )
+                logging.info(f"Report_style is incorrect: {dut['report_style']}. Set to default.")
                 dut["report_style"] = "default"
                 self._write_custom_detail_dut_section(dut)
         else:
