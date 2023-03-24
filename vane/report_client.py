@@ -32,7 +32,6 @@
 
 """Utilities for using PyTest in network testing"""
 
-import logging
 import datetime
 import json
 import os

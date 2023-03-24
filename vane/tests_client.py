@@ -42,7 +42,6 @@
 
     - Excel report: Tabular representation of results. """
 
-import logging
 import os
 import stat
 import sys

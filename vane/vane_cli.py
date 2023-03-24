@@ -34,7 +34,6 @@ Just like a weather vane, Vane is a network certification tool that shows a
 network's readiness for production based on validation tests. """
 
 import argparse
-import logging
 from io import StringIO
 from contextlib import redirect_stdout
 import yaml
