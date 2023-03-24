@@ -795,37 +795,13 @@ class ReportClient:
                 logging.info(f"Report_style is set: {dut['report_style']}, custom")
                 self._write_custom_detail_dut_section(dut)
             else:
-                logging.info("Report_style is incorrect")
-                self._write_default_detail_dut_section(dut)
+                logging.info(f"Report_style is incorrect: {dut['report_style']}. Set to default.")
+                dut["report_style"] = "default"
+                self._write_custom_detail_dut_section(dut)
         else:
-            logging.info("Report_style is not set")
-            self._write_default_detail_dut_section(dut)
-
-    def _write_default_detail_dut_section(self, dut):
-        """Write tabular detailed DUT section
-
-        Args:
-            dut (dict): DUT specific parameters
-        """
-
-        table = self._document.add_table(rows=1, cols=2)
-        table.style = TABLE_GRID
-
-        hdr_cells = table.rows[0].cells
-        hdr_cells[0].text = "Test Parameter"
-        hdr_cells[1].text = "Description"
-
-        self._add_dut_table_row("test_id", dut, table)
-        self._add_dut_table_row("name", dut, table)
-        self._add_dut_table_row("description", dut, table)
-        self._add_dut_table_row("dut", dut, table)
-        self._add_dut_table_row("show_cmd", dut, table)
-        self._add_dut_table_row("show_cmds", dut, table)
-        self._add_dut_table_row("expected_output", dut, table)
-        self._add_dut_table_row("actual_output", dut, table)
-        self._add_dut_table_row("test_result", dut, table)
-        self._add_dut_table_row("fail_or_skip_reason", dut, table)
-        self._add_dut_table_row("comment", dut, table)
+            logging.info("Report_style is NOT set.  Setting to default report_style.")
+            dut["report_style"] = "default"
+            self._write_custom_detail_dut_section(dut)
 
     def _write_custom_detail_dut_section(self, dut):
         """Method for writing a custom detailed DUT section within report
