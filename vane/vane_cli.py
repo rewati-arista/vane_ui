@@ -36,6 +36,9 @@ network's readiness for production based on validation tests. """
 import argparse
 from io import StringIO
 from contextlib import redirect_stdout
+from datetime import datetime
+import shutil
+import os
 import yaml
 import pytest
 from vane import tests_client
@@ -44,6 +47,7 @@ from vane import tests_tools
 from vane import test_step_client
 import vane.config
 from vane.vane_logging import logging
+
 
 logging.info("Starting vane.log file")
 
@@ -234,6 +238,23 @@ def create_duts_from_topo(topology_file):
                 tests_tools.generate_duts_file(node, file, username, password)
 
 
+def download_test_results():
+    """
+    function responsible for creating a zip of the
+    TEST RESULTS folder and storing it in ZIP:TEST RESULTS folder.
+    """
+    logging.info("Downloading a zip file of the TEST RESULTS folder")
+
+    now = datetime.now()
+    dt_string = now.strftime("%d-%m-%Y %H:%M:%S")
+
+    source = "reports/TEST RESULTS"
+    destination = "reports/TEST RESULTS ARCHIVES/" + dt_string
+
+    if os.path.exists(source):
+        shutil.make_archive(destination, "zip", source)
+
+
 def main():
     """main function"""
     logging.info("Accept input from command-line")
@@ -268,6 +289,7 @@ def main():
 
         run_tests(vane.config.DEFINITIONS_FILE, vane.config.DUTS_FILE)
         write_results(vane.config.DEFINITIONS_FILE)
+        download_test_results()
 
         logging.info("\n\n!VANE has completed without errors!\n\n")
 

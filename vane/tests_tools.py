@@ -38,7 +38,6 @@ import time
 import sys
 import os
 import inspect
-import subprocess
 import re
 import yaml
 
@@ -767,7 +766,10 @@ def return_show_cmds(test_parameters):
     Returns:
         show_cmds (list): show commands from the test_definitions
     """
-    show_clock_flag = config.test_parameters["parameters"]["show_clock"]
+    try:
+        show_clock_flag = config.test_parameters["parameters"]["show_clock"]
+    except KeyError:
+        show_clock_flag = False
 
     show_cmds = []
 
@@ -893,32 +895,6 @@ def export_text(text_file, text_data):
         sys.exit(1)
 
 
-def subprocess_ping(definition_file, dut_name, loopback_ip, repeat_ping):
-    """Subprocess to run the continuous ping command
-
-    Args:
-        definition_file: definitions.yaml file
-        dut_name: data structure of dut parameters
-        loopback_ip: loopback ip on device
-        repeat_ping: number of pings to flow the traffic
-
-    Returns:
-        process: instance of the subprocess
-    """
-    return subprocess.Popen(
-        [
-            "python",
-            "/".join(__file__.split("/")[:-1]) + "/test_ping.py",
-            definition_file,
-            dut_name,
-            loopback_ip,
-            repeat_ping,
-        ],
-        stdout=subprocess.PIPE,
-        universal_newlines=True,
-    )
-
-
 def generate_duts_file(dut, file, username, password):
     """Util function to take in an individual dut and print
     its relevant data to a given file.
@@ -1040,10 +1016,15 @@ class TestOps:
         self.report_dir = self.dut["report_dir"]
 
         parameters = config.test_parameters
-        show_clock_flag = parameters["parameters"]["show_clock"]
+
+        try:
+            self.show_clock_flag = parameters["parameters"]["show_clock"]
+        except KeyError:
+            self.show_clock_flag = False
+
         self.show_cmds = []
 
-        if show_clock_flag:
+        if self.show_clock_flag:
             self.show_cmds = ["show version", "show clock"]
 
         self.show_output = ""
@@ -1318,14 +1299,13 @@ class TestOps:
         """
 
         conn = self.dut["connection"]
-        show_clock_flag = config.test_parameters["parameters"]["show_clock"]
 
         # if encoding is json run the commands, store the results
         if encoding == "json":
             json_results = conn.enable(show_cmds)
 
         # run show clock if flag is set
-        if show_clock_flag:
+        if self.show_clock_flag:
             show_clock_cmds = ["show clock"]
             # run the show_clock_cmds
             show_clock_op = conn.enable(show_clock_cmds, "text")
