@@ -211,9 +211,8 @@ class ReportClient:
         logging.info("Create report title page")
         format_date, _ = self._return_date()
         self._document.add_heading("Test Report", 0)
-        paragraph = self._document.add_paragraph(f"{format_date}")
-        # pylint: disable-next=no-member
-        paragraph.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.RIGHT
+        para = self._document.add_paragraph()
+        self._write_text(para, format_date, align="right")
         self._document.add_page_break()
 
     def _write_toc_page(self):
@@ -555,6 +554,7 @@ class ReportClient:
         bold=False,
         color=None,
         data_format="string",
+        text_color=None,
     ):
         """Writes a cell within Word doc table
 
@@ -568,6 +568,7 @@ class ReportClient:
             bold (bool, optional): Bold text in table cell. Defaults to False.
             color (str, optional): Hex-decimanal color to fill table cell. Defaults to None.
             format (str, optional): Style of outputting text in table cell. Defaults to "string".
+            text_color (obj, optional): Text output color. Defaults to None
         """
         para = table.rows[row].cells[column].paragraphs[0]
         logging.info(f"Added cell ({row}, {column}) to report with value: {text}")
@@ -576,29 +577,22 @@ class ReportClient:
             logging.info("Formatting a numbered list")
             if text:
                 for list_idx, list_entry in enumerate(text):
-                    run = para.add_run(f"{list_idx+1}. {list_entry}\n")
+                    self._write_text(para, f"{list_idx+1}. {list_entry}\n")
             else:
                 logging.warning(
                     f"Empty list has been found: {text}.  Resetting value to null string"
                 )
-                run = para.add_run("")
+                self._write_text(para, "")
         elif data_format == "test_result":
             logging.info("Formatting a Test Result")
             if text:
-                run = para.add_run("PASS")
+                self._write_text(para, "PASS", bold=True, color=RGBColor(0, 255, 0))
             else:
-                run = para.add_run("FAIL")
+                self._write_text(para, "FAIL", bold=True, color=RGBColor(255, 0, 0))
         else:
-            run = para.add_run(text)
-
-        if font:
-            run.font.name = font
-
-        if font_size:
-            run.font.size = Pt(font_size)
-
-        if bold:
-            run.font.bold = bold
+            self._write_text(
+                para, text, font=font, font_size=font_size, bold=bold, color=text_color
+            )
 
         if color:
             cell = table.cell(row, column)
@@ -609,6 +603,58 @@ class ReportClient:
             )
             # pylint: disable-next=protected-access
             cell._tc.get_or_add_tcPr().append(color)
+
+    # pylint: disable-next=too-many-arguments
+    def _write_text(
+        self,
+        para,
+        text,
+        font=None,
+        font_size=None,
+        bold=False,
+        align=None,
+        color=None,
+        left_indent=None,
+    ):
+        """Writes a cell within Word doc table
+
+        Args:
+            para (obj): Word doc obj representing a paragraph
+            text (str): Text to output in table cell
+            font (str, optional): Font to use in table cell. Defaults to None.
+            font_size (int, optional): Font size to use in table cell. Defaults to None.
+            bold (bool, optional): Bold text in table cell. Defaults to False.
+            align (obj, optional): Set paragraph alignment.  Defaults to None
+            color (obj, optional): Text output color. Defaults to None
+            left_indent (obj, optional): Sets left in indent in Doc. Defaults to None
+        """
+        run = para.add_run(text)
+        logging.info(
+            f"Adding text {text} with font {font}, font_size {font_size}, bold {bold},"
+            f"alignment {align}"
+        )
+
+        if font:
+            run.font.name = font
+
+        if font_size:
+            run.font.size = Pt(font_size)
+
+        if bold:
+            run.font.bold = bold
+
+        if align == "right":
+            # pylint: disable-next=no-member
+            para.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.RIGHT
+        elif align == "center":
+            # pylint: disable-next=no-member
+            para.alignment = docx.enum.text.WD_ALIGN_PARAGRAPH.CENTER
+
+        if color:
+            run.font.color.rgb = color
+
+        if left_indent:
+            para.paragraph_format.left_indent = left_indent
 
     def _return_summary_headers(self, report_template):
         """Parses report_table for summary fields and returns them
@@ -824,9 +870,7 @@ class ReportClient:
                 "Please update test definition file with this information ",
                 "so test case report can be generated.",
             )
-            run = para.add_run(out_msg)
-            run.font.color.rgb = RGBColor(255, 0, 0)
-            run.font.bold = True
+            self._write_text(para, out_msg, bold=True, color=RGBColor(255, 0, 0))
         else:
             logging.info("Required report fields are in test definitions")
             self._write_custom_paragraph(dut, report_template)
@@ -877,7 +921,7 @@ class ReportClient:
             logging.info(f"Format for {report_field} is set to {report_format}")
 
             if report_format == "string":
-                self._write_string(para, report_text)
+                self._write_text(para, report_text)
             elif report_format == "bulleted_list":
                 self._write_bulleted_list(dut, report_field)
             elif report_format == "numbered_list":
@@ -925,18 +969,9 @@ class ReportClient:
         else:
             output_name = report_field
 
-        para.add_run(f"{output_name.upper()}: ").bold = True
+        self._write_text(para, f"{output_name.upper()}: ", bold=True)
 
         return para
-
-    def _write_string(self, para, report_text):
-        """Write a generic string to Word doc
-
-        Args:
-            para (obj): Current Word paragraph object
-            report_text (string): Name of report field in dut to write
-        """
-        para.add_run(report_text)
 
     def _write_bulleted_list(self, dut, report_field):
         """Write a generic bulleted list to Word doc
@@ -948,7 +983,9 @@ class ReportClient:
 
         if report_field in dut:
             report_value = dut[report_field]
-            self._document.add_paragraph(report_value, style="List Bullet 2")
+            para = self._document.add_paragraph()
+            para.style = "List Bullet 2"
+            self._write_text(para, report_value)
 
     def _write_numbered_list(self, dut, report_field):
         """Write a generic numbered list to Word doc
@@ -961,7 +998,9 @@ class ReportClient:
         if report_field in dut:
             report_values = dut[report_field]
             for report_value in report_values:
-                self._document.add_paragraph(report_value, style="List Number 2")
+                para = self._document.add_paragraph()
+                para.style = "List Number 2"
+                self._write_text(para, report_value)
 
     def _write_dict_string(self, dut, report_field):
         """Write a dictionary in YAML format to Word doc
@@ -976,8 +1015,7 @@ class ReportClient:
             formatted_data = yaml.dump(report_value)
             logging.info(f"Data formatted to YAML: {formatted_data}")
             para = self._document.add_paragraph()
-            para.add_run(formatted_data.strip())
-            para.paragraph_format.left_indent = Inches(0.25)
+            self._write_text(para, formatted_data.strip(), left_indent=Inches(0.25))
 
     def _write_test_result(self, dut, para, report_field):
         """Write test result string to Word doc with formatting
@@ -991,13 +1029,9 @@ class ReportClient:
         if report_field in dut:
             report_value = dut[report_field]
             if report_value:
-                run = para.add_run("PASS")
-                run.font.color.rgb = RGBColor(0, 255, 0)
-                run.font.bold = True
+                self._write_text(para, "PASS", bold=True, color=RGBColor(0, 255, 0))
             else:
-                run = para.add_run("FAIL")
-                run.font.color.rgb = RGBColor(255, 0, 0)
-                run.font.bold = True
+                self._write_text(para, "FAIL", bold=True, color=RGBColor(255, 0, 0))
 
     def _write_config_list(self, dut, report_field):
         """Write list of EOS configurations to Word doc with formatting
@@ -1011,10 +1045,13 @@ class ReportClient:
             report_values = dut[report_field]
             for report_value in report_values:
                 para = self._document.add_paragraph()
-                para.paragraph_format.left_indent = Inches(0.25)
-                run = para.add_run(report_value.strip())
-                run.font.name = "Courier New"
-                run.font.size = Pt(10)
+                self._write_text(
+                    para,
+                    report_value.strip(),
+                    font="Courier New",
+                    font_size=10,
+                    left_indent=Inches(0.25),
+                )
 
     def _write_config_term(self, dut, report_field):
         """Write EOS configurations to Word doc with formatting to appear
@@ -1025,55 +1062,32 @@ class ReportClient:
             report_field (string): Name of report field in dut to write
         """
 
-        if report_field in dut and "show_cmd" in dut:
+        if report_field in dut and "show_cmds" in dut:
             table = self._document.add_table(rows=1, cols=1, style="Table Grid")
-            para = table.rows[0].cells[0].paragraphs[0]
-            black = parse_xml(
-                # pylint: disable-next=consider-using-f-string
-                r'<w:shd {} w:fill="0A0A0A"/>'.format(nsdecls("w"))
-            )
-            # pylint: disable-next=protected-access
-            table.rows[0].cells[0]._tc.get_or_add_tcPr().append(black)
             report_values = dut[report_field]
             show_cmds = dut["show_cmds"]
             dut_name = dut["dut"]
 
             logging.info(f"These are recorded report values: {report_values}")
             for index, report_value in enumerate(report_values):
-                run = para.add_run(f"\n{dut_name}# {show_cmds[index]}\n\n{report_value}\n")
+                if index != 0:
+                    _ = table.add_row().cells
+
+                config_output = f"\n{dut_name}# {show_cmds[index]}\n\n{report_value}\n"
+                self._write_cell(
+                    table,
+                    config_output,
+                    0,
+                    index,
+                    font="Courier New",
+                    font_size=10,
+                    color="0A0A0A",
+                    text_color=RGBColor(0, 255, 0),
+                )
                 logging.info(f"Adding value to report: {report_value.strip()}")
-                run.font.name = "Courier New"
-                run.font.size = Pt(10)
-                run.font.color.rgb = RGBColor(0, 255, 0)
 
             para = self._document.add_paragraph()
-            run = para.add_run()
-
-    def _add_dut_table_row(self, test_field, dut, table):
-        """Create a row in the DUT result table
-
-        Args:
-            test_field (str): test parameter to add to table
-            dut (dict): dictionary of test parameters
-            table (obj): word doc table obj
-        """
-
-        if test_field in dut:
-            test_value = dut[test_field]
-            test_field = self._format_test_field(test_field)
-
-            row_cells = table.add_row().cells
-            row_cells[0].text = test_field
-            row_cells[1].text = str(test_value)
-        elif test_field == "Serial No":
-            test_value = self._test_no
-            test_field = self._format_test_field(test_field)
-
-            row_cells = table.add_row().cells
-            row_cells[0].text = test_field
-            row_cells[1].text = str(test_value)
-
-            self._test_no += 1
+            _ = para.add_run()
 
     def _compile_suite_results(self):
         """Compile test suite results and return them
@@ -1213,24 +1227,3 @@ class ReportClient:
         logging.info(f"Formattted test case name is {tc_name}")
 
         return tc_name
-
-    def _format_test_field(self, test_field):
-        """Input a test field name and return a formatted name for
-            test field
-
-        Args:
-            test_field (str): Name of test field
-
-        Return:
-            test_field (str): Formatted test field
-        """
-
-        logging.info(f"Test case name is {test_field}")
-        test_field = str(test_field)
-        test_field = " ".join(test_field.split("_"))
-        test_field = test_field.replace("cmd", "command")
-        test_field = test_field.replace("dut", "device under Test")
-        test_field = test_field.capitalize()
-        logging.info(f"Formattted test field is {test_field}")
-
-        return test_field
