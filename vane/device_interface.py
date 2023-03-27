@@ -98,32 +98,26 @@ class DeviceConn:
 
     def set_conn_params(self, conf_file):
         """Set the Device connection parameters"""
-        # pylint: disable=unnecessary-pass
         pass
 
     def set_up_conn(self, device_name: str):
         """Connect to the mentioned device"""
-        # pylint: disable=unnecessary-pass
         pass
 
     def run_commands(self, cmds, encoding, send_enable, **kwargs):
         """Send commands over the device conn"""
-        # pylint: disable=unnecessary-pass
         pass
 
     def get_config(self, config, params, as_string):
         """Retrieves the config from device"""
-        # pylint: disable=unnecessary-pass
         pass
 
     def enable(self, commands, encoding, strict, send_enable, **kwargs):
         """Send the array of commands to the node in enable mode"""
-        # pylint: disable=unnecessary-pass
         pass
 
     def config(self, commands, **kwargs):
         """Configures the node with the specified commands"""
-        # pylint: disable=unnecessary-pass
         pass
 
 
