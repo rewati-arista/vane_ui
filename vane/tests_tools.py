@@ -36,23 +36,14 @@ import copy
 import concurrent.futures
 import time
 import sys
-import logging
 import os
 import inspect
 import re
 import yaml
 
 from vane import config, device_interface
+from vane.vane_logging import logging
 
-
-FORMAT = "[%(asctime)s %(filename)s->%(funcName)s():%(lineno)s]%(levelname)s: %(message)s"
-
-logging.basicConfig(
-    level=logging.INFO,
-    filename="vane.log",
-    filemode="w",
-    format=FORMAT,
-)
 
 DEFAULT_EOS_CONN = "eapi"
 

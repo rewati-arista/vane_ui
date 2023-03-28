@@ -42,7 +42,6 @@
 
     - Excel report: Tabular representation of results. """
 
-import logging
 import os
 import stat
 import sys
@@ -55,16 +54,8 @@ import yaml
 
 from jinja2 import Template, Undefined
 from pytest import ExitCode
+from vane.vane_logging import logging
 from vane import tests_tools
-
-# pylint: disable=duplicate-code
-FORMAT = "[%(asctime)s %(filename)s->%(funcName)s():%(lineno)s]%(levelname)s: %(message)s"
-logging.basicConfig(
-    level=logging.INFO,
-    filename="vane.log",
-    filemode="w",
-    format=FORMAT,
-)
 
 
 class NullUndefined(Undefined):
