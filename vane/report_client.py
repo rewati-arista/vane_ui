@@ -630,7 +630,7 @@ class ReportClient:
         """
         run = para.add_run(text)
         logging.info(
-            f"Adding text {text} with font {font}, font_size {font_size}, bold {bold},"
+            f"Adding text 'added {text}' with font {font}, font_size {font_size}, bold {bold},"
             f"alignment {align}"
         )
 
