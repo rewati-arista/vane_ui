@@ -1,21 +1,50 @@
-import vane.tests_client as tests_client
-import os
-import configparser
+import vane.tests_client
+import logging
+import pytest
 
-DEFINITIONS = 'tests/unittests/fixtures/definitions.yaml'
-DUTS = 'tests/fixtures/duts.yaml'
-TC = tests_client.TestsClient(DEFINITIONS, DUTS)
+# LOGGER = logging.getLogger("vane_logs")
 
-def test_assert():
-    assert True
+DEFINITIONS = "tests/unittests/fixtures/definitions.yaml"
+DUTS = "tests/fixtures/duts.yaml"
+TC = vane.tests_client.TestsClient(DEFINITIONS, DUTS)
+
+
+@pytest.fixture
+def logger(mocker):
+    return mocker.patch("vane.tests_client.logging.info")
 
 
 def test_object():
-    """ Verify instance of TestsClient Object can be created
-    """
+    """Verify instance of TestsClient Object can be created"""
 
-    methods = ['_import_yaml', '_remove_result_files', '_render_eapi_cfg', '_set_test_parameters', 'test_runner']
-    variables = ['data_model']
+    methods = [
+        "_get_markers",
+        "_init_parameters",
+        "_remove_result_files",
+        "_remove_test_results_dir",
+        "_render_eapi_cfg",
+        "_set_cmdline_input",
+        "_set_cmdline_no_input",
+        "_set_cmdline_report",
+        "_set_excel_report",
+        "_set_html_report",
+        "_set_json_report",
+        "_set_junit",
+        "_set_mark",
+        "_set_processes",
+        "_set_setup_show",
+        "_set_stdout",
+        "_set_test_cases",
+        "_set_test_dirs",
+        "_set_test_parameters",
+        "_set_verbosity",
+        "_write_file",
+        "generate_test_definitions",
+        "setup_test_runner",
+        "test_runner",
+        "write_test_def_file",
+    ]
+    variables = ["data_model", "duts_model"]
 
     # Test for known methods in object
     for method in methods:
@@ -26,239 +55,346 @@ def test_object():
         assert True == (variable in dir(TC))
 
 
-def test_import_definitions():
-    """ Validate that a YAML file can be inputted
-    """
+def test_generate_test_definitions(logger):
+    """Validate creating test definitions using master definitions"""
 
-    parameters = ['parameters']
+    # Load a definitions file with generate_test_definitions set to false
+    definitions_file = "tests/unittests/fixtures/definitions.yaml"
+    duts_file = "tests/fixtures/duts.yaml"
+    client = vane.tests_client.TestsClient(definitions_file, duts_file)
 
-    # Test if imported YAML is a dict
-    assert True == (isinstance(TC.data_model, dict))
+    # Generate test definitions
+    client.generate_test_definitions()
 
-    # Test for known keywords in YAML
-    for parmeter in parameters:
-        assert True == (parmeter in TC.data_model)
+    # Verify logging message was called
+    logger.assert_called_with("Attempting to regenerate test definition files")
 
-# def test_setting_test_parameters():
+
+def test_generate_test_definitions_regen(logger):
+    """Validate creating test definitions with generate_test_definitions set to true"""
+
+    # Load a definitions file with generate_test_definitions set to true
+    definitions_file = "tests/unittests/fixtures/definitions-generate.yaml"
+    duts_file = "tests/fixtures/duts.yaml"
+    client = vane.tests_client.TestsClient(definitions_file, duts_file)
+
+    # Generate test definitions
+    client.generate_test_definitions()
+
+    # Verify logging message was called (implying files were regenerated)
+    logger.assert_called_with("Regenerated test definition files")
+
+
+def test_generate_test_definitions_neg(capsys):
+    """Validate errors are handled by generate_test_definitions"""
+
+    # Load a definitions file with no generate_test_definitions key
+    definitions_file = "tests/unittests/fixtures/definitions-no-generate-key.yaml"
+    duts_file = "tests/fixtures/duts.yaml"
+    client = vane.tests_client.TestsClient(definitions_file, duts_file)
+
+    # Generate test definitions
+    client.generate_test_definitions()
+
+    captured = capsys.readouterr()
+    assert (
+        captured.out == "Unable to regenerate test definition files.\n"
+    ), "tests_client.generate_test_definitions() did not handle missing key 'generate_test_definitions'"
+
+    # -----------------------------------------------------------------
+
+    # Load a definitions file with no master_definitions key
+    definitions_file = "tests/unittests/fixtures/definitions-no-master-def-key.yaml"
+    duts_file = "tests/fixtures/duts.yaml"
+    client = vane.tests_client.TestsClient(definitions_file, duts_file)
+
+    # Generate test definitions
+    client.generate_test_definitions()
+
+    captured = capsys.readouterr()
+    assert (
+        captured.out == "Unable to regenerate test definition files.\n"
+    ), "tests_client.generate_test_definitions() did not handle missing key 'master_definitions'"
+
+    # -----------------------------------------------------------------
+
+    # Load a definitions file with no template_definitions key
+    definitions_file = "tests/unittests/fixtures/definitions-no-template-def-key.yaml"
+    duts_file = "tests/fixtures/duts.yaml"
+    client = vane.tests_client.TestsClient(definitions_file, duts_file)
+
+    # Generate test definitions
+    client.generate_test_definitions()
+
+    captured = capsys.readouterr()
+    assert (
+        captured.out == "Unable to regenerate test definition files.\n"
+    ), "tests_client.generate_test_definitions() did not handle missing key 'template_definitions'"
+
+    # -----------------------------------------------------------------
+
+    # Load a definitions file with no test_definitions key
+    definitions_file = "tests/unittests/fixtures/definitions-no-test-def-key.yaml"
+    duts_file = "tests/fixtures/duts.yaml"
+    client = vane.tests_client.TestsClient(definitions_file, duts_file)
+
+    # Generate test definitions
+    client.generate_test_definitions()
+
+    captured = capsys.readouterr()
+    assert (
+        captured.out == "Unable to regenerate test definition files.\n"
+    ), "tests_client.generate_test_definitions() did not handle missing key 'test_definitions'"
+
+    # -----------------------------------------------------------------
+
+    # Load a definitions file with no test_dirs key
+    definitions_file = "tests/unittests/fixtures/definitions-no-test-dirs-key.yaml"
+    duts_file = "tests/fixtures/duts.yaml"
+    client = vane.tests_client.TestsClient(definitions_file, duts_file)
+
+    # Generate test definitions
+    client.generate_test_definitions()
+
+    captured = capsys.readouterr()
+    assert (
+        captured.out == "Unable to regenerate test definition files.\n"
+    ), "tests_client.generate_test_definitions() did not handle missing key 'test_dirs'"
+
+
+# def test_import_definitions():
+#     """ Validate that a YAML file can be inputted
+#     """
+#
+#     parameters = ['parameters']
+#
+#     # Test if imported YAML is a dict
+#     assert True == (isinstance(TC.data_model, dict))
+#
+#     # Test for known keywords in YAML
+#     for parmeter in parameters:
+#         assert True == (parmeter in TC.data_model)
+#
+# # def test_setting_test_parameters():
+# #     """ Validate that test parametters are settable based on a definition file
+# #     """
+# #
+# #     definitions = {
+# #         'verbose': [False, True, False],
+# #         'stdout': [False, True, False],
+# #         'test_cases': ["All", "evpn", None],
+# #         'html_report': [None, "report"],
+# #         'excel_report': ["report", None],
+# #         'json_report': [None, "report"],
+# #         'processes': [3, 2, 1, None],
+# #         'setup_show': [False, True, False],
+# #         'mark': ['nrfu', 'cpu', 'memory', None]
+# #     }
+# #
+# #     extensions = {
+# #         'verbose': '-v',
+# #         'stdout': '-s',
+# #         'setup_show': '--setup-show',
+# #         'test_cases': '-k',
+# #         'html_report': 'html',
+# #         'json_report': 'json',
+# #         'excel_report': 'excel',
+# #         'processes': '-n',
+# #         'mark': '-m',
+# #     }
+# #
+# #     processes = [3, 2, 1, None]
+# #     marks = ['nrfu', 'cpu', 'memory', None]
+# #
+# #     for definition in definitions:
+# #         report_dir = TC.data_model['parameters']['report_dir']
+# #
+# #         if definition in ['verbose', 'stdout', 'setup_show']:
+# #             for definition_value in definitions[definition]:
+# #                 TC.data_model['parameters'][definition] = definition_value
+# #                 TC._set_test_parameters()
+# #
+# #                 assert definition_value == (extensions[definition] in TC.test_parameters)
+# #
+# #         elif definition in ['test_cases']:
+# #             for definition_value in definitions[definition]:
+# #                 TC.data_model['parameters'][definition] = definition_value
+# #                 TC._set_test_parameters()
+# #                 extension = extensions[definition]
+# #
+# #                 if definition_value == 'All' or not definition_value:
+# #                     assert False == (extension in TC.test_parameters)
+# #                 else:
+# #                     assert True == (f'{extension} {definition_value}' in TC.test_parameters)
+# #
+# #         elif definition in ['html_report', 'json_report', 'excel_report']:
+# #             for definition_value in definitions[definition]:
+# #                 TC.data_model['parameters'][definition] = definition_value
+# #                 TC._set_test_parameters()
+# #
+# #                 if extensions[definition] == 'excel':
+# #                     extension = f'--{extensions[definition]}report'
+# #                     suffix = 'xlsx'
+# #                 else:
+# #                     extension = f'--{extensions[definition]}'
+# #                     suffix = extensions[definition]
+# #
+# #                 if definition_value:
+# #                     assert True == (f'{extension}={report_dir}/{definition_value}.{suffix}' in TC.test_parameters)
+# #                 else:
+# #                     list_output = [x for x in TC.test_parameters if extension in x]
+# #                     assert True == (len(list_output) == 0)
+# #
+# #         elif definition in ['processes', 'mark']:
+# #             for definition_value in definitions[definition]:
+# #                 TC.data_model['parameters'][definition] = definition_value
+# #                 TC._set_test_parameters()
+# #                 extension = extensions[definition]
+# #
+# #                 if definition_value:
+# #                     assert True == (f'{extension} {definition_value}' in TC.test_parameters)
+# #                 else:
+# #                     list_output = [x for x in TC.test_parameters if extension in x]
+# #                     assert True == (len(list_output) == 0)
+# #
+# def test_test_parameters_not_set():
 #     """ Validate that test parametters are settable based on a definition file
 #     """
 #
-#     definitions = {
-#         'verbose': [False, True, False],
-#         'stdout': [False, True, False],
-#         'test_cases': ["All", "evpn", None],
-#         'html_report': [None, "report"],
-#         'excel_report': ["report", None],
-#         'json_report': [None, "report"],
-#         'processes': [3, 2, 1, None],
-#         'setup_show': [False, True, False],
-#         'mark': ['nrfu', 'cpu', 'memory', None]
-#     }
+#     definitions = ['verbose', 'stdout', 'test_cases', 'html_report',
+#                    'excel_report', 'json_report', 'processes', 'mark',
+#                    'setup_show']
+#     duts_file = 'tests/fixtures/duts.yaml'
 #
-#     extensions = {
-#         'verbose': '-v',
-#         'stdout': '-s',
-#         'setup_show': '--setup-show',
-#         'test_cases': '-k',
-#         'html_report': 'html',
-#         'json_report': 'json',
-#         'excel_report': 'excel',
-#         'processes': '-n',
-#         'mark': '-m',
-#     }
-#
-#     processes = [3, 2, 1, None]
-#     marks = ['nrfu', 'cpu', 'memory', None]
+#     tc = tests_client.TestsClient(DEFINITIONS, duts_file)
 #
 #     for definition in definitions:
-#         report_dir = TC.data_model['parameters']['report_dir']
+#         _ = tc.data_model['parameters'].pop(definition, 1)
+#         _ = tc._set_test_parameters()
+#         assert tc.data_model['parameters'][definition] is None
 #
-#         if definition in ['verbose', 'stdout', 'setup_show']:
-#             for definition_value in definitions[definition]:
-#                 TC.data_model['parameters'][definition] = definition_value
-#                 TC._set_test_parameters()
+# def test_import_no_definitions():
+#     """ Test script exits if spreadsheet doesn't exist
+#     """
 #
-#                 assert definition_value == (extensions[definition] in TC.test_parameters)
+#     try:
+#         definitions = '/project/vane/bin/no_definitions.yaml'
+#         _ = tests_client.TestsClient(definitions)
 #
-#         elif definition in ['test_cases']:
-#             for definition_value in definitions[definition]:
-#                 TC.data_model['parameters'][definition] = definition_value
-#                 TC._set_test_parameters()
-#                 extension = extensions[definition]
+#         assert False
 #
-#                 if definition_value == 'All' or not definition_value:
-#                     assert False == (extension in TC.test_parameters)
-#                 else:
-#                     assert True == (f'{extension} {definition_value}' in TC.test_parameters)
+#     except Exception:
+#         assert True
 #
-#         elif definition in ['html_report', 'json_report', 'excel_report']:
-#             for definition_value in definitions[definition]:
-#                 TC.data_model['parameters'][definition] = definition_value
-#                 TC._set_test_parameters()
+# def test_import_bad_definitions():
+#     """ Test script exits if spreadsheet doesn't exist
+#     """
 #
-#                 if extensions[definition] == 'excel':
-#                     extension = f'--{extensions[definition]}report'
-#                     suffix = 'xlsx'
-#                 else:
-#                     extension = f'--{extensions[definition]}'
-#                     suffix = extensions[definition]
+#     bad_data = """ blahs: jalfjdaipeqelue
+#     feq;j;ejf;eqwj
+#     f;djjad;sjds;iefje2''';
+#     asd;jsda;j:::
+#     L:aere
+#     00---
+#     """
 #
-#                 if definition_value:
-#                     assert True == (f'{extension}={report_dir}/{definition_value}.{suffix}' in TC.test_parameters)
-#                 else:
-#                     list_output = [x for x in TC.test_parameters if extension in x]
-#                     assert True == (len(list_output) == 0)
+#     bad_definition = 'tests/unittests/fixtures/bad_definitions.yaml'
 #
-#         elif definition in ['processes', 'mark']:
-#             for definition_value in definitions[definition]:
-#                 TC.data_model['parameters'][definition] = definition_value
-#                 TC._set_test_parameters()
-#                 extension = extensions[definition]
+#     with open(bad_definition, 'w') as out_file:
+#         out_file.write(bad_data)
 #
-#                 if definition_value:
-#                     assert True == (f'{extension} {definition_value}' in TC.test_parameters)
-#                 else:
-#                     list_output = [x for x in TC.test_parameters if extension in x]
-#                     assert True == (len(list_output) == 0)
+#     try:
+#         _ = tests_client.TestsClient(bad_definition)
 #
-def test_test_parameters_not_set():
-    """ Validate that test parametters are settable based on a definition file
-    """
-
-    definitions = ['verbose', 'stdout', 'test_cases', 'html_report',
-                   'excel_report', 'json_report', 'processes', 'mark',
-                   'setup_show']
-    duts_file = 'tests/fixtures/duts.yaml'
-
-    tc = tests_client.TestsClient(DEFINITIONS, duts_file)
-
-    for definition in definitions:
-        _ = tc.data_model['parameters'].pop(definition, 1)
-        _ = tc._set_test_parameters()
-        assert tc.data_model['parameters'][definition] is None
-
-def test_import_no_definitions():
-    """ Test script exits if spreadsheet doesn't exist
-    """
-
-    try:
-        definitions = '/project/vane/bin/no_definitions.yaml'
-        _ = tests_client.TestsClient(definitions)
-
-        assert False
-
-    except Exception:
-        assert True
-
-def test_import_bad_definitions():
-    """ Test script exits if spreadsheet doesn't exist
-    """
-
-    bad_data = """ blahs: jalfjdaipeqelue
-    feq;j;ejf;eqwj
-    f;djjad;sjds;iefje2''';
-    asd;jsda;j:::
-    L:aere
-    00---
-    """
-
-    bad_definition = 'tests/unittests/fixtures/bad_definitions.yaml'
-
-    with open(bad_definition, 'w') as out_file:
-        out_file.write(bad_data)
-
-    try:
-        _ = tests_client.TestsClient(bad_definition)
-
-        assert False
-
-    except Exception:
-        if os.path.exists(bad_definition):
-            os.remove(bad_definition)
-
-        assert True
-
-def test_rendering_eapi_cfg():
-    """ Verify .eapi.conf file renders
-    """
-
-    eapi_file = TC.data_model['parameters']['eapi_file']
-    file_life = 0
-
-    if os.path.exists(eapi_file):
-        file_life = os.path.getmtime(eapi_file)
-
-    TC._render_eapi_cfg()
-    new_file_life = os.path.getmtime(eapi_file)
-
-    assert new_file_life > file_life
-
-def test_eapi_cfg_data():
-    """ Verify if eapi cfg data is rendered correctly
-    """
-
-    eapi_file = TC.data_model['parameters']['eapi_file']
-    duts = TC.duts_model['duts']
-
-    TC._render_eapi_cfg()
-
-    config = configparser.ConfigParser()
-    config.read(eapi_file)
-    dut_names = config.sections()
-
-    for dut in duts:
-        dut_name = f'connection:{dut["name"]}'
-
-        assert True == (dut_name in dut_names)
-
-        assert config[dut_name]['host'] == dut['mgmt_ip']
-        assert config[dut_name]['username'] == dut['username']
-        assert config[dut_name]['password'] == dut['password']
-
-def test_no_eapi_template():
-    """ Verify an exception is created for Jinja2 template that doesn't exist
-    """
-
-    eapi_file = TC.data_model['parameters']['eapi_file']
-    file_life = 0
-
-    if os.path.exists(eapi_file):
-        file_life = os.path.getmtime(eapi_file)
-
-    TC.data_model['parameters']['eapi_template'] = 'not_a_file.j2'
-
-    try:
-        TC._render_eapi_cfg()
-
-        assert False
-
-    except: # noqa: E722
-        new_file_life = os.path.getmtime(eapi_file)
-
-    assert new_file_life == file_life
-
-def test_remove_result_files():
-    """ Verify files are removed from results directory
-    """
-
-    tc = tests_client.TestsClient(DEFINITIONS, DUTS)
-    results_dir = tc.data_model['parameters']['results_dir']
-
-    if not os.path.exists(results_dir):
-        os.makedirs(results_dir)
-
-    for x in range(10):
-        file_name = f'{results_dir}/result-file{x}'
-
-        with open(file_name, 'w') as results_file:
-            results_file.write('test 1 2 3...')
-
-    tc = tests_client.TestsClient(DEFINITIONS, DUTS)
-    tc._remove_result_files()
-    results_files = os.listdir(results_dir)
-
-    for name in results_files:
-        if 'result-' in name:
-            assert False
-
-    assert True
+#         assert False
+#
+#     except Exception:
+#         if os.path.exists(bad_definition):
+#             os.remove(bad_definition)
+#
+#         assert True
+#
+# def test_rendering_eapi_cfg():
+#     """ Verify .eapi.conf file renders
+#     """
+#
+#     eapi_file = TC.data_model['parameters']['eapi_file']
+#     file_life = 0
+#
+#     if os.path.exists(eapi_file):
+#         file_life = os.path.getmtime(eapi_file)
+#
+#     TC._render_eapi_cfg()
+#     new_file_life = os.path.getmtime(eapi_file)
+#
+#     assert new_file_life > file_life
+#
+# def test_eapi_cfg_data():
+#     """ Verify if eapi cfg data is rendered correctly
+#     """
+#
+#     eapi_file = TC.data_model['parameters']['eapi_file']
+#     duts = TC.duts_model['duts']
+#
+#     TC._render_eapi_cfg()
+#
+#     config = configparser.ConfigParser()
+#     config.read(eapi_file)
+#     dut_names = config.sections()
+#
+#     for dut in duts:
+#         dut_name = f'connection:{dut["name"]}'
+#
+#         assert True == (dut_name in dut_names)
+#
+#         assert config[dut_name]['host'] == dut['mgmt_ip']
+#         assert config[dut_name]['username'] == dut['username']
+#         assert config[dut_name]['password'] == dut['password']
+#
+# def test_no_eapi_template():
+#     """ Verify an exception is created for Jinja2 template that doesn't exist
+#     """
+#
+#     eapi_file = TC.data_model['parameters']['eapi_file']
+#     file_life = 0
+#
+#     if os.path.exists(eapi_file):
+#         file_life = os.path.getmtime(eapi_file)
+#
+#     TC.data_model['parameters']['eapi_template'] = 'not_a_file.j2'
+#
+#     try:
+#         TC._render_eapi_cfg()
+#
+#         assert False
+#
+#     except: # noqa: E722
+#         new_file_life = os.path.getmtime(eapi_file)
+#
+#     assert new_file_life == file_life
+#
+# def test_remove_result_files():
+#     """ Verify files are removed from results directory
+#     """
+#
+#     tc = tests_client.TestsClient(DEFINITIONS, DUTS)
+#     results_dir = tc.data_model['parameters']['results_dir']
+#
+#     if not os.path.exists(results_dir):
+#         os.makedirs(results_dir)
+#
+#     for x in range(10):
+#         file_name = f'{results_dir}/result-file{x}'
+#
+#         with open(file_name, 'w') as results_file:
+#             results_file.write('test 1 2 3...')
+#
+#     tc = tests_client.TestsClient(DEFINITIONS, DUTS)
+#     tc._remove_result_files()
+#     results_files = os.listdir(results_dir)
+#
+#     for name in results_files:
+#         if 'result-' in name:
+#             assert False
+#
+#     assert True

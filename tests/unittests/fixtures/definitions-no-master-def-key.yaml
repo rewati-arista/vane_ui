@@ -16,9 +16,9 @@ parameters:
   test_cases: All
   test_dirs:
     - .
-  generate_test_definitions: false
-  master_definitions: master_def.yaml
+  generate_test_definitions: true
   template_definitions: test_definition.yaml
+  test_definitions: test_definition.yaml
   verbose: true
   spreadsheet: tests/fixtures/spreadsheets/PS-LLD-Questionnaire-Template.xlsx
   xcel_definitions: tests/fixtures/spreadsheets/xcel_definitions.yaml

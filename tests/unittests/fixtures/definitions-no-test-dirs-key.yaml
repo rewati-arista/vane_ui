@@ -14,11 +14,10 @@ parameters:
   show_log: show_output.log
   stdout: false
   test_cases: All
-  test_dirs:
-    - .
-  generate_test_definitions: false
+  generate_test_definitions: true
   master_definitions: master_def.yaml
   template_definitions: test_definition.yaml
+  test_definitions: test_definition.yaml
   verbose: true
   spreadsheet: tests/fixtures/spreadsheets/PS-LLD-Questionnaire-Template.xlsx
   xcel_definitions: tests/fixtures/spreadsheets/xcel_definitions.yaml
