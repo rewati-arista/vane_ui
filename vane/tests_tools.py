@@ -137,46 +137,6 @@ def parametrize_duts(test_fname, test_defs, dut_objs):
     return dut_parameters
 
 
-def parametrize_inputs(test_fname, parameter_name, test_defs):
-    """Use a filter to create input variables for PyTest parametrize
-
-    Args:
-        test_fname (str): Test suite path and file name
-        parameter_name(str): Name of parameter whose values need to be picked
-        test_defs (dict): Dictionary with global test definitions
-
-    Returns:
-        input_parameters (dict): Dictionary with variables PyTest parametrize for each test case.
-    """
-    logging.info("Discover test suite name")
-
-    testsuite = test_fname.split("/")[-1]
-
-    logging.info(f"Filter test definitions by test suite name: {testsuite}")
-
-    subset_def = [defs for defs in test_defs["test_suites"] if testsuite in defs["name"]]
-    testcases = subset_def[0]["testcases"]
-
-    logging.info(
-        """For each testcase in this testsuite,
-            pack up the value and ids for parameter_name"""
-    )
-
-    input_parameters = {}
-
-    for testcase in testcases:
-        if "name" in testcase:
-            testname = testcase["name"]
-            parameter_data = []
-            if parameter_name in testcase:
-                parameter_data = testcase[parameter_name]
-            input_parameters[testname] = {}
-            input_parameters[testname]["data"] = [elem["data"] for elem in parameter_data]
-            input_parameters[testname]["ids"] = [elem["id"] for elem in parameter_data]
-
-    return input_parameters
-
-
 def setup_import_yaml(yaml_file):
     """Import YAML file as python data structure
     Also remove lines starting from #
@@ -252,31 +212,6 @@ def yaml_read(yaml_file):
             logging.error(f"ERROR IN YAML FILE: {err}")
             logging.error("EXITING TEST RUNNER")
             sys.exit(1)
-
-
-def return_dut_list(test_parameters):
-    """Return a duts_list for specific test parameters
-
-    Args:
-        test_parameters (dict): Abstraction of testing parameters
-
-    Returns:
-        duts (list): List of DUT hostnames
-    """
-    logging.info("Creating a list of duts from test definitions")
-
-    if "duts" in test_parameters:
-        logging.info("Duts configured in test definitions")
-        duts = [dut["name"] for dut in test_parameters["duts"]]
-    else:
-        print(">>> NO DUTS CONFIGURED")
-        logging.error("NO DUTS CONFIGURED")
-        logging.error("EXITING TEST RUNNER")
-        sys.exit(1)
-
-    logging.info(f"Returning duts: {duts}")
-
-    return duts
 
 
 def init_duts(show_cmds, test_parameters, test_duts):
@@ -715,7 +650,7 @@ def verify_tacacs(dut):
     if tacacs_servers == 0:
         tacacs_bool = False
 
-    logging.info(f"{tacacs_servers} tacacs serverws are configured so returning {tacacs_bool}")
+    logging.info(f"{tacacs_servers} tacacs servers are configured so returning {tacacs_bool}")
 
     return tacacs_bool
 
@@ -745,25 +680,6 @@ def verify_veos(dut):
         logging.info(f"{dut_name} is not a VEOS instance so returning {veos_bool}")
 
     return veos_bool
-
-
-def generate_interface_list(dut_name, test_definition):
-    """Test_definition is used to create a interface_list for active
-    DUT interfaces and attributes
-
-    Args:
-        dut_name (str): name of the dut
-        test_definition (dict):  test definition data
-
-    Returns:
-        interface_list (list): list of active DUT interfaces and attributes
-    """
-    dut_hostnames = [dut["name"] for dut in test_definition["duts"]]
-    dut_index = dut_hostnames.index(dut_name)
-    int_ptr = test_definition["duts"][dut_index]
-    interface_list = int_ptr["test_criteria"][0]["criteria"]
-
-    return interface_list
 
 
 def return_show_cmds(test_parameters):
@@ -1274,23 +1190,6 @@ class TestOps:
             logging.info(f"{self.dut_name} is not a VEOS instance so returning {veos_bool}")
 
         return veos_bool
-
-    def parse_test_steps(self, func):
-        """Returns a list of all the test_steps in the given function.
-        Inspects functions and finds statements with TS: and organizes
-        them into a list.
-
-        Args:
-            func (obj): function reference with body to inspect for test steps
-        """
-        source_lines, _ = inspect.getsourcelines(func)
-
-        for line in source_lines:
-            match = re.match(r"\s*TS:(.*)", line)
-            if match:
-                self.test_steps.append(match.group(1))
-
-        logging.info(f"These are test steps {self.test_steps}")
 
     def run_show_cmds(self, show_cmds, encoding="json"):
         """run_show_cmds is a wrapper which runs the 'show_cmds' using enable() pyeapi
