@@ -22,5 +22,6 @@ pytest-cov
 pytest-excel
 pytest-html
 pytest-json
+pytest-mock
 #pytest-spec
 pytest-xdist
