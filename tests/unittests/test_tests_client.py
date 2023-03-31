@@ -2,6 +2,9 @@ import vane.tests_client
 import logging
 import pytest
 
+from pytest import ExitCode
+from unittest.mock import call
+
 # LOGGER = logging.getLogger("vane_logs")
 
 DEFINITIONS = "tests/unittests/fixtures/definitions.yaml"
@@ -70,8 +73,11 @@ def test_generate_test_definitions(logger):
     logger.assert_called_with("Attempting to regenerate test definition files")
 
 
-def test_generate_test_definitions_regen(logger):
+def test_generate_test_definitions_regen(logger, mocker):
     """Validate creating test definitions with generate_test_definitions set to true"""
+
+    # Mocke the file open function so we don't actually change anything
+    mocker.patch("vane.tests_client.open")
 
     # Load a definitions file with generate_test_definitions set to true
     definitions_file = "tests/unittests/fixtures/definitions-generate.yaml"
@@ -86,7 +92,7 @@ def test_generate_test_definitions_regen(logger):
 
 
 def test_generate_test_definitions_neg(capsys):
-    """Validate errors are handled by generate_test_definitions"""
+    """Validate key errors are handled by generate_test_definitions"""
 
     # Load a definitions file with no generate_test_definitions key
     definitions_file = "tests/unittests/fixtures/definitions-no-generate-key.yaml"
@@ -160,6 +166,110 @@ def test_generate_test_definitions_neg(capsys):
     assert (
         captured.out == "Unable to regenerate test definition files.\n"
     ), "tests_client.generate_test_definitions() did not handle missing key 'test_dirs'"
+
+
+def test_test_runner(mocker, capsys, logger):
+
+    # Load a definitions file with generate_test_definitions set to false
+    definitions_file = "tests/unittests/fixtures/definitions.yaml"
+    duts_file = "tests/fixtures/duts.yaml"
+    client = vane.tests_client.TestsClient(definitions_file, duts_file)
+
+    # Mock a NO_TESTS_COLLECTED result
+    mocker.patch("vane.tests_client.pytest.main", return_value=None)
+
+    # Run the tests
+    client.test_runner()
+
+    captured = capsys.readouterr()
+    assert (
+        captured.out == "Starting test with command: pytest \n\n"
+    ), "tests_client.test_runner failed when expected to pass"
+
+    # Verify logging message was called
+    logger.assert_called_with("Starting Test with parameters: []")
+
+
+def test_test_runner_no_tests(mocker, capsys):
+
+    # Load a definitions file with generate_test_definitions set to false
+    definitions_file = "tests/unittests/fixtures/definitions.yaml"
+    duts_file = "tests/fixtures/duts.yaml"
+    client = vane.tests_client.TestsClient(definitions_file, duts_file)
+
+    # Mock a NO_TESTS_COLLECTED result
+    mocker.patch("vane.tests_client.pytest.main", return_value=pytest.ExitCode.NO_TESTS_COLLECTED)
+
+    # Mock sys.exit for this run
+    ntc_exit = mocker.patch("vane.tests_client.sys.exit")
+
+    # Run the tests
+    client.test_runner()
+
+    captured = capsys.readouterr()
+    assert (
+        "No tests collected with pytest command" in captured.out
+    ), "tests_client.test_runner did not fail when no tests were collected"
+
+    # Assert sys.exit called one time with 1
+    ntc_exit.assert_called_once_with(1)
+
+
+def test_test_runner_usage_err(mocker, capsys):
+
+    # Load a definitions file with generate_test_definitions set to false
+    definitions_file = "tests/unittests/fixtures/definitions.yaml"
+    duts_file = "tests/fixtures/duts.yaml"
+    client = vane.tests_client.TestsClient(definitions_file, duts_file)
+
+    # Mock a USAGE_ERROR result
+    mocker.patch("vane.tests_client.pytest.main", return_value=pytest.ExitCode.USAGE_ERROR)
+
+    # Mock sys.exit for this run
+    ue_exit = mocker.patch("vane.tests_client.sys.exit")
+
+    # Run the tests
+    client.test_runner()
+
+    captured = capsys.readouterr()
+    assert (
+        "Pytest usage error with parameters" in captured.out
+    ), "tests_client.test_runner did not fail when usage error detected"
+
+    # Assert sys.exit called one time with 1
+    ue_exit.assert_called_once_with(1)
+
+
+def test__set_test_parameters(logger):
+
+    # Load a definitions file built for _set_test_parameters
+    definitions_file = "tests/unittests/fixtures/defs_set_test_params.yaml"
+    duts_file = "tests/fixtures/duts.yaml"
+    client = vane.tests_client.TestsClient(definitions_file, duts_file)
+
+    # Run _set_test_parameters
+    client._set_test_parameters()
+
+    # XXX
+    print(logger.call_args_list)
+
+    # Validate the following messages are logged in order
+    logger_calls = [
+        call("Use data-model to create test parameters"),
+        call("Setting test parameters"),
+        call("Initialize test parameter values"),
+        call("Enable pytest output True"),
+        call("Enable pytest output True"),
+        call("Enable pytest output True"),
+        call("Run the following tests: All"),
+        call("Running All test cases."),
+        call('Set HTML report name to: --html=tests/unittests/fixtures/reports/report.html'),
+        call('Set --json report name to: --json=tests/unittests/fixtures/reports/report.json'),
+        call('Not Setting PyTest -n'),
+        call('Set PyTest -m to: demo'),
+    ]
+    logger.assert_has_calls(logger_calls, any_order=True)
+
 
 
 # def test_import_definitions():
