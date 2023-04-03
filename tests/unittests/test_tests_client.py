@@ -1,6 +1,9 @@
 import vane.tests_client
 import logging
 import pytest
+import os
+import io
+import unittest
 
 from pytest import ExitCode
 from unittest.mock import call
@@ -13,8 +16,15 @@ TC = vane.tests_client.TestsClient(DEFINITIONS, DUTS)
 
 
 @pytest.fixture
-def logger(mocker):
+def loginfo(mocker):
+    """Fixture to mock logger calls from vane.tests_client"""
     return mocker.patch("vane.tests_client.logging.info")
+
+
+@pytest.fixture
+def logerr(mocker):
+    """Fixture to mock logger calls from vane.tests_client"""
+    return mocker.patch("vane.tests_client.logging.error")
 
 
 def test_object():
@@ -58,7 +68,7 @@ def test_object():
         assert True == (variable in dir(TC))
 
 
-def test_generate_test_definitions(logger):
+def test_generate_test_definitions(loginfo):
     """Validate creating test definitions using master definitions"""
 
     # Load a definitions file with generate_test_definitions set to false
@@ -70,10 +80,10 @@ def test_generate_test_definitions(logger):
     client.generate_test_definitions()
 
     # Verify logging message was called
-    logger.assert_called_with("Attempting to regenerate test definition files")
+    loginfo.assert_called_with("Attempting to regenerate test definition files")
 
 
-def test_generate_test_definitions_regen(logger, mocker):
+def test_generate_test_definitions_regen(loginfo, mocker):
     """Validate creating test definitions with generate_test_definitions set to true"""
 
     # Mocke the file open function so we don't actually change anything
@@ -88,11 +98,17 @@ def test_generate_test_definitions_regen(logger, mocker):
     client.generate_test_definitions()
 
     # Verify logging message was called (implying files were regenerated)
-    logger.assert_called_with("Regenerated test definition files")
+    loginfo.assert_called_with("Regenerated test definition files")
 
 
 def test_generate_test_definitions_neg(capsys):
     """Validate key errors are handled by generate_test_definitions"""
+
+    # Multiple key errors are tested in a single test case here because they
+    # are dependent sequentially. If one fails, all the following tests cannot
+    # proceed, etc. Rather than having an early test fail and trigger cascading
+    # failures that we need to trace back to a single point, we keep them
+    # together so we can resolve all the key error problems together.
 
     # Load a definitions file with no generate_test_definitions key
     definitions_file = "tests/unittests/fixtures/definitions-no-generate-key.yaml"
@@ -168,7 +184,8 @@ def test_generate_test_definitions_neg(capsys):
     ), "tests_client.generate_test_definitions() did not handle missing key 'test_dirs'"
 
 
-def test_test_runner(mocker, capsys, logger):
+def test_test_runner(mocker, capsys, loginfo):
+    """Validate test_runner function without generating test definitions"""
 
     # Load a definitions file with generate_test_definitions set to false
     definitions_file = "tests/unittests/fixtures/definitions.yaml"
@@ -187,10 +204,11 @@ def test_test_runner(mocker, capsys, logger):
     ), "tests_client.test_runner failed when expected to pass"
 
     # Verify logging message was called
-    logger.assert_called_with("Starting Test with parameters: []")
+    loginfo.assert_called_with("Starting Test with parameters: []")
 
 
 def test_test_runner_no_tests(mocker, capsys):
+    """Validate test_runner with no tests collected error returned"""
 
     # Load a definitions file with generate_test_definitions set to false
     definitions_file = "tests/unittests/fixtures/definitions.yaml"
@@ -200,22 +218,24 @@ def test_test_runner_no_tests(mocker, capsys):
     # Mock a NO_TESTS_COLLECTED result
     mocker.patch("vane.tests_client.pytest.main", return_value=pytest.ExitCode.NO_TESTS_COLLECTED)
 
-    # Mock sys.exit for this run
-    ntc_exit = mocker.patch("vane.tests_client.sys.exit")
+    # Catch the system exit during the pytest
+    with pytest.raises(SystemExit) as pytest_exit:
 
-    # Run the tests
-    client.test_runner()
+        # Run the tests
+        client.test_runner()
 
     captured = capsys.readouterr()
     assert (
         "No tests collected with pytest command" in captured.out
     ), "tests_client.test_runner did not fail when no tests were collected"
 
-    # Assert sys.exit called one time with 1
-    ntc_exit.assert_called_once_with(1)
+    # Validate the system exit was called
+    assert pytest_exit.type == SystemExit
+    assert pytest_exit.value.code == 1
 
 
 def test_test_runner_usage_err(mocker, capsys):
+    """Validate test_runner with usage error returned"""
 
     # Load a definitions file with generate_test_definitions set to false
     definitions_file = "tests/unittests/fixtures/definitions.yaml"
@@ -225,22 +245,28 @@ def test_test_runner_usage_err(mocker, capsys):
     # Mock a USAGE_ERROR result
     mocker.patch("vane.tests_client.pytest.main", return_value=pytest.ExitCode.USAGE_ERROR)
 
-    # Mock sys.exit for this run
-    ue_exit = mocker.patch("vane.tests_client.sys.exit")
+    # Catch the system exit during the pytest
+    with pytest.raises(SystemExit) as pytest_exit:
 
-    # Run the tests
-    client.test_runner()
+        # Run the tests
+        client.test_runner()
 
     captured = capsys.readouterr()
     assert (
         "Pytest usage error with parameters" in captured.out
     ), "tests_client.test_runner did not fail when usage error detected"
 
-    # Assert sys.exit called one time with 1
-    ue_exit.assert_called_once_with(1)
+    # Validate the system exit was called
+    assert pytest_exit.type == SystemExit
+    assert pytest_exit.value.code == 1
 
 
-def test__set_test_parameters(logger):
+def test__set_test_parameters(loginfo):
+    """Validate _set_test_parameters with various values"""
+
+    # XXX several options all output "enable pytest output true/false" instead of
+    # something descriptive of what is being set. A future issue will correct this,
+    # requiring changes to the test case here to match the updated output strings.
 
     # Load a definitions file built for _set_test_parameters
     definitions_file = "tests/unittests/fixtures/defs_set_test_params.yaml"
@@ -250,11 +276,8 @@ def test__set_test_parameters(logger):
     # Run _set_test_parameters
     client._set_test_parameters()
 
-    # XXX
-    print(logger.call_args_list)
-
     # Validate the following messages are logged in order
-    logger_calls = [
+    loginfo_calls = [
         call("Use data-model to create test parameters"),
         call("Setting test parameters"),
         call("Initialize test parameter values"),
@@ -263,13 +286,172 @@ def test__set_test_parameters(logger):
         call("Enable pytest output True"),
         call("Run the following tests: All"),
         call("Running All test cases."),
-        call('Set HTML report name to: --html=tests/unittests/fixtures/reports/report.html'),
-        call('Set --json report name to: --json=tests/unittests/fixtures/reports/report.json'),
-        call('Not Setting PyTest -n'),
-        call('Set PyTest -m to: demo'),
+        call("Set HTML report name to: --html=tests/unittests/fixtures/reports/report.html"),
+        call("Set --json report name to: --json=tests/unittests/fixtures/reports/report.json"),
+        call("Not Setting PyTest -n"),
+        call("Set PyTest -m to: demo"),
     ]
-    logger.assert_has_calls(logger_calls, any_order=True)
+    loginfo.assert_has_calls(loginfo_calls, any_order=False)
 
+
+def test__set_test_parameters_unset(loginfo):
+    """Validate _set_test_parameters that unsets parameters in functions"""
+
+    # XXX needs implemented
+    pass
+
+
+def test__render_eapi_cfg(loginfo):
+    """Validate _render_eapi_config"""
+
+    # Load a definitions file built for _render_eapi_cfg
+    # This definition file has an eapi file that is named eapi_rendered.conf
+    definitions_file = "tests/unittests/fixtures/defs_render_eapi_cfg.yaml"
+    duts_file = "tests/fixtures/duts.yaml"
+    client = vane.tests_client.TestsClient(definitions_file, duts_file)
+
+    # Make sure the rendered eapi file does not exist
+    filepath = client.data_model["parameters"]["eapi_file"]
+    if os.path.exists(filepath):
+        os.remove(filepath)
+
+    # Run _render_eapi_cfg
+    client._render_eapi_cfg()
+
+    # Assert the expected file was created
+    print(client.data_model["parameters"]["eapi_file"])
+    assert os.path.exists(filepath)
+
+    # Assert the new eapi file contains the expected data (compare with known eapi file)
+    unittest.TestCase().assertListEqual(
+        list(io.open(filepath)), list(io.open("tests/unittests/fixtures/eapi.conf"))
+    )
+
+    # Validate the following messages are logged in order
+    loginfo_calls = [
+        call("Render .eapi.conf file for device access"),
+        call("Open tests/fixtures/templates/eapi.conf.j2 Jinja2 template for reading"),
+        call("Read and save contents of tests/fixtures/templates/eapi.conf.j2 Jinja2 template"),
+        call(
+            "Using tests/fixtures/templates/eapi.conf.j2 Jinja2 template to render "
+            "tests/unittests/fixtures/eapi_rendered.conf file with parameters "
+            "[{'mgmt_ip': '10.255.74.38', 'name': 'BL1', 'neighbors': [{'neighborDevice': "
+            "'leaf1', 'neighborPort': 'Ethernet1', 'port': 'Ethernet1'}, {'neighborDevice': "
+            "'leaf2', 'neighborPort': 'Ethernet1', 'port': 'Ethernet2'}], 'password': 'cvp123!', "
+            "'transport': 'https', 'username': 'cvpadmin', 'role': 'leaf'}, {'mgmt_ip': "
+            "'10.255.22.26', 'name': 'BL2', 'neighbors': [{'neighborDevice': 'leaf1', "
+            "'neighborPort': 'Ethernet1', 'port': 'Ethernet1'}, {'neighborDevice': 'leaf2', "
+            "'neighborPort': 'Ethernet1', 'port': 'Ethernet2'}], 'password': 'cvp123!', "
+            "'transport': 'https', 'username': 'cvpadmin', 'role': 'leaf'}]"
+        ),
+        call(
+            "Rendered tests/unittests/fixtures/eapi_rendered.conf as: [connection:BL1]\n"
+            "host: 10.255.74.38\nusername: cvpadmin\n\npassword: cvp123!\n\ntransport: "
+            "https\n\n[connection:BL2]\nhost: 10.255.22.26\nusername: cvpadmin\n\n"
+            "password: cvp123!\n\ntransport: https\n\n"
+        ),
+        call("Open tests/unittests/fixtures/eapi_rendered.conf for writing"),
+        call("Change permissions of tests/unittests/fixtures/eapi_rendered.conf to 777"),
+    ]
+    loginfo.assert_has_calls(loginfo_calls, any_order=False)
+
+
+def test__render_eapi_cfg_neg(loginfo, logerr, capsys):
+    """Validate failure when eapi_template does not exist"""
+
+    # Load a definitions file built for _render_eapi_cfg
+    # This definition file has an eapi file that is named eapi_rendered.conf
+    definitions_file = "tests/unittests/fixtures/defs_render_eapi_cfg_no_template.yaml"
+    duts_file = "tests/fixtures/duts.yaml"
+    client = vane.tests_client.TestsClient(definitions_file, duts_file)
+
+    template = client.data_model["parameters"]["eapi_template"]
+
+    # Catch the system exit during the pytest
+    with pytest.raises(SystemExit) as pytest_exit:
+        # Run _render_eapi_cfg
+        client._render_eapi_cfg()
+
+    captured = capsys.readouterr()
+    err_msg = f"[Errno 2] No such file or directory: '{template}'"
+    assert (
+        f">>> ERROR READING {template}: {err_msg}" in captured.out
+    ), "tests_client._render_eapi_cfg did not fail when template file could not be read"
+
+    # Validate the system exit was called
+    assert pytest_exit.type == SystemExit
+    assert pytest_exit.value.code == 1
+
+    # Validate the following messages are logged in order
+    loginfo_calls = [
+        call("Render .eapi.conf file for device access"),
+        call("Open tests/fixtures/templates/eapi.missing.conf.j2 Jinja2 template for reading"),
+    ]
+    loginfo.assert_has_calls(loginfo_calls, any_order=False)
+
+    # Validate the following messages are logged in order
+    logerr_calls = [
+        call(f"ERROR READING {template}: {err_msg}"),
+        call("EXITING TEST RUNNER"),
+    ]
+    logerr.assert_has_calls(logerr_calls, any_order=False)
+
+
+def test__write_file_neg(loginfo, logerr, capsys):
+    """Validate failure when eapi_file path is not writable"""
+
+    # Load a definitions file built for _render_eapi_cfg
+    # This definition file has an eapi file that with a path that does not exist
+    definitions_file = "tests/unittests/fixtures/defs_render_eapi_cfg_bad_path.yaml"
+    duts_file = "tests/fixtures/duts.yaml"
+    client = vane.tests_client.TestsClient(definitions_file, duts_file)
+
+    filepath = client.data_model["parameters"]["eapi_file"]
+
+    # Catch the system exit during the pytest
+    with pytest.raises(SystemExit) as pytest_exit:
+        # Run _render_eapi_cfg
+        client._render_eapi_cfg()
+
+    captured = capsys.readouterr()
+    err_msg = f"[Errno 2] No such file or directory: '{filepath}'"
+    assert (
+        f">>> ERROR WRITING {filepath}: {err_msg}" in captured.out
+    ), "tests_client._write_file did not fail when eapi file path could not be opened"
+
+    # Validate the system exit was called
+    assert pytest_exit.type == SystemExit
+    assert pytest_exit.value.code == 1
+
+    # Validate the following messages are logged in order
+    loginfo_calls = [
+        call("Render .eapi.conf file for device access"),
+        call("Open tests/fixtures/templates/eapi.conf.j2 Jinja2 template for reading"),
+        call("Read and save contents of tests/fixtures/templates/eapi.conf.j2 Jinja2 template"),
+        call("Using tests/fixtures/templates/eapi.conf.j2 Jinja2 template to render "
+             "tests/unittests/fixtures/invalid/path/eapi_rendered.conf file with parameters "
+             "[{'mgmt_ip': '10.255.74.38', 'name': 'BL1', 'neighbors': [{'neighborDevice': "
+             "'leaf1', 'neighborPort': 'Ethernet1', 'port': 'Ethernet1'}, {'neighborDevice': "
+             "'leaf2', 'neighborPort': 'Ethernet1', 'port': 'Ethernet2'}], 'password': 'cvp123!', "
+             "'transport': 'https', 'username': 'cvpadmin', 'role': 'leaf'}, {'mgmt_ip': "
+             "'10.255.22.26', 'name': 'BL2', 'neighbors': [{'neighborDevice': 'leaf1', "
+             "'neighborPort': 'Ethernet1', 'port': 'Ethernet1'}, {'neighborDevice': 'leaf2', "
+             "'neighborPort': 'Ethernet1', 'port': 'Ethernet2'}], 'password': 'cvp123!', "
+             "'transport': 'https', 'username': 'cvpadmin', 'role': 'leaf'}]"),
+        call("Rendered tests/unittests/fixtures/invalid/path/eapi_rendered.conf as: "
+             "[connection:BL1]\nhost: 10.255.74.38\nusername: cvpadmin\n\npassword: cvp123!\n\n"
+             "transport: https\n\n[connection:BL2]\nhost: 10.255.22.26\nusername: cvpadmin\n\n"
+             "password: cvp123!\n\ntransport: https\n\n"),
+        call("Open tests/unittests/fixtures/invalid/path/eapi_rendered.conf for writing"),
+    ]
+    loginfo.assert_has_calls(loginfo_calls, any_order=False)
+
+    # Validate the following messages are logged in order
+    logerr_calls = [
+        call(f"ERROR WRITING {filepath}: {err_msg}"),
+        call("EXITING TEST RUNNER"),
+    ]
+    logerr.assert_has_calls(logerr_calls, any_order=False)
 
 
 # def test_import_definitions():
@@ -424,64 +606,8 @@ def test__set_test_parameters(logger):
 #
 #         assert True
 #
-# def test_rendering_eapi_cfg():
-#     """ Verify .eapi.conf file renders
-#     """
 #
-#     eapi_file = TC.data_model['parameters']['eapi_file']
-#     file_life = 0
 #
-#     if os.path.exists(eapi_file):
-#         file_life = os.path.getmtime(eapi_file)
-#
-#     TC._render_eapi_cfg()
-#     new_file_life = os.path.getmtime(eapi_file)
-#
-#     assert new_file_life > file_life
-#
-# def test_eapi_cfg_data():
-#     """ Verify if eapi cfg data is rendered correctly
-#     """
-#
-#     eapi_file = TC.data_model['parameters']['eapi_file']
-#     duts = TC.duts_model['duts']
-#
-#     TC._render_eapi_cfg()
-#
-#     config = configparser.ConfigParser()
-#     config.read(eapi_file)
-#     dut_names = config.sections()
-#
-#     for dut in duts:
-#         dut_name = f'connection:{dut["name"]}'
-#
-#         assert True == (dut_name in dut_names)
-#
-#         assert config[dut_name]['host'] == dut['mgmt_ip']
-#         assert config[dut_name]['username'] == dut['username']
-#         assert config[dut_name]['password'] == dut['password']
-#
-# def test_no_eapi_template():
-#     """ Verify an exception is created for Jinja2 template that doesn't exist
-#     """
-#
-#     eapi_file = TC.data_model['parameters']['eapi_file']
-#     file_life = 0
-#
-#     if os.path.exists(eapi_file):
-#         file_life = os.path.getmtime(eapi_file)
-#
-#     TC.data_model['parameters']['eapi_template'] = 'not_a_file.j2'
-#
-#     try:
-#         TC._render_eapi_cfg()
-#
-#         assert False
-#
-#     except: # noqa: E722
-#         new_file_life = os.path.getmtime(eapi_file)
-#
-#     assert new_file_life == file_life
 #
 # def test_remove_result_files():
 #     """ Verify files are removed from results directory
