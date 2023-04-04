@@ -1,12 +1,16 @@
-import vane.tests_client
-import logging
-import pytest
+"""
+tests_client.py unit tests
+"""
+
+# pylint: disable=redefined-outer-name, protected-access
+
 import os
-import io
 import unittest
 
-from pytest import ExitCode
 from unittest.mock import call
+
+import pytest
+import vane.tests_client
 
 # LOGGER = logging.getLogger("vane_logs")
 
@@ -61,11 +65,11 @@ def test_object():
 
     # Test for known methods in object
     for method in methods:
-        assert True == (method in dir(TC))
+        assert method in dir(TC)
 
     # Test for known methods in variables
     for variable in variables:
-        assert True == (variable in dir(TC))
+        assert variable in dir(TC)
 
 
 def test_generate_test_definitions(loginfo):
@@ -119,9 +123,10 @@ def test_generate_test_definitions_neg(capsys):
     client.generate_test_definitions()
 
     captured = capsys.readouterr()
-    assert (
-        captured.out == "Unable to regenerate test definition files.\n"
-    ), "tests_client.generate_test_definitions() did not handle missing key 'generate_test_definitions'"
+    assert captured.out == "Unable to regenerate test definition files.\n", (
+        "tests_client.generate_test_definitions() did not handle missing key "
+        "'generate_test_definitions'"
+    )
 
     # -----------------------------------------------------------------
 
@@ -262,6 +267,7 @@ def test_test_runner_usage_err(mocker, capsys):
 def test__set_test_parameters(loginfo):
     """Validate _set_test_parameters with various values"""
 
+    # pylint: disable-next=fixme
     # XXX several options all output "enable pytest output true/false" instead of
     # something descriptive of what is being set. A future issue will correct this,
     # requiring changes to the test case here to match the updated output strings.
@@ -292,9 +298,10 @@ def test__set_test_parameters(loginfo):
     loginfo.assert_has_calls(loginfo_calls, any_order=False)
 
 
-def test__set_test_parameters_unset(loginfo):
+def test__set_test_parameters_unset():
     """Validate _set_test_parameters that unsets parameters in functions"""
 
+    # pylint: disable-next=fixme
     # XXX needs implemented
     assert False
 
@@ -321,8 +328,10 @@ def test__render_eapi_cfg(loginfo):
     assert os.path.exists(filepath)
 
     # Assert the new eapi file contains the expected data (compare with known eapi file)
+    # pylint: disable=consider-using-with
     unittest.TestCase().assertListEqual(
-        list(io.open(filepath)), list(io.open("tests/unittests/fixtures/eapi.conf"))
+        list(open(filepath, mode="r", encoding="utf-8")),
+        list(open("tests/unittests/fixtures/eapi.conf", mode="r", encoding="utf-8")),
     )
 
     # Validate the following messages are logged in order
@@ -459,6 +468,7 @@ def test__write_file_neg(loginfo, logerr, capsys):
 def test__remove_result_files():
     """Validate _remove_result_files removes pre-existing results files"""
 
+    # pylint: disable-next=fixme
     # XXX needs implemented
     assert False
 
@@ -466,5 +476,6 @@ def test__remove_result_files():
 def test_remove_test_results_dir():
     """Validate _tremove_test_results_dir removes the TEST RESULTS directory"""
 
+    # pylint: disable-next=fixme
     # XXX needs implemented
     assert False
