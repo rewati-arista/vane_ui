@@ -220,7 +220,6 @@ def test_test_runner_no_tests(mocker, capsys):
 
     # Catch the system exit during the pytest
     with pytest.raises(SystemExit) as pytest_exit:
-
         # Run the tests
         client.test_runner()
 
@@ -247,7 +246,6 @@ def test_test_runner_usage_err(mocker, capsys):
 
     # Catch the system exit during the pytest
     with pytest.raises(SystemExit) as pytest_exit:
-
         # Run the tests
         client.test_runner()
 
@@ -298,7 +296,7 @@ def test__set_test_parameters_unset(loginfo):
     """Validate _set_test_parameters that unsets parameters in functions"""
 
     # XXX needs implemented
-    pass
+    assert False
 
 
 def test__render_eapi_cfg(loginfo):
@@ -428,20 +426,24 @@ def test__write_file_neg(loginfo, logerr, capsys):
         call("Render .eapi.conf file for device access"),
         call("Open tests/fixtures/templates/eapi.conf.j2 Jinja2 template for reading"),
         call("Read and save contents of tests/fixtures/templates/eapi.conf.j2 Jinja2 template"),
-        call("Using tests/fixtures/templates/eapi.conf.j2 Jinja2 template to render "
-             "tests/unittests/fixtures/invalid/path/eapi_rendered.conf file with parameters "
-             "[{'mgmt_ip': '10.255.74.38', 'name': 'BL1', 'neighbors': [{'neighborDevice': "
-             "'leaf1', 'neighborPort': 'Ethernet1', 'port': 'Ethernet1'}, {'neighborDevice': "
-             "'leaf2', 'neighborPort': 'Ethernet1', 'port': 'Ethernet2'}], 'password': 'cvp123!', "
-             "'transport': 'https', 'username': 'cvpadmin', 'role': 'leaf'}, {'mgmt_ip': "
-             "'10.255.22.26', 'name': 'BL2', 'neighbors': [{'neighborDevice': 'leaf1', "
-             "'neighborPort': 'Ethernet1', 'port': 'Ethernet1'}, {'neighborDevice': 'leaf2', "
-             "'neighborPort': 'Ethernet1', 'port': 'Ethernet2'}], 'password': 'cvp123!', "
-             "'transport': 'https', 'username': 'cvpadmin', 'role': 'leaf'}]"),
-        call("Rendered tests/unittests/fixtures/invalid/path/eapi_rendered.conf as: "
-             "[connection:BL1]\nhost: 10.255.74.38\nusername: cvpadmin\n\npassword: cvp123!\n\n"
-             "transport: https\n\n[connection:BL2]\nhost: 10.255.22.26\nusername: cvpadmin\n\n"
-             "password: cvp123!\n\ntransport: https\n\n"),
+        call(
+            "Using tests/fixtures/templates/eapi.conf.j2 Jinja2 template to render "
+            "tests/unittests/fixtures/invalid/path/eapi_rendered.conf file with parameters "
+            "[{'mgmt_ip': '10.255.74.38', 'name': 'BL1', 'neighbors': [{'neighborDevice': "
+            "'leaf1', 'neighborPort': 'Ethernet1', 'port': 'Ethernet1'}, {'neighborDevice': "
+            "'leaf2', 'neighborPort': 'Ethernet1', 'port': 'Ethernet2'}], 'password': 'cvp123!', "
+            "'transport': 'https', 'username': 'cvpadmin', 'role': 'leaf'}, {'mgmt_ip': "
+            "'10.255.22.26', 'name': 'BL2', 'neighbors': [{'neighborDevice': 'leaf1', "
+            "'neighborPort': 'Ethernet1', 'port': 'Ethernet1'}, {'neighborDevice': 'leaf2', "
+            "'neighborPort': 'Ethernet1', 'port': 'Ethernet2'}], 'password': 'cvp123!', "
+            "'transport': 'https', 'username': 'cvpadmin', 'role': 'leaf'}]"
+        ),
+        call(
+            "Rendered tests/unittests/fixtures/invalid/path/eapi_rendered.conf as: "
+            "[connection:BL1]\nhost: 10.255.74.38\nusername: cvpadmin\n\npassword: cvp123!\n\n"
+            "transport: https\n\n[connection:BL2]\nhost: 10.255.22.26\nusername: cvpadmin\n\n"
+            "password: cvp123!\n\ntransport: https\n\n"
+        ),
         call("Open tests/unittests/fixtures/invalid/path/eapi_rendered.conf for writing"),
     ]
     loginfo.assert_has_calls(loginfo_calls, any_order=False)
@@ -454,183 +456,15 @@ def test__write_file_neg(loginfo, logerr, capsys):
     logerr.assert_has_calls(logerr_calls, any_order=False)
 
 
-# def test_import_definitions():
-#     """ Validate that a YAML file can be inputted
-#     """
-#
-#     parameters = ['parameters']
-#
-#     # Test if imported YAML is a dict
-#     assert True == (isinstance(TC.data_model, dict))
-#
-#     # Test for known keywords in YAML
-#     for parmeter in parameters:
-#         assert True == (parmeter in TC.data_model)
-#
-# # def test_setting_test_parameters():
-# #     """ Validate that test parametters are settable based on a definition file
-# #     """
-# #
-# #     definitions = {
-# #         'verbose': [False, True, False],
-# #         'stdout': [False, True, False],
-# #         'test_cases': ["All", "evpn", None],
-# #         'html_report': [None, "report"],
-# #         'excel_report': ["report", None],
-# #         'json_report': [None, "report"],
-# #         'processes': [3, 2, 1, None],
-# #         'setup_show': [False, True, False],
-# #         'mark': ['nrfu', 'cpu', 'memory', None]
-# #     }
-# #
-# #     extensions = {
-# #         'verbose': '-v',
-# #         'stdout': '-s',
-# #         'setup_show': '--setup-show',
-# #         'test_cases': '-k',
-# #         'html_report': 'html',
-# #         'json_report': 'json',
-# #         'excel_report': 'excel',
-# #         'processes': '-n',
-# #         'mark': '-m',
-# #     }
-# #
-# #     processes = [3, 2, 1, None]
-# #     marks = ['nrfu', 'cpu', 'memory', None]
-# #
-# #     for definition in definitions:
-# #         report_dir = TC.data_model['parameters']['report_dir']
-# #
-# #         if definition in ['verbose', 'stdout', 'setup_show']:
-# #             for definition_value in definitions[definition]:
-# #                 TC.data_model['parameters'][definition] = definition_value
-# #                 TC._set_test_parameters()
-# #
-# #                 assert definition_value == (extensions[definition] in TC.test_parameters)
-# #
-# #         elif definition in ['test_cases']:
-# #             for definition_value in definitions[definition]:
-# #                 TC.data_model['parameters'][definition] = definition_value
-# #                 TC._set_test_parameters()
-# #                 extension = extensions[definition]
-# #
-# #                 if definition_value == 'All' or not definition_value:
-# #                     assert False == (extension in TC.test_parameters)
-# #                 else:
-# #                     assert True == (f'{extension} {definition_value}' in TC.test_parameters)
-# #
-# #         elif definition in ['html_report', 'json_report', 'excel_report']:
-# #             for definition_value in definitions[definition]:
-# #                 TC.data_model['parameters'][definition] = definition_value
-# #                 TC._set_test_parameters()
-# #
-# #                 if extensions[definition] == 'excel':
-# #                     extension = f'--{extensions[definition]}report'
-# #                     suffix = 'xlsx'
-# #                 else:
-# #                     extension = f'--{extensions[definition]}'
-# #                     suffix = extensions[definition]
-# #
-# #                 if definition_value:
-# #                     assert True == (f'{extension}={report_dir}/{definition_value}.{suffix}' in TC.test_parameters)
-# #                 else:
-# #                     list_output = [x for x in TC.test_parameters if extension in x]
-# #                     assert True == (len(list_output) == 0)
-# #
-# #         elif definition in ['processes', 'mark']:
-# #             for definition_value in definitions[definition]:
-# #                 TC.data_model['parameters'][definition] = definition_value
-# #                 TC._set_test_parameters()
-# #                 extension = extensions[definition]
-# #
-# #                 if definition_value:
-# #                     assert True == (f'{extension} {definition_value}' in TC.test_parameters)
-# #                 else:
-# #                     list_output = [x for x in TC.test_parameters if extension in x]
-# #                     assert True == (len(list_output) == 0)
-# #
-# def test_test_parameters_not_set():
-#     """ Validate that test parametters are settable based on a definition file
-#     """
-#
-#     definitions = ['verbose', 'stdout', 'test_cases', 'html_report',
-#                    'excel_report', 'json_report', 'processes', 'mark',
-#                    'setup_show']
-#     duts_file = 'tests/fixtures/duts.yaml'
-#
-#     tc = tests_client.TestsClient(DEFINITIONS, duts_file)
-#
-#     for definition in definitions:
-#         _ = tc.data_model['parameters'].pop(definition, 1)
-#         _ = tc._set_test_parameters()
-#         assert tc.data_model['parameters'][definition] is None
-#
-# def test_import_no_definitions():
-#     """ Test script exits if spreadsheet doesn't exist
-#     """
-#
-#     try:
-#         definitions = '/project/vane/bin/no_definitions.yaml'
-#         _ = tests_client.TestsClient(definitions)
-#
-#         assert False
-#
-#     except Exception:
-#         assert True
-#
-# def test_import_bad_definitions():
-#     """ Test script exits if spreadsheet doesn't exist
-#     """
-#
-#     bad_data = """ blahs: jalfjdaipeqelue
-#     feq;j;ejf;eqwj
-#     f;djjad;sjds;iefje2''';
-#     asd;jsda;j:::
-#     L:aere
-#     00---
-#     """
-#
-#     bad_definition = 'tests/unittests/fixtures/bad_definitions.yaml'
-#
-#     with open(bad_definition, 'w') as out_file:
-#         out_file.write(bad_data)
-#
-#     try:
-#         _ = tests_client.TestsClient(bad_definition)
-#
-#         assert False
-#
-#     except Exception:
-#         if os.path.exists(bad_definition):
-#             os.remove(bad_definition)
-#
-#         assert True
-#
-#
-#
-#
-# def test_remove_result_files():
-#     """ Verify files are removed from results directory
-#     """
-#
-#     tc = tests_client.TestsClient(DEFINITIONS, DUTS)
-#     results_dir = tc.data_model['parameters']['results_dir']
-#
-#     if not os.path.exists(results_dir):
-#         os.makedirs(results_dir)
-#
-#     for x in range(10):
-#         file_name = f'{results_dir}/result-file{x}'
-#
-#         with open(file_name, 'w') as results_file:
-#             results_file.write('test 1 2 3...')
-#
-#     tc = tests_client.TestsClient(DEFINITIONS, DUTS)
-#     tc._remove_result_files()
-#     results_files = os.listdir(results_dir)
-#
-#     for name in results_files:
-#         if 'result-' in name:
-#             assert False
-#
-#     assert True
+def test__remove_result_files():
+    """Validate _remove_result_files removes pre-existing results files"""
+
+    # XXX needs implemented
+    assert False
+
+
+def test_remove_test_results_dir():
+    """Validate _tremove_test_results_dir removes the TEST RESULTS directory"""
+
+    # XXX needs implemented
+    assert False
