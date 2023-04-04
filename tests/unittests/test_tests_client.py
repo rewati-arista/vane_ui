@@ -2,7 +2,10 @@
 tests_client.py unit tests
 """
 
-# pylint: disable=redefined-outer-name, protected-access
+# Disable redefined-outer-name for using loginfo and logerr fixture functions
+# Disable protected-access for testing hidden class functions
+# Disable import-error for missing vane imports (avoid requiring install of vane just for linting)
+# pylint: disable=redefined-outer-name, protected-access, import-error
 
 import os
 import unittest
