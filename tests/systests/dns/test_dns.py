@@ -80,7 +80,8 @@ class DNSTests:
 
         print(f"{tops.output_msg}\n{tops.comment}")
 
-        tops.show_cmd = show_cmds
+        tops.show_cmds = show_cmds
+        print(tops.show_cmds)
         tops.actual_output, tops.expected_output = (
             tops.actual_results,
             tops.expected_results,
@@ -106,7 +107,7 @@ class DNSTests:
             else:
                 show_cmd = f"ping {dns_server}"
 
-            tops.return_show_cmd(show_cmd)
+            output = tops.run_show_cmds([show_cmd], "text")[0]["result"]["output"]
             tops.actual_output = "bytes from" in tops.show_cmd_txt
             tops.test_result = tops.actual_output is tops.expected_output
 
@@ -137,14 +138,13 @@ class DNSTests:
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
-        tops.return_show_cmd("show running-config section name-server")
+        output = tops.run_show_cmds(["show running-config section name-server"], "text")
 
-        tops.actual_output = tops.show_cmd_txt
         dns_servers = tops.test_parameters["dns_servers"]
         dns_vrf = tops.test_parameters["dns_vrf"]
         dns_intf = tops.test_parameters["dns_intf"]
         dn_name = tops.test_parameters["dn_name"]
-        dns_cfg = tops.show_cmd_txt
+        dns_cfg = output[0]["result"]["output"]
         vane_dns_cfg = ""
 
         if dns_servers:
