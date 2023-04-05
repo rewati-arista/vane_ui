@@ -55,14 +55,13 @@ class DNSTests:
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
-        show_cmds = []
 
         urls = tops.test_parameters["urls"]
         dut_conn = dut["connection"]
 
         for url in urls:
             show_cmd = f"ping {url}"
-            show_cmds.append(show_cmd)
+            tops.show_cmds.append(show_cmd)
 
             show_cmd_txt = dut_conn.run_commands(show_cmd, encoding="text")
             show_cmd_txt = show_cmd_txt[0]["output"]
@@ -80,8 +79,6 @@ class DNSTests:
 
         print(f"{tops.output_msg}\n{tops.comment}")
 
-        tops.show_cmds = show_cmds
-        print(tops.show_cmds)
         tops.actual_output, tops.expected_output = (
             tops.actual_results,
             tops.expected_results,
