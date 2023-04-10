@@ -993,6 +993,32 @@ class TestOps:
 
                 assert False
 
+    def post_testcase(self):
+        """Do post processing for test case"""
+        self.test_parameters["comment"] = self.comment
+        self.test_parameters["test_result"] = self.test_result
+        self.test_parameters["output_msg"] = self.output_msg
+        self.test_parameters["actual_output"] = self.actual_output
+        self.test_parameters["expected_output"] = self.expected_output
+        self.test_parameters["dut"] = self.dut_name
+        self.test_parameters["show_cmd"] = self.show_cmd
+        self.test_parameters["test_id"] = self.test_id
+        self.test_parameters["show_cmd_txts"] = self.show_cmd_txts
+        self.test_parameters["test_steps"] = self.test_steps
+        self.test_parameters["show_cmds"] = self.show_cmds
+
+        if str(self.show_cmd_txt):
+            self.test_parameters["show_cmd"] += ":\n\n" + self.show_cmd_txt
+
+        self.test_parameters["test_id"] = self.test_id
+        self.test_parameters["fail_or_skip_reason"] = ""
+
+        if not self.test_parameters["test_result"]:
+            self.test_parameters["fail_or_skip_reason"] = self.output_msg
+
+        self._write_results()
+        self._write_text_results()
+
     def _write_results(self):
         """Write the yaml output to a text file"""
         logging.info("Preparing to write results")
@@ -1126,31 +1152,14 @@ class TestOps:
         """
         logging.info(f"Output on device {dut_name} after SSH connection is: {output}")
 
+        self.output_msg = (
+            f"\nOn switch |{dut_name}| The actual output is "
+            f"|{self.actual_output}%| and the expected output is "
+            f"|{self.expected_output}%|"
+        )
         print(f"{self.output_msg}\n{self.comment}")
 
-        self.test_parameters["comment"] = self.comment
-        self.test_parameters["test_result"] = self.test_result
-        self.test_parameters["output_msg"] = self.output_msg
-        self.test_parameters["actual_output"] = self.actual_output
-        self.test_parameters["expected_output"] = self.expected_output
-        self.test_parameters["dut"] = self.dut_name
-        self.test_parameters["show_cmd"] = self.show_cmd
-        self.test_parameters["test_id"] = self.test_id
-        self.test_parameters["show_cmd_txts"] = self.show_cmd_txts
-        self.test_parameters["test_steps"] = self.test_steps
-        self.test_parameters["show_cmds"] = self.show_cmds
-
-        if str(self.show_cmd_txt):
-            self.test_parameters["show_cmd"] += ":\n\n" + self.show_cmd_txt
-
-        self.test_parameters["test_id"] = self.test_id
-        self.test_parameters["fail_or_skip_reason"] = ""
-
-        if not self.test_parameters["test_result"]:
-            self.test_parameters["fail_or_skip_reason"] = self.output_msg
-
-        self._write_results()
-        self._write_text_results()
+        self.post_testcase()
 
     def verify_veos(self):
         """Verify DUT is a VEOS instance
@@ -1172,22 +1181,6 @@ class TestOps:
             logging.info(f"{self.dut_name} is not a VEOS instance so returning {veos_bool}")
 
         return veos_bool
-
-    def parse_test_steps(self, func):
-        """Returns a list of all the test_steps in the given function.
-        Inspects functions and finds statements with TS: and organizes
-        them into a list.
-        Args:
-            func (obj): function reference with body to inspect for test steps
-        """
-        source_lines, _ = inspect.getsourcelines(func)
-
-        for line in source_lines:
-            match = re.match(r"\s*TS:(.*)", line)
-            if match:
-                self.test_steps.append(match.group(1))
-
-        logging.info(f"These are test steps {self.test_steps}")
 
     def run_show_cmds(self, show_cmds, encoding="json"):
         """run_show_cmds is a wrapper which runs the 'show_cmds' using enable() pyeapi

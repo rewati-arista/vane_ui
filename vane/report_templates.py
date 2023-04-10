@@ -131,7 +131,7 @@ REPORT_TEMPLATES = {
             "default": [],
             "output_name": "dut output",
         },
-        "test_criteria": {
+        "criteria": {
             "required": True,
             "format": "string",
             "default": "None",
