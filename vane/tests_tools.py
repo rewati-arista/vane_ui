@@ -1143,7 +1143,7 @@ class TestOps:
             result = False
 
         return result, self.show_output, self.show_cmd_txt, error
-
+ 
     def generate_report(self, dut_name, output):
         """Utility to generate report
 
