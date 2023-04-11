@@ -34,7 +34,6 @@ Just like a weather vane, Vane is a network certification tool that shows a
 network's readiness for production based on validation tests. """
 
 import argparse
-import logging
 from io import StringIO
 from contextlib import redirect_stdout
 from datetime import datetime
@@ -47,16 +46,9 @@ from vane import report_client
 from vane import tests_tools
 from vane import test_step_client
 import vane.config
+from vane.vane_logging import logging
 
 
-# pylint: disable=duplicate-code
-FORMAT = "[%(asctime)s %(filename)s->%(funcName)s():%(lineno)s]%(levelname)s: %(message)s"
-logging.basicConfig(
-    level=logging.INFO,
-    filename="vane.log",
-    filemode="w",
-    format=FORMAT,
-)
 logging.info("Starting vane.log file")
 
 
