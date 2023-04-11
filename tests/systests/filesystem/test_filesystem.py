@@ -64,13 +64,8 @@ class FileSystemTests:
 
         for file_name in files:
             show_cmd = f"show file information {file_name}"
-            show_output, show_cmd_txt = tests_tools.return_show_cmd(
-                show_cmd, dut, tops.test_case, LOG_FILE
-            )
-            if show_output:
-                tops.actual_output = show_output[0]["isDir"]
-            elif show_cmd_txt:
-                tops.actual_output = json.loads(show_cmd_txt[0]["output"])["isDir"]
+            show_output = tops.run_show_cmds([show_cmd])
+            tops.actual_output = show_output[0]["result"]["isDir"]
 
             tops.output_msg += (
                 f"\nOn router |{tops.dut_name}|: {file_name} file isDir "

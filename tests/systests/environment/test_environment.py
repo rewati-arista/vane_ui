@@ -63,8 +63,8 @@ class EnvironmentTests:
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
         if not tests_tools.verify_veos(dut):
-            tops.return_show_cmd("show system environment temperature")
-            tops.actual_output = tops.show_output["systemStatus"]
+            show_output = tops.run_show_cmds(["show system environment temperature"])
+            tops.actual_output = show_output[0]["result"]["systemStatus"]
             tops.test_result = tops.actual_output == tops.expected_output
 
             tops.output_msg = (
@@ -101,9 +101,9 @@ class EnvironmentTests:
         if not tests_tools.verify_veos(dut):
             print(f"\nOn router |{tops.dut_name}|:")
 
-            tops.return_show_cmd("show system environment temperature")
-            powersupplies = tops.show_output["powerSupplySlots"]
-            cards = tops.show_output["cardSlots"]
+            show_output = tops.run_show_cmds(["show system environment temperature"])
+            powersupplies = show_output[0]["result"]["powerSupplySlots"]
+            cards = show_output[0]["result"]["cardSlots"]
 
             for sensor_array in [powersupplies, cards]:
                 for sensor_card in sensor_array:
@@ -160,8 +160,8 @@ class EnvironmentTests:
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
         if not tests_tools.verify_veos(dut):
-            tops.return_show_cmd("show system environment power")
-            power_supplies = tops.show_output["powerSupplies"]
+            show_output = tops.run_show_cmds(["show system environment power"])
+            power_supplies = show_output[0]["result"]["powerSupplies"]
             print(f"\nOn router |{tops.dut_name}|")
 
             for powersupply in power_supplies:

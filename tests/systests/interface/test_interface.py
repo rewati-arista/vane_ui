@@ -154,7 +154,7 @@ class InterfacePhyTests:
 
             for interface in tops.interface_list:
                 interface_name = interface["interface_name"].replace(" ", "")
-                int_ptr = dut["output"][show_cmd]["json"][
+                int_ptr = dut["output"][tops.show_cmd]["json"][
                     "interfacePhyStatuses"
                 ]
                 raw_output = int_ptr[interface_name]["phyStatuses"][0]["text"]

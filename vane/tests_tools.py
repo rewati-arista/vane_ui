@@ -658,7 +658,7 @@ def verify_veos(dut):
 
     logging.info(f"Verify if {dut_name} DUT is a VEOS instance. Model is {veos}")
 
-    if veos == "vEOS":
+    if veos == "vEOS" or veos == "vEOS-lab":
         veos_bool = True
 
         logging.info(f"{dut_name} is a VEOS instance so returning {veos_bool}")

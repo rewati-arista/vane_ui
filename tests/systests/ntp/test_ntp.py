@@ -139,9 +139,9 @@ class NTPTests:
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
-        tops.return_show_cmd("show running-config section ntp")
+        show_cmd_txt = tops.run_show_cmds(["show running-config section ntp"], "text")[0]["result"]["output"]
 
-        tops.actual_output = tops.show_cmd_txt
+        tops.actual_output = show_cmd_txt
         ntp_servers = tops.test_parameters["ntp_servers"]
         ntp_vrf = tops.test_parameters["ntp_vrf"]
         ntp_intf = tops.test_parameters["ntp_intf"]
@@ -212,8 +212,8 @@ class NTPTests:
             else:
                 show_cmd = f"ping {ntp_server}"
 
-            tops.return_show_cmd(show_cmd)
-            tops.actual_output = "bytes from" in tops.show_cmd_txt
+            show_cmd_txt = tops.run_show_cmds([show_cmd], encoding="text")
+            tops.actual_output = "bytes from" in show_cmd_txt[0]["result"]["output"]
             tops.test_result = tops.actual_output is tops.expected_output
 
             tops.output_msg += (

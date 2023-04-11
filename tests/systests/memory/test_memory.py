@@ -36,7 +36,7 @@ from vane import tests_tools
 from vane.config import dut_objs, test_defs
 
 
-TEST_SUITE = __file__
+TEST_SUITE = "test_memory.py"
 
 dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
 test1_duts = dut_parameters["test_memory_utilization_on_"]["duts"]

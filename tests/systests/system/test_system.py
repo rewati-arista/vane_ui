@@ -58,8 +58,8 @@ class CrashTests:
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
-        tops.return_show_cmd("show agent logs crash")
-        lines = tops.show_cmd_txt.split("\n")
+        show_cmd_txt = tops.run_show_cmds(["show agent logs crash"], "text")[0]["result"]["output"]
+        lines = show_cmd_txt.split("\n")
         tops.actual_output = len(lines) - 1
 
         tops.test_result = tops.actual_output <= tops.expected_output
