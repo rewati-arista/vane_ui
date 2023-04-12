@@ -33,8 +33,8 @@
 
 import pytest
 from vane import tests_tools
-from vane.fixtures import dut, tests_definitions
 
+#pytest_plugins = "vane.fixtures"
 
 TEST_SUITE = __file__
 
@@ -58,7 +58,6 @@ class DNSTests:
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
         urls = tops.test_parameters["urls"]
-        dut_conn = dut["connection"]
 
         for url in urls:
             show_cmd = f"ping {url}"
@@ -85,7 +84,8 @@ class DNSTests:
             tops.actual_results,
             tops.expected_results,
         )
-        tops.post_testcase()
+
+        tops.generate_report(tops.dut_name, tops.output_msg)
 
         assert tops.actual_results == tops.expected_results
 
@@ -125,8 +125,8 @@ class DNSTests:
             tops.actual_results,
             tops.expected_results,
         )
-        tops.post_testcase()
 
+        tops.generate_report(tops.dut_name, tops.output_msg)
         assert tops.actual_results == tops.expected_results
 
     def test_dns_configuration_on_(self, dut, tests_definitions):
@@ -199,5 +199,5 @@ class DNSTests:
             tops.actual_results,
             tops.expected_results,
         )
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
         assert tops.actual_results == tops.expected_results

@@ -78,7 +78,7 @@ class CPUTests:
         )
         print(f"{tops.output_msg}\n{tops.comment}")
 
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
 
         assert tops.actual_output < tops.expected_output
 
@@ -103,7 +103,7 @@ class CPUTests:
         )
         print(f"{tops.output_msg}\n{tops.comment}")
 
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
 
         assert tops.actual_output < tops.expected_output
 
@@ -128,6 +128,6 @@ class CPUTests:
         )
         print(f"{tops.output_msg}\n{tops.comment}")
 
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
 
         assert tops.actual_output < tops.expected_output

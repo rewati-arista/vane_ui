@@ -31,7 +31,6 @@
 
 """ Tests to validate base feature status."""
 
-import inspect
 import pytest
 from vane import tests_tools
 
@@ -84,6 +83,6 @@ class FileSystemTests:
             tops.actual_results,
             tops.expected_results,
         )
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
 
         assert tops.actual_results == tops.expected_results

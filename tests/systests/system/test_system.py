@@ -31,8 +31,6 @@
 
 """ Tests to validate base feature status."""
 
-import inspect
-import logging
 import pytest
 from vane import tests_tools
 
@@ -71,7 +69,7 @@ class CrashTests:
             f"|{tops.expected_output}|.\n"
         )
 
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
 
         assert tops.actual_output <= tops.expected_output
 
@@ -105,6 +103,6 @@ class SystemTests:
             f"|{tops.expected_output}%|"
         )
 
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
 
         assert tops.actual_output == tops.expected_output

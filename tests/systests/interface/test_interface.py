@@ -82,7 +82,7 @@ class InterfaceStatusTests:
             tops.actual_results,
             tops.expected_results,
         )
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
 
         assert tops.actual_results == tops.expected_results
 
@@ -122,7 +122,7 @@ class InterfaceStatusTests:
             tops.actual_results,
             tops.expected_results,
         )
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
 
         assert tops.actual_results == tops.expected_results
 
@@ -176,7 +176,7 @@ class InterfacePhyTests:
                 tops.actual_results,
                 tops.expected_results,
             )
-            tops.post_testcase()
+            tops.generate_report(tops.dut_name, tops.output_msg)
 
             assert tops.actual_results == tops.expected_results
         else:
@@ -186,7 +186,7 @@ class InterfacePhyTests:
                 None,
             )
 
-            tops.post_testcase()
+            tops.generate_report(tops.dut_name, tops.output_msg)
 
 
 @pytest.mark.nrfu
@@ -230,7 +230,7 @@ class InterfaceCountersTests:
             tops.actual_results,
             tops.expected_results,
         )
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
 
         assert tops.actual_results == tops.expected_results
 
@@ -269,7 +269,7 @@ class InterfaceCountersTests:
             tops.actual_results,
             tops.expected_results,
         )
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
 
         assert tops.actual_results == tops.expected_results
 
@@ -309,7 +309,7 @@ class InterfaceCountersTests:
             tops.actual_results,
             tops.expected_results,
         )
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
 
         assert tops.actual_results == tops.expected_results
 
@@ -349,7 +349,7 @@ class InterfaceCountersTests:
             tops.actual_results,
             tops.expected_results,
         )
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
 
         assert tops.actual_results == tops.expected_results
 
@@ -389,7 +389,7 @@ class InterfaceCountersTests:
             tops.actual_results,
             tops.expected_results,
         )
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
 
         assert tops.actual_results == tops.expected_results
 
@@ -429,7 +429,7 @@ class InterfaceCountersTests:
             tops.actual_results,
             tops.expected_results,
         )
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
 
         assert tops.actual_results == tops.expected_results
 
@@ -469,146 +469,9 @@ class InterfaceCountersTests:
             tops.actual_results,
             tops.expected_results,
         )
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
 
         assert tops.actual_results == tops.expected_results
-
-
-@pytest.mark.nrfu
-@pytest.mark.interface_baseline_health
-@pytest.mark.interface
-class InterfaceDiscardTests:
-    """Interface Discard Test Suite"""
-
-    @pytest.mark.virtual
-    @pytest.mark.physical
-    @pytest.mark.eos424
-    def test_if_intf_out_counters_are_discarding_on_(self, dut, tests_definitions):
-        """Verify the interfaces of interest have no outDiscards
-
-        Args:
-            dut (dict): Encapsulates dut details including name, connection
-        """
-
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
-
-        print(f"\nOn router |{tops.dut_name}|:")
-
-        for interface in tops.interface_list:
-            interface_name = interface["interface_name"].replace(" ", "")
-            int_ptr = dut["output"][tops.show_cmd]["json"]["interfaces"]
-            tops.actual_output = int_ptr[interface_name]["outDiscards"]
-            tops.test_result = tops.actual_output <= tops.expected_output
-
-            tops.output_msg += (
-                f"On interface |{interface_name}|: interface "
-                f"counter discards has |{tops.actual_output}| "
-                f"outDiscards, correct state is |{tops.expected_output}|.\n\n"
-            )
-
-            tops.actual_results.append(tops.actual_output)
-            tops.expected_results.append(tops.expected_output)
-
-        print(f"{tops.output_msg}\n{tops.comment}")
-
-        tops.actual_output, tops.expected_output = (
-            tops.actual_results,
-            tops.expected_results,
-        )
-        tops.post_testcase()
-
-        assert tops.actual_results == tops.expected_results
-
-    @pytest.mark.virtual
-    @pytest.mark.physical
-    @pytest.mark.eos424
-    def test_if_intf_in_counters_are_discarding_on_(self, dut, tests_definitions):
-        """Verify the interfaces of interest have no inDiscards
-
-        Args:
-            dut (dict): Encapsulates dut details including name, connection
-        """
-
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
-
-        print(f"\nOn router |{tops.dut_name}|:")
-
-        for interface in tops.interface_list:
-            interface_name = interface["interface_name"].replace(" ", "")
-            int_ptr = dut["output"][tops.show_cmd]["json"]["interfaces"]
-            tops.actual_output = int_ptr[interface_name]["inDiscards"]
-            tops.test_result = tops.actual_output <= tops.expected_output
-
-            tops.output_msg += (
-                f"On interface |{interface_name}|: interface "
-                f"counter discards has |{tops.actual_output}| "
-                f"inDiscards, correct state is |{tops.expected_output}|.\n\n"
-            )
-
-            tops.actual_results.append(tops.actual_output)
-            tops.expected_results.append(tops.expected_output)
-
-        print(f"{tops.output_msg}\n{tops.comment}")
-
-        tops.actual_output, tops.expected_output = (
-            tops.actual_results,
-            tops.expected_results,
-        )
-        tops.post_testcase()
-
-        assert tops.actual_results == tops.expected_results
-
-
-@pytest.mark.nrfu
-@pytest.mark.interface_baseline_health
-@pytest.mark.interface
-class InterfaceMtuTests:
-    """Interface MTU Test Suite"""
-
-    @pytest.mark.virtual
-    @pytest.mark.physical
-    def test_if_intf_mtu_is_correct_on_(self, dut, tests_definitions):
-        """Verify the interfaces of interest have no inDiscards
-
-        Args:
-            dut (dict): Encapsulates dut details including name, connection
-        """
-
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
-
-        print(f"\nOn router |{tops.dut_name}|:")
-
-        for interface in tops.interface_list:
-            interface_name = interface["interface_name"].replace(" ", "")
-            int_ptr = dut["output"][tops.show_cmd]["json"]["interfaces"]
-            tops.actual_output = int_ptr[interface_name]["mtu"]
-            tops.test_result = tops.actual_output == tops.expected_output
-
-            tops.output_msg += (
-                f"On interface |{interface_name}|: interface "
-                f"MTU is |{tops.actual_output}|, correct MTU is "
-                f"|{tops.expected_output}|.\n\n"
-            )
-
-            tops.actual_results.append(tops.actual_output)
-            tops.expected_results.append(tops.expected_output)
-
-        print(f"{tops.output_msg}\n{tops.comment}")
-
-        tops.actual_output, tops.expected_output = (
-            tops.actual_results,
-            tops.expected_results,
-        )
-        tops.post_testcase()
-
-        assert tops.actual_results == tops.expected_results
-
-
-@pytest.mark.nrfu
-@pytest.mark.interface_baseline_health
-@pytest.mark.interface
-class InterfaceCountersTests:
-    """Interface Errors Test Suite"""
 
     @pytest.mark.virtual
     @pytest.mark.physical
@@ -707,7 +570,7 @@ class InterfaceCountersTests:
             tops.actual_results,
             tops.expected_results,
         )
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
 
         assert tops.actual_results == tops.expected_results
 
@@ -772,6 +635,136 @@ class InterfaceCountersTests:
             tops.actual_results,
             tops.expected_results,
         )
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
+
+        assert tops.actual_results == tops.expected_results
+
+
+@pytest.mark.nrfu
+@pytest.mark.interface_baseline_health
+@pytest.mark.interface
+class InterfaceDiscardTests:
+    """Interface Discard Test Suite"""
+
+    @pytest.mark.virtual
+    @pytest.mark.physical
+    @pytest.mark.eos424
+    def test_if_intf_out_counters_are_discarding_on_(self, dut, tests_definitions):
+        """Verify the interfaces of interest have no outDiscards
+
+        Args:
+            dut (dict): Encapsulates dut details including name, connection
+        """
+
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+
+        print(f"\nOn router |{tops.dut_name}|:")
+
+        for interface in tops.interface_list:
+            interface_name = interface["interface_name"].replace(" ", "")
+            int_ptr = dut["output"][tops.show_cmd]["json"]["interfaces"]
+            tops.actual_output = int_ptr[interface_name]["outDiscards"]
+            tops.test_result = tops.actual_output <= tops.expected_output
+
+            tops.output_msg += (
+                f"On interface |{interface_name}|: interface "
+                f"counter discards has |{tops.actual_output}| "
+                f"outDiscards, correct state is |{tops.expected_output}|.\n\n"
+            )
+
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
+
+        print(f"{tops.output_msg}\n{tops.comment}")
+
+        tops.actual_output, tops.expected_output = (
+            tops.actual_results,
+            tops.expected_results,
+        )
+        tops.generate_report(tops.dut_name, tops.output_msg)
+
+        assert tops.actual_results == tops.expected_results
+
+    @pytest.mark.virtual
+    @pytest.mark.physical
+    @pytest.mark.eos424
+    def test_if_intf_in_counters_are_discarding_on_(self, dut, tests_definitions):
+        """Verify the interfaces of interest have no inDiscards
+
+        Args:
+            dut (dict): Encapsulates dut details including name, connection
+        """
+
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+
+        print(f"\nOn router |{tops.dut_name}|:")
+
+        for interface in tops.interface_list:
+            interface_name = interface["interface_name"].replace(" ", "")
+            int_ptr = dut["output"][tops.show_cmd]["json"]["interfaces"]
+            tops.actual_output = int_ptr[interface_name]["inDiscards"]
+            tops.test_result = tops.actual_output <= tops.expected_output
+
+            tops.output_msg += (
+                f"On interface |{interface_name}|: interface "
+                f"counter discards has |{tops.actual_output}| "
+                f"inDiscards, correct state is |{tops.expected_output}|.\n\n"
+            )
+
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
+
+        print(f"{tops.output_msg}\n{tops.comment}")
+
+        tops.actual_output, tops.expected_output = (
+            tops.actual_results,
+            tops.expected_results,
+        )
+        tops.generate_report(tops.dut_name, tops.output_msg)
+
+        assert tops.actual_results == tops.expected_results
+
+
+@pytest.mark.nrfu
+@pytest.mark.interface_baseline_health
+@pytest.mark.interface
+class InterfaceMtuTests:
+    """Interface MTU Test Suite"""
+
+    @pytest.mark.virtual
+    @pytest.mark.physical
+    def test_if_intf_mtu_is_correct_on_(self, dut, tests_definitions):
+        """Verify the interfaces of interest have no inDiscards
+
+        Args:
+            dut (dict): Encapsulates dut details including name, connection
+        """
+
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+
+        print(f"\nOn router |{tops.dut_name}|:")
+
+        for interface in tops.interface_list:
+            interface_name = interface["interface_name"].replace(" ", "")
+            int_ptr = dut["output"][tops.show_cmd]["json"]["interfaces"]
+            tops.actual_output = int_ptr[interface_name]["mtu"]
+            tops.test_result = tops.actual_output == tops.expected_output
+
+            tops.output_msg += (
+                f"On interface |{interface_name}|: interface "
+                f"MTU is |{tops.actual_output}|, correct MTU is "
+                f"|{tops.expected_output}|.\n\n"
+            )
+
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
+
+        print(f"{tops.output_msg}\n{tops.comment}")
+
+        tops.actual_output, tops.expected_output = (
+            tops.actual_results,
+            tops.expected_results,
+        )
+        tops.generate_report(tops.dut_name, tops.output_msg)
 
         assert tops.actual_results == tops.expected_results

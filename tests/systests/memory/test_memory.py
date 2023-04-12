@@ -66,7 +66,6 @@ class MemoryTests:
 
         memory_total = dut["output"][tops.show_cmd]["json"]["memTotal"]
         memory_free = dut["output"][tops.show_cmd]["json"]["memFree"]
-        memory_percent = 0.00
         tops.actual_output = (float(memory_free) / float(memory_total)) * 100
         tops.test_result = tops.actual_output < tops.expected_output
 
@@ -78,6 +77,6 @@ class MemoryTests:
 
         print(f"{tops.output_msg}\n{tops.comment}")
 
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
 
         assert tops.actual_output < tops.expected_output

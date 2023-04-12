@@ -31,12 +31,8 @@
 
 """ Tests to validate base feature status."""
 
-import inspect
-import logging
 import pytest
 from vane import tests_tools
-from vane.fixtures import dut, tests_definitions
-
 
 TEST_SUITE = __file__
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
@@ -82,7 +78,7 @@ class EnvironmentTests:
             )
 
         print(f"{tops.output_msg}\n{tops.comment}")
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
         assert tops.actual_output == tops.expected_output
 
     def test_if_sensors_temp_is_in_spec_on_(self, dut, tests_definitions):
@@ -139,7 +135,7 @@ class EnvironmentTests:
             )
 
         print(f"{tops.output_msg}\n{tops.comment}")
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
         assert tops.actual_results == tops.expected_results
 
     def test_if_system_environment_power_are_in_spec_on_(self, dut, tests_definitions):
@@ -184,7 +180,7 @@ class EnvironmentTests:
             tops.actual_results,
             tops.expected_results,
         )
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
 
         assert tops.actual_results == tops.expected_results
 
@@ -220,7 +216,7 @@ class EnvironmentTests:
             )
 
         print(f"{tops.output_msg}\n{tops.comment}")
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
         assert tops.actual_output == tops.expected_output
 
     def test_if_fan_status_is_in_spec_on_(self, dut, tests_definitions):
@@ -273,5 +269,5 @@ class EnvironmentTests:
             )
 
         print(f"{tops.output_msg}\n{tops.comment}")
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
         assert tops.actual_results == tops.expected_results

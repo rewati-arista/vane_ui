@@ -31,11 +31,8 @@
 
 """ Tests to validate base feature status."""
 
-import inspect
-import logging
 import pytest
 from vane import tests_tools
-from vane.fixtures import dut, tests_definitions
 
 
 TEST_SUITE = __file__
@@ -69,7 +66,7 @@ class NTPTests:
 
         print(f"{tops.output_msg}\n{tops.comment}")
 
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
 
         assert tops.actual_output == tops.expected_output
 
@@ -93,7 +90,7 @@ class NTPTests:
 
         print(f"{tops.output_msg}\n{tops.comment}")
 
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
 
         assert tops.actual_output == tops.expected_output
 
@@ -128,7 +125,7 @@ class NTPTests:
 
             print(f"{tops.output_msg}\n{tops.comment}")
 
-            tops.post_testcase()
+            tops.generate_report(tops.dut_name, tops.output_msg)
 
             assert tops.actual_output == tops.expected_output
 
@@ -195,7 +192,7 @@ class NTPTests:
             tops.actual_results,
             tops.expected_results,
         )
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
         assert tops.actual_results == tops.expected_results
 
     def test_if_ntp_servers_are_reachable_on_(self, dut, tests_definitions):
@@ -232,6 +229,6 @@ class NTPTests:
             tops.actual_results,
             tops.expected_results,
         )
-        tops.post_testcase()
+        tops.generate_report(tops.dut_name, tops.output_msg)
 
         assert tops.actual_results == tops.expected_results
