@@ -34,7 +34,6 @@
 
 import copy
 import concurrent.futures
-import time
 import sys
 import os
 import inspect
@@ -443,58 +442,6 @@ def dut_worker(dut, show_cmds, test_parameters):
     logging.info(f"{name} updated with show output {dut}")
 
 
-def return_show_cmd(show_cmd, dut, test_name, test_parameters):
-    """Return model data and text output from show commands and log text output.
-
-    Args:
-      show_cmd (str): show command
-      dut (dict): Dictionary containing dut name and connection
-      test_name (str): test case name
-      test_parameters (dict): Abstraction of testing parameters
-
-    Returns:
-      show_output (dict): json output of cli command
-      show_output_text (dict): plain-text output of cli command
-    """
-    logging.info(
-        f"Raw Input for return_show_cmd \nshow_cmd: {show_cmd}\ndut: "
-        f"{dut} \ntest_name: {test_name} \ntest_parameters: "
-        f"{test_parameters}"
-    )
-
-    conn = dut["connection"]
-    name = dut["name"]
-
-    logging.info(
-        "Return model data and text output from show commands and "
-        f"log text output for {show_cmd} with connnection {conn}"
-    )
-
-    show_output = []
-    show_output_text = []
-    raw_text = ""
-
-    try:
-        show_output = conn.run_commands(show_cmd, encoding="json")
-    # pylint: disable-next=broad-exception-caught
-    except Exception as err:
-        logging.error(f"Missed on commmand {show_cmd}")
-        logging.error(f"Error msg {err}")
-
-        time.sleep(1)
-        show_output_text = conn.run_commands(show_cmd, encoding="text")
-
-        logging.error(f"new value of show_output_text  {show_output_text}")
-
-        raw_text = show_output_text[0]["output"]
-
-    logging.info(f"Raw text output of {show_cmd} on dut {name}: {show_output}")
-
-    export_logs(test_name, name, raw_text, test_parameters)
-
-    return show_output, show_output_text
-
-
 def return_interfaces(hostname, test_parameters):
     """Parse test_parameters for interface connections and return them to test
 
@@ -534,31 +481,6 @@ def return_interfaces(hostname, test_parameters):
     logging.info(f"Returning interface list: {interface_list}")
 
     return interface_list
-
-
-def export_logs(test_name, hostname, output, test_parameters):
-    """Open log file for logging test show commands
-
-    Args:
-        test_name (str): test case name
-        hostname (str):  hostname of dut
-        output (str): output text of the show command
-        test_parameters (dict): Abstraction of testing parameters
-    """
-    logging.info("Open log file for logging test show commands")
-
-    show_log = test_parameters["parameters"]["show_log"]
-
-    try:
-        logging.info(f"Opening file {show_log} and append show output: {output}")
-
-        with open(show_log, "w", encoding="utf-8") as log_file:
-            log_file.write(f"\ntest_suite::{test_name}[{hostname}]:\n{output}")
-    except OSError as error:
-        print(f">>>  ERROR OPENING LOG FILE: {error}")
-        logging.error(f"ERROR OPENING LOG FILE: {error}")
-        logging.error("EXITING TEST RUNNER")
-        sys.exit(1)
 
 
 def get_parameters(tests_parameters, test_suite, test_case=""):
@@ -662,7 +584,7 @@ def verify_veos(dut):
 
     logging.info(f"Verify if {dut_name} DUT is a VEOS instance. Model is {veos}")
 
-    if veos == "vEOS":
+    if "vEOS" in veos:
         veos_bool = True
 
         logging.info(f"{dut_name} is a VEOS instance so returning {veos_bool}")
@@ -939,9 +861,10 @@ class TestOps:
             self.show_clock_flag = False
 
         self.show_cmds = []
+        self._show_cmds = []
 
         if self.show_clock_flag:
-            self.show_cmds = ["show version", "show clock"]
+            self._show_cmds = ["show version", "show clock"]
 
         self.show_output = ""
         self.show_cmd = ""
@@ -951,18 +874,23 @@ class TestOps:
             self.show_cmd = self.test_parameters["show_cmd"]
             if self.show_cmd:
                 self.show_cmds.append(self.show_cmd)
+                self._show_cmds.append(self.show_cmd)
         except KeyError:
             self.show_cmds.extend(self.test_parameters["show_cmds"])
+            self._show_cmds.extend(self.test_parameters["show_cmds"])
 
         self.show_cmd_txts = []
         self.show_cmd_txt = ""
+        self._show_cmd_txts = []
 
-        if len(self.show_cmds) > 0 and self.dut:
-            self._verify_show_cmd(self.show_cmds, self.dut)
+        if len(self._show_cmds) > 0 and self.dut:
+            self._verify_show_cmd(self._show_cmds, self.dut)
             if self.show_cmd:
                 self.show_cmd_txt = self.dut["output"][self.show_cmd]["text"]
             for show_cmd in self.show_cmds:
                 self.show_cmd_txts.append(self.dut["output"][show_cmd]["text"])
+            for show_cmd in self._show_cmds:
+                self._show_cmd_txts.append(self.dut["output"][show_cmd]["text"])
 
         self.comment = ""
         self.output_msg = ""
@@ -1023,7 +951,7 @@ class TestOps:
         text_data = {}
         index = 1
 
-        for command, text in zip(self.show_cmds, self.show_cmd_txts):
+        for command, text in zip(self._show_cmds, self._show_cmd_txts):
             text_data[str(index) + ". " + dut_name + "# " + command] = "\n\n" + text
             index += 1
 
@@ -1078,46 +1006,6 @@ class TestOps:
 
         return case_parameters[0]
 
-    def return_show_cmd(self, show_cmd):
-        """Return model data and text output from show commands and log text output.
-
-        Args:
-          show_cmd (str): show command
-
-        Returns:
-            result (bool): boolean representing if there was a successful result or not
-            show_output (str): text output of running command
-            show_cmd_txt (str): text output of show command
-            error (str): error thrown by standard error while running command
-        """
-        self.show_cmd = show_cmd
-        self.show_output = ""
-        self.show_cmd_txt = ""
-        result = True
-        error = ""
-
-        logging.info(f"Raw Input for return_show_cmd \nshow_cmd: {show_cmd}\n")
-
-        conn = self.dut["connection"]
-        name = self.dut["name"]
-
-        logging.info(
-            "Return model data and text output from show commands and "
-            f"log text output for {show_cmd} with connection {conn}"
-        )
-
-        try:
-            show_output_text = conn.run_commands(show_cmd, encoding="text")
-            logging.info(f"Raw text output of {show_cmd} on dut {name}: {self.show_cmd_txt}")
-            self.show_cmd_txt = show_output_text[0]["output"]
-        # pylint: disable-next=broad-exception-caught
-        except Exception as err:
-            logging.info(f"Error running show command {show_cmd}: {str(err)}")
-            error = str(err)
-            result = False
-
-        return result, self.show_output, self.show_cmd_txt, error
- 
     def generate_report(self, dut_name, output):
         """Utility to generate report
 
@@ -1215,19 +1103,22 @@ class TestOps:
             show_clock_cmds = ["show clock"]
             # run the show_clock_cmds
             show_clock_op = conn.enable(show_clock_cmds, "text")
-            # add the show_clock_cmds to TestOps object's show_cmds list
-            # also add the o/p of show_clock_cmds to TestOps object's show_cmds_txts list
+            # add the show_clock_cmds to TestOps object's _show_cmds list
+            # also add the o/p of show_clock_cmds to TestOps object's _show_cmds_txts list
             for result_dict in show_clock_op:
-                self.show_cmds.append(result_dict["command"])
-                self.show_cmd_txts.append(result_dict["result"]["output"])
+                self._show_cmds.append(result_dict["command"])
+                self._show_cmd_txts.append(result_dict["result"]["output"])
 
         # run the commands in text mode
         txt_results = conn.enable(show_cmds, "text")
-        # add the show_cmds to TestOps object's show_cmds list
-        # also add the o/p of show_cmds to TestOps object's show_cmds_txts list
+        # add the show_cmds to TestOps object's show_cmds and _show_cmds list
+        # also add the o/p of show_cmds to TestOps object's show_cmds_txts and
+        # _show_cmds_txts list
         for result_dict in txt_results:
             self.show_cmds.append(result_dict["command"])
+            self._show_cmds.append(result_dict["command"])
             self.show_cmd_txts.append(result_dict["result"]["output"])
+            self._show_cmd_txts.append(result_dict["result"]["output"])
 
         if encoding == "text":
             return txt_results
