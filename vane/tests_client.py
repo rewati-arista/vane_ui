@@ -42,7 +42,6 @@
 
     - Excel report: Tabular representation of results. """
 
-import logging
 import os
 import stat
 import sys
@@ -55,16 +54,8 @@ import yaml
 
 from jinja2 import Template, Undefined
 from pytest import ExitCode
+from vane.vane_logging import logging
 from vane import tests_tools
-
-# pylint: disable=duplicate-code
-FORMAT = "[%(asctime)s %(filename)s->%(funcName)s():%(lineno)s]%(levelname)s: %(message)s"
-logging.basicConfig(
-    level=logging.INFO,
-    filename="vane.log",
-    filemode="w",
-    format=FORMAT,
-)
 
 
 class NullUndefined(Undefined):
@@ -113,12 +104,12 @@ class TestsClient:
             for file in files:
                 if file == template_definitions:
                     # Inputs template yaml data
-                    with open(
-                        os.path.join(root, file), "r", encoding="utf-8"
-                    ).read() as template_file:
+                    with open(os.path.join(root, file), "r", encoding="utf-8") as template_file:
+                        template = template_file.read()
+
                         # Uses Jinja2 templating to generate new test definition
                         # file and replace the given templates
-                        test_template = Template(str(template_file), undefined=NullUndefined)
+                        test_template = Template(str(template), undefined=NullUndefined)
                         master_template = Template(str(master_definitions), undefined=NullUndefined)
                         replace_data = yaml.safe_load(master_template.render())
 
@@ -126,8 +117,8 @@ class TestsClient:
                         yaml_new = yaml.safe_load(new)
 
                         new_file = os.path.join(root, test_definitions)
-                        with open(new_file, "w", encoding="utf-8") as file:
-                            yaml.safe_dump(yaml_new, file, sort_keys=False)
+                        with open(new_file, "w", encoding="utf-8") as outfile:
+                            yaml.safe_dump(yaml_new, outfile, sort_keys=False)
                         logging.info("Regenerared test definition files")
 
     def generate_test_definitions(self):

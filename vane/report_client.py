@@ -32,7 +32,6 @@
 
 """Utilities for using PyTest in network testing"""
 
-import logging
 import datetime
 import json
 import os
@@ -43,15 +42,8 @@ from docx.oxml.ns import qn, nsdecls
 from docx.oxml import OxmlElement, parse_xml
 from docx.shared import Inches, Pt, RGBColor
 from vane.report_templates import REPORT_TEMPLATES
-from vane.tests_tools import yaml_read, FORMAT
-
-# pylint: disable=duplicate-code
-logging.basicConfig(
-    level=logging.INFO,
-    filename="vane.log",
-    filemode="w",
-    format=FORMAT,
-)
+from vane.tests_tools import yaml_read
+from vane.vane_logging import logging
 
 TABLE_GRID = "Table Grid"
 TOTAL_TESTS = "Total Tests"
