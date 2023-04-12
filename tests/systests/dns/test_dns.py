@@ -34,8 +34,6 @@
 import pytest
 from vane import tests_tools
 
-#pytest_plugins = "vane.fixtures"
-
 TEST_SUITE = __file__
 
 
