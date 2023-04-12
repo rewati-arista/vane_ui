@@ -557,6 +557,7 @@ def return_interfaces(hostname, test_parameters):
 
     return interface_list
 
+
 def get_parameters(tests_parameters, test_suite, test_case=""):
     """Return test parameters for a test case
 
@@ -1215,7 +1216,7 @@ class TestOps:
         # run the commands in text mode
         txt_results = conn.enable(show_cmds, "text")
         # add the show_cmds to TestOps object's show_cmds and _show_cmds list
-        # also add the o/p of show_cmds to TestOps object's show_cmds_txts and 
+        # also add the o/p of show_cmds to TestOps object's show_cmds_txts and
         # _show_cmds_txts list
         for result_dict in txt_results:
             self.show_cmds.append(result_dict["command"])
