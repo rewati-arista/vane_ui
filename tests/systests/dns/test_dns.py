@@ -38,6 +38,7 @@ from vane.fixtures import dut, tests_definitions
 
 TEST_SUITE = __file__
 
+
 @pytest.mark.nrfu
 @pytest.mark.base_feature
 @pytest.mark.dns
@@ -148,9 +149,7 @@ class DNSTests:
         if dns_servers:
             for dns_server in dns_servers:
                 if dns_vrf:
-                    dns_server_cfg = (
-                        f"ip name-server vrf {dns_vrf} {dns_server}"
-                    )
+                    dns_server_cfg = f"ip name-server vrf {dns_vrf} {dns_server}"
                 else:
                     dns_server_cfg = f"ip name-server {dns_server}"
 
@@ -193,7 +192,7 @@ class DNSTests:
             f"|{dns_cfg}|, expect the dns config "
             f"|{vane_dns_cfg}|.\n\n"
         )
-      
+
         print(f"{tops.output_msg}\n{tops.comment}")
 
         tops.actual_output, tops.expected_output = (

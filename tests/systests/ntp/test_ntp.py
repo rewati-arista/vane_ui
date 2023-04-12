@@ -40,6 +40,7 @@ from vane.fixtures import dut, tests_definitions
 
 TEST_SUITE = __file__
 
+
 @pytest.mark.nrfu
 @pytest.mark.base_feature
 @pytest.mark.ntp
@@ -139,7 +140,9 @@ class NTPTests:
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
-        show_cmd_txt = tops.run_show_cmds(["show running-config section ntp"], "text")[0]["result"]["output"]
+        show_cmd_txt = tops.run_show_cmds(["show running-config section ntp"], "text")[0]["result"][
+            "output"
+        ]
 
         tops.actual_output = show_cmd_txt
         ntp_servers = tops.test_parameters["ntp_servers"]
