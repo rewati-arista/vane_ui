@@ -101,7 +101,9 @@ class TestStepClient:
         """
         for key in test_comments:
             # Creates file with original filename into json directory
-            with open(f"{os.path.splitext(key)[0]}.json", "w+", encoding="utf_8") as outfile:
+            with open(
+                f"{os.path.splitext(key)[0]}.json", "w+", encoding="utf_8"
+            ) as outfile:
                 json.dump({key: test_comments.get(key)}, outfile)
 
     def output_md(self, test_comments):
@@ -112,16 +114,19 @@ class TestStepClient:
         """
         for key in test_comments:
             steps = test_comments.get(key)
-            md_file = MdUtils(file_name=f"{os.path.splitext(key)[0]}.md", title=Path(key).stem)
+            md_file = MdUtils(
+                file_name=f"{os.path.splitext(key)[0]}.md", title=Path(key).stem
+            )
             md_file.new_line(f"Date generated: {steps[0]}")
             test_steps_list = []
             for step in steps:
                 # Create Title for Test Definition
-                if step.startswith("TD:") and test_steps_list:
+                if step.startswith("TD:"):
                     # Add Test steps to Document where
                     # there are more than one TD
-                    md_file.new_list(test_steps_list, marked_with="1")
-                    test_steps_list = []
+                    if test_steps_list:
+                        md_file.new_list(test_steps_list, marked_with="1")
+                        test_steps_list = []
                     md_file.new_header(level=1, title=step.lstrip("TD:"))
                 # Add Test steps to list to be added to file
                 elif step.startswith("TS:"):
