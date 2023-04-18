@@ -2,7 +2,7 @@
 
 Network Certification Tool
 
-![Coverage](./coverage.svg)
+![Coverage](./resources/coverage.svg)
 
 ## Description
 
