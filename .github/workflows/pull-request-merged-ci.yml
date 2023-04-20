@@ -67,7 +67,7 @@ jobs:
           echo -e "\n----------------"
           echo "Coverage is ${cov_score}%"
           echo -e "----------------\n"
-          coverage-badge -f -o coverage.svg
+          coverage-badge -f -o resources/coverage.svg
 
       - name: Commit the coverage badge
         # Check the git diff for coverage.svg. If the file has been modified
@@ -77,9 +77,9 @@ jobs:
           git status || true
           git config --local user.name actions-user
           git config --local user.email "actions@github.com"
-          if ! git diff --quiet coverage.svg; then
+          if ! git diff --quiet resources/coverage.svg; then
             echo "Updating coverage badge"
-            git add coverage.svg
+            git add resources/coverage.svg
             git commit -am "Updating coverage badge"
             git push -f origin ${{ github.base_ref }}
           fi
