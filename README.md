@@ -153,7 +153,7 @@ Running the unit tests:
     (venv) $ pytest --cov-report term-missing --cov=vane tests/unittests
 ```
 
-Running the system tests:
+Running the sample network tests tests:
 ```
     (venv) $ vane --definitions_file sample_network_tests/definitions.yaml --duts_file sample_network_tests/duts.yaml
 ```
