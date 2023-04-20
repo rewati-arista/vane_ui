@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright (c) 2019, Arista Networks EOS+
+# Copyright (c) 2023, Arista Networks EOS+
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -29,14 +29,14 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-""" Tests to validate base feature status."""
+""" Testcases to validate base feature status."""
 
 import pytest
-from vane.fixtures import dut, tests_definitions
 from vane import tests_tools
 
 
 TEST_SUITE = __file__
+
 
 @pytest.mark.nrfu
 @pytest.mark.base_feature
