@@ -155,7 +155,7 @@ Running the unit tests:
 
 Running the system tests:
 ```
-    (venv) $ vane --definitions_file tests/systests/fixtures/definitions.yaml --duts_file tests/fixtures/duts.yaml
+    (venv) $ vane --definitions_file sample_network_tests/definitions.yaml --duts_file sample_network_tests/duts.yaml
 ```
 
 The coverage report is printed after running the unittest or systest. You can
