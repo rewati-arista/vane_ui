@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright (c) 2019, Arista Networks EOS+
+# Copyright (c) 2023, Arista Networks EOS+
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -29,10 +29,12 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-""" Tests to validate base feature status."""
+""" Testcases to validate agent log crashes and eos versions on devices."""
 
 import pytest
+from pyeapi.eapilib import EapiError
 from vane import tests_tools
+from vane.vane_logging import logging
 
 
 TEST_SUITE = __file__
@@ -49,28 +51,49 @@ class CrashTests:
     """Crash Test Suite"""
 
     def test_if_there_is_agents_have_crashed_on_(self, dut, tests_definitions):
-        """Verifies the agents logs crash is empty
+        """TD: Verifies the agents logs crash is empty
 
         Args:
           dut (dict): Encapsulates dut details including name, connection
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
-        show_cmd_txt = tops.run_show_cmds(["show agent logs crash"], "text")[0]["result"]["output"]
-        lines = show_cmd_txt.split("\n")
-        tops.actual_output = len(lines) - 1
+        try:
+            """TS: Run show command `show agent logs crash` on dut"""
+            self.output = tops.run_show_cmds(["show agent logs crash"], "text")
+            assert self.output, "Agent logs crash are are not collected."
+            logging.info(
+                f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
+            )
 
-        tops.test_result = tops.actual_output <= tops.expected_output
+            show_cmd_txt = self.output[0]["result"]["output"]
+            lines = show_cmd_txt.split("\n")
+            tops.actual_output = len(lines) - 1
 
-        tops.output_msg = (
-            f"\nOn router |{tops.dut_name}| has "
-            f"|{tops.actual_output}| agent crashes"
-            " correct number of agent crashes is "
-            f"|{tops.expected_output}|.\n"
-        )
+        except (AssertionError, AttributeError, LookupError, EapiError) as exception:
+            logging.error(
+                f"""Error occurred during the testsuite execution on dut: {tops.dut_name}
+                 is {str(exception)}"""
+            )
+            tops.actual_output = str(exception)
 
-        tops.generate_report(tops.dut_name, tops.output_msg)
+        if tops.expected_output == tops.actual_output:
+            tops.test_result = True
+            tops.output_msg = (
+                f"\nOn router |{tops.dut_name}| number of agent crashes is "
+                f"|{tops.actual_output}| which is correct.\n"
+            )
+        else:
+            tops.test_result = False
+            tops.output_msg = (
+                f"\nOn router |{tops.dut_name}| number of agent crashes is "
+                f"|{tops.actual_output}| while "
+                "correct number of agent crashes is "
+                f"|{tops.expected_output}|.\n"
+            )
 
+        tops.parse_test_steps(self.test_if_there_is_agents_have_crashed_on_)
+        tops.generate_report(tops.dut_name, self.output)
         assert tops.actual_output <= tops.expected_output
 
 
@@ -94,15 +117,38 @@ class SystemTests:
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        tops.actual_output = dut["output"][tops.show_cmd]["json"]["version"]
-        tops.test_result = tops.actual_output == tops.expected_output
+        try:
+            """TS: Run show command `show version` on dut"""
+            self.output = dut["output"][tops.show_cmd]["json"]
+            assert self.output, "EOS Version details are not collected."
+            logging.info(
+                f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
+            )
 
-        tops.output_msg = (
-            f"On router |{tops.dut_name}| EOS version is "
-            f"|{tops.actual_output}%|, version should be "
-            f"|{tops.expected_output}%|"
-        )
+            tops.actual_output = self.output["version"]
 
-        tops.generate_report(tops.dut_name, tops.output_msg)
+        except (AssertionError, AttributeError, LookupError, EapiError) as exception:
+            logging.error(
+                f"""Error occurred during the testsuite execution on dut: {tops.dut_name}
+                 is {str(exception)}"""
+            )
+            tops.actual_output = str(exception)
 
+        if tops.actual_output == tops.expected_output:
+            tops.test_result = True
+            tops.output_msg = (
+                f"On router |{tops.dut_name}| EOS version is "
+                f"|{tops.actual_output}%| which is correct."
+            )
+        else:
+            tops.test_result = False
+            tops.output_msg = (
+                f"On router |{tops.dut_name}| EOS version is "
+                f"|{tops.actual_output}%|, while the correct version is "
+                f"|{tops.expected_output}%|"
+            )
+        logging.info(f"ACTUAL {tops.actual_output}")
+        logging.info(f"EXPECTED {tops.expected_output}")
+        tops.parse_test_steps(self.test_if_eos_version_is_correct_on_)
+        tops.generate_report(tops.dut_name, self.output)
         assert tops.actual_output == tops.expected_output
