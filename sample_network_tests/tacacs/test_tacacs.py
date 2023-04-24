@@ -57,7 +57,6 @@ class TacacsTests:
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        tests_tools.verify_show_cmd(tops.show_cmd, dut)
         tacacs_servers = tests_tools.verify_tacacs(dut)
 
         if tacacs_servers:
@@ -94,9 +93,6 @@ class TacacsTests:
                         f"|{eos_messages_sent_2}| doesn't increments from "
                         f"TACACS messages1 sent: |{eos_messages_sent_1}|"
                     )
-
-                tops.parse_test_steps(self.test_if_tacacs_is_sending_messages_on_)
-                tops.generate_report(tops.dut_name, self.output)
                 assert eos_messages_sent_1 < eos_messages_sent_2
 
             except (
@@ -110,9 +106,22 @@ class TacacsTests:
                      is {str(exception)}"""
                 )
         else:
-            print(
+            """TS: TACACS servers are not configured on the dut hence terminating the test"""
+            tops.actual_output = "N/A"
+            tops.expected_output = "N/A"
+            tops.test_result = True
+            self.output = (
                 f"\nOn router |{tops.dut_name}| does not have TACACS servers configured"
             )
+            tops.comment = (
+                f"\nOn router |{tops.dut_name}| does not have TACACS servers configured"
+            )
+            tops.output_msg = (
+                f"\nOn router |{tops.dut_name}| does not have TACACS servers configured"
+            )
+
+        tops.parse_test_steps(self.test_if_tacacs_is_sending_messages_on_)
+        tops.generate_report(tops.dut_name, self.output)
 
     def test_if_tacacs_is_receiving_messages_on_(self, dut, tests_definitions):
         """TD: Verify tacacs messages are received correctly
@@ -124,7 +133,6 @@ class TacacsTests:
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        tests_tools.verify_show_cmd(tops.show_cmd, dut)
         tacacs_servers = tests_tools.verify_tacacs(dut)
 
         if tacacs_servers:
@@ -165,6 +173,7 @@ class TacacsTests:
                         "increments from TACACS messages1 received: "
                         f"|{eos_messages_received_1}|"
                     )
+                assert eos_messages_received_1 < eos_messages_received_2
             except (
                 AssertionError,
                 AttributeError,
@@ -175,12 +184,20 @@ class TacacsTests:
                     f"""Error occurred during the testsuite execution on dut: {tops.dut_name}
                      is {str(exception)}"""
                 )
-
-            tops.parse_test_steps(self.test_if_tacacs_is_receiving_messages_on_)
-            tops.generate_report(tops.dut_name, self.output)
-            assert eos_messages_received_1 < eos_messages_received_2
         else:
-            print(
-                f"\nOn router |{tops.dut_name}| does not have TACACS servers "
-                "configured"
+            """TS: TACACS servers are not configured on the dut hence terminating the test"""
+            tops.actual_output = "N/A"
+            tops.expected_output = "N/A"
+            tops.test_result = True
+            self.output = (
+                f"\nOn router |{tops.dut_name}| does not have TACACS servers configured"
             )
+            tops.comment = (
+                f"\nOn router |{tops.dut_name}| does not have TACACS servers configured"
+            )
+            tops.output_msg = (
+                f"\nOn router |{tops.dut_name}| does not have TACACS servers configured"
+            )
+
+        tops.parse_test_steps(self.test_if_tacacs_is_receiving_messages_on_)
+        tops.generate_report(tops.dut_name, self.output)
