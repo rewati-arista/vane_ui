@@ -114,7 +114,7 @@ class TacacsTests:
                 f"\nOn router |{tops.dut_name}| does not have TACACS servers configured"
             )
             tops.comment = (
-                f"\nOn router |{tops.dut_name}| does not have TACACS servers configured"
+                f"\nRouter |{tops.dut_name}| does not have TACACS servers configured"
             )
             tops.output_msg = (
                 f"\nOn router |{tops.dut_name}| does not have TACACS servers configured"
@@ -193,7 +193,7 @@ class TacacsTests:
                 f"\nOn router |{tops.dut_name}| does not have TACACS servers configured"
             )
             tops.comment = (
-                f"\nOn router |{tops.dut_name}| does not have TACACS servers configured"
+                f"\nRouter |{tops.dut_name}| does not have TACACS servers configured"
             )
             tops.output_msg = (
                 f"\nOn router |{tops.dut_name}| does not have TACACS servers configured"
