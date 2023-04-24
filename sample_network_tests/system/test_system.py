@@ -147,8 +147,6 @@ class SystemTests:
                 f"|{tops.actual_output}%|, while the correct version is "
                 f"|{tops.expected_output}%|"
             )
-        logging.info(f"ACTUAL {tops.actual_output}")
-        logging.info(f"EXPECTED {tops.expected_output}")
         tops.parse_test_steps(self.test_if_eos_version_is_correct_on_)
         tops.generate_report(tops.dut_name, self.output)
         assert tops.actual_output == tops.expected_output
