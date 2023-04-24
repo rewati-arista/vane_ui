@@ -1,3 +1,8 @@
+# This is a sample duts.yaml file which can be used to run vane.
+# This file has been generated from the Vane Demo Lab Topology.
+# Explore the vane --help command options to view ways to 
+# generate a duts.yaml from customized topologies.
+
 duts:
 - mgmt_ip: 10.255.106.71
   name: DSR01
