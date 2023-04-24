@@ -222,9 +222,7 @@ class NetmikoConn(DeviceConn):
                 raise CommandError(err_msg, cmds)
 
             if encoding == "text":
-                # for text encoding, creating the
-                # format similar to one returned by
-                # eapi format
+                # for text encoding, creating the format similar to one returned by eapi format
                 text_ob = {"output": output}
                 cmds_op.append(text_ob)
             else:
@@ -260,8 +258,7 @@ class NetmikoConn(DeviceConn):
             self._connection.enable()
 
         if encoding == "json":
-            # for json encoding, lets try to run cmds
-            # using | json
+            # for json encoding, lets try to run cmds using | json
             cmds, local_cmds = self.get_cmds(cmds=cmds)
 
         elif encoding == "text" and isinstance(cmds, list):
