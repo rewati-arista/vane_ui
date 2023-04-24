@@ -20,6 +20,7 @@ disable=
     logging-fstring-interpolation,
     logging-not-lazy,
     unnecessary-pass,
+    duplicate-code,
 
 
 [MISCELLANEOUS]
@@ -43,3 +44,6 @@ max-module-lines=1200
 
 # Maximum number of locals for function / method body.
 max-locals=25
+
+# Minimum number of public methods for a class (see R0903).
+min-public-methods=1
