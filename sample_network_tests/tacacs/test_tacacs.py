@@ -32,9 +32,9 @@
 """ Tests to validate TACACS functionality."""
 
 import pytest
+from pyeapi.eapilib import EapiError
 from vane import tests_tools
 from vane.vane_logging import logging
-from pyeapi.eapilib import EapiError
 
 
 TEST_SUITE = __file__
