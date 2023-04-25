@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright (c) 2019, Arista Networks EOS+
+# Copyright (c) 2023, Arista Networks EOS+
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -29,10 +29,12 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-""" Tests to validate base feature status."""
+""" Tests to validate memory utilization."""
 
 import pytest
+from pyeapi.eapilib import EapiError
 from vane import tests_tools
+from vane.vane_logging import logging
 from vane.config import dut_objs, test_defs
 
 
@@ -55,7 +57,7 @@ class MemoryTests:
 
     @pytest.mark.parametrize("dut", test1_duts, ids=test1_ids)
     def test_memory_utilization_on_(self, dut, tests_definitions):
-        """Verify memory is not exceeding high utlization
+        """TD: Verify memory is not exceeding high utilization
 
         Args:
             dut (dict): Encapsulates dut details including name, connection
@@ -64,19 +66,40 @@ class MemoryTests:
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        memory_total = dut["output"][tops.show_cmd]["json"]["memTotal"]
-        memory_free = dut["output"][tops.show_cmd]["json"]["memFree"]
-        tops.actual_output = (float(memory_free) / float(memory_total)) * 100
-        tops.test_result = tops.actual_output < tops.expected_output
+        try:
+            """TS: Run show command 'show version' on dut"""
+            self.output = dut["output"][tops.show_cmd]["json"]
+            assert self.output, "Memory details are not collected."
+            logging.info(
+                f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
+            )
 
-        tops.output_msg = (
-            f"On router |{tops.dut_name}| memory utilization percent is "
-            f"|{tops.actual_output}%| and should be under "
-            f"|{tops.expected_output}%|"
-        )
+            memory_total = self.output["memTotal"]
+            memory_free = self.output["memFree"]
+            tops.actual_output = (float(memory_free) / float(memory_total)) * 100
 
-        print(f"{tops.output_msg}\n{tops.comment}")
+        except (AssertionError, AttributeError, LookupError, EapiError) as exception:
+            logging.error(
+                f"Error occurred during the testsuite execution on dut: "
+                f"{tops.dut_name} is {str(exception)}"
+            )
+            tops.actual_output = str(exception)
 
-        tops.generate_report(tops.dut_name, tops.output_msg)
+        if tops.actual_output < tops.expected_output:
+            tops.test_result = True
+            tops.output_msg = (
+                f"On router |{tops.dut_name}| memory utilization percent is "
+                f"|{tops.actual_output}%| which is correct as it is "
+                f"under |{tops.expected_output}%|"
+            )
+        else:
+            tops.test_result = False
+            tops.output_msg = (
+                f"On router |{tops.dut_name}| memory utilization percent is "
+                f"|{tops.actual_output}%| while it should be under "
+                f"|{tops.expected_output}%|"
+            )
 
+        tops.parse_test_steps(self.test_memory_utilization_on_)
+        tops.generate_report(tops.dut_name, self.output)
         assert tops.actual_output < tops.expected_output
