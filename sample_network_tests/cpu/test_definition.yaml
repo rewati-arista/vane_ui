@@ -4,26 +4,40 @@
       description: Verify 1 second CPU % is under specificied value
       show_cmd: show processes
       # CPU process ceiling
-      expected_output: 1
+      expected_output: 
+        cpu_utilization: 10
+      report_style: modern
+      test_criteria: Verify expected CPU percentage less than actual CPU percentage
       # Optionally filter duts by criteria: name, role, regex, or names
       criteria: names
       filter: 
-        - BLFE1
+        - LEAF1
+        - LEAF2
+
     - name: test_1_min_cpu_utlization_on_
       description: Verify 1 minute CPU % is under specificied value
       show_cmd: show processes
       # CPU process ceiling
-      expected_output: 10
+      expected_output: 
+        cpu_utilization: 10
+      report_style: modern
+      test_criteria: Verify expected CPU percentage less than actual CPU percentage
       # Optionally filter duts by criteria: name, role, regex, or names
-      criteria: roles
+      criteria: names
       filter: 
-        - leaf
+        - LEAF1
+        - LEAF2
+
     - name: test_5_min_cpu_utlization_on_
       description: Verify 5 minute CPU % is under specificied value
       show_cmd: show processes
       # CPU process ceiling
-      expected_output: 10
+      expected_output: 
+        cpu_utilization: 10
+      report_style: modern
+      test_criteria: Verify expected CPU percentage less than actual CPU percentage
       # Optionally filter duts by criteria: name, role, regex, or names
       criteria: names
       filter:
-        - BLFE1
+        - LEAF1
+        - LEAF2
