@@ -35,19 +35,37 @@ import pytest
 from pyeapi.eapilib import EapiError
 from vane import tests_tools
 from vane.vane_logging import logging
+from vane.config import dut_objs, test_defs
 
 TEST_SUITE = __file__
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
+
+dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
+
+test1_duts = dut_parameters["test_if_system_environment_temp_is_in_spec_on_"]["duts"]
+test1_ids = dut_parameters["test_if_system_environment_temp_is_in_spec_on_"]["ids"]
+
+test2_duts = dut_parameters["test_if_sensors_temp_is_in_spec_on_"]["duts"]
+test2_ids = dut_parameters["test_if_sensors_temp_is_in_spec_on_"]["ids"]
+
+test3_duts = dut_parameters["test_if_system_environment_power_are_in_spec_on_"]["duts"]
+test3_ids = dut_parameters["test_if_system_environment_power_are_in_spec_on_"]["ids"]
+
+test4_duts = dut_parameters["test_if_system_environment_cooling_is_in_spec_on_"]["duts"]
+test4_ids = dut_parameters["test_if_system_environment_cooling_is_in_spec_on_"]["ids"]
+
+test5_duts = dut_parameters["test_if_fan_status_is_in_spec_on_"]["duts"]
+test5_ids = dut_parameters["test_if_fan_status_is_in_spec_on_"]["ids"]
 
 
 @pytest.mark.nrfu
 @pytest.mark.platform_status
 @pytest.mark.environment
 @pytest.mark.physical
-@pytest.mark.eos424
 class EnvironmentTests:
     """Environment Test Suite"""
 
+    @pytest.mark.parametrize("dut", test1_duts, ids=test1_ids)
     def test_if_system_environment_temp_is_in_spec_on_(self, dut, tests_definitions):
         """TD: Verify system's temperature environmental is functional within spec
 
@@ -120,6 +138,7 @@ class EnvironmentTests:
         tops.generate_report(tops.dut_name, self.output)
         assert tops.actual_output == tops.expected_output
 
+    @pytest.mark.parametrize("dut", test2_duts, ids=test2_ids)
     def test_if_sensors_temp_is_in_spec_on_(self, dut, tests_definitions):
         """TD: Verify system's temperature sensors environmental is functional within spec
 
@@ -209,6 +228,7 @@ class EnvironmentTests:
         tops.generate_report(tops.dut_name, self.output)
         assert tops.actual_output == tops.expected_output
 
+    @pytest.mark.parametrize("dut", test3_duts, ids=test3_ids)
     def test_if_system_environment_power_are_in_spec_on_(self, dut, tests_definitions):
         """TD: Verify system's power environmental is functional within spec
         Args:
@@ -287,6 +307,7 @@ class EnvironmentTests:
         tops.generate_report(tops.dut_name, self.output)
         assert tops.actual_output == tops.expected_output
 
+    @pytest.mark.parametrize("dut", test4_duts, ids=test4_ids)
     def test_if_system_environment_cooling_is_in_spec_on_(self, dut, tests_definitions):
         """TD: Verify system's cooling environmental is functional within spec
 
@@ -357,6 +378,7 @@ class EnvironmentTests:
         tops.generate_report(tops.dut_name, self.output)
         assert tops.actual_output == tops.expected_output
 
+    @pytest.mark.parametrize("dut", test5_duts, ids=test5_ids)
     def test_if_fan_status_is_in_spec_on_(self, dut, tests_definitions):
         """TD: Verify system's cooling environmental is functional within spec
 
