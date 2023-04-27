@@ -39,6 +39,7 @@ from vane.config import dut_objs, test_defs
 
 
 TEST_SUITE = "test_memory.py"
+LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 
 dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
 test1_duts = dut_parameters["test_memory_utilization_on_"]["duts"]
@@ -51,7 +52,6 @@ test1_ids = dut_parameters["test_memory_utilization_on_"]["ids"]
 @pytest.mark.memory
 @pytest.mark.virtual
 @pytest.mark.physical
-@pytest.mark.eos424
 class MemoryTests:
     """Memory Test Suite"""
 
@@ -88,16 +88,16 @@ class MemoryTests:
         if tops.actual_output < tops.expected_output:
             tops.test_result = True
             tops.output_msg = (
-                f"On router |{tops.dut_name}| memory utilization percent is "
-                f"|{tops.actual_output}%| which is correct as it is "
-                f"under |{tops.expected_output}%|"
+                f"On router {tops.dut_name} memory utilization percent is "
+                f"{tops.actual_output}% which is correct as it is "
+                f"under {tops.expected_output}%"
             )
         else:
             tops.test_result = False
             tops.output_msg = (
-                f"On router |{tops.dut_name}| memory utilization percent is "
-                f"|{tops.actual_output}%| while it should be under "
-                f"|{tops.expected_output}%|"
+                f"On router {tops.dut_name} memory utilization percent is "
+                f"{tops.actual_output}% while it should be under "
+                f"{tops.expected_output}%"
             )
 
         tops.parse_test_steps(self.test_memory_utilization_on_)
