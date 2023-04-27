@@ -38,14 +38,14 @@ from vane.vane_logging import logging
 
 
 TEST_SUITE = __file__
-
+LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 
 @pytest.mark.nrfu
 @pytest.mark.base_feature
 @pytest.mark.extensions
 @pytest.mark.virtual
 @pytest.mark.physical
-@pytest.mark.eos424
+
 class ExtensionsTests:
     """EOS Extensions Test Suite"""
 
@@ -91,17 +91,17 @@ class ExtensionsTests:
             if tops.expected_output == tops.actual_output:
                 tops.test_result = True
                 tops.output_msg += (
-                    f"\nOn router |{tops.dut_name}| extension "
-                    f"|{extension}| status |{tops.actual_output}| is "
+                    f"\nOn router {tops.dut_name} extension "
+                    f"{extension} status {tops.actual_output} is "
                     f"correct.\n"
                 )
             else:
                 tops.test_result = False
                 tops.output_msg += (
-                    f"\nOn router |{tops.dut_name}| extension "
-                    f"|{extension}| status is "
-                    f"|{tops.actual_output}|, while correct status is "
-                    f"|{tops.expected_output}|.\n"
+                    f"\nOn router {tops.dut_name} extension "
+                    f"{extension} status is "
+                    f"{tops.actual_output}, while correct status is "
+                    f"{tops.expected_output}.\n"
                 )
 
             tops.actual_results.append(tops.actual_output)
@@ -152,17 +152,17 @@ class ExtensionsTests:
             if tops.expected_output == tops.actual_output:
                 tops.test_result = True
                 tops.output_msg += (
-                    f"\nOn router |{tops.dut_name}| extension "
-                    f"|{extension}| error status |{tops.actual_output}| is "
+                    f"\nOn router {tops.dut_name} extension "
+                    f"{extension} error status {tops.actual_output} is "
                     f"correct.\n"
                 )
             else:
                 tops.test_result = False
                 tops.output_msg += (
-                    f"\nOn router |{tops.dut_name}| extension "
-                    f"|{extension}| error status is "
-                    f"|{tops.actual_output}|, while correct error status "
-                    f"is |{tops.expected_output}|.\n"
+                    f"\nOn router {tops.dut_name} extension "
+                    f"{extension} error status is "
+                    f"{tops.actual_output}, while correct error status "
+                    f"is {tops.expected_output}.\n"
                 )
 
             tops.actual_results.append(tops.actual_output)
