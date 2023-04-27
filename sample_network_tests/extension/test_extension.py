@@ -35,20 +35,26 @@ import pytest
 from pyeapi.eapilib import EapiError
 from vane import tests_tools
 from vane.vane_logging import logging
+from vane.config import dut_objs, test_defs
 
 
 TEST_SUITE = __file__
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
+
+dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
+test1_duts = dut_parameters["test_if_extensions_are_installed_on_"]["duts"]
+test1_ids = dut_parameters["test_if_extensions_are_installed_on_"]["ids"]
+
 
 @pytest.mark.nrfu
 @pytest.mark.base_feature
 @pytest.mark.extensions
 @pytest.mark.virtual
 @pytest.mark.physical
-
 class ExtensionsTests:
     """EOS Extensions Test Suite"""
 
+    @pytest.mark.parametrize("dut", test1_duts, ids=test1_ids)
     def test_if_extensions_are_installed_on_(self, dut, tests_definitions):
         """TD: Verify a list of extension are installed on a DUT
 
