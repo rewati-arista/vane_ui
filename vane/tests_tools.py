@@ -1052,7 +1052,7 @@ class TestOps:
 
         logging.info(f"Verify if {self.dut_name} DUT is a VEOS instance. Model is {veos}")
 
-        if veos == "vEOS":
+        if "vEOS" in veos:
             veos_bool = True
 
             logging.info(f"{self.dut_name} is a VEOS instance so returning {veos_bool}")
