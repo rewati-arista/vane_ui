@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright (c) 2019, Arista Networks EOS+
+# Copyright (c) 2023, Arista Networks EOS+
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -29,10 +29,12 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-""" Tests to validate base feature status."""
+""" Tests to validate system environment."""
 
 import pytest
+from pyeapi.eapilib import EapiError
 from vane import tests_tools
+from vane.vane_logging import logging
 
 TEST_SUITE = __file__
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
@@ -47,7 +49,7 @@ class EnvironmentTests:
     """Environment Test Suite"""
 
     def test_if_system_environment_temp_is_in_spec_on_(self, dut, tests_definitions):
-        """Verify system temperature environmentals are functional within spec
+        """TD: Verify system's temperature environmental is functional within spec
 
         Args:
           dut (dict): Encapsulates dut details including name, connection
@@ -57,32 +59,69 @@ class EnvironmentTests:
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
         if not tests_tools.verify_veos(dut):
-            show_output = tops.run_show_cmds(["show system environment temperature"])
-            tops.actual_output = show_output[0]["result"]["systemStatus"]
-            tops.test_result = tops.actual_output == tops.expected_output
+            try:
+                """
+                TS: Run show command 'show system environment temperature' on dut
+                """
 
-            tops.output_msg = (
-                f"On router |{tops.dut_name}| system temperature status "
-                f"is |{tops.actual_output}| and should be "
-                f"|{tops.expected_output}|"
-            )
+                self.output = tops.run_show_cmds(
+                    ["show system environment temperature"]
+                )
+                assert (
+                    self.output
+                ), "System environment temperature details are not collected."
+                logging.info(
+                    f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
+                )
+
+                tops.actual_output = self.output[0]["result"]["systemStatus"]
+
+            except (
+                AssertionError,
+                AttributeError,
+                LookupError,
+                EapiError,
+            ) as exception:
+                logging.error(
+                    f"Error occurred during the testsuite execution on dut: {tops.dut_name} "
+                    f"is {str(exception)}"
+                )
+                tops.actual_output = str(exception)
+
+            if tops.actual_output == tops.expected_output:
+                tops.test_result = True
+                tops.output_msg = (
+                    f"On router {tops.dut_name} system temperature status "
+                    f"is {tops.actual_output} which is correct.\n"
+                )
+            else:
+                tops.test_result = False
+                tops.output_msg = (
+                    f"On router {tops.dut_name} system temperature status "
+                    f"is {tops.actual_output} while it should be "
+                    f"{tops.expected_output}.\n"
+                )
+
         else:
+            """
+            TS: INVALID TEST: CloudEOS router does not require cooling.
+            """
             tops.test_result, tops.actual_output, tops.expected_output = (
                 True,
-                None,
-                None,
+                "N/A",
+                "N/A",
+            )
+            tops.comment = tops.output_msg = self.output = (
+                "INVALID TEST: CloudEOS router "
+                f"{tops.dut_name} does not require cooling.\n"
             )
 
-            tops.output_msg += (
-                "INVALID TEST: CloudEOS router " f"|{tops.dut_name}| doesnt require cooling.\n"
-            )
-
-        print(f"{tops.output_msg}\n{tops.comment}")
-        tops.generate_report(tops.dut_name, tops.output_msg)
+        tops.parse_test_steps(self.test_if_system_environment_temp_is_in_spec_on_)
+        tops.generate_report(tops.dut_name, self.output)
         assert tops.actual_output == tops.expected_output
 
     def test_if_sensors_temp_is_in_spec_on_(self, dut, tests_definitions):
-        """Verify system temperature sensors environmentals are functional within spec
+        """TD: Verify system's temperature sensors environmental is functional within spec
 
         Args:
           dut (dict): Encapsulates dut details including name, connection
@@ -92,100 +131,164 @@ class EnvironmentTests:
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
         if not tests_tools.verify_veos(dut):
-            print(f"\nOn router |{tops.dut_name}|:")
+            try:
+                """
+                TS: Run show command 'show system environment temperature' on dut
+                """
 
-            show_output = tops.run_show_cmds(["show system environment temperature"])
-            powersupplies = show_output[0]["result"]["powerSupplySlots"]
-            cards = show_output[0]["result"]["cardSlots"]
-
-            for sensor_array in [powersupplies, cards]:
-                for sensor_card in sensor_array:
-                    tempsensors = sensor_card["tempSensors"]
-                    sensor_name = sensor_card["entPhysicalClass"]
-
-                    for temp_sensor in tempsensors:
-                        sensor = temp_sensor["name"]
-                        tops.actual_output = temp_sensor["inAlertState"]
-                        tops.test_result = tops.actual_output == tops.expected_output
-
-                        tops.output_msg += (
-                            f"{sensor_name} Sensor |{sensor}| temperature alert status "
-                            f"is |{tops.actual_output}| and should be "
-                            f"|{tops.expected_output}|.\n"
-                        )
-
-                        tops.actual_results.append(tops.actual_output)
-                        tops.expected_results.append(tops.expected_output)
-
-            tops.actual_output, tops.expected_output = (
-                tops.actual_results,
-                tops.expected_results,
-            )
-
-        else:
-            tops.test_result, tops.actual_output, tops.expected_output = (
-                True,
-                None,
-                None,
-            )
-            tops.actual_results, tops.expected_results = [], []
-
-            tops.output_msg += (
-                "INVALID TEST: CloudEOS router " f"|{tops.dut_name}| doesnt require cooling.\n"
-            )
-
-        print(f"{tops.output_msg}\n{tops.comment}")
-        tops.generate_report(tops.dut_name, tops.output_msg)
-        assert tops.actual_results == tops.expected_results
-
-    def test_if_system_environment_power_are_in_spec_on_(self, dut, tests_definitions):
-        """Verify system power environmentals are functional within spec
-        Args:
-          dut (dict): Encapsulates dut details including name, connection
-          tests_definitions (dict): Test parameters
-        """
-
-        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
-
-        if not tests_tools.verify_veos(dut):
-            show_output = tops.run_show_cmds(["show system environment power"])
-            power_supplies = show_output[0]["result"]["powerSupplies"]
-            print(f"\nOn router |{tops.dut_name}|")
-
-            for powersupply in power_supplies:
-                tops.actual_output = power_supplies[powersupply]["state"]
-                tops.test_result = tops.actual_output == tops.expected_output
-
-                tops.output_msg += (
-                    f"Power-Supply {powersupply} state is "
-                    f"|{tops.actual_output}|, should be in "
-                    f"|{tops.expected_output}|.\n"
+                self.output = tops.run_show_cmds(
+                    ["show system environment temperature"]
+                )
+                assert (
+                    self.output
+                ), "System environment temperature details are not collected."
+                logging.info(
+                    f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
                 )
 
-                tops.actual_results.append(tops.actual_output)
-                tops.expected_results.append(tops.expected_output)
+                powersupplies = self.output[0]["result"]["powerSupplySlots"]
+                cards = self.output[0]["result"]["cardSlots"]
+
+                for sensor_array in [powersupplies, cards]:
+                    for sensor_card in sensor_array:
+                        temp_sensors = sensor_card["tempSensors"]
+                        sensor_name = sensor_card["entPhysicalClass"]
+
+                        for temp_sensor in temp_sensors:
+                            sensor = temp_sensor["name"]
+                            tops.actual_output = temp_sensor["inAlertState"]
+
+                            if tops.actual_output == tops.expected_output:
+                                tops.test_result = True
+                                tops.output_msg += (
+                                    f"{sensor_name} Sensor {sensor} temperature alert status "
+                                    f"is {tops.actual_output} which is correct.\n"
+                                )
+                            else:
+                                tops.test_result = False
+                                tops.output_msg += (
+                                    f"{sensor_name} Sensor {sensor} temperature alert status "
+                                    f"is {tops.actual_output} while it should be "
+                                    f"{tops.expected_output}.\n"
+                                )
+
+                            tops.actual_results.append(tops.actual_output)
+                            tops.expected_results.append(tops.expected_output)
+
+                tops.actual_output, tops.expected_output = (
+                    tops.actual_results,
+                    tops.expected_results,
+                )
+            except (
+                AssertionError,
+                AttributeError,
+                LookupError,
+                EapiError,
+            ) as exception:
+                logging.error(
+                    f"Error occurred during the testsuite execution on dut: {tops.dut_name} "
+                    f"is {str(exception)}"
+                )
+                tops.actual_output = str(exception)
 
         else:
-            tops.test_result = True
-
-            tops.output_msg += (
+            """
+            TS: INVALID TEST: CloudEOS router does not require cooling.
+            """
+            tops.test_result, tops.actual_output, tops.expected_output = (
+                True,
+                "N/A",
+                "N/A",
+            )
+            tops.comment = tops.output_msg = self.output = (
                 "INVALID TEST: CloudEOS router "
-                f"|{tops.dut_name}| doesnt have "
+                f"{tops.dut_name} does not require cooling.\n"
+            )
+
+        tops.parse_test_steps(self.test_if_sensors_temp_is_in_spec_on_)
+        tops.generate_report(tops.dut_name, self.output)
+        assert tops.actual_output == tops.expected_output
+
+    def test_if_system_environment_power_are_in_spec_on_(self, dut, tests_definitions):
+        """TD: Verify system's power environmental is functional within spec
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
+          tests_definitions (dict): Test parameters
+        """
+
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+
+        if not tests_tools.verify_veos(dut):
+            try:
+                """
+                TS: Run show command 'show system environment power' on dut
+                """
+                self.output = tops.run_show_cmds(["show system environment power"])
+                assert (
+                    self.output
+                ), "System environment power details are not collected."
+                logging.info(
+                    f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
+                )
+
+                power_supplies = self.output[0]["result"]["powerSupplies"]
+
+                for power_supply in power_supplies:
+                    tops.actual_output = power_supplies[power_supply]["state"]
+                    if tops.actual_output == tops.expected_output:
+                        tops.test_result = True
+                        tops.output_msg += (
+                            f"Power-Supply {power_supply} state is "
+                            f"{tops.actual_output} which is correct.\n"
+                        )
+                    else:
+                        tops.test_result = False
+                        tops.output_msg += (
+                            f"Power-Supply {power_supply} state is "
+                            f"{tops.actual_output} while it should be in "
+                            f"{tops.expected_output}.\n"
+                        )
+
+                    tops.actual_results.append(tops.actual_output)
+                    tops.expected_results.append(tops.expected_output)
+
+                tops.actual_output, tops.expected_output = (
+                    tops.actual_results,
+                    tops.expected_results,
+                )
+            except (
+                AssertionError,
+                AttributeError,
+                LookupError,
+                EapiError,
+            ) as exception:
+                logging.error(
+                    f"Error occurred during the testsuite execution on dut: {tops.dut_name} "
+                    f"is {str(exception)}"
+                )
+                tops.actual_output = str(exception)
+
+        else:
+            """
+            TS: INVALID TEST: CloudEOS router does not have power-supplies.
+            """
+            tops.test_result, tops.actual_output, tops.expected_output = (
+                True,
+                "N/A",
+                "N/A",
+            )
+            tops.comment = tops.output_msg = self.output = (
+                "INVALID TEST: CloudEOS router "
+                f"{tops.dut_name} does not have "
                 "power-supplies.\n"
             )
 
-        print(f"{tops.output_msg}\n{tops.comment}")
-
-        tops.actual_output, tops.expected_output = (
-            tops.actual_results,
-            tops.expected_results,
-        )
-        tops.generate_report(tops.dut_name, tops.output_msg)
-
-        assert tops.actual_results == tops.expected_results
+        tops.parse_test_steps(self.test_if_system_environment_power_are_in_spec_on_)
+        tops.generate_report(tops.dut_name, self.output)
+        assert tops.actual_output == tops.expected_output
 
     def test_if_system_environment_cooling_is_in_spec_on_(self, dut, tests_definitions):
-        """Verify system cooling environmentals are functional within spec
+        """TD: Verify system's cooling environmental is functional within spec
 
         Args:
           dut (dict): Encapsulates dut details including name, connection
@@ -194,33 +297,68 @@ class EnvironmentTests:
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        if not tops.verify_veos():
-            tops.actual_output = dut["output"][tops.show_cmd]["json"]["systemStatus"]
-            tops.test_result = tops.actual_output == tops.expected_output
+        if not tests_tools.verify_veos(dut):
+            try:
+                """
+                TS: Run show command 'show system environment cooling' on dut
+                """
 
-            tops.output_msg = (
-                f"On router |{tops.dut_name}| system cooling status "
-                f"is |{tops.actual_output}| and should be "
-                f"|{tops.expected_output}|"
-            )
+                self.output = dut["output"][tops.show_cmd]
+                assert (
+                    self.output
+                ), "System environment cooling details are not collected."
+                logging.info(
+                    f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
+                )
+
+                tops.actual_output = self.output["json"]["systemStatus"]
+
+                if tops.actual_output == tops.expected_output:
+                    tops.test_result = True
+                    tops.output_msg = (
+                        f"On router {tops.dut_name} system cooling status "
+                        f"is {tops.actual_output} which is correct.\n"
+                    )
+                else:
+                    tops.test_result = False
+                    tops.output_msg = (
+                        f"On router {tops.dut_name} system cooling status "
+                        f"is {tops.actual_output} while it should be "
+                        f"{tops.expected_output}.\n"
+                    )
+
+            except (
+                AssertionError,
+                AttributeError,
+                LookupError,
+                EapiError,
+            ) as exception:
+                logging.error(
+                    f"Error occurred during the testsuite execution on dut: {tops.dut_name} "
+                    f"is {str(exception)}"
+                )
+                tops.actual_output = str(exception)
 
         else:
+            """
+            TS: "INVALID TEST: CloudEOS router does not require cooling."
+            """
             tops.test_result, tops.actual_output, tops.expected_output = (
                 True,
-                None,
-                None,
+                "N/A",
+                "N/A",
+            )
+            tops.comment = tops.output_msg = self.output = (
+                "INVALID TEST: CloudEOS router "
+                f"{tops.dut_name} does not require cooling.\n"
             )
 
-            tops.output_msg += (
-                "INVALID TEST: CloudEOS router " f"|{tops.dut_name}| doesnt require cooling.\n"
-            )
-
-        print(f"{tops.output_msg}\n{tops.comment}")
-        tops.generate_report(tops.dut_name, tops.output_msg)
+        tops.parse_test_steps(self.test_if_system_environment_cooling_is_in_spec_on_)
+        tops.generate_report(tops.dut_name, self.output)
         assert tops.actual_output == tops.expected_output
 
     def test_if_fan_status_is_in_spec_on_(self, dut, tests_definitions):
-        """Verify system cooling environmentals are functional within spec
+        """TD: Verify system's cooling environmental is functional within spec
 
         Args:
           dut (dict): Encapsulates dut details including name, connection
@@ -229,45 +367,79 @@ class EnvironmentTests:
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        if not tops.verify_veos():
-            powersupplies = dut["output"][tops.show_cmd]["json"]["powerSupplySlots"]
-            fan_trays = dut["output"][tops.show_cmd]["json"]["fanTraySlots"]
+        if not tests_tools.verify_veos(dut):
+            try:
+                """
+                TS: Run show command 'show system environment cooling' on dut
+                """
 
-            for fan_systems in [powersupplies, fan_trays]:
-                for fan_system in fan_systems:
-                    fans = fan_system["fans"]
+                self.output = dut["output"][tops.show_cmd]["json"]
+                assert (
+                    self.output
+                ), "System environment cooling details are not collected."
+                logging.info(
+                    f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
+                )
 
-                    for fan in fans:
-                        tops.actual_output = fan["status"]
-                        fan_name = fan["label"]
-                        tops.test_result = tops.actual_output == tops.expected_output
+                power_supplies = self.output["powerSupplySlots"]
+                fan_trays = self.output["fanTraySlots"]
 
-                        tops.output_msg += (
-                            f"|{fan_name}| fan "
-                            f"is |{tops.actual_output}| and should be "
-                            f"|{tops.expected_output}|.\n"
-                        )
+                for fan_systems in [power_supplies, fan_trays]:
+                    for fan_system in fan_systems:
+                        fans = fan_system["fans"]
 
-                        tops.actual_results.append(tops.actual_output)
-                        tops.expected_results.append(tops.expected_output)
+                        for fan in fans:
+                            tops.actual_output = fan["status"]
+                            fan_name = fan["label"]
 
-            tops.actual_output, tops.expected_output = (
-                tops.actual_results,
-                tops.expected_results,
-            )
+                            if tops.actual_output == tops.expected_output:
+                                tops.test_result = True
+                                tops.output_msg += (
+                                    f"{fan_name} fan "
+                                    f"is {tops.actual_output} which is correct.\n"
+                                )
+
+                            else:
+                                tops.test_result = False
+                                tops.output_msg += (
+                                    f"{fan_name} fan "
+                                    f"is {tops.actual_output} while it should be "
+                                    f"{tops.expected_output}.\n"
+                                )
+
+                            tops.actual_results.append(tops.actual_output)
+                            tops.expected_results.append(tops.expected_output)
+
+                tops.actual_output, tops.expected_output = (
+                    tops.actual_results,
+                    tops.expected_results,
+                )
+            except (
+                AssertionError,
+                AttributeError,
+                LookupError,
+                EapiError,
+            ) as exception:
+                logging.error(
+                    f"Error occurred during the testsuite execution on dut: {tops.dut_name} "
+                    f"is {str(exception)}"
+                )
+                tops.actual_output = str(exception)
 
         else:
+            """
+            TS: INVALID TEST: CloudEOS router does not require fans.
+            """
             tops.test_result, tops.actual_output, tops.expected_output = (
                 True,
-                None,
-                None,
+                "N/A",
+                "N/A",
             )
-            tops.actual_results, tops.expected_results = [], []
-
-            tops.output_msg += (
-                "INVALID TEST: CloudEOS router " f"|{tops.dut_name}| doesnt require fans.\n"
+            tops.comment = tops.output_msg = self.output = (
+                "INVALID TEST: CloudEOS router "
+                f"{tops.dut_name} does not require fans.\n"
             )
 
-        print(f"{tops.output_msg}\n{tops.comment}")
-        tops.generate_report(tops.dut_name, tops.output_msg)
-        assert tops.actual_results == tops.expected_results
+        tops.parse_test_steps(self.test_if_fan_status_is_in_spec_on_)
+        tops.generate_report(tops.dut_name, self.output)
+        assert tops.actual_output == tops.expected_output
