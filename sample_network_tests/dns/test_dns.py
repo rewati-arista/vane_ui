@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright (c) 2019, Arista Networks EOS+
+# Copyright (c) 2023, Arista Networks EOS+
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -33,8 +33,21 @@
 
 import pytest
 from vane import tests_tools
+from vane.config import dut_objs, test_defs
 
 TEST_SUITE = __file__
+LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
+
+dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
+
+test1_duts = dut_parameters["test_if_dns_resolves_on_"]["duts"]
+test1_ids = dut_parameters["test_if_dns_resolves_on_"]["ids"]
+
+test2_duts = dut_parameters["test_if_dns_servers_are_reachable_on_"]["duts"]
+test2_ids = dut_parameters["test_if_dns_servers_are_reachable_on_"]["ids"]
+
+test3_duts = dut_parameters["test_dns_configuration_on_"]["duts"]
+test3_ids = dut_parameters["test_dns_configuration_on_"]["ids"]
 
 
 @pytest.mark.nrfu
@@ -42,10 +55,10 @@ TEST_SUITE = __file__
 @pytest.mark.dns
 @pytest.mark.virtual
 @pytest.mark.physical
-@pytest.mark.eos424
 class DNSTests:
     """DNS Test Suite"""
 
+    @pytest.mark.parametrize("dut", test1_duts, ids=test1_ids)
     def test_if_dns_resolves_on_(self, dut, tests_definitions):
         """Verify DNS is running by performing pings and verifying name resolution
 
@@ -69,8 +82,8 @@ class DNSTests:
             tops.test_result = tops.actual_output is tops.expected_output
 
             tops.output_msg += (
-                f"\nOn router |{tops.dut_name}|, DNS resolution is"
-                f"|{tops.test_result}| for {url}.\n"
+                f"\nOn router {tops.dut_name}, DNS resolution is"
+                f"{tops.test_result} for {url}.\n"
             )
 
             tops.actual_results.append(tops.actual_output)
@@ -87,6 +100,7 @@ class DNSTests:
 
         assert tops.actual_results == tops.expected_results
 
+    @pytest.mark.parametrize("dut", test2_duts, ids=test2_ids)
     def test_if_dns_servers_are_reachable_on_(self, dut, tests_definitions):
         """Verifies DNS servers are reachable via ping
 
@@ -109,9 +123,9 @@ class DNSTests:
             tops.test_result = tops.actual_output is tops.expected_output
 
             tops.output_msg += (
-                f"\nOn router |{tops.dut_name}|, verifying DNS "
-                f"server reachability for |{dns_server}| is "
-                f"|{tops.test_result}|.\n"
+                f"\nOn router {tops.dut_name}, verifying DNS "
+                f"server reachability for {dns_server} is "
+                f"{tops.test_result}.\n"
             )
 
             tops.actual_results.append(tops.actual_output)
@@ -127,6 +141,7 @@ class DNSTests:
         tops.generate_report(tops.dut_name, tops.output_msg)
         assert tops.actual_results == tops.expected_results
 
+    @pytest.mark.parametrize("dut", test3_duts, ids=test3_ids)
     def test_dns_configuration_on_(self, dut, tests_definitions):
         """Verifies DNS configuration matches the recommended practices
 
@@ -157,7 +172,9 @@ class DNSTests:
                 tops.expected_results.append(tops.expected_output)
 
             if dns_intf and dns_vrf:
-                dns_server_cfg = f"ip domain lookup vrf {dns_vrf} source-interface {dns_intf}"
+                dns_server_cfg = (
+                    f"ip domain lookup vrf {dns_vrf} source-interface {dns_intf}"
+                )
             elif dns_intf:
                 dns_server_cfg = f"ip domain lookup source-interface {dns_intf}"
             else:
@@ -186,9 +203,9 @@ class DNSTests:
 
         tops.test_result = tops.actual_results == tops.expected_results
         tops.output_msg += (
-            f"|{tops.dut_name}| has the dns config "
-            f"|{dns_cfg}|, expect the dns config "
-            f"|{vane_dns_cfg}|.\n\n"
+            f"{tops.dut_name} has the dns config "
+            f"{dns_cfg}, expect the dns config "
+            f"{vane_dns_cfg}.\n\n"
         )
 
         print(f"{tops.output_msg}\n{tops.comment}")
