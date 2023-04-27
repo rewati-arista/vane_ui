@@ -35,9 +35,17 @@ import pytest
 from pyeapi.eapilib import EapiError
 from vane import tests_tools
 from vane.vane_logging import logging
-
+from vane.config import dut_objs, test_defs
 
 TEST_SUITE = __file__
+LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
+
+dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
+test1_duts = dut_parameters["test_if_there_is_agents_have_crashed_on_"]["duts"]
+test1_ids = dut_parameters["test_if_there_is_agents_have_crashed_on_"]["ids"]
+
+test2_duts = dut_parameters["test_if_eos_version_is_correct_on_"]["duts"]
+test2_ids = dut_parameters["test_if_eos_version_is_correct_on_"]["ids"]
 
 
 @pytest.mark.demo
@@ -46,10 +54,10 @@ TEST_SUITE = __file__
 @pytest.mark.system
 @pytest.mark.virtual
 @pytest.mark.physical
-@pytest.mark.eos424
 class CrashTests:
     """Crash Test Suite"""
 
+    @pytest.mark.parametrize("dut", test1_duts, ids=test1_ids)
     def test_if_there_is_agents_have_crashed_on_(self, dut, tests_definitions):
         """TD: Verifies the agents logs crash is empty
 
@@ -80,16 +88,16 @@ class CrashTests:
         if tops.expected_output == tops.actual_output:
             tops.test_result = True
             tops.output_msg = (
-                f"\nOn router |{tops.dut_name}| number of agent crashes is "
-                f"|{tops.actual_output}| which is correct.\n"
+                f"\nOn router {tops.dut_name} number of agent crashes is "
+                f"{tops.actual_output} which is correct.\n"
             )
         else:
             tops.test_result = False
             tops.output_msg = (
-                f"\nOn router |{tops.dut_name}| number of agent crashes is "
-                f"|{tops.actual_output}| while "
+                f"\nOn router {tops.dut_name} number of agent crashes is "
+                f"{tops.actual_output} while "
                 "correct number of agent crashes is "
-                f"|{tops.expected_output}|.\n"
+                f"{tops.expected_output}.\n"
             )
 
         tops.parse_test_steps(self.test_if_there_is_agents_have_crashed_on_)
@@ -103,10 +111,10 @@ class CrashTests:
 @pytest.mark.system
 @pytest.mark.virtual
 @pytest.mark.physical
-@pytest.mark.eos424
 class SystemTests:
     """System Test Suite"""
 
+    @pytest.mark.parametrize("dut", test2_duts, ids=test2_ids)
     def test_if_eos_version_is_correct_on_(self, dut, tests_definitions):
         """Verifies EOS version running on the device
 
@@ -137,15 +145,15 @@ class SystemTests:
         if tops.actual_output == tops.expected_output:
             tops.test_result = True
             tops.output_msg = (
-                f"On router |{tops.dut_name}| EOS version is "
-                f"|{tops.actual_output}%| which is correct."
+                f"On router {tops.dut_name} EOS version is "
+                f"{tops.actual_output}% which is correct."
             )
         else:
             tops.test_result = False
             tops.output_msg = (
-                f"On router |{tops.dut_name}| EOS version is "
-                f"|{tops.actual_output}%|, while the correct version is "
-                f"|{tops.expected_output}%|"
+                f"On router {tops.dut_name} EOS version is "
+                f"{tops.actual_output}%, while the correct version is "
+                f"{tops.expected_output}%"
             )
         tops.parse_test_steps(self.test_if_eos_version_is_correct_on_)
         tops.generate_report(tops.dut_name, self.output)
