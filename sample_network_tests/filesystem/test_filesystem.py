@@ -35,10 +35,15 @@ import pytest
 from pyeapi.eapilib import EapiError
 from vane import tests_tools
 from vane.vane_logging import logging
+from vane.config import dut_objs, test_defs
 
 
 TEST_SUITE = __file__
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
+
+dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
+test1_duts = dut_parameters["test_if_files_on_"]["duts"]
+test1_ids = dut_parameters["test_if_files_on_"]["ids"]
 
 
 @pytest.mark.demo
@@ -47,10 +52,10 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.filesystem
 @pytest.mark.virtual
 @pytest.mark.physical
-@pytest.mark.eos424
 class FileSystemTests:
     """EOS File System Test Suite"""
 
+    @pytest.mark.parametrize("dut", test1_duts, ids=test1_ids)
     def test_if_files_on_(self, dut, tests_definitions):
         """TD: Verify filesystem is correct and expected files are present
 
@@ -91,16 +96,16 @@ class FileSystemTests:
             if tops.actual_output == tops.expected_output:
                 tops.test_result = True
                 tops.output_msg += (
-                    f"\nOn router |{tops.dut_name}|: {file_name} file isDir "
-                    f"state is |{tops.actual_output}| which is the correct state.\n"
+                    f"\nOn router {tops.dut_name}: {file_name} file isDir "
+                    f"state is {tops.actual_output} which is the correct state.\n"
                 )
 
             else:
                 tops.test_result = False
                 tops.output_msg += (
-                    f"\nOn router |{tops.dut_name}|: {file_name} file isDir "
-                    f"state is |{tops.actual_output}|, while the correct state is "
-                    f"|{tops.expected_output}|.\n"
+                    f"\nOn router {tops.dut_name}: {file_name} file isDir "
+                    f"state is {tops.actual_output}, while the correct state is "
+                    f"{tops.expected_output}.\n"
                 )
 
             tops.actual_results.append(tops.actual_output)
