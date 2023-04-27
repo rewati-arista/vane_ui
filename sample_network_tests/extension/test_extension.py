@@ -45,6 +45,9 @@ dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
 test1_duts = dut_parameters["test_if_extensions_are_installed_on_"]["duts"]
 test1_ids = dut_parameters["test_if_extensions_are_installed_on_"]["ids"]
 
+test2_duts = dut_parameters["test_if_extensions_are_erroring_on_"]["duts"]
+test2_ids = dut_parameters["test_if_extensions_are_erroring_on_"]["ids"]
+
 
 @pytest.mark.nrfu
 @pytest.mark.base_feature
@@ -122,6 +125,7 @@ class ExtensionsTests:
         tops.generate_report(tops.dut_name, self.output)
         assert tops.actual_output == tops.expected_output
 
+    @pytest.mark.parametrize("dut", test2_duts, ids=test2_ids)
     def test_if_extensions_are_erroring_on_(self, dut, tests_definitions):
         """TD: Verify a list of extension are not erroring on a DUT
 
