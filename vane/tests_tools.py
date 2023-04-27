@@ -609,10 +609,10 @@ def return_show_cmds(test_parameters):
     except KeyError:
         show_clock_flag = False
 
-    show_cmds = []
+    show_cmds = ["show version"]
 
     if show_clock_flag:
-        show_cmds = ["show version", "show clock"]
+        show_cmds = ["show clock"]
 
     logging.info(f"Discover the names of test suites from {test_parameters}")
 
@@ -860,16 +860,15 @@ class TestOps:
         except KeyError:
             self.show_clock_flag = False
 
-        self.show_cmds = []
-        self._show_cmds = []
+        self.show_cmds = ["show version"]
+        self._show_cmds = ["show version"]
 
         if self.show_clock_flag:
-            self._show_cmds = ["show version", "show clock"]
+            self._show_cmds = ["show clock"]
 
         self.show_output = ""
         self.show_cmd = ""
         self.test_steps = []
-
         try:
             self.show_cmd = self.test_parameters["show_cmd"]
             if self.show_cmd:
