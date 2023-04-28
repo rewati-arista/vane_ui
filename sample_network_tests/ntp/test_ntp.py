@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright (c) 2019, Arista Networks EOS+
+# Copyright (c) 2023, Arista Networks EOS+
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -29,13 +29,32 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-""" Tests to validate base feature status."""
+""" Tests to validate ntp functionality."""
 
 import pytest
 from vane import tests_tools
+from vane.config import dut_objs, test_defs
 
 
 TEST_SUITE = __file__
+LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
+
+dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
+
+test1_duts = dut_parameters["test_if_ntp_is_synchronized_on_"]["duts"]
+test1_ids = dut_parameters["test_if_ntp_is_synchronized_on_"]["ids"]
+
+test2_duts = dut_parameters["test_if_ntp_associated_with_peers_on_"]["duts"]
+test2_ids = dut_parameters["test_if_ntp_associated_with_peers_on_"]["ids"]
+
+test3_duts = dut_parameters["test_if_process_is_running_on_"]["duts"]
+test3_ids = dut_parameters["test_if_process_is_running_on_"]["ids"]
+
+test4_duts = dut_parameters["test_ntp_configuration_on_"]["duts"]
+test4_ids = dut_parameters["test_ntp_configuration_on_"]["ids"]
+
+test5_duts = dut_parameters["test_if_ntp_servers_are_reachable_on_"]["duts"]
+test5_ids = dut_parameters["test_if_ntp_servers_are_reachable_on_"]["ids"]
 
 
 @pytest.mark.nrfu
@@ -47,8 +66,9 @@ TEST_SUITE = __file__
 class NTPTests:
     """NTP Test Suite"""
 
+    @pytest.mark.parametrize("dut", test1_duts, ids=test1_ids)
     def test_if_ntp_is_synchronized_on_(self, dut, tests_definitions):
-        """Verify ntp is synchronzied
+        """TD: Verify ntp is synchronized
 
         Args:
           dut (dict): Encapsulates dut details including name, connection
@@ -59,9 +79,9 @@ class NTPTests:
         tops.test_result = tops.actual_output == tops.expected_output
 
         tops.output_msg = (
-            f"\nOn router |{tops.dut_name}| NTP "
-            f"synchronised status is |{tops.actual_output}| "
-            f" correct status is |{tops.expected_output}|.\n"
+            f"\nOn router {tops.dut_name} NTP "
+            f"synchronised status is {tops.actual_output} "
+            f" correct status is {tops.expected_output}.\n"
         )
 
         print(f"{tops.output_msg}\n{tops.comment}")
@@ -70,8 +90,9 @@ class NTPTests:
 
         assert tops.actual_output == tops.expected_output
 
+    @pytest.mark.parametrize("dut", test2_duts, ids=test2_ids)
     def test_if_ntp_associated_with_peers_on_(self, dut, tests_definitions):
-        """Verify ntp peers are correct
+        """TD: Verify ntp peers are correct
 
         Args:
           dut (dict): Encapsulates dut details including name, connection
@@ -83,9 +104,9 @@ class NTPTests:
         tops.test_result = tops.actual_output >= tops.expected_output
 
         tops.output_msg = (
-            f"\nOn router |{tops.dut_name}| has "
-            f"|{tops.actual_output}| NTP peer associations, "
-            f"correct associations is |{tops.expected_output}|"
+            f"\nOn router {tops.dut_name} has "
+            f"{tops.actual_output} NTP peer associations, "
+            f"correct associations is {tops.expected_output}"
         )
 
         print(f"{tops.output_msg}\n{tops.comment}")
@@ -94,8 +115,9 @@ class NTPTests:
 
         assert tops.actual_output == tops.expected_output
 
+    @pytest.mark.parametrize("dut", test3_duts, ids=test3_ids)
     def test_if_process_is_running_on_(self, dut, tests_definitions):
-        """Verify ntp processes are running
+        """TD: Verify ntp processes are running
 
         Args:
           dut (dict): Encapsulates dut details including name, connection
@@ -115,10 +137,10 @@ class NTPTests:
             tops.actual_output = len(results)
 
             tops.output_msg = (
-                f"\nOn router |{tops.dut_name}| has "
+                f"\nOn router {tops.dut_name} has "
                 f"{tops.actual_output} NTP processes, "
                 " correct processes is equal to or greater "
-                f"|{tops.expected_output}|.\n"
+                f"{tops.expected_output}.\n"
             )
 
             tops.test_result = tops.actual_output >= tops.expected_output
@@ -129,17 +151,18 @@ class NTPTests:
 
             assert tops.actual_output == tops.expected_output
 
+    @pytest.mark.parametrize("dut", test4_duts, ids=test4_ids)
     def test_ntp_configuration_on_(self, dut, tests_definitions):
-        """Verifies NTP configuration matches the recommended practices
+        """TD: Verifies NTP configuration matches the recommended practices
 
         Args:
           dut (dict): Encapsulates dut details including name, connection
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
-        show_cmd_txt = tops.run_show_cmds(["show running-config section ntp"], "text")[0]["result"][
-            "output"
-        ]
+        show_cmd_txt = tops.run_show_cmds(["show running-config section ntp"], "text")[
+            0
+        ]["result"]["output"]
 
         tops.actual_output = show_cmd_txt
         ntp_servers = tops.test_parameters["ntp_servers"]
@@ -181,9 +204,9 @@ class NTPTests:
 
         tops.test_result = tops.actual_results == tops.expected_results
         tops.output_msg += (
-            f"|{tops.dut_name}| has the ntp config "
-            f"|{ntp_cfg}|, expect the ntp config "
-            f"|{vane_ntp_cfg}|.\n\n"
+            f"{tops.dut_name} has the ntp config "
+            f"{ntp_cfg}, expect the ntp config "
+            f"{vane_ntp_cfg}.\n\n"
         )
 
         print(f"{tops.output_msg}\n{tops.comment}")
@@ -195,8 +218,9 @@ class NTPTests:
         tops.generate_report(tops.dut_name, tops.output_msg)
         assert tops.actual_results == tops.expected_results
 
+    @pytest.mark.parametrize("dut", test5_duts, ids=test5_ids)
     def test_if_ntp_servers_are_reachable_on_(self, dut, tests_definitions):
-        """Verifies DNS servers are reachable via ping
+        """TD: Verifies DNS servers are reachable via ping
 
         Args:
           dut (dict): Encapsulates dut details including name, connection
@@ -217,9 +241,9 @@ class NTPTests:
             tops.test_result = tops.actual_output is tops.expected_output
 
             tops.output_msg += (
-                f"\nOn router |{tops.dut_name}|, verifying NTP "
-                f"server reachability for |{ntp_server}| is "
-                f"|{tops.test_result}|.\n"
+                f"\nOn router {tops.dut_name}, verifying NTP "
+                f"server reachability for {ntp_server} is "
+                f"{tops.test_result}.\n"
             )
 
             tops.actual_results.append(tops.actual_output)
