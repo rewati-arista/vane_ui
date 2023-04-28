@@ -32,8 +32,10 @@
 """ Tests to validate ntp functionality."""
 
 import pytest
+from pyeapi.eapilib import EapiError
 from vane import tests_tools
 from vane.config import dut_objs, test_defs
+from vane.vane_logging import logging
 
 
 TEST_SUITE = __file__
@@ -75,19 +77,48 @@ class NTPTests:
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
-        tops.actual_output = dut["output"][tops.show_cmd]["json"]["status"]
-        tops.test_result = tops.actual_output == tops.expected_output
 
-        tops.output_msg = (
-            f"\nOn router {tops.dut_name} NTP "
-            f"synchronised status is {tops.actual_output} "
-            f" correct status is {tops.expected_output}.\n"
-        )
+        try:
+            """
+            TS: Run show command `show ntp status` on dut
+            """
+            self.output = dut["output"][tops.show_cmd]["json"]
+            assert self.output, "NTP server status details are not collected."
+            logging.info(f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}")
 
-        print(f"{tops.output_msg}\n{tops.comment}")
+            tops.actual_output = self.output["status"]
 
+            if tops.actual_output == tops.expected_output:
+                tops.test_result = True
+                tops.output_msg = (
+                    f"\nOn router {tops.dut_name} NTP "
+                    f"synchronized status is {tops.actual_output} "
+                    f"which is correct.\n"
+                )
+            else:
+                tops.test_result = False
+                tops.output_msg = (
+                    f"\nOn router {tops.dut_name} NTP "
+                    f"synchronized status is {tops.actual_output} "
+                    f"while the correct status is {tops.expected_output}.\n"
+                )
+
+        except (AttributeError, LookupError, EapiError) as exception:
+            logging.error(
+                f"On device {tops.dut_name}: Error while running testcase on DUT is: "
+                f"{str(exception)}"
+            )
+            tops.actual_output = str(exception)
+            tops.output_msg += (
+                f"EXCEPTION encountered on device {tops.dut_name}, while "
+                f"investigating if ntp is synchronized. Vane recorded error: {exception}"
+            )
+
+        """
+        TS: Creating test report based on results
+        """
+        tops.parse_test_steps(self.test_if_ntp_is_synchronized_on_)
         tops.generate_report(tops.dut_name, tops.output_msg)
-
         assert tops.actual_output == tops.expected_output
 
     @pytest.mark.parametrize("dut", test2_duts, ids=test2_ids)
@@ -99,20 +130,49 @@ class NTPTests:
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
-        tops.actual_output = dut["output"][tops.show_cmd]["json"]["peers"]
-        tops.actual_output = len(tops.actual_output)
-        tops.test_result = tops.actual_output >= tops.expected_output
 
-        tops.output_msg = (
-            f"\nOn router {tops.dut_name} has "
-            f"{tops.actual_output} NTP peer associations, "
-            f"correct associations is {tops.expected_output}"
-        )
+        try:
+            """
+            TS: Run show command `show ntp associations` on dut
+            """
+            self.output = dut["output"][tops.show_cmd]["json"]["peers"]
+            p = dut["output"][tops.show_cmd]
+            assert self.output, "No NTP association details to collect."
+            logging.info(f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}")
+            
+            tops.actual_output = len(self.output)
+            
+            if tops.actual_output >= tops.expected_output:
+                tops.test_result = True
+                tops.output_msg = (
+                    f"\nOn router {tops.dut_name} has "
+                    f"{tops.actual_output} NTP peer associations, "
+                    f"which is correct"
+                )
+            else:
+                tops.test_result = False
+                tops.output_msg = (
+                    f"\nOn router {tops.dut_name} has "
+                    f"{tops.actual_output} NTP peer associations, "
+                    f"while the correct associations is {tops.expected_output}"
+                )
 
-        print(f"{tops.output_msg}\n{tops.comment}")
+        except (AttributeError, LookupError, EapiError) as exception:
+            logging.error(
+                f"On device {tops.dut_name}: Error while running testcase on DUT is: "
+                f"{str(exception)}"
+            )
+            tops.actual_output = str(exception)
+            tops.output_msg += (
+                f"EXCEPTION encountered on device {tops.dut_name}, while "
+                f"investigating if ntp peers are correct. Vane recorded error: {exception}"
+            )
 
+        """
+        TS: Creating test report based on results
+        """
+        tops.parse_test_steps(self.test_if_ntp_associated_with_peers_on_)
         tops.generate_report(tops.dut_name, tops.output_msg)
-
         assert tops.actual_output == tops.expected_output
 
     @pytest.mark.parametrize("dut", test3_duts, ids=test3_ids)
