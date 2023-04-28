@@ -29,99 +29,193 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-""" Tests to validate base feature status."""
+""" Tests to validate LLDP status."""
 
-import inspect
 import pytest
+from pyeapi.eapilib import EapiError
+from vane.config import dut_objs, test_defs
 from vane import tests_tools
-from vane.fixtures import dut, tests_definitions
+from vane.vane_logging import logging
 
 
 TEST_SUITE = __file__
+LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
+
 
 @pytest.mark.nrfu
 @pytest.mark.l2_protocols
 @pytest.mark.lldp
 @pytest.mark.virtual
 @pytest.mark.physical
-@pytest.mark.eos424
 class LldpTests:
     """LLDP Test Suite"""
 
+    dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
+    test_duts = dut_parameters["test_if_lldp_rx_is_enabled_on_"]["duts"]
+    test_ids = dut_parameters["test_if_lldp_rx_is_enabled_on_"]["ids"]
+
+    @pytest.mark.parametrize("dut", test_duts, ids=test_ids)
     def test_if_lldp_rx_is_enabled_on_(self, dut, tests_definitions):
         """Verify LLDP receive is enabled on interesting interfaces
 
         Args:
             dut (dict): Encapsulates dut details including name, connection
+            tests_definitions (dict): Test parameters
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        print(f"\nOn router |{tops.dut_name}|:")
+        try:
+            """
+            TS: Collecting the output of 'show lldp' command from DUT
+            """
 
-        for interface in tops.interface_list:
-            interface_name = interface["interface_name"].replace(" ", "")
-            int_ptr = dut["output"][tops.show_cmd]["json"]["lldpInterfaces"]
-            tops.actual_output = int_ptr[interface_name]["rxEnabled"]
+            output = dut["output"][tops.show_cmd]["json"]
 
+            for interface in tops.interface_list:
+                interface_name = interface["interface_name"].replace(" ", "")
+                assert output.get("lldpInterfaces").get(
+                    interface_name
+                ), f"Show LLDP interface: {interface_name} details are not found"
+
+                logging.info(
+                    f"On device {tops.dut_name} output of {tops.show_cmd} command is: {output}"
+                )
+
+                tops.actual_output = output["lldpInterfaces"][interface_name][
+                    "rxEnabled"
+                ]
+
+                """
+                TS: Verify LLDP interface RX state on DUT
+                """
+                if tops.actual_output == tops.expected_output:
+                    tops.output_msg += (
+                        f"{tops.dut_name}'s {interface_name} LLDP RX is enabled\n"
+                    )
+                else:
+                    tops.output_msg += (
+                        f"{tops.dut_name}'s {interface_name} LLDP RX is NOT enabled\n"
+                    )
+
+                tops.actual_results.append(tops.actual_output)
+                tops.expected_results.append(tops.expected_output)
+
+        except (AttributeError, LookupError, EapiError) as exp:
+            tops.actual_output = str(exp)
+            logging.error(
+                "On device %s: Error while running testcase on DUT is: %s",
+                tops.dut_name,
+                str(exp),
+            )
             tops.output_msg += (
-                f"On interface |{interface_name}|: interface LLDP"
-                f"rxEnabled is in state |{tops.actual_output}|, correct "
-                f"LLDP rxEnabled state is |{tops.expected_output}|"
+                f" EXCEPTION encountered on device {tops.dut_name}, while "
+                f"investigating LLDP rxEnabled: {interface_name}. Vane recorded error: {exp} "
             )
 
-            tops.test_result = tops.actual_output == tops.expected_output
+        print(
+            f"\n{tops.dut_name}# {tops.test_parameters['show_cmd']}\n"
+            f"{dut['output'][tops.show_cmd]['text']}"
+        )
 
-            tops.actual_results.append(tops.actual_output)
-            tops.expected_results.append(tops.expected_output)
-
-
-        print(f"{tops.output_msg}\n{tops.comment}")
-
+        """
+        TS: Creating test report based on results
+        """
         tops.actual_output, tops.expected_output = (
             tops.actual_results,
             tops.expected_results,
         )
-        tops.post_testcase()
+        tops.parse_test_steps(self.test_if_lldp_rx_is_enabled_on_)
+        tops.test_result = tops.actual_results == tops.expected_results
+        tops.generate_report(tops.dut_name, output)
 
+        """
+        TS: Determing pass or fail based on test criteria
+        """
         assert tops.actual_results == tops.expected_results
 
+    dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
+    test_duts = dut_parameters["test_if_lldp_tx_is_enabled_on_"]["duts"]
+    test_ids = dut_parameters["test_if_lldp_tx_is_enabled_on_"]["ids"]
+
+    @pytest.mark.parametrize("dut", test_duts, ids=test_ids)
     def test_if_lldp_tx_is_enabled_on_(self, dut, tests_definitions):
         """Verify LLDP transmit is enabled on interesting interfaces
 
         Args:
             dut (dict): Encapsulates dut details including name, connection
+            tests_definitions (dict): Test parameters
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        print(f"\nOn router |{tops.dut_name}|:")
+        try:
+            """
+            TS: Collecting the output of 'show lldp' command from DUT
+            """
 
-        for interface in tops.interface_list:
-            interface_name = interface["interface_name"].replace(" ", "")
-            int_ptr = dut["output"][tops.show_cmd]["json"]["lldpInterfaces"]
-            tops.actual_output = int_ptr[interface_name]["txEnabled"]
+            output = dut["output"][tops.show_cmd]["json"]
 
+            for interface in tops.interface_list:
+                interface_name = interface["interface_name"].replace(" ", "")
+                assert output.get("lldpInterfaces").get(
+                    interface_name
+                ), f"Show LLDP interface: {interface_name} details are not found"
+
+                logging.info(
+                    f"On device {tops.dut_name} output of {tops.show_cmd} command is: {output}"
+                )
+
+                tops.actual_output = output["lldpInterfaces"][interface_name][
+                    "txEnabled"
+                ]
+
+                """
+                TS: Verify LLDP interface TX state on DUT
+                """
+                if tops.actual_output == tops.expected_output:
+                    tops.output_msg += (
+                        f"{tops.dut_name}'s {interface_name} LLDP TX is enabled\n"
+                    )
+                else:
+                    tops.output_msg += (
+                        f"{tops.dut_name}'s {interface_name} LLDP TX is NOT enabled\n"
+                    )
+
+                tops.actual_results.append(tops.actual_output)
+                tops.expected_results.append(tops.expected_output)
+
+        except (AttributeError, LookupError, EapiError) as exp:
+            tops.actual_output = str(exp)
+            logging.error(
+                "On device %s: Error while running testcase on DUT is: %s",
+                tops.dut_name,
+                str(exp),
+            )
             tops.output_msg += (
-                f"On interface |{interface_name}|: interface LLDP"
-                f"txEnabled is in state |{tops.actual_output}|, correct "
-                f"LLDP txEnabled state is |{tops.expected_output}|.\n\n"
+                f" EXCEPTION encountered on device {tops.dut_name}, while "
+                f"investigating LLDP txEnabled: {interface_name}. Vane recorded error: {exp} "
             )
 
-            tops.test_result = tops.actual_output == tops.expected_output
+        print(
+            f"\n{tops.dut_name}# {tops.test_parameters['show_cmd']}\n"
+            f"{dut['output'][tops.show_cmd]['text']}"
+        )
 
-            tops.actual_results.append(tops.actual_output)
-            tops.expected_results.append(tops.expected_output)
-
-
-        print(f"{tops.output_msg}\n{tops.comment}")
-
+        """
+        TS: Creating test report based on results
+        """
         tops.actual_output, tops.expected_output = (
             tops.actual_results,
             tops.expected_results,
         )
-        tops.post_testcase()
+        tops.parse_test_steps(self.test_if_lldp_tx_is_enabled_on_)
+        tops.test_result = tops.actual_results == tops.expected_results
+        tops.generate_report(tops.dut_name, output)
 
+        """
+        TS: Determing pass or fail based on test criteria
+        """
         assert tops.actual_results == tops.expected_results
 
 
@@ -130,107 +224,249 @@ class LldpTests:
 @pytest.mark.lldp
 @pytest.mark.virtual
 @pytest.mark.physical
-@pytest.mark.eos424
 class LldpLocalInfoTests:
     """LLDP Local-Info Test Suite"""
 
+    dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
+    test_duts = dut_parameters["test_if_lldp_system_name_is_correct_on_"]["duts"]
+    test_ids = dut_parameters["test_if_lldp_system_name_is_correct_on_"]["ids"]
+
+    @pytest.mark.parametrize("dut", test_duts, ids=test_ids)
     def test_if_lldp_system_name_is_correct_on_(self, dut, tests_definitions):
         """Verify show lldp local-info hostname is the system's name
 
         Args:
             dut (dict): Encapsulates dut details including name, connection
+            tests_definitions (dict): Test parameters
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        tops.expected_output = tops.dut_name
-        tops.actual_output = dut["output"][tops.show_cmd]["json"]["systemName"]
+        try:
+            """
+            TS: Collecting the output of 'show lldp local-info' command from DUT
+            """
+            output = dut["output"][tops.show_cmd]["json"]
+            tops.expected_output = tops.dut_name
 
-        tops.output_msg = (
-            f"On router |{tops.dut_name}|: the LLDP local-info system "
-            f"name is |{tops.actual_output}|, correct name is "
-            f"|{tops.expected_output}|.\n\n"
+            assert output.get("systemName"), "Show LLDP details are not found"
+            tops.actual_output = output["systemName"]
+
+            logging.info(
+                f"On device {tops.dut_name} output of {tops.show_cmd} command is: {output}"
+            )
+
+            """
+            TS: Verify LLDP system name
+            """
+            if tops.actual_output == tops.expected_output:
+                tops.output_msg = (
+                    f"{tops.dut_name}'s LLDP System Name is correct: "
+                    f"{tops.expected_output}"
+                )
+            else:
+                tops.output_msg = (
+                    f"{tops.dut_name}'s LLDP System Name is NOT correct: {tops.actual_output}. "
+                    f"LLDP System Name should be set to: {tops.expected_output}"
+                )
+
+        except (AttributeError, LookupError, EapiError) as exp:
+            tops.actual_output = str(exp)
+            logging.error(
+                "On device %s: Error while running testcase on DUT is: %s",
+                tops.dut_name,
+                str(exp),
+            )
+            tops.output_msg += (
+                f" EXCEPTION encountered on device {tops.dut_name}, while "
+                f"investigating LLDP system name. Vane recorded error: {exp} "
+            )
+
+        print(
+            f"\n{tops.dut_name}# {tops.test_parameters['show_cmd']}\n"
+            f"{dut['output'][tops.show_cmd]['text']}"
         )
+
+        """
+        TS: Creating test report based on results
+        """
+        tops.parse_test_steps(self.test_if_lldp_system_name_is_correct_on_)
         tops.test_result = tops.actual_output == tops.expected_output
+        tops.generate_report(tops.dut_name, output)
 
-
-        print(f"{tops.output_msg}\n{tops.comment}")
-
-        tops.post_testcase()
-
+        """
+        TS: Determing pass or fail based on test criteria
+        """
         assert tops.actual_output == tops.expected_output
 
-    def test_if_lldp_max_frame_size_is_correct_on_(
-        self, dut, tests_definitions
-    ):
+    dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
+    test_duts = dut_parameters["test_if_lldp_max_frame_size_is_correct_on_"]["duts"]
+    test_ids = dut_parameters["test_if_lldp_max_frame_size_is_correct_on_"]["ids"]
+
+    @pytest.mark.parametrize("dut", test_duts, ids=test_ids)
+    def test_if_lldp_max_frame_size_is_correct_on_(self, dut, tests_definitions):
         """Verify show lldp local-info maxFrameSize is correct
 
         Args:
             dut (dict): Encapsulates dut details including name, connection
+            tests_definitions (dict): Test parameters
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        print(f"\nOn router |{tops.dut_name}|:")
+        try:
+            """
+            TS: Collecting the output of 'show lldp local-info' command from DUT
+            """
 
-        for interface in tops.interface_list:
-            interface_name = interface["interface_name"].replace(" ", "")
-            int_ptr = dut["output"][tops.show_cmd]["json"]["localInterfaceInfo"]
-            tops.actual_output = int_ptr[interface_name]["maxFrameSize"]
+            output = dut["output"][tops.show_cmd]["json"]
 
-            tops.output_msg += (
-                f"On interface |{interface_name}|: LLDP local-info "
-                f"maxFrameSize is |{tops.actual_output}|, correct "
-                f"maxFrameSize is |{tops.expected_output}|.\n\n"
+            for interface in tops.interface_list:
+                interface_name = interface["interface_name"].replace(" ", "")
+                assert output.get("localInterfaceInfo").get(
+                    interface_name
+                ), f"Show LLDP interface: {interface_name} details are not found"
+
+                logging.info(
+                    f"On device {tops.dut_name} output of {tops.show_cmd} command is: {output}"
+                )
+
+                tops.actual_output = output["localInterfaceInfo"][interface_name][
+                    "maxFrameSize"
+                ]
+
+                """
+                TS: Verify LLDP interface max frame size on DUT
+                """
+                if tops.actual_output == tops.expected_output:
+                    tops.output_msg += (
+                        f"{tops.dut_name}'s {interface_name} Max frame size is correct: "
+                        f"{tops.actual_output}\n"
+                    )
+                else:
+                    tops.output_msg += (
+                        f"{tops.dut_name}'s {interface_name} Max frame size is NOT correct: "
+                        f"{tops.expected_output}.  Max frame size should be {tops.actual_output}\n"
+                    )
+
+                tops.actual_results.append(tops.actual_output)
+                tops.expected_results.append(tops.expected_output)
+
+        except (AttributeError, LookupError, EapiError) as exp:
+            tops.actual_output = str(exp)
+            logging.error(
+                "On device %s: Error while running testcase on DUT is: %s",
+                tops.dut_name,
+                str(exp),
             )
-            tops.test_result = tops.actual_output == tops.expected_output
+            tops.output_msg += (
+                f" EXCEPTION encountered on device {tops.dut_name}, while "
+                f"investigating Max frame size for {interface_name}. Vane recorded error: {exp} "
+            )
 
+        print(
+            f"\n{tops.dut_name}# {tops.test_parameters['show_cmd']}\n"
+            f"{dut['output'][tops.show_cmd]['text']}"
+        )
 
-            tops.actual_results.append(tops.actual_output)
-            tops.expected_results.append(tops.expected_output)
-
-        print(f"{tops.output_msg}\n{tops.comment}")
-
+        """
+        TS: Creating test report based on results
+        """
         tops.actual_output, tops.expected_output = (
             tops.actual_results,
             tops.expected_results,
         )
-        tops.post_testcase()
+        tops.parse_test_steps(self.test_if_lldp_max_frame_size_is_correct_on_)
+        tops.test_result = tops.actual_results == tops.expected_results
+        tops.generate_report(tops.dut_name, output)
 
+        """
+        TS: Determing pass or fail based on test criteria
+        """
         assert tops.actual_results == tops.expected_results
 
+    dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
+    test_duts = dut_parameters["test_if_lldp_interface_id_is_correct_on_"]["duts"]
+    test_ids = dut_parameters["test_if_lldp_interface_id_is_correct_on_"]["ids"]
+
+    @pytest.mark.parametrize("dut", test_duts, ids=test_ids)
     def test_if_lldp_interface_id_is_correct_on_(self, dut, tests_definitions):
         """Verify show lldp local-info interfaceIdType is correct
 
         Args:
             dut (dict): Encapsulates dut details including name, connection
+            tests_definitions (dict): Test parameters
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        print(f"\nOn router |{tops.dut_name}|:")
+        try:
+            """
+            TS: Collecting the output of 'show lldp local-info' command from DUT
+            """
 
-        for interface in tops.interface_list:
-            interface_name = interface["interface_name"].replace(" ", "")
-            int_ptr = dut["output"][tops.show_cmd]["json"]["localInterfaceInfo"]
-            tops.actual_output = int_ptr[interface_name]["interfaceIdType"]
+            output = dut["output"][tops.show_cmd]["json"]
 
-            tops.output_msg += (
-                f"On interface |{interface_name}|: LLDP local-info "
-                f"interfaceIdType is |{tops.actual_output}|, correct "
-                f"interfaceIdType is |{tops.expected_output}|.\n\n"
+            for interface in tops.interface_list:
+                interface_name = interface["interface_name"].replace(" ", "")
+                assert output.get("localInterfaceInfo").get(
+                    interface_name
+                ), f"Show LLDP interface: {interface_name} details are not found"
+
+                logging.info(
+                    f"On device {tops.dut_name} output of {tops.show_cmd} command is: {output}"
+                )
+
+                tops.actual_output = output["localInterfaceInfo"][interface_name][
+                    "interfaceIdType"
+                ]
+
+                """
+                TS: Verify LLDP interface ID on DUT
+                """
+                if tops.actual_output == tops.expected_output:
+                    tops.output_msg += (
+                        f"{tops.dut_name}'s {interface_name} interface ID is correct: "
+                        f"{tops.actual_output}\n"
+                    )
+                else:
+                    tops.output_msg += (
+                        f"{tops.dut_name}'s {interface_name} interface ID is NOT correct: "
+                        f"{tops.expected_output}.  Interface ID should be {tops.actual_output}\n"
+                    )
+
+                tops.actual_results.append(tops.actual_output)
+                tops.expected_results.append(tops.expected_output)
+
+        except (AttributeError, LookupError, EapiError) as exp:
+            tops.actual_output = str(exp)
+            logging.error(
+                "On device %s: Error while running testcase on DUT is: %s",
+                tops.dut_name,
+                str(exp),
             )
-            tops.test_result = tops.actual_output == tops.expected_output
+            tops.output_msg += (
+                f" EXCEPTION encountered on device {tops.dut_name}, while "
+                f"investigating interface ID for {interface_name}. Vane recorded error: {exp} "
+            )
 
-            tops.actual_results.append(tops.actual_output)
-            tops.expected_results.append(tops.expected_output)
+        print(
+            f"\n{tops.dut_name}# {tops.test_parameters['show_cmd']}\n"
+            f"{dut['output'][tops.show_cmd]['text']}"
+        )
 
-        print(f"{tops.output_msg}\n{tops.comment}")
-
+        """
+        TS: Creating test report based on results
+        """
         tops.actual_output, tops.expected_output = (
             tops.actual_results,
             tops.expected_results,
         )
-        tops.post_testcase()
+        tops.parse_test_steps(self.test_if_lldp_interface_id_is_correct_on_)
+        tops.test_result = tops.actual_results == tops.expected_results
+        tops.generate_report(tops.dut_name, output)
 
+        """
+        TS: Determing pass or fail based on test criteria
+        """
         assert tops.actual_results == tops.expected_results
