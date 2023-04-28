@@ -29,11 +29,13 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-""" Tests to validate base feature status."""
+""" Tests to validate DNS functionality."""
 
 import pytest
+from pyeapi.eapilib import EapiError
 from vane import tests_tools
 from vane.config import dut_objs, test_defs
+from vane.vane_logging import logging
 
 TEST_SUITE = __file__
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
@@ -60,7 +62,7 @@ class DNSTests:
 
     @pytest.mark.parametrize("dut", test1_duts, ids=test1_ids)
     def test_if_dns_resolves_on_(self, dut, tests_definitions):
-        """Verify DNS is running by performing pings and verifying name resolution
+        """TD: Verify DNS is running by performing pings and verifying name resolution
 
         Args:
          dut (dict): Encapsulates dut details including name, connection
@@ -68,151 +70,250 @@ class DNSTests:
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        urls = tops.test_parameters["urls"]
+        try:
+            """
+            TS: Collecting the urls from DUT
+            """
+            urls = tops.test_parameters["urls"]
 
-        for url in urls:
-            show_cmd = f"ping {url}"
-            tops.show_cmds.append(show_cmd)
+            for url in urls:
+                show_cmd = f"ping {url}"
+                """
+                TS: Running ping commands on the DUT
+                """
+                self.output = tops.run_show_cmds([show_cmd], encoding="text")[0][
+                    "result"
+                ]["output"]
+                assert self.output, "PING Command details are not collected."
+                logging.info(
+                    f"On device {tops.dut_name} output of {show_cmd} command is: {self.output}"
+                )
 
-            print(show_cmd)
-            show_cmd_txt = tops.run_show_cmds([show_cmd], encoding="text")
-            show_cmd_txt = show_cmd_txt[0]["result"]["output"]
+                tops.actual_output = "Name or service not known" not in self.output
 
-            tops.actual_output = "Name or service not known" not in show_cmd_txt
-            tops.test_result = tops.actual_output is tops.expected_output
+                if tops.actual_output == tops.expected_output:
+                    tops.test_result = True
+                    tops.output_msg += (
+                        f"\nOn router {tops.dut_name}, DNS resolution is"
+                        f"{tops.test_result} for {url}.\n"
+                    )
+                else:
+                    tops.test_result = False
+                    tops.output_msg += (
+                        f"\nOn router {tops.dut_name}, DNS resolution is"
+                        f"{tops.test_result} for {url}.\n"
+                    )
 
-            tops.output_msg += (
-                f"\nOn router {tops.dut_name}, DNS resolution is"
-                f"{tops.test_result} for {url}.\n"
+                tops.actual_results.append(tops.actual_output)
+                tops.expected_results.append(tops.expected_output)
+
+            tops.actual_output, tops.expected_output = (
+                tops.actual_results,
+                tops.expected_results,
             )
 
-            tops.actual_results.append(tops.actual_output)
-            tops.expected_results.append(tops.expected_output)
+        except (AttributeError, LookupError, EapiError) as exception:
+            logging.error(
+                f"On device {tops.dut_name}: Error while running testcase on DUT is: "
+                f"{str(exception)}"
+            )
+            tops.actual_output = str(exception)
+            tops.output_msg += (
+                f"EXCEPTION encountered on device {tops.dut_name}, while "
+                f"investigating if dns servers can be resolved on. Vane recorded error: {exception}"
+            )
 
-        print(f"{tops.output_msg}\n{tops.comment}")
-
-        tops.actual_output, tops.expected_output = (
-            tops.actual_results,
-            tops.expected_results,
-        )
-
+        """
+        TS: Creating test report based on results
+        """
+        tops.parse_test_steps(self.test_if_dns_resolves_on_)
         tops.generate_report(tops.dut_name, tops.output_msg)
-
         assert tops.actual_results == tops.expected_results
 
     @pytest.mark.parametrize("dut", test2_duts, ids=test2_ids)
     def test_if_dns_servers_are_reachable_on_(self, dut, tests_definitions):
-        """Verifies DNS servers are reachable via ping
+        """TD: Verifies DNS servers are reachable via ping
 
         Args:
           dut (dict): Encapsulates dut details including name, connection
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
-        dns_servers = tops.test_parameters["dns_servers"]
-        dns_vrf = tops.test_parameters["dns_vrf"]
 
-        for dns_server in dns_servers:
-            if dns_vrf:
-                show_cmd = f"ping vrf {dns_vrf} ip {dns_server}"
-            else:
-                show_cmd = f"ping {dns_server}"
+        try:
+            """
+            TS: Collecting the dns servers and dns vrfs for the test
+            """
 
-            output = tops.run_show_cmds([show_cmd], "text")[0]["result"]["output"]
-            tops.actual_output = "bytes from" in output
-            tops.test_result = tops.actual_output is tops.expected_output
+            dns_servers = tops.test_parameters["dns_servers"]
+            dns_vrf = tops.test_parameters["dns_vrf"]
 
-            tops.output_msg += (
-                f"\nOn router {tops.dut_name}, verifying DNS "
-                f"server reachability for {dns_server} is "
-                f"{tops.test_result}.\n"
+            for dns_server in dns_servers:
+                if dns_vrf:
+                    show_cmd = f"ping vrf {dns_vrf} ip {dns_server}"
+                else:
+                    show_cmd = f"ping {dns_server}"
+
+                """
+                TS: Running ping commands on the DUT
+                """
+
+                self.output = tops.run_show_cmds([show_cmd], "text")[0]["result"][
+                    "output"
+                ]
+                assert self.output, "PING Command details are not collected."
+                logging.info(
+                    f"On device {tops.dut_name} output of {show_cmd} command is: {self.output}"
+                )
+
+                tops.actual_output = "bytes from" in self.output
+
+                if tops.actual_output == tops.expected_output:
+                    tops.test_result = True
+                    tops.output_msg += (
+                        f"\nOn router {tops.dut_name}, verifying DNS "
+                        f"server reachability for {dns_server} is "
+                        f"{tops.test_result}.\n"
+                    )
+                else:
+                    tops.test_result = False
+                    tops.output_msg += (
+                        f"\nOn router {tops.dut_name}, verifying DNS "
+                        f"server reachability for {dns_server} is "
+                        f"{tops.test_result}.\n"
+                    )
+
+                tops.actual_results.append(tops.actual_output)
+                tops.expected_results.append(tops.expected_output)
+
+            tops.actual_output, tops.expected_output = (
+                tops.actual_results,
+                tops.expected_results,
             )
 
-            tops.actual_results.append(tops.actual_output)
-            tops.expected_results.append(tops.expected_output)
+        except (AttributeError, LookupError, EapiError) as exception:
+            logging.error(
+                f"On device {tops.dut_name}: Error while running testcase on DUT is: "
+                f"{str(exception)}"
+            )
+            tops.actual_output = str(exception)
+            tops.output_msg += (
+                f"EXCEPTION encountered on device {tops.dut_name}, while "
+                f"investigating if dns servers are reachable. Vane recorded error: {exception}"
+            )
 
-        print(f"{tops.output_msg}\n{tops.comment}")
-
-        tops.actual_output, tops.expected_output = (
-            tops.actual_results,
-            tops.expected_results,
-        )
-
+        """
+            TS: Creating test report based on results
+        """
+        tops.parse_test_steps(self.test_if_dns_servers_are_reachable_on_)
         tops.generate_report(tops.dut_name, tops.output_msg)
         assert tops.actual_results == tops.expected_results
 
     @pytest.mark.parametrize("dut", test3_duts, ids=test3_ids)
     def test_dns_configuration_on_(self, dut, tests_definitions):
-        """Verifies DNS configuration matches the recommended practices
+        """TD: Verifies DNS configuration matches the recommended practices
 
         Args:
           dut (dict): Encapsulates dut details including name, connection
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
-        output = tops.run_show_cmds(["show running-config section name-server"], "text")
 
-        dns_servers = tops.test_parameters["dns_servers"]
-        dns_vrf = tops.test_parameters["dns_vrf"]
-        dns_intf = tops.test_parameters["dns_intf"]
-        dn_name = tops.test_parameters["dn_name"]
-        dns_cfg = output[0]["result"]["output"]
-        vane_dns_cfg = ""
+        try:
+            """
+            TS: Running show command `show running-config section name-server` on dut
+            """
+            self.output = tops.run_show_cmds(
+                ["show running-config section name-server"], "text"
+            )
+            assert self.output, "Running config details are not collected."
+            logging.info(
+                f"On device {tops.dut_name} output of show running-config section name-server"
+                f" command is: {self.output}"
+            )
 
-        if dns_servers:
-            for dns_server in dns_servers:
-                if dns_vrf:
-                    dns_server_cfg = f"ip name-server vrf {dns_vrf} {dns_server}"
+            dns_servers = tops.test_parameters["dns_servers"]
+            dns_vrf = tops.test_parameters["dns_vrf"]
+            dns_intf = tops.test_parameters["dns_intf"]
+            dn_name = tops.test_parameters["dn_name"]
+            dns_cfg = self.output[0]["result"]["output"]
+            vane_dns_cfg = ""
+
+            if dns_servers:
+                for dns_server in dns_servers:
+                    if dns_vrf:
+                        dns_server_cfg = f"ip name-server vrf {dns_vrf} {dns_server}"
+                    else:
+                        dns_server_cfg = f"ip name-server {dns_server}"
+
+                    vane_dns_cfg += f"{dns_server_cfg}\n"
+                    tops.actual_output = dns_server_cfg in dns_cfg
+                    tops.actual_results.append(tops.actual_output)
+                    tops.expected_results.append(tops.expected_output)
+
+                if dns_intf and dns_vrf:
+                    dns_server_cfg = (
+                        f"ip domain lookup vrf {dns_vrf} source-interface {dns_intf}"
+                    )
+                elif dns_intf:
+                    dns_server_cfg = f"ip domain lookup source-interface {dns_intf}"
                 else:
-                    dns_server_cfg = f"ip name-server {dns_server}"
+                    dns_server_cfg = None
 
-                vane_dns_cfg += f"{dns_server_cfg}\n"
-                tops.actual_output = dns_server_cfg in dns_cfg
-                tops.actual_results.append(tops.actual_output)
-                tops.expected_results.append(tops.expected_output)
+                if dns_server_cfg:
+                    tops.actual_output = dns_server_cfg in dns_cfg
+                    tops.actual_results.append(tops.actual_output)
+                    tops.expected_results.append(tops.expected_output)
+                    vane_dns_cfg += f"{dns_server_cfg}\n"
 
-            if dns_intf and dns_vrf:
-                dns_server_cfg = (
-                    f"ip domain lookup vrf {dns_vrf} source-interface {dns_intf}"
+                if dn_name:
+                    dns_server_cfg = f"ip domain-name {dn_name}"
+
+                if dns_server_cfg:
+                    tops.actual_output = dns_server_cfg in dns_cfg
+                    tops.actual_results.append(tops.actual_output)
+                    tops.expected_results.append(tops.expected_output)
+                    vane_dns_cfg += f"{dns_server_cfg}\n"
+
+            dns_cfg_length = len(dns_cfg.split("\n"))
+            vane_dns_cfg_length = len(vane_dns_cfg.split("\n"))
+            tops.actual_output = dns_cfg_length == vane_dns_cfg_length
+            tops.actual_results.append(tops.actual_output)
+            tops.expected_results.append(tops.expected_output)
+
+            if tops.actual_results == tops.expected_results:
+                tops.test_result = True
+                tops.output_msg += (
+                    f"{tops.dut_name} has the dns config "
+                    f"{dns_cfg} which is correct.\n\n"
                 )
-            elif dns_intf:
-                dns_server_cfg = f"ip domain lookup source-interface {dns_intf}"
             else:
-                dns_server_cfg = None
+                tops.test_result = False
+                tops.output_msg += (
+                    f"{tops.dut_name} has the dns config\n"
+                    f"{dns_cfg}\nwhile the correct dns config is\n"
+                    f"{vane_dns_cfg}\n\n"
+                )
 
-            if dns_server_cfg:
-                tops.actual_output = dns_server_cfg in dns_cfg
-                tops.actual_results.append(tops.actual_output)
-                tops.expected_results.append(tops.expected_output)
-                vane_dns_cfg += f"{dns_server_cfg}\n"
+            tops.actual_output, tops.expected_output = (
+                tops.actual_results,
+                tops.expected_results,
+            )
 
-            if dn_name:
-                dns_server_cfg = f"ip domain-name {dn_name}"
+        except (AttributeError, LookupError, EapiError) as exception:
+            logging.error(
+                f"On device {tops.dut_name}: Error while running testcase on DUT is: "
+                f"{str(exception)}"
+            )
+            tops.actual_output = str(exception)
+            tops.output_msg += (
+                f"EXCEPTION encountered on device {tops.dut_name}, while "
+                f"investigating dns config. Vane recorded error: {exception}"
+            )
 
-            if dns_server_cfg:
-                tops.actual_output = dns_server_cfg in dns_cfg
-                tops.actual_results.append(tops.actual_output)
-                tops.expected_results.append(tops.expected_output)
-                vane_dns_cfg += f"{dns_server_cfg}\n"
-
-        dns_cfg_length = len(dns_cfg.split("\n"))
-        vane_dns_cfg_length = len(vane_dns_cfg.split("\n"))
-        tops.actual_output = dns_cfg_length == vane_dns_cfg_length
-        tops.actual_results.append(tops.actual_output)
-        tops.expected_results.append(tops.expected_output)
-
-        tops.test_result = tops.actual_results == tops.expected_results
-        tops.output_msg += (
-            f"{tops.dut_name} has the dns config "
-            f"{dns_cfg}, expect the dns config "
-            f"{vane_dns_cfg}.\n\n"
-        )
-
-        print(f"{tops.output_msg}\n{tops.comment}")
-
-        tops.actual_output, tops.expected_output = (
-            tops.actual_results,
-            tops.expected_results,
-        )
+        """
+        TS: Creating test report based on results
+        """
+        tops.parse_test_steps(self.test_dns_configuration_on_)
         tops.generate_report(tops.dut_name, tops.output_msg)
         assert tops.actual_results == tops.expected_results
