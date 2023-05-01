@@ -20,6 +20,9 @@ disable=
     logging-fstring-interpolation,
     logging-not-lazy,
     duplicate-code,
+    attribute-defined-outside-init,
+    pointless-string-statement,
+    too-many-nested-blocks,
 
 
 [MISCELLANEOUS]
