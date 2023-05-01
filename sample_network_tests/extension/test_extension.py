@@ -72,7 +72,9 @@ class ExtensionsTests:
 
         for extension in extensions:
             try:
-                """TS: Run show command 'show extensions' on dut"""
+                """
+                TS: Run show command 'show extensions' on dut
+                """
                 self.output = dut["output"][tops.show_cmd]["json"]
                 assert self.output, "No Extensions are available"
                 logging.info(
@@ -138,7 +140,9 @@ class ExtensionsTests:
 
         for extension in extensions:
             try:
-                """TS: Run show command 'show extensions' on dut"""
+                """
+                TS: Run show command 'show extensions' on dut
+                """
                 self.output = dut["output"][tops.show_cmd]["json"]
 
                 if extension in self.output["extensions"]:
