@@ -94,14 +94,12 @@ class FileSystemTests:
                 tops.actual_output = str(exception)
 
             if tops.actual_output == tops.expected_output:
-                tops.test_result = True
                 tops.output_msg += (
                     f"\nOn router {tops.dut_name}: {file_name} file isDir "
                     f"state is {tops.actual_output} which is the correct state.\n"
                 )
 
             else:
-                tops.test_result = False
                 tops.output_msg += (
                     f"\nOn router {tops.dut_name}: {file_name} file isDir "
                     f"state is {tops.actual_output}, while the correct state is "
@@ -117,5 +115,6 @@ class FileSystemTests:
         )
 
         tops.parse_test_steps(self.test_if_files_on_)
+        tops.test_result = tops.actual_output == tops.expected_output
         tops.generate_report(tops.dut_name, self.output)
-        assert tops.actual_results == tops.expected_results
+        assert tops.actual_output == tops.expected_output
