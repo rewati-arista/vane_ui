@@ -80,7 +80,7 @@ class TacacsTests:
                 eos_messages_sent_1 = self.output["tacacsServers"][0]["messagesSent"]
 
                 """TS: Run `show tacacs` on dut again in order to see if messagesSent increments"""
-                self.output = tops.run_show_cmds("show tacacs", "text")[0]["result"]
+                self.output = tops.run_show_cmds(tops.show_cmd, "text")[0]["result"]
                 assert self.output, "TACACS details are not collected."
                 logging.info(
                     f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
