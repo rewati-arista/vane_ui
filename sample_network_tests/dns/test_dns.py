@@ -127,8 +127,9 @@ class DNSTests:
         TS: Creating test report based on results
         """
         tops.parse_test_steps(self.test_if_dns_resolves_on_)
+        tops.test_result = tops.actual_output == tops.expected_output
         tops.generate_report(tops.dut_name, tops.output_msg)
-        assert tops.actual_results == tops.expected_results
+        assert tops.actual_output == tops.expected_output
 
     @pytest.mark.parametrize("dut", test2_duts, ids=test2_ids)
     def test_if_dns_servers_are_reachable_on_(self, dut, tests_definitions):
@@ -206,8 +207,9 @@ class DNSTests:
             TS: Creating test report based on results
         """
         tops.parse_test_steps(self.test_if_dns_servers_are_reachable_on_)
+        tops.test_result = tops.actual_output == tops.expected_output
         tops.generate_report(tops.dut_name, tops.output_msg)
-        assert tops.actual_results == tops.expected_results
+        assert tops.actual_output == tops.expected_output
 
     @pytest.mark.parametrize("dut", test3_duts, ids=test3_ids)
     def test_dns_configuration_on_(self, dut, tests_definitions):
@@ -223,9 +225,8 @@ class DNSTests:
             """
             TS: Running show command `show running-config section name-server` on dut
             """
-            self.output = tops.run_show_cmds(
-                tops.show_cmd, "text"
-            )
+
+            self.output = tops.run_show_cmds(tops.show_cmd, "text")
             assert self.output, "Running config details are not collected."
             logging.info(
                 f"On device {tops.dut_name} output of show running-config section name-server"
@@ -316,4 +317,4 @@ class DNSTests:
         """
         tops.parse_test_steps(self.test_dns_configuration_on_)
         tops.generate_report(tops.dut_name, tops.output_msg)
-        assert tops.actual_results == tops.expected_results
+        assert tops.actual_output == tops.expected_output
