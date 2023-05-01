@@ -266,7 +266,7 @@ class NTPTests:
             """
 
             self.output = tops.run_show_cmds(
-                ["show running-config section ntp"], "text"
+                tops.show_cmd, "text"
             )[0]["result"]["output"]
             assert self.output, "NTP configuration details not collected."
             logging.info(
