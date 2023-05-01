@@ -67,7 +67,9 @@ class MemoryTests:
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
         try:
-            """TS: Run show command 'show version' on dut"""
+            """
+            TS: Run show command 'show version' on dut
+            """
             self.output = dut["output"][tops.show_cmd]["json"]
             assert self.output, "Memory details are not collected."
             logging.info(
