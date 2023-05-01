@@ -98,14 +98,12 @@ class ExtensionsTests:
                 tops.actual_output = str(exception)
 
             if tops.expected_output == tops.actual_output:
-                tops.test_result = True
                 tops.output_msg += (
                     f"\nOn router {tops.dut_name} extension "
                     f"{extension} status {tops.actual_output} is "
                     f"correct.\n"
                 )
             else:
-                tops.test_result = False
                 tops.output_msg += (
                     f"\nOn router {tops.dut_name} extension "
                     f"{extension} status is "
@@ -122,6 +120,7 @@ class ExtensionsTests:
         )
 
         tops.parse_test_steps(self.test_if_extensions_are_installed_on_)
+        tops.test_result = tops.actual_output == tops.expected_output
         tops.generate_report(tops.dut_name, self.output)
         assert tops.actual_output == tops.expected_output
 
@@ -160,14 +159,12 @@ class ExtensionsTests:
                 tops.actual_output = str(exception)
 
             if tops.expected_output == tops.actual_output:
-                tops.test_result = True
                 tops.output_msg += (
                     f"\nOn router {tops.dut_name} extension "
                     f"{extension} error status {tops.actual_output} is "
                     f"correct.\n"
                 )
             else:
-                tops.test_result = False
                 tops.output_msg += (
                     f"\nOn router {tops.dut_name} extension "
                     f"{extension} error status is "
@@ -184,5 +181,6 @@ class ExtensionsTests:
         )
 
         tops.parse_test_steps(self.test_if_extensions_are_erroring_on_)
+        tops.test_result = tops.actual_output == tops.expected_output
         tops.generate_report(tops.dut_name, self.output)
-        assert tops.actual_results == tops.expected_results
+        assert tops.actual_output == tops.expected_output
