@@ -70,7 +70,9 @@ class TacacsTests:
 
         if tacacs_servers:
             try:
-                """TS: Run show command `show tacacs` on dut"""
+                """
+                TS: Run show command `show tacacs` on dut
+                """
                 self.output = dut["output"][tops.show_cmd]["json"]
                 assert self.output, "TACACS details are not collected."
                 logging.info(
@@ -79,7 +81,9 @@ class TacacsTests:
 
                 eos_messages_sent_1 = self.output["tacacsServers"][0]["messagesSent"]
 
-                """TS: Run `show tacacs` on dut again in order to see if messagesSent increments"""
+                """
+                TS: Run `show tacacs` on dut again in order to see if messagesSent increments
+                """
                 self.output = tops.run_show_cmds(tops.show_cmd, "text")[0]["result"]
                 assert self.output, "TACACS details are not collected."
                 logging.info(
@@ -115,7 +119,9 @@ class TacacsTests:
                      is {str(exception)}"""
                 )
         else:
-            """TS: TACACS servers are not configured on the dut hence terminating the test"""
+            """
+            TS: TACACS servers are not configured on the dut hence terminating the test
+            """
             tops.actual_output = "N/A"
             tops.expected_output = "N/A"
             tops.test_result = True
@@ -147,7 +153,9 @@ class TacacsTests:
 
         if tacacs_servers:
             try:
-                """TS: Run show command `show tacacs` on dut"""
+                """
+                TS: Run show command `show tacacs` on dut
+                """
                 self.output = dut["output"][tops.show_cmd]["json"]["tacacsServers"]
                 assert self.output, "TACACS details are not collected."
                 logging.info(
@@ -156,7 +164,9 @@ class TacacsTests:
 
                 eos_messages_received_1 = self.output[0]["messagesReceived"]
 
-                """TS: Run `show tacacs` on dut again in order to see if messagesSent increments"""
+                """
+                TS: Run `show tacacs` on dut again in order to see if messagesSent increments
+                """
                 self.output = tops.run_show_cmds(tops.show_cmd, "text")[0]["result"]
                 assert self.output, "TACACS details are not collected."
                 logging.info(
@@ -195,7 +205,9 @@ class TacacsTests:
                      is {str(exception)}"""
                 )
         else:
-            """TS: TACACS servers are not configured on the dut hence terminating the test"""
+            """
+            TS: TACACS servers are not configured on the dut hence terminating the test
+            """
             tops.actual_output = "N/A"
             tops.expected_output = "N/A"
             tops.test_result = True
