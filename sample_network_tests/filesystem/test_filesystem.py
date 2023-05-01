@@ -70,7 +70,9 @@ class FileSystemTests:
 
         for file_name in files:
             try:
-                """TS: Run show command 'show file information' on dut"""
+                """
+                TS: Run show command 'show file information' on dut
+                """
 
                 show_cmd = f"show file information {file_name}"
                 self.output = tops.run_show_cmds([show_cmd])
