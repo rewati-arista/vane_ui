@@ -82,9 +82,7 @@ class EnvironmentTests:
                 TS: Run show command 'show system environment temperature' on dut
                 """
 
-                self.output = tops.run_show_cmds(
-                    tops.show_cmd
-                )
+                self.output = tops.run_show_cmds(tops.show_cmd)
                 assert (
                     self.output
                 ), "System environment temperature details are not collected."
@@ -155,9 +153,7 @@ class EnvironmentTests:
                 TS: Run show command 'show system environment temperature' on dut
                 """
 
-                self.output = tops.run_show_cmds(
-                    tops.show_cmd
-                )
+                self.output = tops.run_show_cmds(tops.show_cmd)
                 assert (
                     self.output
                 ), "System environment temperature details are not collected."
@@ -178,13 +174,11 @@ class EnvironmentTests:
                             tops.actual_output = temp_sensor["inAlertState"]
 
                             if tops.actual_output == tops.expected_output:
-                                tops.test_result = True
                                 tops.output_msg += (
                                     f"{sensor_name} Sensor {sensor} temperature alert status "
                                     f"is {tops.actual_output} which is correct.\n"
                                 )
                             else:
-                                tops.test_result = False
                                 tops.output_msg += (
                                     f"{sensor_name} Sensor {sensor} temperature alert status "
                                     f"is {tops.actual_output} while it should be "
@@ -225,6 +219,7 @@ class EnvironmentTests:
             )
 
         tops.parse_test_steps(self.test_if_sensors_temp_is_in_spec_on_)
+        tops.test_result = tops.actual_output == tops.expected_output
         tops.generate_report(tops.dut_name, self.output)
         assert tops.actual_output == tops.expected_output
 
@@ -256,13 +251,11 @@ class EnvironmentTests:
                 for power_supply in power_supplies:
                     tops.actual_output = power_supplies[power_supply]["state"]
                     if tops.actual_output == tops.expected_output:
-                        tops.test_result = True
                         tops.output_msg += (
                             f"Power-Supply {power_supply} state is "
                             f"{tops.actual_output} which is correct.\n"
                         )
                     else:
-                        tops.test_result = False
                         tops.output_msg += (
                             f"Power-Supply {power_supply} state is "
                             f"{tops.actual_output} while it should be in "
@@ -304,6 +297,7 @@ class EnvironmentTests:
             )
 
         tops.parse_test_steps(self.test_if_system_environment_power_are_in_spec_on_)
+        tops.test_result = tops.actual_output == tops.expected_output
         tops.generate_report(tops.dut_name, self.output)
         assert tops.actual_output == tops.expected_output
 
@@ -415,14 +409,12 @@ class EnvironmentTests:
                             fan_name = fan["label"]
 
                             if tops.actual_output == tops.expected_output:
-                                tops.test_result = True
                                 tops.output_msg += (
                                     f"{fan_name} fan "
                                     f"is {tops.actual_output} which is correct.\n"
                                 )
 
                             else:
-                                tops.test_result = False
                                 tops.output_msg += (
                                     f"{fan_name} fan "
                                     f"is {tops.actual_output} while it should be "
@@ -463,5 +455,6 @@ class EnvironmentTests:
             )
 
         tops.parse_test_steps(self.test_if_fan_status_is_in_spec_on_)
+        tops.test_result = tops.actual_output == tops.expected_output
         tops.generate_report(tops.dut_name, self.output)
         assert tops.actual_output == tops.expected_output
