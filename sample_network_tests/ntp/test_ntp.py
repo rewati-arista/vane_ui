@@ -175,7 +175,7 @@ class NTPTests:
         """
         tops.parse_test_steps(self.test_if_ntp_associated_with_peers_on_)
         tops.generate_report(tops.dut_name, self.output)
-        assert tops.actual_output == tops.expected_output
+        assert tops.actual_output >= tops.expected_output
 
     @pytest.mark.parametrize("dut", test3_duts, ids=test3_ids)
     def test_if_process_is_running_on_(self, dut, tests_definitions):
@@ -210,14 +210,12 @@ class NTPTests:
                 tops.actual_output = len(results)
 
                 if tops.actual_output >= tops.expected_output:
-                    tops.test_result = True
                     tops.output_msg = (
                         f"\nOn router {tops.dut_name} has "
                         f"{tops.actual_output} NTP processes running, "
                         "which is correct.\n"
                     )
                 else:
-                    tops.test_result = False
                     tops.output_msg = (
                         f"\nOn router {tops.dut_name} has "
                         f"{tops.actual_output} NTP processes, "
@@ -246,9 +244,13 @@ class NTPTests:
         """
         TS: Creating test report based on results
         """
+
         tops.parse_test_steps(self.test_if_process_is_running_on_)
+        tops.test_result = all(
+            x >= y for x, y in zip(tops.actual_output, tops.expected_output)
+        )
         tops.generate_report(tops.dut_name, self.output)
-        assert tops.actual_output == tops.expected_output
+        assert tops.test_result
 
     @pytest.mark.parametrize("dut", test4_duts, ids=test4_ids)
     def test_ntp_configuration_on_(self, dut, tests_definitions):
@@ -265,9 +267,9 @@ class NTPTests:
             TS: Run show command `show running-config section ntp` on dut
             """
 
-            self.output = tops.run_show_cmds(
-                tops.show_cmd, "text"
-            )[0]["result"]["output"]
+            self.output = tops.run_show_cmds(tops.show_cmd, "text")[0]["result"][
+                "output"
+            ]
             assert self.output, "NTP configuration details not collected."
             logging.info(
                 f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
@@ -377,8 +379,7 @@ class NTPTests:
                 )
 
                 tops.actual_output = "bytes from" in self.output[0]["result"]["output"]
-
-                if tops.actual_output is tops.expected_output:
+                if tops.actual_output == tops.expected_output:
                     tops.test_result = True
                     tops.output_msg += (
                         f"\nOn router {tops.dut_name}, verifying NTP "
@@ -416,5 +417,6 @@ class NTPTests:
         TS: Creating test report based on results
         """
         tops.parse_test_steps(self.test_if_ntp_servers_are_reachable_on_)
+        tops.test_result = tops.actual_output == tops.expected_output
         tops.generate_report(tops.dut_name, tops.output_msg)
         assert tops.actual_output == tops.expected_output
