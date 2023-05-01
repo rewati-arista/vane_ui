@@ -83,7 +83,7 @@ class EnvironmentTests:
                 """
 
                 self.output = tops.run_show_cmds(
-                    ["show system environment temperature"]
+                    tops.show_cmd
                 )
                 assert (
                     self.output
@@ -156,7 +156,7 @@ class EnvironmentTests:
                 """
 
                 self.output = tops.run_show_cmds(
-                    ["show system environment temperature"]
+                    tops.show_cmd
                 )
                 assert (
                     self.output
@@ -243,7 +243,7 @@ class EnvironmentTests:
                 """
                 TS: Run show command 'show system environment power' on dut
                 """
-                self.output = tops.run_show_cmds(["show system environment power"])
+                self.output = tops.run_show_cmds(tops.show_cmd)
                 assert (
                     self.output
                 ), "System environment power details are not collected."
