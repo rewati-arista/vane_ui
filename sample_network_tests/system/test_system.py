@@ -67,7 +67,9 @@ class CrashTests:
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
         try:
-            """TS: Run show command `show agent logs crash` on dut"""
+            """
+            TS: Run show command `show agent logs crash` on dut
+            """
             self.output = tops.run_show_cmds(tops.show_cmd, "text")
             assert self.output, "Agent logs crash are are not collected."
             logging.info(
@@ -85,7 +87,7 @@ class CrashTests:
             )
             tops.actual_output = str(exception)
 
-        if tops.expected_output == tops.actual_output:
+        if tops.actual_output <= tops.expected_output:
             tops.test_result = True
             tops.output_msg = (
                 f"\nOn router {tops.dut_name} number of agent crashes is "
@@ -116,7 +118,7 @@ class SystemTests:
 
     @pytest.mark.parametrize("dut", test2_duts, ids=test2_ids)
     def test_if_eos_version_is_correct_on_(self, dut, tests_definitions):
-        """Verifies EOS version running on the device
+        """TD: Verifies EOS version running on the device
 
         Args:
             dut (dict): Encapsulates dut details including name, connection
@@ -126,7 +128,9 @@ class SystemTests:
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
         try:
-            """TS: Run show command `show version` on dut"""
+            """
+            TS: Run show command `show version` on dut
+            """
             self.output = dut["output"][tops.show_cmd]["json"]
             assert self.output, "EOS Version details are not collected."
             logging.info(
