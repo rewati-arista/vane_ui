@@ -224,7 +224,7 @@ class DNSTests:
             TS: Running show command `show running-config section name-server` on dut
             """
             self.output = tops.run_show_cmds(
-                ["show running-config section name-server"], "text"
+                tops.show_cmd, "text"
             )
             assert self.output, "Running config details are not collected."
             logging.info(
