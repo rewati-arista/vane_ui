@@ -68,7 +68,7 @@ class CrashTests:
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
         try:
             """TS: Run show command `show agent logs crash` on dut"""
-            self.output = tops.run_show_cmds(["show agent logs crash"], "text")
+            self.output = tops.run_show_cmds(tops.show_cmd, "text")
             assert self.output, "Agent logs crash are are not collected."
             logging.info(
                 f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
