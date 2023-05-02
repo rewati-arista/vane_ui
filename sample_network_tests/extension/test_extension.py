@@ -144,6 +144,11 @@ class ExtensionsTests:
                 TS: Run show command 'show extensions' on dut
                 """
                 self.output = dut["output"][tops.show_cmd]["json"]
+                assert self.output, "No Extensions are available"
+                logging.info(
+                    f"""On device {tops.dut_name}
+                            output of {tops.show_cmd} command is: {self.output}"""
+                )
 
                 if extension in self.output["extensions"]:
                     tops.actual_output = self.output["extensions"][extension]["error"]
