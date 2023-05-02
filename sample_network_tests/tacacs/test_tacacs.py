@@ -125,14 +125,8 @@ class TacacsTests:
             tops.actual_output = "N/A"
             tops.expected_output = "N/A"
             tops.test_result = True
-            self.output = (
-                f"\nOn router {tops.dut_name} does not have TACACS servers configured"
-            )
-            tops.comment = (
+            self.output = tops.output_msg = tops.comment = (
                 f"\nRouter {tops.dut_name} does not have TACACS servers configured"
-            )
-            tops.output_msg = (
-                f"\nOn router {tops.dut_name} does not have TACACS servers configured"
             )
 
         tops.parse_test_steps(self.test_if_tacacs_is_sending_messages_on_)
@@ -211,14 +205,8 @@ class TacacsTests:
             tops.actual_output = "N/A"
             tops.expected_output = "N/A"
             tops.test_result = True
-            self.output = (
-                f"\nOn router {tops.dut_name} does not have TACACS servers configured"
-            )
-            tops.comment = (
+            self.output = tops.output_msg = tops.comment = (
                 f"\nRouter {tops.dut_name} does not have TACACS servers configured"
-            )
-            tops.output_msg = (
-                f"\nOn router {tops.dut_name} does not have TACACS servers configured"
             )
 
         tops.parse_test_steps(self.test_if_tacacs_is_receiving_messages_on_)
