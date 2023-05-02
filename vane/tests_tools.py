@@ -612,7 +612,7 @@ def return_show_cmds(test_parameters):
     show_cmds = ["show version"]
 
     if show_clock_flag:
-        show_cmds = ["show clock"]
+        show_cmds.append("show clock")
 
     logging.info(f"Discover the names of test suites from {test_parameters}")
 
@@ -864,7 +864,7 @@ class TestOps:
         self._show_cmds = ["show version"]
 
         if self.show_clock_flag:
-            self._show_cmds = ["show clock"]
+            self._show_cmds.append("show clock")
 
         self.show_output = ""
         self.show_cmd = ""
