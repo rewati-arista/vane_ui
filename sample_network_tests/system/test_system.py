@@ -70,13 +70,13 @@ class CrashTests:
             """
             TS: Run show command `show agent logs crash` on dut
             """
-            self.output = tops.run_show_cmds(tops.show_cmd, "text")
+            self.output = dut["output"][tops.show_cmd]
             assert self.output, "Agent logs crash are are not collected."
             logging.info(
                 f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
             )
 
-            show_cmd_txt = self.output[0]["result"]["output"]
+            show_cmd_txt = self.output["text"]
             lines = show_cmd_txt.split("\n")
             tops.actual_output = len(lines) - 1
 
