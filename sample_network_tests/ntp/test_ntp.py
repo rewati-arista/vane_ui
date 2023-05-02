@@ -267,9 +267,7 @@ class NTPTests:
             TS: Run show command `show running-config section ntp` on dut
             """
 
-            self.output = tops.run_show_cmds(tops.show_cmd, "text")[0]["result"][
-                "output"
-            ]
+            self.output = dut["output"][tops.show_cmd]["text"]
             assert self.output, "NTP configuration details not collected."
             logging.info(
                 f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
@@ -380,18 +378,18 @@ class NTPTests:
 
                 tops.actual_output = "bytes from" in self.output[0]["result"]["output"]
                 if tops.actual_output == tops.expected_output:
-                    tops.test_result = True
+                    result = True
                     tops.output_msg += (
                         f"\nOn router {tops.dut_name}, verifying NTP "
                         f"server reachability for {ntp_server} is "
-                        f"{tops.test_result}.\n"
+                        f"{result}.\n"
                     )
                 else:
-                    tops.test_result = False
+                    result = False
                     tops.output_msg += (
                         f"\nOn router {tops.dut_name}, verifying NTP "
                         f"server reachability for {ntp_server} is "
-                        f"{tops.test_result}.\n"
+                        f"{result}.\n"
                     )
 
                 tops.actual_results.append(tops.actual_output)
