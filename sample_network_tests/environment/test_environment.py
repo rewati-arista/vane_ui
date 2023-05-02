@@ -82,7 +82,7 @@ class EnvironmentTests:
                 TS: Run show command 'show system environment temperature' on dut
                 """
 
-                self.output = tops.run_show_cmds(tops.show_cmd)
+                self.output = dut["output"][tops.show_cmd]
                 assert (
                     self.output
                 ), "System environment temperature details are not collected."
@@ -90,7 +90,7 @@ class EnvironmentTests:
                     f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
                 )
 
-                tops.actual_output = self.output[0]["result"]["systemStatus"]
+                tops.actual_output = self.output["json"]["systemStatus"]
 
             except (
                 AssertionError,
@@ -119,14 +119,10 @@ class EnvironmentTests:
                 )
 
         else:
-            """
-            TS: INVALID TEST: CloudEOS router does not require cooling.
-            """
-            tops.test_result, tops.actual_output, tops.expected_output = (
-                True,
-                "N/A",
-                "N/A",
-            )
+            tops.test_result = True
+            tops.actual_output = "N/A"
+            tops.expected_output = "N/A"
+
             tops.comment = tops.output_msg = self.output = (
                 "INVALID TEST: CloudEOS router "
                 f"{tops.dut_name} does not require cooling.\n"
@@ -153,7 +149,7 @@ class EnvironmentTests:
                 TS: Run show command 'show system environment temperature' on dut
                 """
 
-                self.output = tops.run_show_cmds(tops.show_cmd)
+                self.output = dut["output"][tops.show_cmd]
                 assert (
                     self.output
                 ), "System environment temperature details are not collected."
@@ -161,8 +157,8 @@ class EnvironmentTests:
                     f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
                 )
 
-                powersupplies = self.output[0]["result"]["powerSupplySlots"]
-                cards = self.output[0]["result"]["cardSlots"]
+                powersupplies = self.output["json"]["powerSupplySlots"]
+                cards = self.output["json"]["cardSlots"]
 
                 for sensor_array in [powersupplies, cards]:
                     for sensor_card in sensor_array:
@@ -205,14 +201,10 @@ class EnvironmentTests:
                 tops.actual_output = str(exception)
 
         else:
-            """
-            TS: INVALID TEST: CloudEOS router does not require cooling.
-            """
-            tops.test_result, tops.actual_output, tops.expected_output = (
-                True,
-                "N/A",
-                "N/A",
-            )
+            tops.test_result = True
+            tops.actual_output = "N/A"
+            tops.expected_output = "N/A"
+
             tops.comment = tops.output_msg = self.output = (
                 "INVALID TEST: CloudEOS router "
                 f"{tops.dut_name} does not require cooling.\n"
@@ -238,7 +230,7 @@ class EnvironmentTests:
                 """
                 TS: Run show command 'show system environment power' on dut
                 """
-                self.output = tops.run_show_cmds(tops.show_cmd)
+                self.output = dut["output"][tops.show_cmd]
                 assert (
                     self.output
                 ), "System environment power details are not collected."
@@ -246,7 +238,7 @@ class EnvironmentTests:
                     f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
                 )
 
-                power_supplies = self.output[0]["result"]["powerSupplies"]
+                power_supplies = self.output["json"]["powerSupplies"]
 
                 for power_supply in power_supplies:
                     tops.actual_output = power_supplies[power_supply]["state"]
@@ -282,14 +274,10 @@ class EnvironmentTests:
                 tops.actual_output = str(exception)
 
         else:
-            """
-            TS: INVALID TEST: CloudEOS router does not have power-supplies.
-            """
-            tops.test_result, tops.actual_output, tops.expected_output = (
-                True,
-                "N/A",
-                "N/A",
-            )
+            tops.test_result = True
+            tops.actual_output = "N/A"
+            tops.expected_output = "N/A"
+
             tops.comment = tops.output_msg = self.output = (
                 "INVALID TEST: CloudEOS router "
                 f"{tops.dut_name} does not have "
@@ -355,14 +343,10 @@ class EnvironmentTests:
                 tops.actual_output = str(exception)
 
         else:
-            """
-            TS: "INVALID TEST: CloudEOS router does not require cooling."
-            """
-            tops.test_result, tops.actual_output, tops.expected_output = (
-                True,
-                "N/A",
-                "N/A",
-            )
+            tops.test_result = True
+            tops.actual_output = "N/A"
+            tops.expected_output = "N/A"
+
             tops.comment = tops.output_msg = self.output = (
                 "INVALID TEST: CloudEOS router "
                 f"{tops.dut_name} does not require cooling.\n"
@@ -441,14 +425,10 @@ class EnvironmentTests:
                 tops.actual_output = str(exception)
 
         else:
-            """
-            TS: INVALID TEST: CloudEOS router does not require fans.
-            """
-            tops.test_result, tops.actual_output, tops.expected_output = (
-                True,
-                "N/A",
-                "N/A",
-            )
+            tops.test_result = True
+            tops.actual_output = "N/A"
+            tops.expected_output = "N/A"
+
             tops.comment = tops.output_msg = self.output = (
                 "INVALID TEST: CloudEOS router "
                 f"{tops.dut_name} does not require fans.\n"
