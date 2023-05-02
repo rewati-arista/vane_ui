@@ -203,7 +203,9 @@ def show_markers():
             marker_description = i.split(": ")[1]
 
             if marker_name not in inbuilt_list:
-                marker_list.append({"marker": marker_name, "description": marker_description})
+                marker_list.append(
+                    {"marker": marker_name, "description": marker_description}
+                )
 
     return marker_list
 
@@ -269,7 +271,9 @@ def main():
 
     else:
         if args.definitions_file:
-            logging.warning(f"Changing Definitions file name to {args.definitions_file}")
+            logging.warning(
+                f"Changing Definitions file name to {args.definitions_file}"
+            )
             vane.config.DEFINITIONS_FILE = args.definitions_file
 
         if args.duts_file:
