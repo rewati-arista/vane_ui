@@ -12,26 +12,26 @@
         - DSR01
         - DCBBW1
     - name: test_if_ntp_associated_with_peers_on_
-      description: Verify ntp peers are correct
+      description: Verify there are at least expected number of ntp peers
       show_cmd: show ntp associations
       # number of ntp associations
       expected_output: 1
       report_style: modern
-      test_criteria: Verify ntp peers are correct
+      test_criteria: Verify there are at least expected number of ntp peers
       # Optionally filter duts by criteria: name, role, regex, or names
       criteria: names
       filter: 
         - DSR01
         - DCBBW1
     - name: test_if_process_is_running_on_
-      description: Verify processes are running
+      description: Verify there are at least expected number of ntp processes running
       show_cmd: show processes
       # processes to check
       processes:
         - ntpd
       expected_output: 1
       report_style: modern
-      test_criteria: Verify processes are running
+      test_criteria: Verify there are at least expected number of ntp processes running
       # Optionally filter duts by criteria: name, role, regex, or names
       criteria: names
       filter: 

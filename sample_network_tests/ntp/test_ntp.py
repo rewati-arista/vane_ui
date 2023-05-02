@@ -124,7 +124,7 @@ class NTPTests:
 
     @pytest.mark.parametrize("dut", test2_duts, ids=test2_ids)
     def test_if_ntp_associated_with_peers_on_(self, dut, tests_definitions):
-        """TD: Verify ntp peers are correct
+        """TD: Verify there are at least expected number of ntp peers
 
         Args:
           dut (dict): Encapsulates dut details including name, connection
@@ -179,7 +179,7 @@ class NTPTests:
 
     @pytest.mark.parametrize("dut", test3_duts, ids=test3_ids)
     def test_if_process_is_running_on_(self, dut, tests_definitions):
-        """TD: Verify ntp processes are running
+        """TD: Verify there are at least expected number of ntp processes running
 
         Args:
           dut (dict): Encapsulates dut details including name, connection
