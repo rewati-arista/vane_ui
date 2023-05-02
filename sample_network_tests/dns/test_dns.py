@@ -92,16 +92,16 @@ class DNSTests:
                 tops.actual_output = "Name or service not known" not in self.output
 
                 if tops.actual_output == tops.expected_output:
-                    tops.test_result = True
+                    result = True
                     tops.output_msg += (
                         f"\nOn router {tops.dut_name}, DNS resolution is"
-                        f"{tops.test_result} for {url}.\n"
+                        f"{result} for {url}.\n"
                     )
                 else:
-                    tops.test_result = False
+                    result = False
                     tops.output_msg += (
                         f"\nOn router {tops.dut_name}, DNS resolution is"
-                        f"{tops.test_result} for {url}.\n"
+                        f"{result} for {url}.\n"
                     )
 
                 tops.actual_results.append(tops.actual_output)
@@ -170,18 +170,18 @@ class DNSTests:
                 tops.actual_output = "bytes from" in self.output
 
                 if tops.actual_output == tops.expected_output:
-                    tops.test_result = True
+                    result = True
                     tops.output_msg += (
                         f"\nOn router {tops.dut_name}, verifying DNS "
                         f"server reachability for {dns_server} is "
-                        f"{tops.test_result}.\n"
+                        f"{result}.\n"
                     )
                 else:
-                    tops.test_result = False
+                    result = False
                     tops.output_msg += (
                         f"\nOn router {tops.dut_name}, verifying DNS "
                         f"server reachability for {dns_server} is "
-                        f"{tops.test_result}.\n"
+                        f"{result}.\n"
                     )
 
                 tops.actual_results.append(tops.actual_output)
