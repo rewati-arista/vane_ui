@@ -19,6 +19,7 @@ ignore-patterns=
 disable=
     logging-fstring-interpolation,
     logging-not-lazy,
+    unnecessary-pass,
     duplicate-code,
     pointless-string-statement,
     attribute-defined-outside-init,
