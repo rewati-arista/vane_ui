@@ -21,6 +21,7 @@ disable=
     logging-not-lazy,
     unnecessary-pass,
     duplicate-code,
+    too-many-nested-blocks,
     pointless-string-statement,
     attribute-defined-outside-init,
     too-many-branches,
