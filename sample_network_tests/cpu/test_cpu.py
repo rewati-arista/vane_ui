@@ -41,6 +41,17 @@ from vane.vane_logging import logging
 TEST_SUITE = __file__
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 
+dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
+
+test1_duts = dut_parameters["test_1_sec_cpu_utlization_on_"]["duts"]
+test1_ids = dut_parameters["test_1_sec_cpu_utlization_on_"]["ids"]
+
+test2_duts = dut_parameters["test_1_min_cpu_utlization_on_"]["duts"]
+test2_ids = dut_parameters["test_1_min_cpu_utlization_on_"]["ids"]
+
+test3_duts = dut_parameters["test_5_min_cpu_utlization_on_"]["duts"]
+test3_ids = dut_parameters["test_5_min_cpu_utlization_on_"]["ids"]
+
 
 @pytest.mark.demo
 @pytest.mark.nrfu
@@ -51,11 +62,7 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 class CPUTests:
     """CPU Test Suite"""
 
-    dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
-    test_duts = dut_parameters["test_1_sec_cpu_utlization_on_"]["duts"]
-    test_ids = dut_parameters["test_1_sec_cpu_utlization_on_"]["ids"]
-
-    @pytest.mark.parametrize("dut", test_duts, ids=test_ids)
+    @pytest.mark.parametrize("dut", test1_duts, ids=test1_ids)
     def test_1_sec_cpu_utlization_on_(self, dut, tests_definitions):
         """TD: Verify 1 second CPU % is under specificied value
 
@@ -70,56 +77,46 @@ class CPUTests:
             """
             TS: Collecting the output of 'show processes' command from DUT
             """
-            output = dut["output"][tops.show_cmd]["json"]
-            assert (output.get("timeInfo")).get("loadAvg"), "Show process details are not found"
-
+            self.output = dut["output"][tops.show_cmd]["json"]
+            assert (self.output.get("timeInfo")).get(
+                "loadAvg"
+            ), "Show process details are not found"
             logging.info(
-                f"On device {tops.dut_name} output of {tops.show_cmd} command is: {output}"
+                f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
             )
 
-            tops.actual_output = output["timeInfo"]["loadAvg"][0]
+            tops.actual_output = self.output["timeInfo"]["loadAvg"][0]
 
             """
             TS: Comparing Switch's 1 second utilization to expected utilization
             """
             if tops.actual_output < tops.expected_output["cpu_utilization"]:
+                tops.test_result = True
                 tops.output_msg = (
-                    f"{tops.dut_name} 1 sec CPU utilization is {tops.actual_output} and "
-                    f"under the acceptable utilization: {tops.expected_output['cpu_utilization']}"
+                    f"{tops.dut_name} 1 sec CPU utilization is {tops.actual_output}% and "
+                    f"under the acceptable utilization: {tops.expected_output['cpu_utilization']}%"
                 )
             else:
+                tops.test_result = False
                 tops.output_msg = (
-                    f"{tops.dut_name} 1 sec CPU utilization: {tops.actual_output} and "
-                    f"over the acceptable utilization: {tops.expected_output['cpu_utilization']}"
+                    f"{tops.dut_name} 1 sec CPU utilization: {tops.actual_output}% and "
+                    f"over the acceptable utilization: {tops.expected_output['cpu_utilization']}%"
                 )
-
-            print(dut["output"][tops.show_cmd]["text"])
 
         except (AttributeError, LookupError, EapiError) as exp:
             tops.actual_output = str(exp)
             logging.error(
-                "On device %s: Error while running testcase on DUT is: %s",
-                tops.dut_name,
-                str(exp),
+                f"On device {tops.dut_name}: Error while running testcase on DUT is: {str(exp)}"
             )
 
         """
-        TS: Creating test report based
+        TS: Creating test report based on results
         """
         tops.parse_test_steps(self.test_1_sec_cpu_utlization_on_)
-        tops.test_result = tops.actual_output < tops.expected_output["cpu_utilization"]
-        tops.generate_report(tops.dut_name, output)
-
-        """
-        TS: Determing pass or fail based on test criteria
-        """
+        tops.generate_report(tops.dut_name, self.output)
         assert tops.actual_output < tops.expected_output["cpu_utilization"]
 
-    dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
-    test_duts = dut_parameters["test_1_min_cpu_utlization_on_"]["duts"]
-    test_ids = dut_parameters["test_1_min_cpu_utlization_on_"]["ids"]
-
-    @pytest.mark.parametrize("dut", test_duts, ids=test_ids)
+    @pytest.mark.parametrize("dut", test2_duts, ids=test2_ids)
     def test_1_min_cpu_utlization_on_(self, dut, tests_definitions):
         """TD: Verify 1 minute CPU % is under specificied value
 
@@ -134,56 +131,46 @@ class CPUTests:
             """
             TS: Collecting the output of 'show processes' command from DUT
             """
-            output = dut["output"][tops.show_cmd]["json"]
-            assert (output.get("timeInfo")).get("loadAvg"), "Show process details are not found"
-
+            self.output = dut["output"][tops.show_cmd]["json"]
+            assert (self.output.get("timeInfo")).get(
+                "loadAvg"
+            ), "Show process details are not found"
             logging.info(
-                f"On device {tops.dut_name} output of {tops.show_cmd} command is: {output}"
+                f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
             )
 
-            tops.actual_output = output["timeInfo"]["loadAvg"][1]
+            tops.actual_output = self.output["timeInfo"]["loadAvg"][1]
 
             """
             TS: Comparing Switch's 1 minute utilization to expected utilization
             """
             if tops.actual_output < tops.expected_output["cpu_utilization"]:
+                tops.test_result = True
                 tops.output_msg = (
-                    f"{tops.dut_name} 1 minute CPU utilization is {tops.actual_output} and "
-                    f"under the acceptable utilization: {tops.expected_output['cpu_utilization']}"
+                    f"{tops.dut_name} 1 minute CPU utilization is {tops.actual_output}% and "
+                    f"under the acceptable utilization: {tops.expected_output['cpu_utilization']}%"
                 )
             else:
+                tops.test_result = False
                 tops.output_msg = (
-                    f"{tops.dut_name} 1 minute CPU utilization: {tops.actual_output} and "
-                    f"over the acceptable utilization: {tops.expected_output['cpu_utilization']}"
+                    f"{tops.dut_name} 1 minute CPU utilization: {tops.actual_output}% and "
+                    f"over the acceptable utilization: {tops.expected_output['cpu_utilization']}%"
                 )
-
-            print(dut["output"][tops.show_cmd]["text"])
 
         except (AttributeError, LookupError, EapiError) as exp:
             tops.actual_output = str(exp)
             logging.error(
-                "On device %s: Error while running testcase on DUT is: %s",
-                tops.dut_name,
-                str(exp),
+                f"On device {tops.dut_name}: Error while running testcase on DUT is: {str(exp)}"
             )
 
         """
-        TS: Creating test report based
+        TS: Creating test report based on results
         """
         tops.parse_test_steps(self.test_1_min_cpu_utlization_on_)
-        tops.test_result = tops.actual_output < tops.expected_output["cpu_utilization"]
-        tops.generate_report(tops.dut_name, output)
-
-        """
-        TS: Determing pass or fail based on test criteria
-        """
+        tops.generate_report(tops.dut_name, self.output)
         assert tops.actual_output < tops.expected_output["cpu_utilization"]
 
-    dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
-    test_duts = dut_parameters["test_5_min_cpu_utlization_on_"]["duts"]
-    test_ids = dut_parameters["test_5_min_cpu_utlization_on_"]["ids"]
-
-    @pytest.mark.parametrize("dut", test_duts, ids=test_ids)
+    @pytest.mark.parametrize("dut", test3_duts, ids=test3_ids)
     def test_5_min_cpu_utlization_on_(self, dut, tests_definitions):
         """TD: Verify 5 minute CPU % is under specificied value
 
@@ -198,47 +185,41 @@ class CPUTests:
             """
             TS: Collecting the output of 'show processes' command from DUT
             """
-            output = dut["output"][tops.show_cmd]["json"]
-            assert (output.get("timeInfo")).get("loadAvg"), "Show process details are not found"
-
+            self.output = dut["output"][tops.show_cmd]["json"]
+            assert (self.output.get("timeInfo")).get(
+                "loadAvg"
+            ), "Show process details are not found"
             logging.info(
-                f"On device {tops.dut_name} output of {tops.show_cmd} command is: {output}"
+                f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
             )
 
-            tops.actual_output = output["timeInfo"]["loadAvg"][1]
+            tops.actual_output = self.output["timeInfo"]["loadAvg"][1]
 
             """
             TS: Comparing Switch's 5 minute utilization to expected utilization
             """
             if tops.actual_output < tops.expected_output["cpu_utilization"]:
+                tops.test_result = True
                 tops.output_msg = (
-                    f"{tops.dut_name} 5 minute CPU utilization is {tops.actual_output} and "
-                    f"under the acceptable utilization: {tops.expected_output['cpu_utilization']}"
+                    f"{tops.dut_name} 5 minute CPU utilization is {tops.actual_output}% and "
+                    f"under the acceptable utilization: {tops.expected_output['cpu_utilization']}%"
                 )
             else:
+                tops.test_result = False
                 tops.output_msg = (
-                    f"{tops.dut_name} 5 minute CPU utilization: {tops.actual_output} and "
-                    f"over the acceptable utilization: {tops.expected_output['cpu_utilization']}"
+                    f"{tops.dut_name} 5 minute CPU utilization: {tops.actual_output}% and "
+                    f"over the acceptable utilization: {tops.expected_output['cpu_utilization']}%"
                 )
-
-            print(dut["output"][tops.show_cmd]["text"])
 
         except (AttributeError, LookupError, EapiError) as exp:
             tops.actual_output = str(exp)
             logging.error(
-                "On device %s: Error while running testcase on DUT is: %s",
-                tops.dut_name,
-                str(exp),
+                f"On device {tops.dut_name}: Error while running testcase on DUT is: {str(exp)}"
             )
 
         """
-        TS: Creating test report based
+        TS: Creating test report based on results
         """
         tops.parse_test_steps(self.test_5_min_cpu_utlization_on_)
-        tops.test_result = tops.actual_output < tops.expected_output["cpu_utilization"]
-        tops.generate_report(tops.dut_name, output)
-
-        """
-        TS: Determing pass or fail based on test criteria
-        """
+        tops.generate_report(tops.dut_name, self.output)
         assert tops.actual_output < tops.expected_output["cpu_utilization"]

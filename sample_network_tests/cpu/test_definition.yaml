@@ -11,8 +11,8 @@
       # Optionally filter duts by criteria: name, role, regex, or names
       criteria: names
       filter: 
-        - LEAF1
-        - LEAF2
+        - DLFW3
+        - DLFW4
 
     - name: test_1_min_cpu_utlization_on_
       description: Verify 1 minute CPU % is under specificied value
@@ -25,8 +25,8 @@
       # Optionally filter duts by criteria: name, role, regex, or names
       criteria: names
       filter: 
-        - LEAF1
-        - LEAF2
+        - DLFW3
+        - DLFW4
 
     - name: test_5_min_cpu_utlization_on_
       description: Verify 5 minute CPU % is under specificied value
@@ -39,5 +39,5 @@
       # Optionally filter duts by criteria: name, role, regex, or names
       criteria: names
       filter:
-        - LEAF1
-        - LEAF2
+        - DLFW3
+        - DLFW4
