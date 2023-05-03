@@ -19,10 +19,13 @@ ignore-patterns=
 disable=
     logging-fstring-interpolation,
     logging-not-lazy,
+    unnecessary-pass,
     duplicate-code,
-    attribute-defined-outside-init,
-    pointless-string-statement,
     too-many-nested-blocks,
+    pointless-string-statement,
+    attribute-defined-outside-init,
+    too-many-branches,
+    too-many-statements,
 
 
 [MISCELLANEOUS]
