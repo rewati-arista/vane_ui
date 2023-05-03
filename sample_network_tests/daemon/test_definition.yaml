@@ -13,8 +13,8 @@
       # Optionally filter duts by criteria: name, role, regex, or names
       criteria: names
       filter: 
-        - LEAF1
-        - LEAF2
+        - DLFW3
+        - DLFW4
 
     - name: test_if_daemons_are_enabled_on_
       description: Verify a list of daemons are enabled on DUT
@@ -28,6 +28,6 @@
       test_criteria: Verify a list of daemons are enabled on DUT
       # Optionally filter duts by criteria: name, role, regex, or names
       criteria: names
-      filter: 
-        - LEAF1
-        - LEAF2
+      filter:
+        - DLFW3
+        - DLFW4
