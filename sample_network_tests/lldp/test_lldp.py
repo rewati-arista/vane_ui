@@ -68,7 +68,7 @@ class LldpTests:
 
     @pytest.mark.parametrize("dut", test1_duts, ids=test1_ids)
     def test_if_lldp_rx_is_enabled_on_(self, dut, tests_definitions):
-        """Verify LLDP receive is enabled on interesting interfaces
+        """TD: Verify LLDP receive is enabled on interesting interfaces
 
         Args:
             dut (dict): Encapsulates dut details including name, connection
@@ -135,7 +135,7 @@ class LldpTests:
 
     @pytest.mark.parametrize("dut", test2_duts, ids=test2_ids)
     def test_if_lldp_tx_is_enabled_on_(self, dut, tests_definitions):
-        """Verify LLDP transmit is enabled on interesting interfaces
+        """TD: Verify LLDP transmit is enabled on interesting interfaces
 
         Args:
             dut (dict): Encapsulates dut details including name, connection
@@ -211,7 +211,7 @@ class LldpLocalInfoTests:
 
     @pytest.mark.parametrize("dut", test3_duts, ids=test3_ids)
     def test_if_lldp_system_name_is_correct_on_(self, dut, tests_definitions):
-        """Verify show lldp local-info hostname is the system's name
+        """TD: Verify show lldp local-info hostname is the system's name
 
         Args:
             dut (dict): Encapsulates dut details including name, connection
@@ -268,7 +268,7 @@ class LldpLocalInfoTests:
 
     @pytest.mark.parametrize("dut", test4_duts, ids=test4_ids)
     def test_if_lldp_max_frame_size_is_correct_on_(self, dut, tests_definitions):
-        """Verify show lldp local-info maxFrameSize is correct
+        """TD: Verify show lldp local-info maxFrameSize is correct
 
         Args:
             dut (dict): Encapsulates dut details including name, connection
@@ -340,7 +340,7 @@ class LldpLocalInfoTests:
 
     @pytest.mark.parametrize("dut", test5_duts, ids=test5_ids)
     def test_if_lldp_interface_id_is_correct_on_(self, dut, tests_definitions):
-        """Verify show lldp local-info interfaceIdType is correct
+        """TD: Verify show lldp local-info interfaceIdType is correct
 
         Args:
             dut (dict): Encapsulates dut details including name, connection
