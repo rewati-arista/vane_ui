@@ -14,20 +14,3 @@
         - TerminAttr
       expected_output: True
       show_cmd: show daemon
-
-
-    - name: test_if_daemons_are_running_on_
-      description: Verify a list of daemons are running on DUT
-      show_cmd: show daemon
-      # List daemons to check on DUT
-      daemons:
-        - TerminAttr
-      expected_output: 
-        daemon_running: True
-      report_style: modern
-      test_criteria: Verify a list of daemons are running on DUT
-      # Optionally filter duts by criteria: name, role, regex, or names
-      criteria: names
-      filter: 
-        - LEAF1
-        - LEAF2
