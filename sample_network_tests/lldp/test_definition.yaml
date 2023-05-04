@@ -10,8 +10,8 @@
       # Optionally filter duts by criteria: name, role, regex, or names
       criteria: names
       filter: 
-        - LEAF1
-        - LEAF2
+        - DLFW3
+        - DLFW4
 
     - name: test_if_lldp_tx_is_enabled_on_
       description: Verify LLDP transmit is enabled on interesting interfaces
@@ -23,8 +23,8 @@
       # Optionally filter duts by criteria: name, role, regex, or names
       criteria: names
       filter: 
-        - LEAF1
-        - LEAF2
+        - DLFW3
+        - DLFW4
 
     - name: test_if_lldp_system_name_is_correct_on_
       description: Verify show lldp local-info hostname is the system's name
@@ -36,8 +36,8 @@
       # Optionally filter duts by criteria: name, role, regex, or names
       criteria: names
       filter: 
-        - LEAF1
-        - LEAF2
+        - DLFW3
+        - DLFW4
 
     - name: test_if_lldp_max_frame_size_is_correct_on_
       description: Verify show lldp local-info maxFrameSize is correct
@@ -49,8 +49,8 @@
       # Optionally filter duts by criteria: name, role, regex, or names
       criteria: names
       filter: 
-        - LEAF1
-        - LEAF2
+        - DLFW3
+        - DLFW4
 
     - name: test_if_lldp_interface_id_is_correct_on_
       description: Verify show lldp local-info interfaceIdType is correct
@@ -62,5 +62,5 @@
       # Optionally filter duts by criteria: name, role, regex, or names
       criteria: names
       filter: 
-        - LEAF1
-        - LEAF2
+        - DLFW3
+        - DLFW4
