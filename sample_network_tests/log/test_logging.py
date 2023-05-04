@@ -33,13 +33,17 @@
 
 import pytest
 from pyeapi.eapilib import EapiError
-from vane.config import dut_objs, test_defs
 from vane import tests_tools
 from vane.vane_logging import logging
+from vane.config import dut_objs, test_defs
 
 
 TEST_SUITE = __file__
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
+
+dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
+test_duts = dut_parameters["test_if_log_messages_appear_on_"]["duts"]
+test_ids = dut_parameters["test_if_log_messages_appear_on_"]["ids"]
 
 
 @pytest.mark.demo
@@ -52,10 +56,6 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 class LoggingTests:
     """Logging Test Suite"""
 
-    dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
-    test_duts = dut_parameters["test_if_log_messages_appear_on_"]["duts"]
-    test_ids = dut_parameters["test_if_log_messages_appear_on_"]["ids"]
-
     @pytest.mark.parametrize("dut", test_duts, ids=test_ids)
     def test_if_log_messages_appear_on_(self, dut, tests_definitions):
         """TD: Verify local log messages entries
@@ -67,67 +67,55 @@ class LoggingTests:
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-        try:
-            """
-            TS: Collecting the output of 'show logging' command from DUT
-            """
+        sys_msgs = tops.test_parameters["sys_msgs"]
 
-            sys_msgs = tops.test_parameters["sys_msgs"]
+        for sys_msg in sys_msgs:
+            try:
+                """
+                TS: Collecting the output of 'show logging' command from DUT
+                """
+                logging.info(
+                    f"On device {tops.dut_name} output of {tops.show_cmd} command is: "
+                    f"{tops.show_cmd_txt}"
+                )
 
-            logging.info(
-                f"On device {tops.dut_name} output of {tops.show_cmd} command is: "
-                f"{tops.show_cmd_txt}"
-            )
-
-            for sys_msg in sys_msgs:
                 """
                 TS: Verifying if DUT's system logs have messages
                 """
                 if sys_msg in tops.show_cmd_txt:
+                    tops.actual_output = True
                     tops.output_msg += (
                         f"{tops.dut_name} system logs contains message: {sys_msg}. "
                     )
-                    tops.actual_output = False
                 else:
+                    tops.actual_output = False
                     tops.output_msg += (
                         f"{tops.dut_name} system logs does NOT contains message: "
                         f"{sys_msg}. "
                     )
-                    tops.actual_output = True
 
-                tops.actual_results.append(tops.actual_output)
-                tops.expected_results.append(tops.expected_output)
+                tops.actual_results.append({sys_msg: tops.actual_output})
+                tops.expected_results.append({sys_msg: tops.expected_output})
 
-        except (AttributeError, LookupError, EapiError) as exp:
-            tops.actual_output = str(exp)
-            logging.error(
-                "On device %s: Error while running testcase on DUT is: %s",
-                tops.dut_name,
-                str(exp),
-            )
+            except (AttributeError, LookupError, EapiError) as exp:
+                tops.actual_output = str(exp)
+                logging.error(
+                    f"On device {tops.dut_name}: Error while running testcase on DUT is: {str(exp)}"
+                )
+                tops.output_msg += (
+                    f" EXCEPTION encountered on device {tops.dut_name}, while "
+                    f"investigating logging: {sys_msg}. Vane recorded error: {exp} "
+                )
 
-            tops.output_msg += (
-                f" EXCEPTION encountered on device {tops.dut_name}, while "
-                f"investigating logging: {sys_msg}. Vane recorded error: {exp} "
-            )
-
-        print(
-            f"\n{tops.dut_name}# {tops.test_parameters['show_cmd']}\n"
-            f"{tops.show_cmd_txt}"
+        tops.actual_output, tops.expected_output = (
+            tops.actual_results,
+            tops.expected_results,
         )
 
         """
         TS: Creating test report based on results
         """
-        tops.actual_output, tops.expected_output = (
-            tops.actual_results,
-            tops.expected_results,
-        )
         tops.parse_test_steps(self.test_if_log_messages_appear_on_)
         tops.test_result = tops.actual_output == tops.expected_output
         tops.generate_report(tops.dut_name, tops.show_cmd_txt)
-
-        """
-        TS: Determing pass or fail based on test criteria
-        """
         assert tops.actual_output == tops.expected_output
