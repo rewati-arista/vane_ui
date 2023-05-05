@@ -115,8 +115,8 @@ class TacacsTests:
                 EapiError,
             ) as exception:
                 logging.error(
-                    f"""Error occurred during the testsuite execution on dut: {tops.dut_name}
-                     is {str(exception)}"""
+                    f"Error occurred during the testsuite execution on dut: {tops.dut_name}"
+                    f" is {str(exception)}"
                 )
         else:
             """
@@ -197,8 +197,8 @@ class TacacsTests:
                 EapiError,
             ) as exception:
                 logging.error(
-                    f"""Error occurred during the testsuite execution on dut: {tops.dut_name}
-                     is {str(exception)}"""
+                    f"Error occurred during the testsuite execution on dut: {tops.dut_name}"
+                    f" is {str(exception)}"
                 )
         else:
             """
