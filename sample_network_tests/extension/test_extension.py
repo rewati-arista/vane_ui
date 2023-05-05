@@ -78,8 +78,8 @@ class ExtensionsTests:
                 self.output = dut["output"][tops.show_cmd]["json"]
                 assert self.output, "No Extensions are available"
                 logging.info(
-                    f"""On device {tops.dut_name}
-                            output of {tops.show_cmd} command is: {self.output}"""
+                    f"On device {tops.dut_name}"
+                    f" output of {tops.show_cmd} command is: {self.output}"
                 )
 
                 if extension in self.output["extensions"]:
@@ -94,8 +94,8 @@ class ExtensionsTests:
                 EapiError,
             ) as exception:
                 logging.error(
-                    f"""Error occurred during the testsuite execution on dut:
-                            {tops.dut_name} is {str(exception)}"""
+                    f"Error occurred during the testsuite execution on dut:"
+                    f" {tops.dut_name} is {str(exception)}"
                 )
                 tops.actual_output = str(exception)
 
@@ -146,8 +146,8 @@ class ExtensionsTests:
                 self.output = dut["output"][tops.show_cmd]["json"]
                 assert self.output, "No Extensions are available"
                 logging.info(
-                    f"""On device {tops.dut_name}
-                            output of {tops.show_cmd} command is: {self.output}"""
+                    f"On device {tops.dut_name}"
+                    f" output of {tops.show_cmd} command is: {self.output}"
                 )
 
                 if extension in self.output["extensions"]:
@@ -162,8 +162,8 @@ class ExtensionsTests:
                 EapiError,
             ) as exception:
                 logging.error(
-                    f"""Error occurred during the testsuite execution on dut:
-                               {tops.dut_name} is {str(exception)}"""
+                    f"Error occurred during the testsuite execution on dut:"
+                    f" {tops.dut_name} is {str(exception)}"
                 )
                 tops.actual_output = str(exception)
 
