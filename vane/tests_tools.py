@@ -98,7 +98,9 @@ def parametrize_duts(test_fname, test_defs, dut_objs):
 
     logging.info(f"Filtering test definitions by test suite name: {testsuite}")
 
-    subset_def = [defs for defs in test_defs["test_suites"] if testsuite == defs["name"]]
+    subset_def = [
+        defs for defs in test_defs["test_suites"] if testsuite == defs["name"]
+    ]
     testcases = subset_def[0]["testcases"]
 
     logging.info("Unpack testcases by defining dut and criteria")
@@ -265,7 +267,9 @@ def login_duts(test_parameters, test_duts):
     network_configs = {}
     if "network_configs" in test_parameters["parameters"]:
         if test_parameters["parameters"]["network_configs"]:
-            network_configs = import_yaml(test_parameters["parameters"]["network_configs"])
+            network_configs = import_yaml(
+                test_parameters["parameters"]["network_configs"]
+            )
 
     for dut in duts:
         name = dut["name"]
@@ -322,7 +326,9 @@ def send_cmds(show_cmds, conn, encoding):
     """
 
     try:
-        logging.debug(f"List of show commands in show_cmds with encoding {encoding}: {show_cmds}")
+        logging.debug(
+            f"List of show commands in show_cmds with encoding {encoding}: {show_cmds}"
+        )
 
         if encoding == "json":
             show_cmd_list = conn.run_commands(show_cmds)
@@ -415,7 +421,9 @@ def dut_worker(dut, show_cmds, test_parameters):
         if show_cmd in show_cmds_json:
             cmd_index = show_cmds_json.index(show_cmd)
 
-            logging.debug(f"Found cmd: {show_cmd} at index {cmd_index} of {show_cmds_json}")
+            logging.debug(
+                f"Found cmd: {show_cmd} at index {cmd_index} of {show_cmds_json}"
+            )
             logging.debug(
                 f"length of cmds: {len(show_cmds_json)} vs length of "
                 f"output {len(show_cmd_json_list)}"
@@ -435,7 +443,9 @@ def dut_worker(dut, show_cmds, test_parameters):
             show_output_txt = show_cmd_txt_list[cmd_index]
             dut["output"][show_cmd]["text"] = show_output_txt["output"]
 
-            logging.warning(f"Adding text cmd {show_cmd} to dut and data {show_output_txt}")
+            logging.warning(
+                f"Adding text cmd {show_cmd} to dut and data {show_output_txt}"
+            )
         else:
             dut["output"][show_cmd]["text"] = ""
 
@@ -455,7 +465,9 @@ def return_interfaces(hostname, test_parameters):
       interface_list (list): list of interesting interfaces based on
                              PS LLD spreadsheet
     """
-    logging.info("Parse test_parameters for interface connections and return them to test")
+    logging.info(
+        "Parse test_parameters for interface connections and return them to test"
+    )
 
     interface_list = []
     duts = test_parameters["duts"]
@@ -471,7 +483,9 @@ def return_interfaces(hostname, test_parameters):
             for neighbor in neighbors:
                 interface = {}
 
-                logging.debug(f"Adding interface parameters: {neighbor} neighbor for: {dut_name}")
+                logging.debug(
+                    f"Adding interface parameters: {neighbor} neighbor for: {dut_name}"
+                )
 
                 interface["hostname"] = dut_name
                 interface["interface_name"] = neighbor["port"]
@@ -508,7 +522,9 @@ def get_parameters(tests_parameters, test_suite, test_case=""):
     logging.info(f"Return testcases for Test Suite: {test_suite}")
 
     suite_parameters = [
-        param for param in tests_parameters["test_suites"] if param["name"] == test_suite
+        param
+        for param in tests_parameters["test_suites"]
+        if param["name"] == test_suite
     ]
 
     logging.debug(f"Suite_parameters: {suite_parameters}")
@@ -516,7 +532,9 @@ def get_parameters(tests_parameters, test_suite, test_case=""):
     logging.info(f"Return parameters for Test Case: {test_case}")
 
     case_parameters = [
-        param for param in suite_parameters[0]["testcases"] if param["name"] == test_case
+        param
+        for param in suite_parameters[0]["testcases"]
+        if param["name"] == test_case
     ]
 
     logging.debug(f"Case_parameters: {case_parameters[0]}")
@@ -536,7 +554,9 @@ def verify_show_cmd(show_cmd, dut):
 
     dut_name = dut["name"]
 
-    logging.info(f"Verifying if show command |{show_cmd}| was successfully executed on {dut_name} dut")
+    logging.info(
+        f"Verifying if show command |{show_cmd}| was successfully executed on {dut_name} dut"
+    )
 
     if show_cmd in dut["output"]:
         logging.debug(f"Verified output for show command |{show_cmd}| on {dut_name}")
@@ -566,7 +586,9 @@ def verify_tacacs(dut):
     if tacacs_servers == 0:
         tacacs_bool = False
 
-    logging.debug(f"{tacacs_servers} tacacs servers are configured so returning {tacacs_bool}")
+    logging.debug(
+        f"{tacacs_servers} tacacs servers are configured so returning {tacacs_bool}"
+    )
 
     return tacacs_bool
 
@@ -647,7 +669,9 @@ def return_show_cmds(test_parameters):
 
                     show_cmds.append(show_cmd)
 
-    logging.info(f"The following show commands are required for test cases: {show_cmds}")
+    logging.info(
+        f"The following show commands are required for test cases: {show_cmds}"
+    )
 
     return show_cmds
 
@@ -789,7 +813,9 @@ def create_duts_file(topology_file, inventory_file):
             if "cvp" in name:
                 continue
             if name in inventory_file["all"]["children"]["VEOS"]["hosts"]:
-                inventory_details = inventory_file["all"]["children"]["VEOS"]["hosts"][name]
+                inventory_details = inventory_file["all"]["children"]["VEOS"]["hosts"][
+                    name
+                ]
                 dut_properties.append(
                     {
                         "mgmt_ip": inventory_details["ansible_host"],
@@ -802,7 +828,9 @@ def create_duts_file(topology_file, inventory_file):
                     }
                 )
             elif name in inventory_file["all"]["children"]["GENERIC"]["hosts"]:
-                inventory_details = inventory_file["all"]["children"]["GENERIC"]["hosts"][name]
+                inventory_details = inventory_file["all"]["children"]["GENERIC"][
+                    "hosts"
+                ][name]
                 server_properties.append(
                     {
                         "mgmt_ip": inventory_details["ansible_host"],
@@ -847,7 +875,9 @@ class TestOps:
         """
         test_case = inspect.stack()[1][3]
         self.test_case = test_case
-        self.test_parameters = self._get_parameters(tests_definitions, test_suite, self.test_case)
+        self.test_parameters = self._get_parameters(
+            tests_definitions, test_suite, self.test_case
+        )
         self.expected_output = self.test_parameters["expected_output"]
         self.dut = dut
         self.dut_name = self.dut["name"]
@@ -917,9 +947,13 @@ class TestOps:
 
         for show_cmd in show_cmds:
             if show_cmd and show_cmd in dut["output"]:
-                logging.debug(f"Verified output for show command |{show_cmd}| on {dut_name}")
+                logging.debug(
+                    f"Verified output for show command |{show_cmd}| on {dut_name}"
+                )
             else:
-                logging.critical(f"Show command |{show_cmd}| not executed on {dut_name}")
+                logging.critical(
+                    f"Show command |{show_cmd}| not executed on {dut_name}"
+                )
 
                 assert False
 
@@ -1050,14 +1084,20 @@ class TestOps:
         veos_bool = False
         veos = self.dut["output"][show_cmd]["json"]["modelName"]
 
-        logging.info(f"Verifying if {self.dut_name} DUT is a VEOS instance. Model is {veos}")
+        logging.info(
+            f"Verifying if {self.dut_name} DUT is a VEOS instance. Model is {veos}"
+        )
 
         if veos == "vEOS":
             veos_bool = True
 
-            logging.debug(f"{self.dut_name} is a VEOS instance so returning {veos_bool}")
+            logging.debug(
+                f"{self.dut_name} is a VEOS instance so returning {veos_bool}"
+            )
         else:
-            logging.debug(f"{self.dut_name} is not a VEOS instance so returning {veos_bool}")
+            logging.debug(
+                f"{self.dut_name} is not a VEOS instance so returning {veos_bool}"
+            )
 
         return veos_bool
 
