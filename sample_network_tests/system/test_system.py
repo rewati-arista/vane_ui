@@ -82,8 +82,8 @@ class CrashTests:
 
         except (AssertionError, AttributeError, LookupError, EapiError) as exception:
             logging.error(
-                f"""Error occurred during the testsuite execution on dut: {tops.dut_name}
-                 is {str(exception)}"""
+                f"Error occurred during the testsuite execution on dut: {tops.dut_name}"
+                f" is {str(exception)}"
             )
             tops.actual_output = str(exception)
 
@@ -141,8 +141,8 @@ class SystemTests:
 
         except (AssertionError, AttributeError, LookupError, EapiError) as exception:
             logging.error(
-                f"""Error occurred during the testsuite execution on dut: {tops.dut_name}
-                 is {str(exception)}"""
+                f"Error occurred during the testsuite execution on dut: {tops.dut_name}"
+                f" is {str(exception)}"
             )
             tops.actual_output = str(exception)
 
