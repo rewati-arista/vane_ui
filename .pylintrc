@@ -17,11 +17,15 @@ ignore-patterns=
 # no Warning level messages displayed, use "--disable=all --enable=classes
 # --disable=W".
 disable=
-    logging-fstring-interpolation,
-    logging-not-lazy,
-    duplicate-code,
     pointless-string-statement,
     attribute-defined-outside-init,
+    logging-fstring-interpolation,
+    logging-not-lazy,
+    unnecessary-pass,
+    duplicate-code,
+    too-many-nested-blocks,
+    too-many-branches,
+    too-many-statements,
 
 
 [MISCELLANEOUS]
