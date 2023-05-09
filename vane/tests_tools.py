@@ -555,13 +555,13 @@ def verify_show_cmd(show_cmd, dut):
     dut_name = dut["name"]
 
     logging.info(
-        f"Verifying if show command |{show_cmd}| was successfully executed on {dut_name} dut"
+        f"Verifying if show command {show_cmd} was successfully executed on {dut_name} dut"
     )
 
     if show_cmd in dut["output"]:
-        logging.debug(f"Verified output for show command |{show_cmd}| on {dut_name}")
+        logging.debug(f"Verified output for show command {show_cmd} on {dut_name}")
     else:
-        logging.critical(f"Show command |{show_cmd}| not executed on {dut_name}")
+        logging.critical(f"Show command {show_cmd} not executed on {dut_name}")
 
         assert False
 
@@ -942,17 +942,17 @@ class TestOps:
         dut_name = dut["name"]
 
         logging.info(
-            f"Verifying if show command |{show_cmds}| were successfully executed on {dut_name} dut"
+            f"Verifying if show command {show_cmds} were successfully executed on {dut_name} dut"
         )
 
         for show_cmd in show_cmds:
             if show_cmd and show_cmd in dut["output"]:
                 logging.debug(
-                    f"Verified output for show command |{show_cmd}| on {dut_name}"
+                    f"Verified output for show command {show_cmd} on {dut_name}"
                 )
             else:
                 logging.critical(
-                    f"Show command |{show_cmd}| not executed on {dut_name}"
+                    f"Show command {show_cmd} not executed on {dut_name}"
                 )
 
                 assert False
