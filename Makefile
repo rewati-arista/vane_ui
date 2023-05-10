@@ -84,7 +84,7 @@ pylint:
 	pylint vane/ tests/
 
 .PHONY: sample_network_tests
-systest: 
+sample_network_tests: 
 	sudo openvpn --config ovpn_profiles/eosplus-act.ovpn --daemon
 	ping 10.255.74.38 -c 5
 	coverage run --source /project/vane -m vane.vane_cli --definitions_file sample_network_tests/definitions.yaml --duts_file sample_network_tests/duts.yaml
