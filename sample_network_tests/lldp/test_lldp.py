@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright (c) 2019, Arista Networks EOS+
+# Copyright (c) 2023, Arista Networks EOS+
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -129,9 +129,9 @@ class LldpTests:
         TS: Creating test report based on results
         """
         tops.parse_test_steps(self.test_if_lldp_rx_is_enabled_on_)
-        tops.test_result = tops.actual_results == tops.expected_results
+        tops.test_result = tops.actual_output == tops.expected_output
         tops.generate_report(tops.dut_name, self.output)
-        assert tops.actual_results == tops.expected_results
+        assert tops.actual_output == tops.expected_output
 
     @pytest.mark.parametrize("dut", test2_duts, ids=test2_ids)
     def test_if_lldp_tx_is_enabled_on_(self, dut, tests_definitions):
@@ -196,9 +196,9 @@ class LldpTests:
         TS: Creating test report based on results
         """
         tops.parse_test_steps(self.test_if_lldp_tx_is_enabled_on_)
-        tops.test_result = tops.actual_results == tops.expected_results
+        tops.test_result = tops.actual_output == tops.expected_output
         tops.generate_report(tops.dut_name, self.output)
-        assert tops.actual_results == tops.expected_results
+        assert tops.actual_output == tops.expected_output
 
 
 @pytest.mark.nrfu
@@ -334,9 +334,9 @@ class LldpLocalInfoTests:
         TS: Creating test report based on results
         """
         tops.parse_test_steps(self.test_if_lldp_max_frame_size_is_correct_on_)
-        tops.test_result = tops.actual_results == tops.expected_results
+        tops.test_result = tops.actual_output == tops.expected_output
         tops.generate_report(tops.dut_name, self.output)
-        assert tops.actual_results == tops.expected_results
+        assert tops.actual_output == tops.expected_output
 
     @pytest.mark.parametrize("dut", test5_duts, ids=test5_ids)
     def test_if_lldp_interface_id_is_correct_on_(self, dut, tests_definitions):
@@ -403,6 +403,6 @@ class LldpLocalInfoTests:
         TS: Creating test report based on results
         """
         tops.parse_test_steps(self.test_if_lldp_interface_id_is_correct_on_)
-        tops.test_result = tops.actual_results == tops.expected_results
+        tops.test_result = tops.actual_output == tops.expected_output
         tops.generate_report(tops.dut_name, self.output)
-        assert tops.actual_results == tops.expected_results
+        assert tops.actual_output == tops.expected_output
