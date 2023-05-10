@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright (c) 2019, Arista Networks EOS+
+# Copyright (c) 2023, Arista Networks EOS+
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -117,11 +117,12 @@ class TestStepClient:
             test_steps_list = []
             for step in steps:
                 # Create Title for Test Definition
-                if step.startswith("TD:") and test_steps_list:
+                if step.startswith("TD:"):
                     # Add Test steps to Document where
                     # there are more than one TD
-                    md_file.new_list(test_steps_list, marked_with="1")
-                    test_steps_list = []
+                    if test_steps_list:
+                        md_file.new_list(test_steps_list, marked_with="1")
+                        test_steps_list = []
                     md_file.new_header(level=1, title=step.lstrip("TD:"))
                 # Add Test steps to list to be added to file
                 elif step.startswith("TS:"):
