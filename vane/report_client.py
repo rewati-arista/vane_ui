@@ -116,7 +116,10 @@ class ReportClient:
         test_suite = test_suite.split("/")[-1]
         dut_name = test_parameters["dut"]
         test_case = test_parameters["name"]
-        logging.info(f"Validating test case results data and reconciling missing data for test case: {test_case} on DUT: {dut_name}")
+        logging.info(
+            "Validating test case results data and reconciling missing data for test case: "
+            f"{test_case} on DUT: {dut_name}"
+        )
 
         if not self._results_datamodel:
             self._results_datamodel = {
@@ -411,7 +414,7 @@ class ReportClient:
                     testcases_results[dut_index]["ERROR"] += 1
 
                 testcases_results[dut_index]["TOTAL"] += 1
-        
+
         logging.debug(f"DUT compiled results: {testcases_results}")
 
         return testcases_results
@@ -865,7 +868,9 @@ class ReportClient:
         missing_fields = self._required_template_fields(dut, report_template)
 
         if missing_fields:
-            logging.warning("Required report fields are NOT in test definitions for test case: {tc_name}")
+            logging.warning(
+                "Required report fields are NOT in test definitions for test case: {tc_name}"
+            )
             para = self._document.add_paragraph()
             out_msg = (
                 f"The following required fields are missing: {missing_fields}, ",
