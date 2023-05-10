@@ -193,7 +193,7 @@ class CPUTests:
                 f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
             )
 
-            tops.actual_output = self.output["timeInfo"]["loadAvg"][1]
+            tops.actual_output = self.output["timeInfo"]["loadAvg"][2]
 
             """
             TS: Comparing Switch's 5 minute utilization to expected utilization
