@@ -109,9 +109,8 @@ class TacacsTests:
 
                 if not tops.test_result:
                     tops.output_msg = (
-                        f"\nOn router {tops.dut_name} TACACS messages2 sent: "
-                        f"{eos_messages_sent_2} does not increment from TACACS "
-                        f"messages1 sent: {eos_messages_sent_1}"
+                        f"\nOn router {tops.dut_name} none of TACACS servers"
+                        f"messages sent are incrementing"
                     )
 
                 assert tops.test_result
@@ -192,9 +191,8 @@ class TacacsTests:
 
                 if not tops.test_result:
                     tops.output_msg = (
-                        f"\nOn router {tops.dut_name} TACACS messages2 sent: "
-                        f"{eos_messages_received_2} does not increment from TACACS "
-                        f"messages1 sent: {eos_messages_received_1}"
+                        f"\nOn router {tops.dut_name} none of TACACS servers"
+                        f"messages received are incrementing"
                     )
 
                 assert tops.test_result
