@@ -378,7 +378,8 @@ def remove_cmd(err, show_cmds):
         cmd_index = show_cmds.index(longest_matching_cmd)
         show_cmds.pop(cmd_index)
 
-        logging.info(f"Removed {longest_matching_cmd} because of {err}")
+        logging.info(f"Removed {longest_matching_cmd} due to an error")
+        logging.debug(f"Removed {longest_matching_cmd} because of {err}")
 
     return show_cmds
 
