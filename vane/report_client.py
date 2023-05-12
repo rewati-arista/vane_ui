@@ -706,6 +706,7 @@ class ReportClient:
                     logging.debug(f"Compiled DUT results: {testcase_result}")
                     testcase_results.append(testcase_result)
 
+        logging.info("Returning testcase result")
         logging.debug(f"Returning testcase result {testcase_results}")
         return testcase_results
 
