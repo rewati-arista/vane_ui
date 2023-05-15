@@ -1163,3 +1163,51 @@ class TestOps:
             return txt_results
 
         return json_results
+    
+    def run_show_cmds_on_dut(self, show_cmds, dut, encoding="json"):
+        """run_show_cmds is a wrapper which runs the 'show_cmds' using enable() pyeapi
+        method. It returns the output of these 'show_cmds' in the encoding requested.
+        Also it checks show_clock_flag
+        to see if 'show_clock' cmd needs to be run. It stores the text output for
+        'show_cmds' list in 'show_cmds_txt' list. Also 'show_cmds' list is appended
+        to object's 'show_cmds' list.
+
+        Args: show_cmds: list of show commands to be run
+        encoding: json or text, with json being default
+
+        Returns: A dict object that includes the response for each command along
+        with the encoding
+        """
+
+        conn = dut["connection"]
+
+        # if encoding is json run the commands, store the results
+        if encoding == "json":
+            json_results = conn.enable(show_cmds)
+
+        # run show clock if flag is set
+        if self.show_clock_flag:
+            show_clock_cmds = ["show clock"]
+            # run the show_clock_cmds
+            show_clock_op = conn.enable(show_clock_cmds, "text")
+            # add the show_clock_cmds to TestOps object's _show_cmds list
+            # also add the o/p of show_clock_cmds to TestOps object's _show_cmds_txts list
+            # for result_dict in show_clock_op:
+            #     self._show_cmds.append(result_dict["command"])
+            #     self._show_cmd_txts.append(result_dict["result"]["output"])
+
+        # run the commands in text mode
+        txt_results = conn.enable(show_cmds, "text")
+        # add the show_cmds to TestOps object's show_cmds and _show_cmds list
+        # also add the o/p of show_cmds to TestOps object's show_cmds_txts and
+        # _show_cmds_txts list
+        # for result_dict in txt_results:
+        #     self.show_cmds.append(result_dict["command"])
+        #     self._show_cmds.append(result_dict["command"])
+        #     self.show_cmd_txts.append(result_dict["result"]["output"])
+        #     self._show_cmd_txts.append(result_dict["result"]["output"])
+
+        if encoding == "text":
+            return txt_results
+
+        return json_results

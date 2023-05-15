@@ -75,6 +75,9 @@ class MemoryTests:
             logging.info(
                 f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
             )
+            neighbor = test1_duts[1]
+            res = tops.run_show_cmds_on_dut("show mlag detail", neighbor)
+            logging.info(f"REWATI {res}")
 
             memory_total = self.output["memTotal"]
             memory_free = self.output["memFree"]
