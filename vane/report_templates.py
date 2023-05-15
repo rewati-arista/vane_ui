@@ -137,7 +137,7 @@ REPORT_TEMPLATES = {
             "default": "None",
             "output_name": "expected output",
         },
-        "fail_or_skip_reason": {
+        "output_msg": {
             "required": True,
             "format": "string",
             "default": "None",

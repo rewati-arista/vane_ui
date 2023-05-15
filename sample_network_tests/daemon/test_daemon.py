@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright (c) 2019, Arista Networks EOS+
+# Copyright (c) 2023, Arista Networks EOS+
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -29,16 +29,25 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-""" Tests to validate base feature status."""
+""" Tests to validate daemon status."""
 
-import inspect
-import logging
 import pytest
+from pyeapi.eapilib import EapiError
 from vane import tests_tools
+from vane.vane_logging import logging
+from vane.config import dut_objs, test_defs
 
 
 TEST_SUITE = __file__
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
+
+dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
+test1_duts = dut_parameters["test_if_daemons_are_running_on_"]["duts"]
+test1_ids = dut_parameters["test_if_daemons_are_running_on_"]["ids"]
+
+test2_duts = dut_parameters["test_if_daemons_are_enabled_on_"]["duts"]
+test2_ids = dut_parameters["test_if_daemons_are_enabled_on_"]["ids"]
+
 
 @pytest.mark.demo
 @pytest.mark.nrfu
@@ -46,12 +55,12 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 @pytest.mark.daemons
 @pytest.mark.virtual
 @pytest.mark.physical
-@pytest.mark.eos424
 class DaemonTests:
     """EOS Daemon Test Suite"""
 
+    @pytest.mark.parametrize("dut", test1_duts, ids=test1_ids)
     def test_if_daemons_are_running_on_(self, dut, tests_definitions):
-        """Verify a list of daemons are running on DUT
+        """TD: Verify a list of daemons are running on DUT
 
         Args:
           dut (dict): Encapsulates dut details including name, connection
@@ -59,34 +68,68 @@ class DaemonTests:
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+
         daemons = tops.test_parameters["daemons"]
 
         for daemon in daemons:
-            dut_ptr = dut["output"][tops.show_cmd]["json"]["daemons"]
-            tops.actual_output = dut_ptr[daemon]["running"]
-            tops.test_result = tops.actual_output == tops.expected_output
+            try:
+                """
+                TS: Collecting the output of 'show daemon' command from DUT
+                """
+                self.output = dut["output"][tops.show_cmd]["json"]
+                assert (
+                    (self.output.get("daemons")).get(daemon).get("running")
+                ), "Show daemon details are not found"
+                logging.info(
+                    f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
+                )
 
-            tops.output_msg += (
-                f"\nOn router |{tops.dut_name}|, daemon running "
-                f"state is |{tops.actual_output}| correct"
-                f" state is |{tops.expected_output}|.\n"
-            )
+                actual_output = self.output["daemons"][daemon]["running"]
 
-            tops.actual_results.append(tops.actual_output)
-            tops.expected_results.append(tops.expected_output)
+            except (AttributeError, LookupError, EapiError) as exp:
+                actual_output = str(exp)
+                logging.error(
+                    f"On device {tops.dut_name}: Error while running testcase on DUT is: {str(exp)}"
+                )
+                tops.output_msg += (
+                    f" EXCEPTION encountered on device {tops.dut_name}, while "
+                    f"investigating daemon: {daemon}. Vane recorded error: {exp} "
+                )
 
-        print(f"{tops.output_msg}\n{tops.comment}")
+            """
+            TS: Verify daemons are running on DUT
+            """
+            if actual_output == tops.expected_output["daemon_running"]:
+                tops.output_msg += (
+                    f"{tops.dut_name}'s {daemon} daemon has expected running "
+                    f"state: {actual_output}. "
+                )
+            else:
+                tops.output_msg += (
+                    f"{tops.dut_name}'s {daemon} daemon has unexpected running state: "
+                    f"{actual_output} and should be in running state: "
+                    f"{tops.expected_output['daemon_running']}. "
+                )
+
+            tops.actual_results.append(actual_output)
+            tops.expected_results.append(tops.expected_output["daemon_running"])
 
         tops.actual_output, tops.expected_output = (
             tops.actual_results,
             tops.expected_results,
         )
-        tops.post_testcase()
 
-        assert tops.actual_results == tops.expected_results
+        """
+        TS: Creating test report based on results
+        """
+        tops.parse_test_steps(self.test_if_daemons_are_running_on_)
+        tops.test_result = tops.actual_output == tops.expected_output
+        tops.generate_report(tops.dut_name, self.output)
+        assert tops.actual_output == tops.expected_output
 
+    @pytest.mark.parametrize("dut", test2_duts, ids=test2_ids)
     def test_if_daemons_are_enabled_on_(self, dut, tests_definitions):
-        """Verify a list of daemons are enabled on DUT
+        """TD: Verify a list of daemons are enabled on DUT
 
         Args:
           dut (dict): Encapsulates dut details including name, connection
@@ -94,27 +137,63 @@ class DaemonTests:
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+
         daemons = tops.test_parameters["daemons"]
 
         for daemon in daemons:
-            dut_ptr = dut["output"][tops.show_cmd]["json"]["daemons"]
-            tops.actual_output = dut_ptr[daemon]["enabled"]
-            tops.test_result = tops.actual_output == tops.expected_output
+            try:
+                """
+                TS: Collecting the output of 'show daemon' command from DUT
+                """
+                self.output = dut["output"][tops.show_cmd]["json"]
+                assert (
+                    (self.output.get("daemons")).get(daemon).get("enabled")
+                ), "Show daemon details are not found"
+                logging.info(
+                    f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
+                )
 
-            tops.output_msg += (
-                f"\nOn router |{tops.dut_name}|, daemon enabled "
-                f"state is |{tops.actual_output}| correct"
-                f" state is |{tops.expected_output}|.\n"
-            )
+                actual_output = self.output["daemons"][daemon]["enabled"]
 
-            tops.actual_results.append(tops.actual_output)
-            tops.expected_results.append(tops.expected_output)
-        print(f"{tops.output_msg}\n{tops.comment}")
+            except (AttributeError, LookupError, EapiError) as exp:
+                actual_output = str(exp)
+                logging.error(
+                    "On device %s: Error while running testcase on DUT is: %s",
+                    tops.dut_name,
+                    str(exp),
+                )
+                tops.output_msg += (
+                    f" EXCEPTION encountered on device {tops.dut_name}, while "
+                    f"investigating daemon: {daemon}. Vane recorded error: {exp} "
+                )
+
+            """
+            TS: Verify daemons are enabled on DUT
+            """
+            if actual_output == tops.expected_output["daemon_enabled"]:
+                tops.output_msg += (
+                    f"{tops.dut_name}'s {daemon} daemon has expected enabled "
+                    f"state: {actual_output}. "
+                )
+            else:
+                tops.output_msg += (
+                    f"{tops.dut_name}'s {daemon} daemon has unexpected enabled state: "
+                    f"{actual_output} and should be in enabled state: "
+                    f"{tops.expected_output['daemon_enabled']}. "
+                )
+
+            tops.actual_results.append(actual_output)
+            tops.expected_results.append(tops.expected_output["daemon_enabled"])
 
         tops.actual_output, tops.expected_output = (
             tops.actual_results,
             tops.expected_results,
         )
-        tops.post_testcase()
 
-        assert tops.actual_results == tops.expected_results
+        """
+        TS: Creating test report based on results
+        """
+        tops.parse_test_steps(self.test_if_daemons_are_enabled_on_)
+        tops.test_result = tops.actual_output == tops.expected_output
+        tops.generate_report(tops.dut_name, self.output)
+        assert tops.actual_output == tops.expected_output
