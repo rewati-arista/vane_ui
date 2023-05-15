@@ -83,22 +83,22 @@ class LoggingTests:
                 TS: Verifying if DUT's system logs have messages
                 """
                 if sys_msg in tops.show_cmd_txt:
-                    tops.actual_output = True
+                    actual_output = True
                     tops.output_msg += (
                         f"{tops.dut_name} system logs contains message: {sys_msg}. "
                     )
                 else:
-                    tops.actual_output = False
+                    actual_output = False
                     tops.output_msg += (
                         f"{tops.dut_name} system logs does NOT contains message: "
                         f"{sys_msg}. "
                     )
 
-                tops.actual_results.append({sys_msg: tops.actual_output})
+                tops.actual_results.append({sys_msg: actual_output})
                 tops.expected_results.append({sys_msg: tops.expected_output})
 
             except (AttributeError, LookupError, EapiError) as exp:
-                tops.actual_output = str(exp)
+                actual_output = str(exp)
                 logging.error(
                     f"On device {tops.dut_name}: Error while running testcase on DUT is: {str(exp)}"
                 )
