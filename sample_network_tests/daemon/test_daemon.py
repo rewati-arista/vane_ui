@@ -87,7 +87,7 @@ class DaemonTests:
                 actual_output = self.output["daemons"][daemon]["running"]
 
             except (AttributeError, LookupError, EapiError) as exp:
-                tops.actual_output = str(exp)
+                actual_output = str(exp)
                 logging.error(
                     f"On device {tops.dut_name}: Error while running testcase on DUT is: {str(exp)}"
                 )
@@ -102,12 +102,12 @@ class DaemonTests:
             if actual_output == tops.expected_output["daemon_running"]:
                 tops.output_msg += (
                     f"{tops.dut_name}'s {daemon} daemon has expected running "
-                    f"state: {tops.actual_output}. "
+                    f"state: {actual_output}. "
                 )
             else:
                 tops.output_msg += (
                     f"{tops.dut_name}'s {daemon} daemon has unexpected running state: "
-                    f"{tops.actual_output} and should be in running state: "
+                    f"{actual_output} and should be in running state: "
                     f"{tops.expected_output['daemon_running']}. "
                 )
 
@@ -153,10 +153,10 @@ class DaemonTests:
                     f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
                 )
 
-                tops.actual_output = self.output["daemons"][daemon]["enabled"]
+                actual_output = self.output["daemons"][daemon]["enabled"]
 
             except (AttributeError, LookupError, EapiError) as exp:
-                tops.actual_output = str(exp)
+                actual_output = str(exp)
                 logging.error(
                     "On device %s: Error while running testcase on DUT is: %s",
                     tops.dut_name,
@@ -170,19 +170,19 @@ class DaemonTests:
             """
             TS: Verify daemons are enabled on DUT
             """
-            if tops.actual_output == tops.expected_output["daemon_enabled"]:
+            if actual_output == tops.expected_output["daemon_enabled"]:
                 tops.output_msg += (
                     f"{tops.dut_name}'s {daemon} daemon has expected enabled "
-                    f"state: {tops.actual_output}. "
+                    f"state: {actual_output}. "
                 )
             else:
                 tops.output_msg += (
                     f"{tops.dut_name}'s {daemon} daemon has unexpected enabled state: "
-                    f"{tops.actual_output} and should be in enabled state: "
+                    f"{actual_output} and should be in enabled state: "
                     f"{tops.expected_output['daemon_enabled']}. "
                 )
 
-            tops.actual_results.append(tops.actual_output)
+            tops.actual_results.append(actual_output)
             tops.expected_results.append(tops.expected_output["daemon_enabled"])
 
         tops.actual_output, tops.expected_output = (
