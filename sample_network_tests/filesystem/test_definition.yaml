@@ -9,3 +9,10 @@
         - flash:zerotouch-config
       expected_output: False
       show_cmd: null
+      report_style: modern
+      test_criteria: Verify filesystem is correct and expected files are present
+      # Optionally filter duts by criteria: name, role, regex, or names
+      criteria: names
+      filter: 
+        - DSR01
+        - DCBBW1
