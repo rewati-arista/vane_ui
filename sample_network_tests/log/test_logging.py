@@ -94,9 +94,6 @@ class LoggingTests:
                         f"{sys_msg}. "
                     )
 
-                tops.actual_results.append({sys_msg: actual_output})
-                tops.expected_results.append({sys_msg: tops.expected_output})
-
             except (AttributeError, LookupError, EapiError) as exp:
                 actual_output = str(exp)
                 logging.error(
@@ -106,6 +103,9 @@ class LoggingTests:
                     f" EXCEPTION encountered on device {tops.dut_name}, while "
                     f"investigating logging: {sys_msg}. Vane recorded error: {exp} "
                 )
+
+            tops.actual_results.append({sys_msg: actual_output})
+            tops.expected_results.append({sys_msg: tops.expected_output})
 
         tops.actual_output, tops.expected_output = (
             tops.actual_results,
