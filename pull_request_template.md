@@ -29,11 +29,11 @@ Make sure to link the issue in the github PR UI
 
 # How Has This Been Tested?
 
-# Bug fix
+## Bug fix
 
     Include before and after snapshots/screenshots/changed logs
     
-# New feature
+## New feature
 
     Ensure current test cases pass and include newer test cases if required
     
