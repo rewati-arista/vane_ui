@@ -84,7 +84,7 @@ class DaemonTests:
                     f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
                 )
 
-                tops.actual_output = self.output["daemons"][daemon]["running"]
+                actual_output = self.output["daemons"][daemon]["running"]
 
             except (AttributeError, LookupError, EapiError) as exp:
                 tops.actual_output = str(exp)
@@ -99,7 +99,7 @@ class DaemonTests:
             """
             TS: Verify daemons are running on DUT
             """
-            if tops.actual_output == tops.expected_output["daemon_running"]:
+            if actual_output == tops.expected_output["daemon_running"]:
                 tops.output_msg += (
                     f"{tops.dut_name}'s {daemon} daemon has expected running "
                     f"state: {tops.actual_output}. "
@@ -111,7 +111,7 @@ class DaemonTests:
                     f"{tops.expected_output['daemon_running']}. "
                 )
 
-            tops.actual_results.append(tops.actual_output)
+            tops.actual_results.append(actual_output)
             tops.expected_results.append(tops.expected_output["daemon_running"])
 
         tops.actual_output, tops.expected_output = (
