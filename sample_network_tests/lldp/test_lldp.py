@@ -91,12 +91,12 @@ class LldpTests:
                     f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
                 )
 
-                tops.actual_output = self.output["lldpInterfaces"][interface_name][
+                actual_output = self.output["lldpInterfaces"][interface_name][
                     "rxEnabled"
                 ]
 
             except (AttributeError, LookupError, EapiError) as exp:
-                tops.actual_output = str(exp)
+                actual_output = str(exp)
                 logging.error(
                     f"On device {tops.dut_name}: Error while running testcase on DUT is: {str(exp)}"
                 )
@@ -108,7 +108,7 @@ class LldpTests:
             """
             TS: Verify LLDP interface RX state on DUT
             """
-            if tops.actual_output == tops.expected_output:
+            if actual_output == tops.expected_output:
                 tops.output_msg += (
                     f"{tops.dut_name}'s {interface_name} LLDP RX is enabled\n"
                 )
@@ -117,7 +117,7 @@ class LldpTests:
                     f"{tops.dut_name}'s {interface_name} LLDP RX is NOT enabled\n"
                 )
 
-            tops.actual_results.append({interface_name: tops.actual_output})
+            tops.actual_results.append({interface_name: actual_output})
             tops.expected_results.append({interface_name: tops.expected_output})
 
         tops.actual_output, tops.expected_output = (
@@ -158,12 +158,12 @@ class LldpTests:
                     f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
                 )
 
-                tops.actual_output = self.output["lldpInterfaces"][interface_name][
+                actual_output = self.output["lldpInterfaces"][interface_name][
                     "txEnabled"
                 ]
 
             except (AttributeError, LookupError, EapiError) as exp:
-                tops.actual_output = str(exp)
+                actual_output = str(exp)
                 logging.error(
                     "On device {tops.dut_name}: Error while running testcase on DUT is: {str(exp)}"
                 )
@@ -175,7 +175,7 @@ class LldpTests:
             """
             TS: Verify LLDP interface TX state on DUT
             """
-            if tops.actual_output == tops.expected_output:
+            if actual_output == tops.expected_output:
                 tops.output_msg += (
                     f"{tops.dut_name}'s {interface_name} LLDP TX is enabled\n"
                 )
@@ -184,7 +184,7 @@ class LldpTests:
                     f"{tops.dut_name}'s {interface_name} LLDP TX is NOT enabled\n"
                 )
 
-            tops.actual_results.append({interface_name: tops.actual_output})
+            tops.actual_results.append({interface_name: actual_output})
             tops.expected_results.append({interface_name: tops.expected_output})
 
         tops.actual_output, tops.expected_output = (
@@ -291,12 +291,12 @@ class LldpLocalInfoTests:
                     f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
                 )
 
-                tops.actual_output = self.output["localInterfaceInfo"][interface_name][
+                actual_output = self.output["localInterfaceInfo"][interface_name][
                     "maxFrameSize"
                 ]
 
             except (AttributeError, LookupError, EapiError) as exp:
-                tops.actual_output = str(exp)
+                actual_output = str(exp)
                 logging.error(
                     "On device {tops.dut_name}: Error while running testcase on DUT is: {str(exp)}"
                 )
@@ -308,18 +308,18 @@ class LldpLocalInfoTests:
             """
             TS: Verify LLDP interface max frame size on DUT
             """
-            if tops.actual_output == tops.expected_output:
+            if actual_output == tops.expected_output:
                 tops.output_msg += (
                     f"{tops.dut_name}'s {interface_name} Max frame size is correct: "
-                    f"{tops.actual_output}\n"
+                    f"{actual_output}\n"
                 )
             else:
                 tops.output_msg += (
                     f"{tops.dut_name}'s {interface_name} Max frame size is NOT correct: "
-                    f"{tops.expected_output}.  Max frame size should be {tops.actual_output}\n"
+                    f"{tops.expected_output}.  Max frame size should be {actual_output}\n"
                 )
 
-            tops.actual_results.append({interface_name: tops.actual_output})
+            tops.actual_results.append({interface_name: actual_output})
             tops.expected_results.append({interface_name: tops.expected_output})
 
         """
@@ -363,12 +363,12 @@ class LldpLocalInfoTests:
                     f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
                 )
 
-                tops.actual_output = self.output["localInterfaceInfo"][interface_name][
+                actual_output = self.output["localInterfaceInfo"][interface_name][
                     "interfaceIdType"
                 ]
 
             except (AttributeError, LookupError, EapiError) as exp:
-                tops.actual_output = str(exp)
+                actual_output = str(exp)
                 logging.error(
                     "On device {tops.dut_name}: Error while running testcase on DUT is: {str(exp)}"
                 )
@@ -380,18 +380,18 @@ class LldpLocalInfoTests:
             """
             TS: Verify LLDP interface ID on DUT
             """
-            if tops.actual_output == tops.expected_output:
+            if actual_output == tops.expected_output:
                 tops.output_msg += (
                     f"{tops.dut_name}'s {interface_name} interface ID is correct: "
-                    f"{tops.actual_output}\n"
+                    f"{actual_output}\n"
                 )
             else:
                 tops.output_msg += (
                     f"{tops.dut_name}'s {interface_name} interface ID is NOT correct: "
-                    f"{tops.expected_output}.  Interface ID should be {tops.actual_output}\n"
+                    f"{tops.expected_output}.  Interface ID should be {actual_output}\n"
                 )
 
-            tops.actual_results.append({interface_name: tops.actual_output})
+            tops.actual_results.append({interface_name: actual_output})
             tops.expected_results.append({interface_name: tops.expected_output})
 
         tops.actual_output, tops.expected_output = (
