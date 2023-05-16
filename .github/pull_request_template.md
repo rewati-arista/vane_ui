@@ -43,5 +43,9 @@ Make sure to link the issue in the github PR UI
 - [ ] Fail
   
   If it fails, explain the reason and whether or not we should ignore the failure
+  
+# Verify Documentation Update
+
+    If applicable, ensure documentation has been updated for ReadMe, Getting Started guide, and Style guide
     
 # Additional comments
