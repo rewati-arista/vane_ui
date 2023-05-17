@@ -894,8 +894,7 @@ class TestOps:
         self._show_cmds = {self.dut["name"]: ["show version"]}
 
         if self.show_clock_flag:
-            value = self._show_cmds.get(self.dut["name"])
-            value.append("show clock")
+            self._show_cmds.get(self.dut["name"]).append("show clock")
 
         self.show_output = ""
         self.show_cmd = ""
@@ -903,19 +902,11 @@ class TestOps:
         try:
             self.show_cmd = self.test_parameters["show_cmd"]
             if self.show_cmd:
-                # self.show_cmds.append(self.show_cmd)
-                value = self.show_cmds.get(self.dut["name"])
-                value.append(self.show_cmd)
-                # self._show_cmds.append(self.show_cmd)
-                value = self._show_cmds.get(self.dut["name"])
-                value.append(self.show_cmd)
+                self.show_cmds.get(self.dut["name"]).append(self.show_cmd)
+                self._show_cmds.get(self.dut["name"]).append(self.show_cmd)
         except KeyError:
-            # self.show_cmds.extend(self.test_parameters["show_cmds"])
-            value = self.show_cmds.get(self.dut["name"])
-            value.extend(self.test_parameters["show_cmds"])
-            # self._show_cmds.extend(self.test_parameters["show_cmds"])
-            value = self._show_cmds.get(self.dut["name"])
-            value.extend(self.test_parameters["show_cmds"])
+            self.show_cmds.get(self.dut["name"]).extend(self.test_parameters["show_cmds"])
+            self._show_cmds.get(self.dut["name"]).extend(self.test_parameters["show_cmds"])
 
         self.show_cmd_txts = {self.dut["name"]:[]}
         self.show_cmd_txt = ""
@@ -926,13 +917,9 @@ class TestOps:
             if self.show_cmd:
                 self.show_cmd_txt = self.dut["output"][self.show_cmd]["text"]
             for show_cmd in self.show_cmds.get(self.dut["name"]):
-                # self.show_cmd_txts.append(self.dut["output"][show_cmd]["text"])
-                value = self.show_cmd_txts.get(dut["name"])
-                value.append(self.dut["output"][show_cmd]["text"])
+                self.show_cmd_txts.get(dut["name"]).append(self.dut["output"][show_cmd]["text"])
             for show_cmd in self._show_cmds.get(self.dut["name"]):
-                # self._show_cmd_txts.append(self.dut["output"][show_cmd]["text"])
-                value = self._show_cmd_txts.get(dut["name"])
-                value.append(self.dut["output"][show_cmd]["text"])
+                self._show_cmd_txts.get(dut["name"]).append(self.dut["output"][show_cmd]["text"])
 
         self.comment = ""
         self.output_msg = ""
@@ -1082,18 +1069,17 @@ class TestOps:
         self.test_parameters["dut"] = self.dut_name
         self.test_parameters["show_cmd"] = self.show_cmd
         self.test_parameters["test_id"] = self.test_id
-        # final_show_cmd_txts = []
-        # for values in self.show_cmd_txts.values():
-        #     final_show_cmd_txts.append(values)
-        c = self.show_cmd_txts.get(self.dut["name"])
-        logging.info(f"REWATI {c}")
-        self.test_parameters["show_cmd_txts"] = c
+        final_show_cmd_txts = []
+        for values in self.show_cmd_txts.values():
+            for value in values:
+                final_show_cmd_txts.append(value)
+        self.test_parameters["show_cmd_txts"] = final_show_cmd_txts 
         self.test_parameters["test_steps"] = self.test_steps
-        # final_show_cmd = []
-        # for values in self.show_cmds.values():
-        #     final_show_cmd.append(values)
-        # logging.info(f"REWATI {self.show_cmd_txts}")
-        self.test_parameters["show_cmds"] = self.show_cmds.get(self.dut["name"])
+        final_show_cmd = []
+        for values in self.show_cmds.values():
+            for value in values:
+                final_show_cmd.append(value)
+        self.test_parameters["show_cmds"] = final_show_cmd
 
         if str(self.show_cmd_txt):
             self.test_parameters["show_cmd"] += ":\n\n" + self.show_cmd_txt
@@ -1147,73 +1133,14 @@ class TestOps:
                 self.test_steps.append(match.group(1))
 
         logging.info(f"These are test steps {self.test_steps}")
-
-    def run_show_cmds(self, show_cmds, encoding="json"):
-        """run_show_cmds is a wrapper which runs the 'show_cmds' using enable() pyeapi
-        method. It returns the output of these 'show_cmds' in the encoding requested.
-        Also it checks show_clock_flag
-        to see if 'show_clock' cmd needs to be run. It stores the text output for
-        'show_cmds' list in 'show_cmds_txt' list. Also 'show_cmds' list is appended
-        to object's 'show_cmds' list.
-
-        Args: show_cmds: list of show commands to be run
-        encoding: json or text, with json being default
-
-        Returns: A dict object that includes the response for each command along
-        with the encoding
-        """
-
-        conn = self.dut["connection"]
-
-        # if encoding is json run the commands, store the results
-        if encoding == "json":
-            json_results = conn.enable(show_cmds)
-
-        # run show clock if flag is set
-        if self.show_clock_flag:
-            show_clock_cmds = ["show clock"]
-            # run the show_clock_cmds
-            show_clock_op = conn.enable(show_clock_cmds, "text")
-            # add the show_clock_cmds to TestOps object's _show_cmds list
-            # also add the o/p of show_clock_cmds to TestOps object's _show_cmds_txts list
-            for result_dict in show_clock_op:
-                # self._show_cmds.append(result_dict["command"])
-                value = self._show_cmds.get(self.dut["name"])
-                value.append(result_dict["command"])
-                # self._show_cmd_txts.append(result_dict["result"]["output"])
-                value = self._show_cmd_txts.get(self.dut["name"])
-                value.append(result_dict["result"]["output"])
-
-        # run the commands in text mode
-        txt_results = conn.enable(show_cmds, "text")
-        # add the show_cmds to TestOps object's show_cmds and _show_cmds list
-        # also add the o/p of show_cmds to TestOps object's show_cmds_txts and
-        # _show_cmds_txts list
-        for result_dict in txt_results:
-            # self.show_cmds.append(result_dict["command"])
-            value = self.show_cmds.get(self.dut["name"])
-            value.append(result_dict["command"])
-            # self._show_cmds.append(result_dict["command"])
-            value = self._show_cmds.get(self.dut["name"])
-            value.append(result_dict["command"])
-            # self.show_cmd_txts.append(result_dict["result"]["output"])
-            value = self.show_cmd_txts.get(self.dut["name"])
-            value.append(result_dict["result"]["output"])
-            # self._show_cmd_txts.append(result_dict["result"]["output"])
-            value = self._show_cmd_txts.get(self.dut["name"])
-            value.append(result_dict["result"]["output"])
-
-        if encoding == "text":
-            return txt_results
-
-        return json_results
     
-    def run_show_cmds_on_dut(self, show_cmds, dut, encoding="json"):
-        """run_show_cmds_on_dut is a wrapper which runs the 'show_cmds' using enable() pyeapi
-        method on the specified dut. It returns the output of these 'show_cmds' in the encoding requested.
+    def run_show_cmds(self, show_cmds, dut=None, encoding="json"):
+        """run_show_cmds is a wrapper which runs the 'show_cmds' using enable() pyeapi
+        method on the specified dut and if no dut is passed then on primary dut. 
+        It returns the output of these 'show_cmds' in the encoding requested.
         Also it checks show_clock_flag
         to see if 'show_clock' cmd needs to be run. It stores the text output for
-        'show_cmds' list in 'show_cmds_txt' list. Also 'show_cmds' list is appended
+        'show_cmds' list in 'show_cmds_txt' list for the specific dut. Also 'show_cmds' list is appended
         to object's 'show_cmds' list.
 
         Args: show_cmds: list of show commands to be run
@@ -1224,11 +1151,22 @@ class TestOps:
         with the encoding
         """
 
+        if dut is None:
+            dut = self.dut
+
         conn = dut["connection"]
+
+        # for initializing these values for neighbor duts since 
+        # init only initializes for primary dut
         if not self._show_cmd_txts.get(dut["name"]):
             self._show_cmd_txts[dut["name"]] = []
         if not self._show_cmds.get(dut["name"]):
             self._show_cmds[dut["name"]] = []
+        if not self.show_cmd_txts.get(dut["name"]):
+            self.show_cmd_txts[dut["name"]] = []
+        if not self.show_cmds.get(dut["name"]):
+            self.show_cmds[dut["name"]] = []
+
 
         # if encoding is json run the commands, store the results
         if encoding == "json":
@@ -1242,13 +1180,8 @@ class TestOps:
             # add the show_clock_cmds to TestOps object's _show_cmds list
             # also add the o/p of show_clock_cmds to TestOps object's _show_cmds_txts list
             for result_dict in show_clock_op:
-                # self._show_cmds.append(result_dict["command"])
-                value = self._show_cmds.get(dut["name"])
-                value.append(result_dict["command"])
-                # self._show_cmd_txts.append(result_dict["result"]["output"])
-                value = self._show_cmd_txts.get(dut["name"])
-                value.append(result_dict["result"]["output"])
-
+                self._show_cmds.get(dut["name"]).append(result_dict["command"])
+                self._show_cmd_txts.get(dut["name"]).append(result_dict["result"]["output"])
 
         # run the commands in text mode
         txt_results = conn.enable(show_cmds, "text")
@@ -1256,19 +1189,10 @@ class TestOps:
         # also add the o/p of show_cmds to TestOps object's show_cmds_txts and
         # _show_cmds_txts list
         for result_dict in txt_results:
-            # self.show_cmds.append(result_dict["command"])
-            value = self.show_cmds.get(dut["name"])
-            value.append(result_dict["command"])
-            # self._show_cmds.append(result_dict["command"])
-            value = self._show_cmds.get(dut["name"])
-            value.append(result_dict["command"])
-            # self.show_cmd_txts.append(result_dict["result"]["output"])
-            value = self.show_cmd_txts.get(dut["name"])
-            value.append(result_dict["result"]["output"])
-            # self._show_cmd_txts.append(result_dict["result"]["output"])
-            value = self._show_cmd_txts.get(dut["name"])
-            value.append(result_dict["result"]["output"])
-
+            self.show_cmds.get(dut["name"]).append(result_dict["command"])
+            self._show_cmds.get(dut["name"]).append(result_dict["command"])
+            self.show_cmd_txts.get(dut["name"]).append(result_dict["result"]["output"])
+            self._show_cmd_txts.get(dut["name"]).append(result_dict["result"]["output"])
         if encoding == "text":
             return txt_results
 
