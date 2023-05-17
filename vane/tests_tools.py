@@ -1158,14 +1158,10 @@ class TestOps:
 
         # for initializing these values for neighbor duts since 
         # init only initializes for primary dut
-        if not self._show_cmd_txts.get(dut["name"]):
-            self._show_cmd_txts[dut["name"]] = []
-        if not self._show_cmds.get(dut["name"]):
-            self._show_cmds[dut["name"]] = []
-        if not self.show_cmd_txts.get(dut["name"]):
-            self.show_cmd_txts[dut["name"]] = []
-        if not self.show_cmds.get(dut["name"]):
-            self.show_cmds[dut["name"]] = []
+        self._show_cmd_txts.setdefault(dut["name"], [])
+        self._show_cmds.setdefault(dut["name"], [])
+        self.show_cmd_txts.setdefault(dut["name"], [])
+        self.show_cmds.setdefault(dut["name"], [])
 
 
         # if encoding is json run the commands, store the results
