@@ -975,16 +975,7 @@ class TestOps:
         report_dir = self.report_dir
         test_id = self.test_parameters["test_id"]
         test_case = self.test_parameters["name"]
-        # dut_name = self.test_parameters["dut"]
 
-        # text_file = (
-        #     f"{report_dir}/TEST RESULTS/{test_id} {test_case}/"
-        #     f"{test_id} {dut_name} Verification.txt"
-        # )
-
-        # text_data = {}
-        # index = 1
-        logging.info("1")
         for dut_name in self._show_cmds:
             text_file = (
                 f"{report_dir}/TEST RESULTS/{test_id} {test_case}/"
