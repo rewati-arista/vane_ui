@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright (c) 2019, Arista Networks EOS+
+# Copyright (c) 2023, Arista Networks EOS+
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -989,10 +989,13 @@ class ReportClient:
 
         if report_field in dut:
             report_values = dut[report_field]
+            list_counter = 1
+
             for report_value in report_values:
+                report_value = f"{list_counter}. {report_value}"
                 para = self._document.add_paragraph()
-                para.style = "List Number 2"
-                self._write_text(para, report_value)
+                self._write_text(para, report_value, left_indent=Inches(0.25))
+                list_counter += 1
 
     def _write_dict_string(self, dut, report_field):
         """Write a dictionary in YAML format to Word doc
