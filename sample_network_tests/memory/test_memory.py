@@ -65,8 +65,6 @@ class MemoryTests:
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
-        logging.info(f"IN HERE LENGTH {tops._show_cmd_txts}")
-
 
         try:
             """
