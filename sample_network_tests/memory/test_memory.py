@@ -65,6 +65,8 @@ class MemoryTests:
         """
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+        logging.info(f"IN HERE LENGTH {tops._show_cmd_txts}")
+
 
         try:
             """
@@ -75,9 +77,6 @@ class MemoryTests:
             logging.info(
                 f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
             )
-            neighbor = test1_duts[1]
-            res = tops.run_show_cmds_on_dut("show mlag detail", neighbor)
-            logging.info(f"REWATI {res}")
 
             memory_total = self.output["memTotal"]
             memory_free = self.output["memFree"]
