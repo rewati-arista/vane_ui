@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright (c) 2019, Arista Networks EOS+
+# Copyright (c) 2023, Arista Networks EOS+
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -32,13 +32,52 @@
 """ Tests to validate base feature status."""
 
 import inspect
-import logging
 import pytest
+from pyeapi.eapilib import EapiError
 from vane import tests_tools
+from vane.vane_logging import logging
+from vane.config import dut_objs, test_defs
 
 
 TEST_SUITE = __file__
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
+
+dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
+test1_duts = dut_parameters["test_if_authentication_counters_are_incrementing_on_"]["duts"]
+test1_ids = dut_parameters["test_if_authentication_counters_are_incrementing_on_"]["ids"]
+
+test2_duts = dut_parameters["test_if_aaa_session_logging_is_working_on_"]["duts"]
+test2_ids = dut_parameters["test_if_aaa_session_logging_is_working_on_"]["ids"]
+
+test3_duts = dut_parameters["test_if_commands_authorization_methods_set_on_"]["duts"]
+test3_ids = dut_parameters["test_if_commands_authorization_methods_set_on_"]["ids"]
+
+test4_duts = dut_parameters["test_if_exec_authorization_methods_set_on_"]["duts"]
+test4_ids = dut_parameters["test_if_exec_authorization_methods_set_on_"]["ids"]
+
+test5_duts = dut_parameters["test_if_default_login_authentication_methods_set_on_"]["duts"]
+test5_ids = dut_parameters["test_if_default_login_authentication_methods_set_on_"]["ids"]
+
+test6_duts = dut_parameters["test_if_login_authentication_methods_set_on_"]["duts"]
+test6_ids = dut_parameters["test_if_login_authentication_methods_set_on_"]["ids"]
+
+test7_duts = dut_parameters["test_if_dot1x_authentication_methods_set_on_"]["duts"]
+test7_ids = dut_parameters["test_if_dot1x_authentication_methods_set_on_"]["ids"]
+
+test8_duts = dut_parameters["test_if_enable_authentication_methods_set_on_"]["duts"]
+test8_ids = dut_parameters["test_if_enable_authentication_methods_set_on_"]["ids"]
+
+test9_duts = dut_parameters["test_if_system_accounting_methods_set_on_"]["duts"]
+test9_ids = dut_parameters["test_if_system_accounting_methods_set_on_"]["ids"]
+
+test10_duts = dut_parameters["test_if_exec_accounting_methods_set_on_"]["duts"]
+test10_ids = dut_parameters["test_if_exec_accounting_methods_set_on_"]["ids"]
+
+test11_duts = dut_parameters["test_if_privilege_accounting_methods_set_on_"]["duts"]
+test11_ids = dut_parameters["test_if_privilege_accounting_methods_set_on_"]["ids"]
+
+test12_duts = dut_parameters["test_if_dot1x_accounting_methods_set_on_"]["duts"]
+test12_ids = dut_parameters["test_if_dot1x_accounting_methods_set_on_"]["ids"]
 
 
 @pytest.mark.nrfu
@@ -48,6 +87,7 @@ class AAATests:
     """AAA Test Suite"""
 
     @pytest.mark.skip(reason="No AAA setup on DUTs")
+    @pytest.mark.parametrize("dut", test1_duts, ids=test1_ids)
     def test_if_authentication_counters_are_incrementing_on_(
         self, return_global_data, dut, tests_definitions
     ):
@@ -71,7 +111,7 @@ class AAATests:
         show_cmd_txt = dut["output"][show_cmd]["text"]
 
         logging.info(
-            f"TEST is |{dut_name}| authentication counters " "incrementing"
+            f"TEST is {dut_name} authentication counters " "incrementing"
         )
 
         ptr = dut["output"][show_cmd]["json"]
@@ -94,22 +134,23 @@ class AAATests:
 
         if auth_allowed_1 < auth_allowed_2:
             print(
-                f"\nOn router |{dut_name}| AAA authorization allowed "
-                f"messages2: |{auth_allowed_2}| increments from AAA "
-                f"authorization allowed message1: |{auth_allowed_1}|"
+                f"\nOn router {dut_name} AAA authorization allowed "
+                f"messages2: {auth_allowed_2} increments from AAA "
+                f"authorization allowed message1: {auth_allowed_1}"
             )
-            logging.info("THEN test case result is |True|")
+            logging.info("THEN test case result is True")
         else:
             print(
-                f"\nOn router |{dut_name}| AAA authorization allowed "
-                f"messages2: |{auth_allowed_2}| doesn't increments from AAA "
-                f"authorization allowed message1: |{auth_allowed_1}|"
+                f"\nOn router {dut_name} AAA authorization allowed "
+                f"messages2: {auth_allowed_2} doesn't increments from AAA "
+                f"authorization allowed message1: {auth_allowed_1}"
             )
-            logging.info("THEN test case result is |False|")
+            logging.info("THEN test case result is False")
 
-        logging.info(f"OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}")
+        logging.info(f"OUTPUT of {show_cmd} is :\n\n{show_cmd_txt}")
         assert auth_allowed_1 < auth_allowed_2
 
+    @pytest.mark.parametrize("dut", test2_duts, ids=test2_ids)
     def test_if_aaa_session_logging_is_working_on_(
         self, dut, tests_definitions
     ):
@@ -133,7 +174,7 @@ class AAATests:
         show_cmd_txt = dut["output"][show_cmd]["text"]
 
         logging.info(
-            f"TEST is |{dut_name}| AAA session logging is working by "
+            f"TEST is {dut_name} AAA session logging is working by "
             "identifying eapi connection"
         )
 
@@ -147,27 +188,28 @@ class AAATests:
 
             if service == "commandApi":
                 print(
-                    f"\nOn router |{dut_name}| identified eAPi AAA session: "
-                    f"|{service}|"
+                    f"\nOn router {dut_name} identified eAPi AAA session: "
+                    f"{service}"
                 )
                 aaa_flag = True
 
         if not aaa_flag:
             print(
-                f"\nOn router |{dut_name}| did NOT identified eAPi AAA "
-                f"session: |{service}|"
+                f"\nOn router {dut_name} did NOT identified eAPi AAA "
+                f"session: {service}"
             )
 
         for non_interactive in actual_output:
             service = actual_output[non_interactive]["service"]
 
             test_result = service == expected_output
-            logging.info(f"THEN test case result is |{test_result}|")
-            logging.info(f"OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}")
+            logging.info(f"THEN test case result is {test_result}")
+            logging.info(f"OUTPUT of {show_cmd} is :\n\n{show_cmd_txt}")
 
             assert service == expected_output
 
     @pytest.mark.authorization
+    @pytest.mark.parametrize("dut", test3_duts, ids=test3_ids)
     def test_if_commands_authorization_methods_set_on_(
         self, dut, tests_definitions
     ):
@@ -194,29 +236,30 @@ class AAATests:
 
         logging.info(
             "TEST is command authorization methods list set correct "
-            f"on |{dut_name}| "
+            f"on {dut_name} "
         )
-        logging.info(f"GIVEN command authorization method list: |{cmd_auth}|")
+        logging.info(f"GIVEN command authorization method list: {cmd_auth}")
 
         ptr = dut["output"][show_cmd]["json"]["authorization"]
         actual_output = ptr["commandsAuthzMethods"]["privilege0-15"]["methods"]
         logging.info(
             f"WHEN EOS command authorization method list is set "
-            f"to |{actual_output}|"
+            f"to {actual_output}"
         )
 
         test_result = actual_output == expected_output
-        logging.info(f"THEN test case result is |{test_result}|")
-        logging.info(f"OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}")
+        logging.info(f"THEN test case result is {test_result}")
+        logging.info(f"OUTPUT of {show_cmd} is :\n\n{show_cmd_txt}")
 
         print(
-            f"\nOn router |{dut_name}| AAA authorization methods for f"
-            f"commands: |{actual_output}|"
+            f"\nOn router {dut_name} AAA authorization methods for f"
+            f"commands: {actual_output}"
         )
 
         assert actual_output == expected_output
 
     @pytest.mark.authorization
+    @pytest.mark.parametrize("dut", test4_duts, ids=test4_ids)
     def test_if_exec_authorization_methods_set_on_(
         self, dut, tests_definitions
     ):
@@ -243,29 +286,30 @@ class AAATests:
 
         logging.info(
             "TEST is exec authorization methods list set correct "
-            f"on |{dut_name}| "
+            f"on {dut_name} "
         )
-        logging.info(f"GIVEN exec authorization method list: |{exec_auth}|")
+        logging.info(f"GIVEN exec authorization method list: {exec_auth}")
 
         ptr = dut["output"][show_cmd]["json"]["authorization"]
         actual_output = ptr["execAuthzMethods"]["exec"]["methods"]
         logging.info(
             "WHEN EOS exec authorization method list is set to "
-            f"|{actual_output}|"
+            f"{actual_output}"
         )
 
         test_result = actual_output == expected_output
-        logging.info(f"THEN test case result is |{test_result}|")
-        logging.info(f"OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}")
+        logging.info(f"THEN test case result is {test_result}")
+        logging.info(f"OUTPUT of {show_cmd} is :\n\n{show_cmd_txt}")
 
         print(
-            f"\nOn router |{dut_name}| AAA authorization methods for exec: "
-            f"|{actual_output}|"
+            f"\nOn router {dut_name} AAA authorization methods for exec: "
+            f"{actual_output}"
         )
 
         assert actual_output == expected_output
 
     @pytest.mark.authentication
+    @pytest.mark.parametrize("dut", test5_duts, ids=test5_ids)
     def test_if_default_login_authentication_methods_set_on_(
         self, dut, tests_definitions
     ):
@@ -292,29 +336,30 @@ class AAATests:
 
         logging.info(
             f"TEST is default login authentication methods list set "
-            f"correct on |{dut_name}| "
+            f"correct on {dut_name} "
         )
-        logging.info(f"GIVEN login authentication method list: |{login_auth}|")
+        logging.info(f"GIVEN login authentication method list: {login_auth}")
 
         ptr = dut["output"][show_cmd]["json"]["authentication"]
         actual_output = ptr["loginAuthenMethods"]["default"]["methods"]
         logging.info(
             "WHEN EOS login authentication method list is set to "
-            f"|{actual_output}|"
+            f"{actual_output}"
         )
 
         test_result = actual_output == expected_output
-        logging.info(f"THEN test case result is |{test_result}|")
-        logging.info(f"OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}")
+        logging.info(f"THEN test case result is {test_result}")
+        logging.info(f"OUTPUT of {show_cmd} is :\n\n{show_cmd_txt}")
 
         print(
-            f"\nOn router |{dut_name}| AAA authentication methods for "
-            f"default login: |{actual_output}|"
+            f"\nOn router {dut_name} AAA authentication methods for "
+            f"default login: {actual_output}"
         )
 
         assert actual_output == expected_output
 
     @pytest.mark.authentication
+    @pytest.mark.parametrize("dut", test6_duts, ids=test6_ids)
     def test_if_login_authentication_methods_set_on_(
         self, dut, tests_definitions
     ):
@@ -341,38 +386,39 @@ class AAATests:
 
         logging.info(
             "TEST is login authentication methods list set correct "
-            f"on |{dut_name}| "
+            f"on {dut_name} "
         )
-        logging.info(f"GIVEN login authentication method list: |{login_auth}|")
+        logging.info(f"GIVEN login authentication method list: {login_auth}")
 
         if login_auth:
             ptr = dut["output"][show_cmd]["json"]["authentication"]
             actual_output = ptr["loginAuthenMethods"]["login"]["methods"]
             logging.info(
                 "WHEN EOS login authentication method list is set "
-                f"to |{actual_output}|"
+                f"to {actual_output}"
             )
 
             test_result = actual_output == expected_output
-            logging.info(f"THEN test case result is |{test_result}|")
-            logging.info(f"OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}")
+            logging.info(f"THEN test case result is {test_result}")
+            logging.info(f"OUTPUT of {show_cmd} is :\n\n{show_cmd_txt}")
 
             print(
-                f"\nOn router |{dut_name}| AAA authentication methods for "
-                f"login: |{actual_output}|"
+                f"\nOn router {dut_name} AAA authentication methods for "
+                f"login: {actual_output}"
             )
 
             assert actual_output == expected_output
         else:
             logging.info(
-                "WHEN EOS login authentication method list is set to " "|None|"
+                "WHEN EOS login authentication method list is set to " "None"
             )
-            logging.info("THEN test case result is |True|")
-            logging.info(f"OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}")
+            logging.info("THEN test case result is True")
+            logging.info(f"OUTPUT of {show_cmd} is :\n\n{show_cmd_txt}")
 
             assert True
 
     @pytest.mark.authentication
+    @pytest.mark.parametrize("dut", test7_duts, ids=test7_ids)
     def test_if_dot1x_authentication_methods_set_on_(
         self, dut, tests_definitions
     ):
@@ -399,29 +445,30 @@ class AAATests:
 
         logging.info(
             f"TEST is dot1x authentication methods list set correct "
-            f"on |{dut_name}| "
+            f"on {dut_name} "
         )
-        logging.info(f"GIVEN dot1x authentication method list: |{dot1x_auth}|")
+        logging.info(f"GIVEN dot1x authentication method list: {dot1x_auth}")
 
         ptr = dut["output"][show_cmd]["json"]["authentication"]
         actual_output = ptr["dot1xAuthenMethods"]["default"]["methods"]
         logging.info(
             "WHEN EOS dot1x authentication method list is set to "
-            f"|{actual_output}|"
+            f"{actual_output}"
         )
 
         test_result = actual_output == expected_output
-        logging.info(f"THEN test case result is |{test_result}|")
-        logging.info(f"OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}")
+        logging.info(f"THEN test case result is {test_result}")
+        logging.info(f"OUTPUT of {show_cmd} is :\n\n{show_cmd_txt}")
 
         print(
-            f"\nOn router |{dut_name}| AAA authentication methods for dot1x "
-            f"default: |{actual_output}|"
+            f"\nOn router {dut_name} AAA authentication methods for dot1x "
+            f"default: {actual_output}"
         )
 
         assert actual_output == expected_output
 
     @pytest.mark.authentication
+    @pytest.mark.parametrize("dut", test8_duts, ids=test8_ids)
     def test_if_enable_authentication_methods_set_on_(
         self, dut, tests_definitions
     ):
@@ -444,10 +491,10 @@ class AAATests:
 
         logging.info(
             "TEST is enable authentication methods list set correct "
-            f"on |{dut_name}| "
+            f"on {dut_name} "
         )
         logging.info(
-            "GIVEN enable authentication method list: " f"|{enable_auth}|"
+            "GIVEN enable authentication method list: " f"{enable_auth}"
         )
 
         show_cmd = test_parameters["show_cmd"]
@@ -458,21 +505,22 @@ class AAATests:
         actual_output = ptr["enableAuthenMethods"]["default"]["methods"]
 
         print(
-            f"\nOn router |{dut['name']}| AAA authentication methods for "
-            f"enable default: |{actual_output}|"
+            f"\nOn router {dut['name']} AAA authentication methods for "
+            f"enable default: {actual_output}"
         )
         logging.info(
             f"WHEN EOS enable authentication method list is set to "
-            f"|{actual_output}|"
+            f"{actual_output}"
         )
 
         test_result = actual_output == expected_output
-        logging.info(f"THEN test case result is |{test_result}|")
-        logging.info(f"OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}")
+        logging.info(f"THEN test case result is {test_result}")
+        logging.info(f"OUTPUT of {show_cmd} is :\n\n{show_cmd_txt}")
 
         assert actual_output == expected_output
 
     @pytest.mark.accounting
+    @pytest.mark.parametrize("dut", test9_duts, ids=test9_ids)
     def test_if_system_accounting_methods_set_on_(self, dut, tests_definitions):
         """Verify AAA system accounting method-lists are set correct
 
@@ -494,12 +542,12 @@ class AAATests:
 
         logging.info(
             f"TEST is system accounting methods list set correct "
-            f"on |{dut_name}| "
+            f"on {dut_name} "
         )
         logging.info(
             f"GIVEN default system accounting method list: "
-            f"|{default_acct}| and console system accounting method"
-            f"list: |{console_acct}|"
+            f"{default_acct} and console system accounting method"
+            f"list: {console_acct}"
         )
 
         show_cmd = test_parameters["show_cmd"]
@@ -513,22 +561,23 @@ class AAATests:
         actual_output = [eos_default_acct, eos_console_acct]
 
         print(
-            f"\nOn router |{dut['name']}| AAA accounting methods for "
-            f"default: |{eos_default_acct}|"
+            f"\nOn router {dut['name']} AAA accounting methods for "
+            f"default: {eos_default_acct}"
         )
         logging.info(
             f"WHEN default system accounting method list: "
-            f"|{eos_default_acct}| and console system accounting "
-            f"method list: |{eos_console_acct}|"
+            f"{eos_default_acct} and console system accounting "
+            f"method list: {eos_console_acct}"
         )
 
         test_result = expected_output == actual_output
-        logging.info(f"THEN test case result is |{test_result}|")
-        logging.info(f"OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}")
+        logging.info(f"THEN test case result is {test_result}")
+        logging.info(f"OUTPUT of {show_cmd} is :\n\n{show_cmd_txt}")
 
         assert expected_output == actual_output
 
     @pytest.mark.accounting
+    @pytest.mark.parametrize("dut", test10_duts, ids=test10_ids)
     def test_if_exec_accounting_methods_set_on_(self, dut, tests_definitions):
         """Verify AAA exec accounting method-lists are set correct
 
@@ -550,12 +599,12 @@ class AAATests:
 
         logging.info(
             f"TEST is exec accounting methods list set correct "
-            f"on |{dut_name}| "
+            f"on {dut_name} "
         )
         logging.info(
             f"GIVEN exec system accounting method list: "
-            f"|{default_acct}| and exec system accounting method"
-            f"list: |{console_acct}|"
+            f"{default_acct} and exec system accounting method"
+            f"list: {console_acct}"
         )
 
         show_cmd = test_parameters["show_cmd"]
@@ -569,26 +618,27 @@ class AAATests:
         actual_output = [eos_default_acct, eos_console_acct]
 
         print(
-            f"\nOn router |{dut['name']}| AAA accounting exec methods for "
-            f"console: |{eos_console_acct}|"
+            f"\nOn router {dut['name']} AAA accounting exec methods for "
+            f"console: {eos_console_acct}"
         )
         logging.info(
             f"WHEN default exec accounting method list: "
-            f"|{eos_default_acct}| and console exec accounting method"
-            f"list: |{eos_console_acct}|"
+            f"{eos_default_acct} and console exec accounting method"
+            f"list: {eos_console_acct}"
         )
 
         test_result = expected_output == actual_output
-        logging.info(f"THEN test case result is |{test_result}|")
-        logging.info(f"OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}")
+        logging.info(f"THEN test case result is {test_result}")
+        logging.info(f"OUTPUT of {show_cmd} is :\n\n{show_cmd_txt}")
 
         assert expected_output == actual_output
 
     @pytest.mark.accounting
-    def test_if_priviledge_accounting_methods_set_on_(
+    @pytest.mark.parametrize("dut", test11_duts, ids=test11_ids)
+    def test_if_privilege_accounting_methods_set_on_(
         self, dut, tests_definitions
     ):
-        """Verify AAA priviledge accounting method-lists are set correct
+        """Verify AAA privilege accounting method-lists are set correct
 
         Args:
           dut (dict): Encapsulates dut details including name, connection
@@ -608,12 +658,12 @@ class AAATests:
 
         logging.info(
             f"TEST is priviledge accounting methods list set correct "
-            f"on |{dut_name}| "
+            f"on {dut_name} "
         )
         logging.info(
             f"GIVEN priviledge system accounting method list: "
-            f"|{default_acct}| and priviledge system accounting "
-            f"method list: |{console_acct}|"
+            f"{default_acct} and priviledge system accounting "
+            f"method list: {console_acct}"
         )
 
         show_cmd = test_parameters["show_cmd"]
@@ -627,22 +677,23 @@ class AAATests:
         actual_output = [eos_default_acct, eos_console_acct]
 
         print(
-            f"\nOn router |{dut['name']}| AAA accounting exec methods for "
-            f"console: |{eos_console_acct}|"
+            f"\nOn router {dut['name']} AAA accounting exec methods for "
+            f"console: {eos_console_acct}"
         )
         logging.info(
             f"WHEN default privilege accounting method list: "
-            f"|{eos_default_acct}| and console privilege accounting "
-            f"method list: |{eos_console_acct}|"
+            f"{eos_default_acct} and console privilege accounting "
+            f"method list: {eos_console_acct}"
         )
 
         test_result = expected_output == actual_output
-        logging.info(f"THEN test case result is |{test_result}|")
-        logging.info(f"OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}")
+        logging.info(f"THEN test case result is {test_result}")
+        logging.info(f"OUTPUT of {show_cmd} is :\n\n{show_cmd_txt}")
 
         assert expected_output == actual_output
 
     @pytest.mark.accounting
+    @pytest.mark.parametrize("dut", test12_duts, ids=test12_ids)
     def test_if_dot1x_accounting_methods_set_on_(self, dut, tests_definitions):
         """Verify AAA dot1x accounting method-lists are set correct
 
@@ -664,12 +715,12 @@ class AAATests:
 
         logging.info(
             f"TEST is dot1x accounting methods list set correct on "
-            f"|{dut_name}|"
+            f"{dut_name}"
         )
         logging.info(
             f"GIVEN dot1x system accounting method list: "
-            f"|{default_acct}| and dot1x system accounting method"
-            f"list: |{console_acct}|"
+            f"{default_acct} and dot1x system accounting method"
+            f"list: {console_acct}"
         )
 
         show_cmd = test_parameters["show_cmd"]
@@ -682,17 +733,17 @@ class AAATests:
         actual_output = [eos_default_acct, eos_console_acct]
 
         print(
-            f"\nOn router |{dut_name}| AAA accounting exec methods for "
-            f"dot1x: |{eos_console_acct}|"
+            f"\nOn router {dut_name} AAA accounting exec methods for "
+            f"dot1x: {eos_console_acct}"
         )
         logging.info(
             f"WHEN default dot1x accounting method list: "
-            f"|{eos_default_acct}| and console dot1x accounting "
-            f"method list: |{eos_console_acct}|"
+            f"{eos_default_acct} and console dot1x accounting "
+            f"method list: {eos_console_acct}"
         )
 
         test_result = expected_output == actual_output
-        logging.info(f"THEN test case result is |{test_result}|")
-        logging.info(f"OUTPUT of |{show_cmd}| is :\n\n{show_cmd_txt}")
+        logging.info(f"THEN test case result is {test_result}")
+        logging.info(f"OUTPUT of {show_cmd} is :\n\n{show_cmd_txt}")
 
         assert expected_output == actual_output

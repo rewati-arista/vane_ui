@@ -6,12 +6,24 @@
       expected_output: null
       comment: null
       result: True
+      report_style: modern
+      test_criteria: Verify AAA counters are working correctly
+      criteria: names
+      filter: 
+        - DSR01
+        - DCBBW1
     - name: test_if_aaa_session_logging_is_working_on_
       description: Verify AAA session logging is working by identifying eapi connection
       show_cmd: show users detail
       expected_output: command-api
       comment: null
       result: True
+      report_style: modern
+      test_criteria: Verify AAA session logging is working by identifying eapi connection
+      criteria: names
+      filter: 
+        - DSR01
+        - DCBBW1
     - name: test_if_commands_authorization_methods_set_on_
       description: Verify AAA command authorization are method-lists set correct
       # List command authorizations to check on DUT
@@ -21,6 +33,12 @@
       expected_output: null
       comment: null
       result: True
+      report_style: modern
+      test_criteria: Verify AAA command authorization are method-lists set correct
+      criteria: names
+      filter: 
+        - DSR01
+        - DCBBW1
     - name: test_if_exec_authorization_methods_set_on_
       description: Verify AAA exec authorization are method-lists set correct
       # List exec authorizations to check on DUT
@@ -30,6 +48,12 @@
       expected_output: null
       comment: null
       result: True
+      report_style: modern
+      test_criteria: Verify AAA exec authorization are method-lists set correct
+      criteria: names
+      filter: 
+        - DSR01
+        - DCBBW1
     - name: test_if_default_login_authentication_methods_set_on_
       description: Verify AAA default login authentication are method-lists set correct
       # List default login authentication to check on DUT
@@ -39,6 +63,12 @@
       expected_output: null
       comment: null
       result: True
+      report_style: modern
+      test_criteria: Verify AAA default login authentication are method-lists set correct
+      criteria: names
+      filter: 
+        - DSR01
+        - DCBBW1
     - name: test_if_login_authentication_methods_set_on_
       description: AAA login authentication are method-lists set correct
       # List login authentication to check on DUT
@@ -47,6 +77,12 @@
       expected_output: null
       comment: null
       result: True
+      report_style: modern
+      test_criteria: AAA login authentication are method-lists set correct
+      criteria: names
+      filter: 
+        - DSR01
+        - DCBBW1
     - name: test_if_dot1x_authentication_methods_set_on_
       description: Verify AAA dot1x authentication are method-lists set correct
       # List dot1x authentication to check on DUT
@@ -55,6 +91,12 @@
       expected_output: null
       comment: null
       result: True
+      report_style: modern
+      test_criteria: Verify AAA dot1x authentication are method-lists set correct
+      criteria: names
+      filter: 
+        - DSR01
+        - DCBBW1
     - name: test_if_enable_authentication_methods_set_on_
       description: Verify AAA enable authentication are method-lists set correct
       # List enable login authentication to check on DUT
@@ -65,6 +107,12 @@
       actual_output: null
       comment: null
       result: True
+      report_style: modern
+      test_criteria: Verify AAA enable authentication are method-lists set correct
+      criteria: names
+      filter: 
+        - DSR01
+        - DCBBW1
     - name: test_if_system_accounting_methods_set_on_
       description: Verify AAA system accounting method-lists are set correct
       # List default system accounting to check on DUT
@@ -74,6 +122,12 @@
       expected_output: null
       comment: null
       result: True
+      report_style: modern
+      test_criteria:Verify AAA system accounting method-lists are set correct
+      criteria: names
+      filter: 
+        - DSR01
+        - DCBBW1
     - name: test_if_exec_accounting_methods_set_on_
       description: Verify AAA exec accounting method-lists are set correct
       # List exec system accounting to check on DUT
@@ -83,15 +137,27 @@
       expected_output: null
       comment: null
       result: True
-    - name: test_if_priviledge_accounting_methods_set_on_
-      description: Verify AAA priviledge accounting method-lists are set correct
-      # List priviledge system accounting to check on DUT
+      report_style: modern
+      test_criteria: Verify AAA exec accounting method-lists are set correct
+      criteria: names
+      filter: 
+        - DSR01
+        - DCBBW1
+    - name: test_if_privilege_accounting_methods_set_on_
+      description: Verify AAA privilege accounting method-lists are set correct
+      # List privilege system accounting to check on DUT
       default_acct: []
       console_acct: []
       show_cmd: show aaa methods all
       expected_output: null
       comment: null
       result: True
+      report_style: modern
+      test_criteria: Verify AAA privilege accounting method-lists are set correct
+      criteria: names
+      filter: 
+        - DSR01
+        - DCBBW1
     - name: test_if_dot1x_accounting_methods_set_on_
       description: Verify AAA dot1x accounting method-lists are set correct
       # List dot1x system accounting to check on DUT
@@ -101,3 +167,9 @@
       expected_output: null
       comment: null
       result: True
+      report_style: modern
+      test_criteria: Verify AAA dot1x accounting method-lists are set correct
+      criteria: names
+      filter: 
+        - DSR01
+        - DCBBW1
