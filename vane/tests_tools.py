@@ -422,6 +422,7 @@ def dut_worker(dut, show_cmds, test_parameters):
         if show_cmd in show_cmds_json:
             cmd_index = show_cmds_json.index(show_cmd)
 
+
             logging.debug(
                 f"Found cmd: {show_cmd} at index {cmd_index} of {show_cmds_json}"
             )
@@ -634,10 +635,10 @@ def return_show_cmds(test_parameters):
     except KeyError:
         show_clock_flag = False
 
-    show_cmds = []
+    show_cmds = ["show version"]
 
     if show_clock_flag:
-        show_cmds = ["show version", "show clock"]
+        show_cmds.append("show clock")
 
     logging.debug(f"Discover the names of test suites from {test_parameters}")
 
@@ -893,16 +894,15 @@ class TestOps:
         except KeyError:
             self.show_clock_flag = False
 
-        self.show_cmds = []
-        self._show_cmds = []
+        self.show_cmds = ["show version"]
+        self._show_cmds = ["show version"]
 
         if self.show_clock_flag:
-            self._show_cmds = ["show version", "show clock"]
+            self._show_cmds.append("show clock")
 
         self.show_output = ""
         self.show_cmd = ""
         self.test_steps = []
-
         try:
             self.show_cmd = self.test_parameters["show_cmd"]
             if self.show_cmd:
@@ -1089,7 +1089,7 @@ class TestOps:
             f"Verifying if {self.dut_name} DUT is a VEOS instance. Model is {veos}"
         )
 
-        if veos == "vEOS":
+        if "vEOS" in veos:
             veos_bool = True
 
             logging.debug(
