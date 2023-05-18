@@ -523,6 +523,9 @@ class ReportClient:
                 if "format" in report_template[testcase_data]:
                     data_format = report_template[testcase_data]["format"]
                     logging.info(f"Format has been set to {format}")
+                
+                if testcase_data == "name":
+                    testcase_result[testcase_data] =self._format_tc_name(testcase_result[testcase_data])
 
                 self._write_cell(
                     table,
