@@ -1,3 +1,6 @@
+# This is a sample definitions.yaml file which can be used to run vane.
+# The fields below can be changed to reflect specific test cases, test directories which need to be run.
+
 parameters:
   eapi_file: tests/unittests/fixtures/eapi.conf
   eapi_template: tests/fixtures/templates/eapi.conf.j2
@@ -15,7 +18,7 @@ parameters:
   stdout: false
   test_cases: All
   test_dirs: 
-  - tests/systests
+  - sample_network_tests
   report_test_steps: true
   generate_test_definitions: false
   master_definitions: master_def.yaml
