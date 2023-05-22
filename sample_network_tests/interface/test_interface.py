@@ -265,7 +265,7 @@ class InterfacePhyTests:
                     split_output = raw_output.split("\n")
 
                     for line_output in split_output:
-                        if "PH  Y state" in line_output:
+                        if "PHY state" in line_output:
                             tops.actual_output = line_output.split()[2]
                             if tops.actual_output == tops.expected_output:
                                 tops.output_msg += (
