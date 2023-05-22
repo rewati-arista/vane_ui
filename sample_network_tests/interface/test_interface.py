@@ -261,28 +261,31 @@ class InterfacePhyTests:
                     interface_name = interface["interface_name"].replace(" ", "")
 
                     self.output = dut["output"][tops.show_cmd]["json"]["interfacePhyStatuses"]
-                    raw_output = self.output[interface_name]["phyStatuses"][0]["text"]
-                    split_output = raw_output.split("\n")
+                    assert self.output, "No InterfacePhysical Details are available"
+                    logging.info(
+                        f"On device {tops.dut_name}"
+                        f" output of {tops.show_cmd} command is: {self.output}"
+                    )
 
-                    for line_output in split_output:
-                        if "PHY state" in line_output:
-                            tops.actual_output = line_output.split()[2]
-                            if tops.actual_output == tops.expected_output:
-                                tops.output_msg += (
-                                    f"On interface {interface_name}: "
-                                    f"physical detail PHY state is set to: "
-                                    f"{tops.actual_output}, which is the correct state.\n\n"
-                                )
-                            else:
-                                tops.output_msg += (
-                                    f"On interface {interface_name}: "
-                                    f"physical detail PHY state is set to: "
-                                    f"{tops.actual_output}, while correct state is "
-                                    f"{tops.expected_output}.\n\n"
-                                )
+                    tops.actual_output = self.output[interface_name]["phyStatuses"][0]["phyState"][
+                        "value"
+                    ]
 
-                            tops.actual_results.append(tops.actual_output)
-                            tops.expected_results.append(tops.expected_output)
+                    if tops.actual_output == tops.expected_output:
+                        tops.output_msg += (
+                            f"On interface {interface_name}: "
+                            f"physical detail PHY state is set to: "
+                            f"{tops.actual_output}, which is the correct state.\n\n"
+                        )
+                    else:
+                        tops.output_msg += (
+                            f"On interface {interface_name}: "
+                            f"physical detail PHY state is set to: "
+                            f"{tops.actual_output}, while correct state is "
+                            f"{tops.expected_output}.\n\n"
+                        )
+                    tops.actual_results.append(tops.actual_output)
+                    tops.expected_results.append(tops.expected_output)
 
                 tops.actual_output, tops.expected_output = (
                     tops.actual_results,
