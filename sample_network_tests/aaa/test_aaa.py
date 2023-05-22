@@ -109,7 +109,7 @@ class AAATests:
             auth_allowed_1 = self.output["authorizationAllowed"]
 
             """
-            TS: Running show command 'show aaa counters' on dut again to check for 
+            TS: Running show command 'show aaa counters' on dut again to check for
             counter increments
             """
             self.output = tops.run_show_cmds(tops.show_cmd, "json")[0]["result"]
