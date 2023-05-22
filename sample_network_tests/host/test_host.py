@@ -72,12 +72,12 @@ class HostTests:
             TS: Collecting the output of 'show hostname' command from DUT
             """
             self.output = dut["output"][tops.show_cmd]["json"]
-            tops.expected_output = {"hostname": tops.dut_name}
             assert self.output.get("hostname"), "Show hostname details are not found"
             logging.info(
                 f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
             )
 
+            tops.expected_output = {"hostname": tops.dut_name}
             tops.actual_output = {"hostname": self.output["hostname"]}
 
         except (AttributeError, LookupError, EapiError) as exp:
