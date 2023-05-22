@@ -733,12 +733,13 @@ def export_yaml(yaml_file, yaml_data):
         sys.exit(1)
 
 
-def export_text(text_file, text_data):
+def export_text(text_file, text_data, dut_name):
     """Export python data structure as a TEXT file
 
     Args:
         text_file (str): Name of TEXT file
         text_data (dict): output of show command in python dictionary
+        dut_name (str): Primary dut name
     """
     logging.info(f"Opening {text_file} for write")
 
@@ -748,6 +749,9 @@ def export_text(text_file, text_data):
     try:
         with open(text_file, "a", encoding="utf-8") as text_out:
             logging.info(f"Output the following text file: {text_data}")
+            divider = "============================================"
+            heading = f"{divider}\nThese commands were run when PRIMARY DUT was {dut_name}\n{divider}\n\n"
+            text_out.write(heading)
             for key, value in text_data.items():
                 text_out.write(f"{key}{value}\n")
     except OSError as err:
@@ -994,7 +998,7 @@ class TestOps:
                     f"Preparing to write show command output to text file {text_file}"
                 )
                 
-                export_text(text_file, text_data)
+                export_text(text_file, text_data, self.dut_name)
             else:
                 logging.info("No show command output to display")
 
