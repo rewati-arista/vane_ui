@@ -749,7 +749,7 @@ def export_text(text_file, text_data, dut_name):
     try:
         with open(text_file, "a", encoding="utf-8") as text_out:
             logging.info(f"Output the following text file: {text_data}")
-            divider = "============================================"
+            divider = "================================================================"
             heading = f"{divider}\nThese commands were run when PRIMARY DUT was {dut_name}\n{divider}\n\n"
             text_out.write(heading)
             for key, value in text_data.items():
