@@ -578,231 +578,274 @@ class AAATests:
         tops.generate_report(tops.dut_name, self.output)
         assert tops.actual_output == tops.expected_output
 
-    # @pytest.mark.accounting
-    # @pytest.mark.parametrize("dut", test9_duts, ids=test9_ids)
-    # def test_if_system_accounting_methods_set_on_(self, dut, tests_definitions):
-    #     """TD: Verify AAA system accounting method-lists are set correct
+    @pytest.mark.accounting
+    @pytest.mark.parametrize("dut", test9_duts, ids=test9_ids)
+    def test_if_system_accounting_methods_set_on_(self, dut, tests_definitions):
+        """TD: Verify AAA system accounting method-lists are set correct
 
-    #     Args:
-    #       dut (dict): Encapsulates dut details including name, connection
-    #       tests_definitions (dict): Test parameters
-    #     """
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
+          tests_definitions (dict): Test parameters
+        """
 
-    #     test_case = inspect.currentframe().f_code.co_name
-    #     test_parameters = tests_tools.get_parameters(
-    #         tests_definitions, TEST_SUITE, test_case
-    #     )
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-    #     expected_output = test_parameters["expected_output"]
-    #     dut_name = dut["name"]
-    #     default_acct = test_parameters["default_acct"]
-    #     console_acct = test_parameters["console_acct"]
-    #     expected_output = [default_acct, console_acct]
+        try:
+            """
+            TS: Collecting output of show command 'show aaa methods all' from dut
+            """
 
-    #     logging.info(
-    #         f"TEST is system accounting methods list set correct "
-    #         f"on {dut_name} "
-    #     )
-    #     logging.info(
-    #         f"GIVEN default system accounting method list: "
-    #         f"{default_acct} and console system accounting method"
-    #         f"list: {console_acct}"
-    #     )
+            self.output = dut["output"][tops.show_cmd]["json"]["accounting"]["systemAcctMethods"]
+            assert self.output, "No AAA method details are available"
+            logging.info(
+                f"On device {tops.dut_name}" f" output of {tops.show_cmd} command is: {self.output}"
+            )
 
-    #     show_cmd = test_parameters["show_cmd"]
-    #     tests_tools.verify_show_cmd(show_cmd, dut)
-    #     show_cmd_txt = dut["output"][show_cmd]["text"]
+            eos_default_acct = self.output["system"]["defaultMethods"]
+            eos_console_acct = self.output["system"]["consoleMethods"]
 
-    #     dut_ptr = dut["output"][show_cmd]["json"]
-    #     acct_ptr = dut_ptr["accounting"]["systemAcctMethods"]
-    #     eos_default_acct = acct_ptr["system"]["defaultMethods"]
-    #     eos_console_acct = acct_ptr["system"]["consoleMethods"]
-    #     actual_output = [eos_default_acct, eos_console_acct]
+            tops.expected_output = [
+                tops.test_parameters["default_acct"],
+                tops.test_parameters["console_acct"],
+            ]
+            tops.actual_output = [eos_default_acct, eos_console_acct]
 
-    #     print(
-    #         f"\nOn router {dut['name']} AAA accounting methods for "
-    #         f"default: {eos_default_acct}"
-    #     )
-    #     logging.info(
-    #         f"WHEN default system accounting method list: "
-    #         f"{eos_default_acct} and console system accounting "
-    #         f"method list: {eos_console_acct}"
-    #     )
+        except (
+            AssertionError,
+            AttributeError,
+            LookupError,
+            EapiError,
+        ) as exception:
+            logging.error(
+                f"Error occurred during the testsuite execution on dut:"
+                f" {tops.dut_name} is {str(exception)}"
+            )
+            tops.actual_output = str(exception)
 
-    #     test_result = expected_output == actual_output
-    #     logging.info(f"THEN test case result is {test_result}")
-    #     logging.info(f"OUTPUT of {show_cmd} is :\n\n{show_cmd_txt}")
+        if tops.actual_output == tops.expected_output:
+            tops.test_result = True
+            tops.output_msg += (
+                f"On router {tops.dut_name} default system and "
+                f"console system accounting method list "
+                f"is {tops.actual_output}, which is correct.\n\n"
+            )
+        else:
+            tops.test_result = False
+            tops.output_msg += (
+                f"On router {tops.dut_name} default system and "
+                f"console system accounting method list "
+                f"is {tops.actual_output}, while correct default system and "
+                f"console system accounting method list "
+                f"is {tops.expected_output}.\n\n"
+            )
 
-    #     assert expected_output == actual_output
+        """
+        TS: Creating test report based on results
+        """
+        tops.parse_test_steps(self.test_if_system_accounting_methods_set_on_)
+        tops.generate_report(tops.dut_name, self.output)
+        assert tops.actual_output == tops.expected_output
 
-    # @pytest.mark.accounting
-    # @pytest.mark.parametrize("dut", test10_duts, ids=test10_ids)
-    # def test_if_exec_accounting_methods_set_on_(self, dut, tests_definitions):
-    #     """TD: Verify AAA exec accounting method-lists are set correct
+    @pytest.mark.accounting
+    @pytest.mark.parametrize("dut", test10_duts, ids=test10_ids)
+    def test_if_exec_accounting_methods_set_on_(self, dut, tests_definitions):
+        """TD: Verify AAA exec accounting method-lists are set correct
 
-    #     Args:
-    #       dut (dict): Encapsulates dut details including name, connection
-    #       tests_definitions (dict): Test parameters
-    #     """
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
+          tests_definitions (dict): Test parameters
+        """
 
-    #     test_case = inspect.currentframe().f_code.co_name
-    #     test_parameters = tests_tools.get_parameters(
-    #         tests_definitions, TEST_SUITE, test_case
-    #     )
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-    #     expected_output = test_parameters["expected_output"]
-    #     dut_name = dut["name"]
-    #     default_acct = test_parameters["default_acct"]
-    #     console_acct = test_parameters["console_acct"]
-    #     expected_output = [default_acct, console_acct]
+        try:
+            """
+            TS: Collecting output of show command 'show aaa methods all' from dut
+            """
 
-    #     logging.info(
-    #         f"TEST is exec accounting methods list set correct "
-    #         f"on {dut_name} "
-    #     )
-    #     logging.info(
-    #         f"GIVEN exec system accounting method list: "
-    #         f"{default_acct} and exec system accounting method"
-    #         f"list: {console_acct}"
-    #     )
+            self.output = dut["output"][tops.show_cmd]["json"]["accounting"]["execAcctMethods"]
+            assert self.output, "No AAA method details are available"
+            logging.info(
+                f"On device {tops.dut_name}" f" output of {tops.show_cmd} command is: {self.output}"
+            )
 
-    #     show_cmd = test_parameters["show_cmd"]
-    #     tests_tools.verify_show_cmd(show_cmd, dut)
-    #     show_cmd_txt = dut["output"][show_cmd]["text"]
+            eos_default_acct = self.output["exec"]["defaultMethods"]
+            eos_console_acct = self.output["exec"]["consoleMethods"]
 
-    #     dut_ptr = dut["output"][show_cmd]["json"]
-    #     acct_ptr = dut_ptr["accounting"]["execAcctMethods"]
-    #     eos_default_acct = acct_ptr["exec"]["defaultMethods"]
-    #     eos_console_acct = acct_ptr["exec"]["consoleMethods"]
-    #     actual_output = [eos_default_acct, eos_console_acct]
+            tops.expected_output = [
+                tops.test_parameters["default_acct"],
+                tops.test_parameters["console_acct"],
+            ]
+            tops.actual_output = [eos_default_acct, eos_console_acct]
 
-    #     print(
-    #         f"\nOn router {dut['name']} AAA accounting exec methods for "
-    #         f"console: {eos_console_acct}"
-    #     )
-    #     logging.info(
-    #         f"WHEN default exec accounting method list: "
-    #         f"{eos_default_acct} and console exec accounting method"
-    #         f"list: {eos_console_acct}"
-    #     )
+        except (
+            AssertionError,
+            AttributeError,
+            LookupError,
+            EapiError,
+        ) as exception:
+            logging.error(
+                f"Error occurred during the testsuite execution on dut:"
+                f" {tops.dut_name} is {str(exception)}"
+            )
+            tops.actual_output = str(exception)
 
-    #     test_result = expected_output == actual_output
-    #     logging.info(f"THEN test case result is {test_result}")
-    #     logging.info(f"OUTPUT of {show_cmd} is :\n\n{show_cmd_txt}")
+        if tops.actual_output == tops.expected_output:
+            tops.test_result = True
+            tops.output_msg += (
+                f"On router {tops.dut_name} default exec and "
+                f"console exec accounting method list "
+                f"is {tops.actual_output}, which is correct.\n\n"
+            )
+        else:
+            tops.test_result = False
+            tops.output_msg += (
+                f"On router {tops.dut_name} default exec and "
+                f"console exec accounting method list "
+                f"is {tops.actual_output}, while correct default exec "
+                f"and console exec accounting method list "
+                f"is {tops.expected_output}.\n\n"
+            )
 
-    #     assert expected_output == actual_output
+        """
+        TS: Creating test report based on results
+        """
+        tops.parse_test_steps(self.test_if_exec_accounting_methods_set_on_)
+        tops.generate_report(tops.dut_name, self.output)
+        assert tops.actual_output == tops.expected_output
 
-    # @pytest.mark.accounting
-    # @pytest.mark.parametrize("dut", test11_duts, ids=test11_ids)
-    # def test_if_privilege_accounting_methods_set_on_(
-    #     self, dut, tests_definitions
-    # ):
-    #     """TD: Verify AAA privilege accounting method-lists are set correct
+    @pytest.mark.accounting
+    @pytest.mark.parametrize("dut", test11_duts, ids=test11_ids)
+    def test_if_privilege_accounting_methods_set_on_(self, dut, tests_definitions):
+        """TD: Verify AAA privilege accounting method-lists are set correct
 
-    #     Args:
-    #       dut (dict): Encapsulates dut details including name, connection
-    #       tests_definitions (dict): Test parameters
-    #     """
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
+          tests_definitions (dict): Test parameters
+        """
 
-    #     test_case = inspect.currentframe().f_code.co_name
-    #     test_parameters = tests_tools.get_parameters(
-    #         tests_definitions, TEST_SUITE, test_case
-    #     )
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-    #     expected_output = test_parameters["expected_output"]
-    #     dut_name = dut["name"]
-    #     default_acct = test_parameters["default_acct"]
-    #     console_acct = test_parameters["console_acct"]
-    #     expected_output = [default_acct, console_acct]
+        try:
+            """
+            TS: Collecting output of show command 'show aaa methods all' from dut
+            """
 
-    #     logging.info(
-    #         f"TEST is priviledge accounting methods list set correct "
-    #         f"on {dut_name} "
-    #     )
-    #     logging.info(
-    #         f"GIVEN priviledge system accounting method list: "
-    #         f"{default_acct} and priviledge system accounting "
-    #         f"method list: {console_acct}"
-    #     )
+            self.output = dut["output"][tops.show_cmd]["json"]["accounting"]["commandsAcctMethods"]
+            assert self.output, "No AAA method details are available"
+            logging.info(
+                f"On device {tops.dut_name}" f" output of {tops.show_cmd} command is: {self.output}"
+            )
 
-    #     show_cmd = test_parameters["show_cmd"]
-    #     tests_tools.verify_show_cmd(show_cmd, dut)
-    #     show_cmd_txt = dut["output"][show_cmd]["text"]
+            eos_default_acct = self.output["privilege0-15"]["defaultMethods"]
+            eos_console_acct = self.output["privilege0-15"]["consoleMethods"]
 
-    #     dut_ptr = dut["output"][show_cmd]["json"]
-    #     acct_ptr = dut_ptr["accounting"]["commandsAcctMethods"]
-    #     eos_default_acct = acct_ptr["privilege0-15"]["defaultMethods"]
-    #     eos_console_acct = acct_ptr["privilege0-15"]["consoleMethods"]
-    #     actual_output = [eos_default_acct, eos_console_acct]
+            tops.expected_output = [
+                tops.test_parameters["default_acct"],
+                tops.test_parameters["console_acct"],
+            ]
+            tops.actual_output = [eos_default_acct, eos_console_acct]
 
-    #     print(
-    #         f"\nOn router {dut['name']} AAA accounting exec methods for "
-    #         f"console: {eos_console_acct}"
-    #     )
-    #     logging.info(
-    #         f"WHEN default privilege accounting method list: "
-    #         f"{eos_default_acct} and console privilege accounting "
-    #         f"method list: {eos_console_acct}"
-    #     )
+        except (
+            AssertionError,
+            AttributeError,
+            LookupError,
+            EapiError,
+        ) as exception:
+            logging.error(
+                f"Error occurred during the testsuite execution on dut:"
+                f" {tops.dut_name} is {str(exception)}"
+            )
+            tops.actual_output = str(exception)
 
-    #     test_result = expected_output == actual_output
-    #     logging.info(f"THEN test case result is {test_result}")
-    #     logging.info(f"OUTPUT of {show_cmd} is :\n\n{show_cmd_txt}")
+        if tops.actual_output == tops.expected_output:
+            tops.test_result = True
+            tops.output_msg += (
+                f"On router {tops.dut_name} default privilege and "
+                f"console privilege accounting method list "
+                f"is {tops.actual_output}, which is correct.\n\n"
+            )
+        else:
+            tops.test_result = False
+            tops.output_msg += (
+                f"On router {tops.dut_name} default privilege and "
+                f"console privilege accounting method list "
+                f"is {tops.actual_output}, while correct default privilege and "
+                f"console privilege accounting method list "
+                f"is {tops.expected_output}.\n\n"
+            )
 
-    #     assert expected_output == actual_output
+        """
+        TS: Creating test report based on results
+        """
+        tops.parse_test_steps(self.test_if_privilege_accounting_methods_set_on_)
+        tops.generate_report(tops.dut_name, self.output)
+        assert tops.actual_output == tops.expected_output
 
-    # @pytest.mark.accounting
-    # @pytest.mark.parametrize("dut", test12_duts, ids=test12_ids)
-    # def test_if_dot1x_accounting_methods_set_on_(self, dut, tests_definitions):
-    #     """TD: Verify AAA dot1x accounting method-lists are set correct
+    @pytest.mark.accounting
+    @pytest.mark.parametrize("dut", test12_duts, ids=test12_ids)
+    def test_if_dot1x_accounting_methods_set_on_(self, dut, tests_definitions):
+        """TD: Verify AAA dot1x accounting method-lists are set correct
 
-    #     Args:
-    #      dut (dict): Encapsulates dut details including name, connection
-    #      tests_definitions (dict): Test parameters
-    #     """
+        Args:
+         dut (dict): Encapsulates dut details including name, connection
+         tests_definitions (dict): Test parameters
+        """
 
-    #     test_case = inspect.currentframe().f_code.co_name
-    #     test_parameters = tests_tools.get_parameters(
-    #         tests_definitions, TEST_SUITE, test_case
-    #     )
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
-    #     expected_output = test_parameters["expected_output"]
-    #     dut_name = dut["name"]
-    #     default_acct = test_parameters["default_acct"]
-    #     console_acct = test_parameters["console_acct"]
-    #     expected_output = [default_acct, console_acct]
+        try:
+            """
+            TS: Collecting output of show command 'show aaa methods all' from dut
+            """
 
-    #     logging.info(
-    #         f"TEST is dot1x accounting methods list set correct on "
-    #         f"{dut_name}"
-    #     )
-    #     logging.info(
-    #         f"GIVEN dot1x system accounting method list: "
-    #         f"{default_acct} and dot1x system accounting method"
-    #         f"list: {console_acct}"
-    #     )
+            self.output = dut["output"][tops.show_cmd]["json"]["accounting"]["dot1xAcctMethods"]
+            assert self.output, "No AAA method details are available"
+            logging.info(
+                f"On device {tops.dut_name}" f" output of {tops.show_cmd} command is: {self.output}"
+            )
 
-    #     show_cmd = test_parameters["show_cmd"]
-    #     tests_tools.verify_show_cmd(show_cmd, dut)
-    #     show_cmd_txt = dut["output"][show_cmd]["text"]
+            eos_default_acct = self.output["dot1x"]["defaultMethods"]
+            eos_console_acct = self.output["dot1x"]["consoleMethods"]
 
-    #     ptr = dut["output"][show_cmd]["json"]["accounting"]
-    #     eos_default_acct = ptr["dot1xAcctMethods"]["dot1x"]["defaultMethods"]
-    #     eos_console_acct = ptr["dot1xAcctMethods"]["dot1x"]["consoleMethods"]
-    #     actual_output = [eos_default_acct, eos_console_acct]
+            tops.expected_output = [
+                tops.test_parameters["default_acct"],
+                tops.test_parameters["console_acct"],
+            ]
+            tops.actual_output = [eos_default_acct, eos_console_acct]
 
-    #     print(
-    #         f"\nOn router {dut_name} AAA accounting exec methods for "
-    #         f"dot1x: {eos_console_acct}"
-    #     )
-    #     logging.info(
-    #         f"WHEN default dot1x accounting method list: "
-    #         f"{eos_default_acct} and console dot1x accounting "
-    #         f"method list: {eos_console_acct}"
-    #     )
+        except (
+            AssertionError,
+            AttributeError,
+            LookupError,
+            EapiError,
+        ) as exception:
+            logging.error(
+                f"Error occurred during the testsuite execution on dut:"
+                f" {tops.dut_name} is {str(exception)}"
+            )
+            tops.actual_output = str(exception)
 
-    #     test_result = expected_output == actual_output
-    #     logging.info(f"THEN test case result is {test_result}")
-    #     logging.info(f"OUTPUT of {show_cmd} is :\n\n{show_cmd_txt}")
+        if tops.actual_output == tops.expected_output:
+            tops.test_result = True
+            tops.output_msg += (
+                f"On router {tops.dut_name} default dot1x and "
+                f"console dot1x accounting method list "
+                f"is {tops.actual_output}, which is correct.\n\n"
+            )
+        else:
+            tops.test_result = False
+            tops.output_msg += (
+                f"On router {tops.dut_name} default dot1x and "
+                f"console dot1x accounting method list "
+                f"is {tops.actual_output}, while correct default dot1x and "
+                f"console dot1x accounting method list "
+                f"is {tops.expected_output}.\n\n"
+            )
 
-    #     assert expected_output == actual_output
+        """
+        TS: Creating test report based on results
+        """
+        tops.parse_test_steps(self.test_if_dot1x_accounting_methods_set_on_)
+        tops.generate_report(tops.dut_name, self.output)
+        assert tops.actual_output == tops.expected_output
