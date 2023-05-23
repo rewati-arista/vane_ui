@@ -968,10 +968,10 @@ class TestOps:
                 text_data[str(index) + ". " + dut_name + "# " + command] = "\n\n" + text
                 index += 1
 
-        if text_data:
-            export_text(text_file, text_data, self.dut_name)
-        else:
-            logging.debug("No show command output to display")
+            if text_data:
+                export_text(text_file, text_data, self.dut_name)
+            else:
+                logging.debug("No show command output to display")
 
     def _get_parameters(self, tests_parameters, test_suite, test_case):
         """Return test parameters for a test case
