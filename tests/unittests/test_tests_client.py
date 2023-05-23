@@ -15,27 +15,27 @@ from unittest.mock import call
 import pytest
 import vane.tests_client
 
-# LOGGER = logging.getLogger("vane_logs")
 
-DEFINITIONS = "tests/unittests/fixtures/definitions.yaml"
+# Common duts file
 DUTS = "tests/fixtures/duts.yaml"
-TC = vane.tests_client.TestsClient(DEFINITIONS, DUTS)
 
 
 @pytest.fixture
 def loginfo(mocker):
-    """Fixture to mock logger calls from vane.tests_client"""
+    """Fixture to mock logger info calls from vane.tests_client"""
     return mocker.patch("vane.tests_client.logging.info")
 
 
 @pytest.fixture
 def logerr(mocker):
-    """Fixture to mock logger calls from vane.tests_client"""
+    """Fixture to mock logger error calls from vane.tests_client"""
     return mocker.patch("vane.tests_client.logging.error")
 
 
-def test_object():
+def test_constructor():
     """Verify instance of TestsClient Object can be created"""
+
+    client = vane.tests_client.TestsClient("tests/unittests/fixtures/definitions.yaml", DUTS)
 
     methods = [
         "_get_markers",
@@ -68,20 +68,21 @@ def test_object():
 
     # Test for known methods in object
     for method in methods:
-        assert method in dir(TC)
+        assert method in dir(client)
 
     # Test for known methods in variables
     for variable in variables:
-        assert variable in dir(TC)
+        assert variable in dir(client)
+
+
+# XXX test write_test_def_file
 
 
 def test_generate_test_definitions(loginfo):
     """Validate creating test definitions using master definitions"""
 
     # Load a definitions file with generate_test_definitions set to false
-    definitions_file = "tests/unittests/fixtures/definitions.yaml"
-    duts_file = "tests/fixtures/duts.yaml"
-    client = vane.tests_client.TestsClient(definitions_file, duts_file)
+    client = vane.tests_client.TestsClient("tests/unittests/fixtures/definitions.yaml", DUTS)
 
     # Generate test definitions
     client.generate_test_definitions()
@@ -97,9 +98,9 @@ def test_generate_test_definitions_regen(loginfo, mocker):
     mocker.patch("vane.tests_client.open")
 
     # Load a definitions file with generate_test_definitions set to true
-    definitions_file = "tests/unittests/fixtures/definitions-generate.yaml"
-    duts_file = "tests/fixtures/duts.yaml"
-    client = vane.tests_client.TestsClient(definitions_file, duts_file)
+    client = vane.tests_client.TestsClient(
+        "tests/unittests/fixtures/definitions-generate.yaml", DUTS
+    )
 
     # Generate test definitions
     client.generate_test_definitions()
@@ -108,99 +109,65 @@ def test_generate_test_definitions_regen(loginfo, mocker):
     loginfo.assert_called_with("Regenerated test definition files")
 
 
-def test_generate_test_definitions_neg(capsys):
+@pytest.mark.parametrize(
+    # Set up iterative tests for the next test case
+    # Each test passes in a separate definitions file, and a specific error message if
+    # that test case fails
+    "defs_file, fail_msg",
+    [
+        (
+            # Load a definitions file with no generate_test_definitions key
+            "tests/unittests/fixtures/definitions-no-generate-key.yaml",
+            "tests_client.generate_test_definitions() did not handle missing key "
+            "'generate_test_definitions'",
+        ),
+        (
+            # Load a definitions file with no master_definitions key
+            "tests/unittests/fixtures/definitions-no-master-def-key.yaml",
+            "tests_client.generate_test_definitions() did not handle missing key 'master_definitions'",
+        ),
+        (
+            # Load a definitions file with no template_definitions key
+            "tests/unittests/fixtures/definitions-no-template-def-key.yaml",
+            "tests_client.generate_test_definitions() did not handle missing key 'template_definitions'",
+        ),
+        (
+            # Load a definitions file with no test_definitions key
+            "tests/unittests/fixtures/definitions-no-test-def-key.yaml",
+            "tests_client.generate_test_definitions() did not handle missing key 'test_definitions'",
+        ),
+        (
+            # Load a definitions file with no test_dirs key
+            "tests/unittests/fixtures/definitions-no-test-dirs-key.yaml",
+            "tests_client.generate_test_definitions() did not handle missing key 'test_dirs'",
+        ),
+    ],
+)
+def test_generate_test_definitions_neg(mocker, capsys, defs_file, fail_msg):
     """Validate key errors are handled by generate_test_definitions"""
 
-    # Multiple key errors are tested in a single test case here because they
-    # are dependent sequentially. If one fails, all the following tests cannot
-    # proceed, etc. Rather than having an early test fail and trigger cascading
-    # failures that we need to trace back to a single point, we keep them
-    # together so we can resolve all the key error problems together.
+    # Mock the write_test_def_file routine in case we get past the negative tests
+    mocker.patch("vane.tests_client.TestsClient.write_test_def_file", return_value=None)
 
-    # Load a definitions file with no generate_test_definitions key
-    definitions_file = "tests/unittests/fixtures/definitions-no-generate-key.yaml"
-    duts_file = "tests/fixtures/duts.yaml"
-    client = vane.tests_client.TestsClient(definitions_file, duts_file)
+    # Create the client from the passed-in definitions file and common duts file
+    client = vane.tests_client.TestsClient(defs_file, DUTS)
 
-    # Generate test definitions
+    # Call the generate test definitions method
     client.generate_test_definitions()
 
+    # Examine the captured stdout output and verify the expected error was received, otherwise
+    # report the passed-in failure message
     captured = capsys.readouterr()
-    assert captured.out == "Unable to regenerate test definition files.\n", (
-        "tests_client.generate_test_definitions() did not handle missing key "
-        "'generate_test_definitions'"
-    )
-
-    # -----------------------------------------------------------------
-
-    # Load a definitions file with no master_definitions key
-    definitions_file = "tests/unittests/fixtures/definitions-no-master-def-key.yaml"
-    duts_file = "tests/fixtures/duts.yaml"
-    client = vane.tests_client.TestsClient(definitions_file, duts_file)
-
-    # Generate test definitions
-    client.generate_test_definitions()
-
-    captured = capsys.readouterr()
-    assert (
-        captured.out == "Unable to regenerate test definition files.\n"
-    ), "tests_client.generate_test_definitions() did not handle missing key 'master_definitions'"
-
-    # -----------------------------------------------------------------
-
-    # Load a definitions file with no template_definitions key
-    definitions_file = "tests/unittests/fixtures/definitions-no-template-def-key.yaml"
-    duts_file = "tests/fixtures/duts.yaml"
-    client = vane.tests_client.TestsClient(definitions_file, duts_file)
-
-    # Generate test definitions
-    client.generate_test_definitions()
-
-    captured = capsys.readouterr()
-    assert (
-        captured.out == "Unable to regenerate test definition files.\n"
-    ), "tests_client.generate_test_definitions() did not handle missing key 'template_definitions'"
-
-    # -----------------------------------------------------------------
-
-    # Load a definitions file with no test_definitions key
-    definitions_file = "tests/unittests/fixtures/definitions-no-test-def-key.yaml"
-    duts_file = "tests/fixtures/duts.yaml"
-    client = vane.tests_client.TestsClient(definitions_file, duts_file)
-
-    # Generate test definitions
-    client.generate_test_definitions()
-
-    captured = capsys.readouterr()
-    assert (
-        captured.out == "Unable to regenerate test definition files.\n"
-    ), "tests_client.generate_test_definitions() did not handle missing key 'test_definitions'"
-
-    # -----------------------------------------------------------------
-
-    # Load a definitions file with no test_dirs key
-    definitions_file = "tests/unittests/fixtures/definitions-no-test-dirs-key.yaml"
-    duts_file = "tests/fixtures/duts.yaml"
-    client = vane.tests_client.TestsClient(definitions_file, duts_file)
-
-    # Generate test definitions
-    client.generate_test_definitions()
-
-    captured = capsys.readouterr()
-    assert (
-        captured.out == "Unable to regenerate test definition files.\n"
-    ), "tests_client.generate_test_definitions() did not handle missing key 'test_dirs'"
+    assert captured.out == "Unable to regenerate test definition files.\n", fail_msg
 
 
 def test_test_runner(mocker, capsys, loginfo):
     """Validate test_runner function without generating test definitions"""
 
     # Load a definitions file with generate_test_definitions set to false
-    definitions_file = "tests/unittests/fixtures/definitions.yaml"
-    duts_file = "tests/fixtures/duts.yaml"
-    client = vane.tests_client.TestsClient(definitions_file, duts_file)
+    client = vane.tests_client.TestsClient("tests/unittests/fixtures/definitions.yaml", DUTS)
 
-    # Mock a NO_TESTS_COLLECTED result
+    # Mock a valid test run
     mocker.patch("vane.tests_client.pytest.main", return_value=None)
 
     # Run the tests
@@ -219,9 +186,7 @@ def test_test_runner_no_tests(mocker, capsys):
     """Validate test_runner with no tests collected error returned"""
 
     # Load a definitions file with generate_test_definitions set to false
-    definitions_file = "tests/unittests/fixtures/definitions.yaml"
-    duts_file = "tests/fixtures/duts.yaml"
-    client = vane.tests_client.TestsClient(definitions_file, duts_file)
+    client = vane.tests_client.TestsClient("tests/unittests/fixtures/definitions.yaml", DUTS)
 
     # Mock a NO_TESTS_COLLECTED result
     mocker.patch("vane.tests_client.pytest.main", return_value=pytest.ExitCode.NO_TESTS_COLLECTED)
@@ -245,9 +210,7 @@ def test_test_runner_usage_err(mocker, capsys):
     """Validate test_runner with usage error returned"""
 
     # Load a definitions file with generate_test_definitions set to false
-    definitions_file = "tests/unittests/fixtures/definitions.yaml"
-    duts_file = "tests/fixtures/duts.yaml"
-    client = vane.tests_client.TestsClient(definitions_file, duts_file)
+    client = vane.tests_client.TestsClient("tests/unittests/fixtures/definitions.yaml", DUTS)
 
     # Mock a USAGE_ERROR result
     mocker.patch("vane.tests_client.pytest.main", return_value=pytest.ExitCode.USAGE_ERROR)
@@ -276,9 +239,9 @@ def test__set_test_parameters(loginfo):
     # requiring changes to the test case here to match the updated output strings.
 
     # Load a definitions file built for _set_test_parameters
-    definitions_file = "tests/unittests/fixtures/defs_set_test_params.yaml"
-    duts_file = "tests/fixtures/duts.yaml"
-    client = vane.tests_client.TestsClient(definitions_file, duts_file)
+    client = vane.tests_client.TestsClient(
+        "tests/unittests/fixtures/defs_set_test_params.yaml", DUTS
+    )
 
     # Run _set_test_parameters
     client._set_test_parameters()
@@ -314,9 +277,9 @@ def test__render_eapi_cfg(loginfo):
 
     # Load a definitions file built for _render_eapi_cfg
     # This definition file has an eapi file that is named eapi_rendered.conf
-    definitions_file = "tests/unittests/fixtures/defs_render_eapi_cfg.yaml"
-    duts_file = "tests/fixtures/duts.yaml"
-    client = vane.tests_client.TestsClient(definitions_file, duts_file)
+    client = vane.tests_client.TestsClient(
+        "tests/unittests/fixtures/defs_render_eapi_cfg.yaml", DUTS
+    )
 
     # Make sure the rendered eapi file does not exist
     filepath = client.data_model["parameters"]["eapi_file"]
@@ -371,9 +334,9 @@ def test__render_eapi_cfg_neg(loginfo, logerr, capsys):
 
     # Load a definitions file built for _render_eapi_cfg
     # This definition file has an eapi file that is named eapi_rendered.conf
-    definitions_file = "tests/unittests/fixtures/defs_render_eapi_cfg_no_template.yaml"
-    duts_file = "tests/fixtures/duts.yaml"
-    client = vane.tests_client.TestsClient(definitions_file, duts_file)
+    client = vane.tests_client.TestsClient(
+        "tests/unittests/fixtures/defs_render_eapi_cfg_no_template.yaml", DUTS
+    )
 
     template = client.data_model["parameters"]["eapi_template"]
 
@@ -412,9 +375,9 @@ def test__write_file_neg(loginfo, logerr, capsys):
 
     # Load a definitions file built for _render_eapi_cfg
     # This definition file has an eapi file that with a path that does not exist
-    definitions_file = "tests/unittests/fixtures/defs_render_eapi_cfg_bad_path.yaml"
-    duts_file = "tests/fixtures/duts.yaml"
-    client = vane.tests_client.TestsClient(definitions_file, duts_file)
+    client = vane.tests_client.TestsClient(
+        "tests/unittests/fixtures/defs_render_eapi_cfg_bad_path.yaml", DUTS
+    )
 
     filepath = client.data_model["parameters"]["eapi_file"]
 

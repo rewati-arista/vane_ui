@@ -15,9 +15,10 @@ parameters:
   stdout: false
   test_cases: All
   test_dirs:
-    - tests/
+    - .
   master_definitions: master_def.yaml
   template_definitions: test_definition.yaml
+  test_definitions: test_definition.yaml
   verbose: true
   spreadsheet: /builds/gslab-dev/vane/tests/fixtures/spreadsheets/PS-LLD-Questionnaire-Template.xlsx
   xcel_definitions: /builds/gslab-dev/vane/tests/fixtures/spreadsheets/xcel_definitions.yaml
