@@ -1064,17 +1064,9 @@ class TestOps:
         self.test_parameters["dut"] = self.dut_name
         self.test_parameters["show_cmd"] = self.show_cmd
         self.test_parameters["test_id"] = self.test_id
-        final_show_cmd_txts = []
-        for values in self.show_cmd_txts.values():
-            for value in values:
-                final_show_cmd_txts.append(value)
-        self.test_parameters["show_cmd_txts"] = final_show_cmd_txts 
+        self.test_parameters["show_cmd_txts"] = self.show_cmd_txts
         self.test_parameters["test_steps"] = self.test_steps
-        final_show_cmd = []
-        for values in self.show_cmds.values():
-            for value in values:
-                final_show_cmd.append(value)
-        self.test_parameters["show_cmds"] = final_show_cmd
+        self.test_parameters["show_cmds"] = self.show_cmds
 
         if str(self.show_cmd_txt):
             self.test_parameters["show_cmd"] += ":\n\n" + self.show_cmd_txt
