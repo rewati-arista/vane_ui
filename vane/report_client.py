@@ -1056,27 +1056,26 @@ class ReportClient:
 
         if report_field in dut and "show_cmds" in dut:
             table = self._document.add_table(rows=1, cols=1, style="Table Grid")
-            report_values = dut[report_field]
+
+            show_cmd_txts = dut["show_cmd_txts"]
             show_cmds = dut["show_cmds"]
-            dut_name = dut["dut"]
-
-            logging.info(f"These are recorded report values: {report_values}")
-            for index, report_value in enumerate(report_values):
-                if index != 0:
-                    _ = table.add_row().cells
-
-                config_output = f"\n{dut_name}# {show_cmds[index]}\n\n{report_value}\n"
-                self._write_cell(
-                    table,
-                    config_output,
-                    0,
-                    index,
-                    font="Courier New",
-                    font_size=10,
-                    color="0A0A0A",
-                    text_color=RGBColor(0, 255, 0),
-                )
-                logging.info(f"Adding value to report: {report_value.strip()}")
+            index = 0
+            for dut_name in show_cmds.keys():
+                for command, text in zip(show_cmds.get(dut_name), show_cmd_txts.get(dut_name)):
+                    if index != 0:
+                        _ = table.add_row().cells
+                    config_output = f"\n{dut_name}# {command}\n\n{text}\n"
+                    self._write_cell(
+                        table,
+                        config_output,
+                        0,
+                        index,
+                        font="Courier New",
+                        font_size=10,
+                        color="0A0A0A",
+                        text_color=RGBColor(0, 255, 0),
+                    )
+                    index = index + 1
 
             para = self._document.add_paragraph()
             _ = para.add_run()
