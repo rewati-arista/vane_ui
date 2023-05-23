@@ -75,7 +75,37 @@ def test_constructor():
         assert variable in dir(client)
 
 
-# XXX test write_test_def_file
+def test_write_test_def_file(loginfo):
+    """Validate creating test definitions using master definitions"""
+
+    # Load a definitions file with generate_test_definitions set to false, to create a client
+    client = vane.tests_client.TestsClient("tests/unittests/fixtures/definitions.yaml", DUTS)
+
+    # Set the definitions information to be passed to write_test_def_file
+    template_definitions = "test_definition.yaml"
+    master_definitions = {}
+    test_dir = "tests/unittests/fixtures"
+    test_definitions = "test_definition_regenerated.yaml"  # don't overwrite the file
+
+    # Make sure the regenerated file does not exist
+    if os.path.exists(test_definitions):
+        os.remove(test_definitions)
+
+    # Write test def file
+    client.write_test_def_file(template_definitions, master_definitions, test_dir, test_definitions)
+
+    # Verify the definitions file was regenerated
+    assert os.path.exists(f"{test_dir}/{test_definitions}")
+
+    # Assert the new definition file contains the expected data (compare with known definition file)
+    # pylint: disable=consider-using-with
+    unittest.TestCase().assertListEqual(
+        list(open(f"{test_dir}/{test_definitions}", mode="r", encoding="utf-8")),
+        list(open("tests/unittests/fixtures/test_definition.yaml", mode="r", encoding="utf-8")),
+    )
+
+    # Verify logging message was called
+    loginfo.assert_called_with("Regenerated test definition files")
 
 
 def test_generate_test_definitions(loginfo):
