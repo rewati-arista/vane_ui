@@ -27,6 +27,12 @@ def loginfo(mocker):
 
 
 @pytest.fixture
+def logwarn(mocker):
+    """Fixture to mock logger warning calls from vane.tests_client"""
+    return mocker.patch("vane.tests_client.logging.warning")
+
+
+@pytest.fixture
 def logerr(mocker):
     """Fixture to mock logger error calls from vane.tests_client"""
     return mocker.patch("vane.tests_client.logging.error")
@@ -294,12 +300,80 @@ def test__set_test_parameters(loginfo):
     loginfo.assert_has_calls(loginfo_calls, any_order=False)
 
 
-def test__set_test_parameters_unset():
+def test__set_test_parameters_unset(loginfo, logwarn):
     """Validate _set_test_parameters that unsets parameters in functions"""
 
-    # pylint: disable-next=fixme
-    # XXX needs implemented
-    assert False
+    # Load a definitions file built for _set_test_parameters with some parameters set
+    # to false in the file to be unset by the functions
+    client = vane.tests_client.TestsClient(
+        "tests/unittests/fixtures/defs_unset_test_params.yaml", DUTS
+    )
+
+    # Run _set_test_parameters
+    client._set_test_parameters()
+
+    # Validate the following info messages are logged in order
+    loginfo_calls = [
+        call("Use data-model to create test parameters"),
+        call("Setting test parameters"),
+        call("Initialize test parameter values"),
+        call("Enable pytest output True"),
+        call("Run the following tests: "),
+        call("Could not find test cases."),
+        call("Not Setting PyTest -n"),
+        call("Set PyTest -m to: demo"),
+    ]
+    loginfo.assert_has_calls(loginfo_calls, any_order=False)
+
+    # Validate the following warning messages are logged in order
+    logwarn_calls = [
+        call("Disable pytest output False"),
+        call("Disable pytest output False"),
+        call("HTML report will NOT be created"),
+        call("--excelreport report will NOT be created"),
+        call("--json report will NOT be created"),
+    ]
+    logwarn.assert_has_calls(logwarn_calls, any_order=False)
+
+
+def test__set_test_parameters_unset_cmd_line(loginfo, logwarn):
+    """Validate _set_test_parameters that unsets parameters in functions based on command line options"""
+
+    # Load a definitions file built for _set_test_parameters with some parameters set
+    # to false in the file to be unset by the functions, but we will override parameters
+    # with command line options
+    client = vane.tests_client.TestsClient(
+        "tests/unittests/fixtures/defs_unset_test_params.yaml", DUTS
+    )
+
+    # Add the command line option that sets a parameter
+    client.test_parameters.append("--setup-show")
+
+    # Run _set_test_parameters
+    client._set_test_parameters()
+
+    # Validate the following info messages are logged in order
+    loginfo_calls = [
+        call("Use data-model to create test parameters"),
+        call("Setting test parameters"),
+        call("Initialize test parameter values"),
+        call("Enable pytest output True"),
+        call("Remove and disable pytest output False"),
+        call("Run the following tests: "),
+        call("Could not find test cases."),
+        call("Not Setting PyTest -n"),
+        call("Set PyTest -m to: demo"),
+    ]
+    loginfo.assert_has_calls(loginfo_calls, any_order=False)
+
+    # Validate the following warning messages are logged in order
+    logwarn_calls = [
+        call("Disable pytest output False"),
+        call("HTML report will NOT be created"),
+        call("--excelreport report will NOT be created"),
+        call("--json report will NOT be created"),
+    ]
+    logwarn.assert_has_calls(logwarn_calls, any_order=False)
 
 
 def test__render_eapi_cfg(loginfo):
