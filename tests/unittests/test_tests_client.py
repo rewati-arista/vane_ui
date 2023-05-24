@@ -8,6 +8,7 @@ tests_client.py unit tests
 # pylint: disable=redefined-outer-name, protected-access, import-error
 
 import os
+import tempfile
 import unittest
 
 from unittest.mock import call
@@ -160,17 +161,20 @@ def test_generate_test_definitions_regen(loginfo, mocker):
         (
             # Load a definitions file with no master_definitions key
             "tests/unittests/fixtures/definitions-no-master-def-key.yaml",
-            "tests_client.generate_test_definitions() did not handle missing key 'master_definitions'",
+            "tests_client.generate_test_definitions() did not handle missing key "
+            "'master_definitions'",
         ),
         (
             # Load a definitions file with no template_definitions key
             "tests/unittests/fixtures/definitions-no-template-def-key.yaml",
-            "tests_client.generate_test_definitions() did not handle missing key 'template_definitions'",
+            "tests_client.generate_test_definitions() did not handle missing key "
+            "'template_definitions'",
         ),
         (
             # Load a definitions file with no test_definitions key
             "tests/unittests/fixtures/definitions-no-test-def-key.yaml",
-            "tests_client.generate_test_definitions() did not handle missing key 'test_definitions'",
+            "tests_client.generate_test_definitions() did not handle missing key "
+            "'test_definitions'",
         ),
         (
             # Load a definitions file with no test_dirs key
@@ -337,7 +341,7 @@ def test__set_test_parameters_unset(loginfo, logwarn):
 
 
 def test__set_test_parameters_unset_cmd_line(loginfo, logwarn):
-    """Validate _set_test_parameters that unsets parameters in functions based on command line options"""
+    """Validate _set_test_parameters that unsets parameters based on command line options"""
 
     # Load a definitions file built for _set_test_parameters with some parameters set
     # to false in the file to be unset by the functions, but we will override parameters
@@ -394,7 +398,6 @@ def test__render_eapi_cfg(loginfo):
     client._render_eapi_cfg()
 
     # Assert the expected file was created
-    print(client.data_model["parameters"]["eapi_file"])
     assert os.path.exists(filepath)
 
     # Assert the new eapi file contains the expected data (compare with known eapi file)
@@ -535,17 +538,61 @@ def test__write_file_neg(loginfo, logerr, capsys):
     logerr.assert_has_calls(logerr_calls, any_order=False)
 
 
-def test__remove_result_files():
+def test__remove_result_files(loginfo):
     """Validate _remove_result_files removes pre-existing results files"""
 
-    # pylint: disable-next=fixme
-    # XXX needs implemented
-    assert False
+    # Create a tests_client client
+    client = vane.tests_client.TestsClient("tests/unittests/fixtures/definitions.yaml", DUTS)
+
+    # Prepopulate the unittest results dir with "result-*" files
+    result_dir = "tests/unittests/fixtures/reports/results"
+    files = []
+    for _ in range(10):
+        # pylint: disable-next=consider-using-with
+        tmpf = tempfile.NamedTemporaryFile(prefix="result-", dir=result_dir, delete=False)
+        files.append(tmpf.name)
+
+    # Call the function to remove the results files
+    client._remove_result_files()
+
+    # Verify the result files were deleted
+    loginfo_calls = []
+    for filename in files:
+        loginfo_calls.append(call(f"Remove result file: {result_dir}/{os.path.basename(filename)}"))
+        assert not os.path.exists(filename)
+
+    # Verify the removal messages were logged
+    loginfo.assert_has_calls(loginfo_calls, any_order=True)
 
 
-def test_remove_test_results_dir():
+# pytest.mark.filterwarnings: Ignore the warning we receive from the tempfile library
+# because it can't find the files to clean them up because we deleted them manually. We
+# don't tell it to not clean up the files just in case the test fails and the files do get
+# left behind for some reason.
+@pytest.mark.filterwarnings("ignore:Exception ignored")
+def test_remove_test_results_dir(loginfo):
     """Validate _tremove_test_results_dir removes the TEST RESULTS directory"""
 
-    # pylint: disable-next=fixme
-    # XXX needs implemented
-    assert False
+    # Create a tests_client client
+    client = vane.tests_client.TestsClient("tests/unittests/fixtures/definitions.yaml", DUTS)
+
+    # Make sure the reports/TEST RESULTS dir exists
+    results_dir = "reports/TEST RESULTS"
+    if not os.path.exists(results_dir):
+        os.makedirs(results_dir)
+
+    # Prepopulate the TEST RESULTS directory with "result-*" files
+    files = []
+    for _ in range(10):
+        # pylint: disable-next=consider-using-with
+        tmpf = tempfile.NamedTemporaryFile(prefix="result-", dir=results_dir)
+        files.append(tmpf)
+
+    # Call _remove_test_results_dir
+    client._remove_test_results_dir()
+
+    # Verify the TEST RESULTS directory was removed
+    assert not os.path.exists(results_dir)
+
+    # Verify the removal was logged
+    loginfo.assert_called_with(f"Deleted {results_dir} directory successfully")
