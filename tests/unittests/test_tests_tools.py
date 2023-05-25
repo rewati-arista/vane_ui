@@ -23,6 +23,7 @@ def logerr(mocker):
     """Fixture to mock logger calls from vane.tests_tools"""
     return mocker.patch("vane.vane_logging.logging.error")
 
+
 @pytest.fixture
 def logdebug(mocker):
     """Fixture to mock logger calls from vane.tests_tools"""
@@ -77,7 +78,9 @@ def test_verify_show_cmd(loginfo, logdebug):
     dut = {"output": {"show clock": ""}, "name": "Test Dut"}
     show_cmd = "show clock"
     tests_tools.verify_show_cmd(show_cmd, dut)
-    loginfo.assert_called_with("Verifying if show command show clock was successfully executed on Test Dut dut")
+    loginfo.assert_called_with(
+        "Verifying if show command show clock was successfully executed on Test Dut dut"
+    )
     logdebug.assert_called_with("Verified output for show command show clock on Test Dut")
     # assert False in the verify_show_cmd should not get executed
 
@@ -157,7 +160,7 @@ def test_filter_duts(loginfo):
     loginfo.assert_called_with("Filter: R by criteria: regex")
 
 
-def test_parametrize_duts(loginfo):
+def test_parametrize_duts(loginfo, logdebug):
     """Validates the parametrize_duts method"""
     # defining parameters to pass to method under test
     test_fname = "vane-tests-bofa/tests/nrfu_tests/baseline_mgmt_tests"
@@ -179,21 +182,24 @@ def test_parametrize_duts(loginfo):
     actual_dut_parameters = tests_tools.parametrize_duts(test_fname, test_defs, duts)
     loginfo_calls = [
         call("Discover test suite name"),
-        call("Filter test definitions by test suite name: baseline_mgmt_tests"),
+        call("Filtering test definitions by test suite name: baseline_mgmt_tests"),
         call("Unpack testcases by defining dut and criteria"),
         call("Filter:  by criteria: "),
         call("Filter: ['DLFW3'] by criteria: names"),
     ]
     loginfo.assert_has_calls(loginfo_calls, any_order=False)
-    # logdebug_calls = [ 
-    #     call(
-    #         "create dut parameters.  \nDuts: [{'role': 'Role1', 'name': 'DLFW3'}, "
-    #         "{'role': 'Role2', 'name': 'Test Dut 2'}] \nIds: ['DLFW3', 'Test Dut 2']"
-    #     ),
-        
-    #     call(
-    #         "create dut parameters.  \nDuts: [{'role': 'Role1', 'name': 'DLFW3'}] \nIds: ['DLFW3']"
-    #     ),]
+
+    logdebug_calls = [
+        call(
+            "Creating dut parameters.  \nDuts: [{'role': 'Role1', 'name': 'DLFW3'}, "
+            "{'role': 'Role2', 'name': 'Test Dut 2'}] \nIds: ['DLFW3', 'Test Dut 2']"
+        ),
+
+        call(
+            "Creating dut parameters.  \nDuts: [{'role': 'Role1', 'name': 'DLFW3'}] \nIds: ['DLFW3']"
+        ),]
+    logdebug.assert_has_calls(logdebug_calls, any_order=False)
+
     # defining expected output
     expected_dut_parameters = {}
     expected_dut_parameters["test_local_user_access"] = {}
@@ -210,13 +216,13 @@ def test_import_yaml():
     """Validates import yaml method
     FIXTURE NEEDED: test_import_yaml.yaml"""
     logging.info("FIXTURE NEEDED: test_import_yaml.yaml")
-    yaml_file = "fixtures/test_import_yaml.yaml"
+    yaml_file = "tests/unittests/fixtures/test_import_yaml.yaml"
     expected_yaml = read_yaml(yaml_file)
     actual_yaml = tests_tools.import_yaml(yaml_file)
     assert expected_yaml == actual_yaml
 
 
-def test_return_test_defs(loginfo):
+def test_return_test_defs(logdebug):
     """Validates if test definitions are being generated correctly
     Creates a temporary reports/test_definition and deletes it before exiting
     FIXTURE NEEDED: test_return_test_defs"""
@@ -225,43 +231,42 @@ def test_return_test_defs(loginfo):
         "parameters": {
             "report_dir": "reports",
             "test_cases": "test_tacacs.py",
-            "test_dirs": ["../../sample_network_tests/tacacs"],
+            "test_dirs": ["sample_network_tests/tacacs"],
             "test_definitions": "test_definition.yaml",
         }
     }
     os.makedirs(os.path.dirname("reports/test_definition.yaml"), exist_ok=True)
     actual_output = tests_tools.return_test_defs(expected_yaml)
-    expected_output = read_yaml("fixtures/test_return_test_defs.yaml")
+    expected_output = read_yaml("tests/unittests/fixtures/test_return_test_defs.yaml")
     assert (
         actual_output["test_suites"][0]["testcases"]
         == expected_output["test_suites"][0]["testcases"]
     )
     assert actual_output["test_suites"][0]["name"] == expected_output["test_suites"][0]["name"]
     assert actual_output == expected_output
-    logging.info(actual_output)
-    logging.info(expected_output)
-    # logdebug.assert_called_with(
-    #     "Return the following test definitions data structure"
-    #     " {'test_suites':"
-    #     " [{'name': 'test_tacacs.py',"
-    #     " 'testcases':"
-    #     " [{'name': 'test_if_tacacs_is_sending_messages_on_',"
-    #     " 'description': 'Verify tacacs messages are sending correctly',"
-    #     " 'show_cmd': 'show tacacs', 'expected_output': None,"
-    #     " 'comment': None, 'result': True},"
-    #     " {'name': 'test_if_tacacs_is_receiving_messages_on_',"
-    #     " 'description': 'Verify tacacs messages are received correctly',"
-    #     " 'show_cmd': 'show tacacs', 'expected_output': None, 'comment': None,"
-    #     " 'result': True}],"
-    #     " 'dir_path': '../sample_network_tests/tacacs'}]}"
-    # )
+
+    logdebug.assert_called_with(
+        "Return the following test definitions data structure "
+        "{'test_suites': [{'name': 'test_tacacs.py', "
+        "'testcases': [{'name': 'test_if_tacacs_is_sending_messages_on_', "
+        "'description': 'Verify tacacs messages are sending correctly', 'show_cmd': 'show tacacs', "
+        "'expected_output': None, 'report_style': 'modern', "
+        "'test_criteria': 'Verify tacacs messages are sending correctly', "
+        "'criteria': 'names', 'filter': ['DSR01', 'DCBBW1'], 'comment': None, 'result': True}, "
+        "{'name': 'test_if_tacacs_is_receiving_messages_on_', "
+        "'description': 'Verify tacacs messages are received correctly', 'show_cmd': 'show tacacs', "
+        "'expected_output': None, 'report_style': 'modern', "
+        "'test_criteria': 'Verify tacacs messages are received correctly', "
+        "'criteria': 'names', 'filter': ['DSR01', 'DCBBW1'], 'comment': None, 'result': True}], "
+        "'dir_path': 'sample_network_tests/tacacs'}]}"
+    )
     shutil.rmtree("reports", ignore_errors=True)
 
 
-def test_return_interfaces(loginfo):
+def test_return_interfaces(loginfo, logdebug):
     """Validates if interfaces are being read properly from test parameters
     FIXTURE NEEDED: test_return_interfaces_input.yaml"""
-    test_parameters = read_yaml("fixtures/test_return_interfaces_input.yaml")
+    test_parameters = read_yaml("tests/unittests/fixtures/test_return_interfaces_input.yaml")
     actual_output = tests_tools.return_interfaces("DSR01", test_parameters)
     excepted_output = [
         {
@@ -297,6 +302,10 @@ def test_return_interfaces(loginfo):
     loginfo_calls = [
         call("Parse test_parameters for interface connections and return them to test"),
         call("Discovering interface parameters for: DSR01"),
+        call("Returning interface list."),
+    ]
+    loginfo.assert_has_calls(loginfo_calls, any_order=False)
+    logdebug_calls = [
         call(
             "Adding interface parameters:"
             " {'neighborDevice': 'DCBBW1', 'neighborPort': 'Ethernet1', 'port': 'Ethernet1'}"
@@ -329,7 +338,7 @@ def test_return_interfaces(loginfo):
             " 'z_hostname': 'DCBBE2', 'z_interface_name': 'Ethernet1', 'media_type': ''}]"
         ),
     ]
-    loginfo.assert_has_calls(loginfo_calls, any_order=False)
+    logdebug.assert_has_calls(logdebug_calls, any_order=False)
 
 
 def test_export_yaml():
@@ -414,8 +423,8 @@ def test_generate_duts_file():
 def test_create_duts_file():
     """Validates generation of duts file from topology and inventory file
     FIXTURES NEEDED: test_topology.yaml, test_inventory.yaml"""
-    topology_data = "fixtures/test_topology.yaml"
-    inventory_data = "fixtures/test_inventory.yaml"
+    topology_data = "tests/unittests/fixtures/test_topology.yaml"
+    inventory_data = "tests/unittests/fixtures/test_inventory.yaml"
 
     expected_data = {
         "duts": [
@@ -441,11 +450,11 @@ def test_create_duts_file():
     os.remove(file)
 
 
-def test_get_parameters(loginfo):
+def test_get_parameters(loginfo, logdebug):
     """Validates getting test case details from test parameters, suites and name
     FIXTURES NEEDED: test_return_show_cmds.yaml"""
-    tests_parameters = read_yaml("fixtures/test_return_show_cmds.yaml")
-    test_suite = "../systests/aaa/test_aaa.py"
+    tests_parameters = read_yaml("tests/unittests/fixtures/test_return_show_cmds.yaml")
+    test_suite = "sample_network_tests/aaa/test_aaa.py"
     test_case = "test_if_exec_authorization_methods_set_on_"
 
     expected_output = {
@@ -465,12 +474,17 @@ def test_get_parameters(loginfo):
     loginfo_calls = [
         call("Identify test case and return parameters"),
         call("Return testcases for Test Suite: test_aaa.py"),
+        call("Return parameters for Test Case: test_if_exec_authorization_methods_set_on_"),
+    ]
+    loginfo.assert_has_calls(loginfo_calls, any_order=False)
+
+    logdebug_calls = [
         call(
             "Suite_parameters:"
             " [{'name': 'test_aaa.py',"
             " 'testcases': [{'name': 'test_if_authentication_counters_are_incrementing_on_',"
             " 'description': 'Verify AAA counters are working correctly',"
-            " 'show_cmd': 'show aaa counters', 'expected_output': None,"
+            " 'show_cmds': ['show lldp neighbors', 'show aaa counters'], 'expected_output': None,"
             " 'comment': None, 'result': True},"
             " {'name': 'test_if_aaa_session_logging_is_working_on_',"
             " 'description': 'Verify AAA session logging is working by"
@@ -486,7 +500,6 @@ def test_get_parameters(loginfo):
             " 'exec_auth': ['none'], 'show_cmd': 'show aaa methods all', 'expected_output': None,"
             " 'comment': None, 'result': True}]}]"
         ),
-        call("Return parameters for Test Case: test_if_exec_authorization_methods_set_on_"),
         call(
             "Case_parameters: {'name': 'test_if_exec_authorization_methods_set_on_',"
             " 'description': 'Verify AAA exec authorization are method-lists set correct',"
@@ -494,24 +507,39 @@ def test_get_parameters(loginfo):
             " 'comment': None, 'result': True}"
         ),
     ]
-    loginfo.assert_has_calls(loginfo_calls, any_order=False)
+    logdebug.assert_has_calls(logdebug_calls, any_order=False)
 
 
-def test_return_show_cmds(loginfo):
+def test_return_show_cmds(loginfo, logdebug):
     """Validates if correct show commands get returned given test suites
     FIXTURES NEEDED: test_return_show_cmds.yaml"""
-    test_parameters = read_yaml("fixtures/test_return_show_cmds.yaml")
-    expected_output = ["show aaa counters", "show users detail", "show aaa methods all"]
+    test_parameters = read_yaml("tests/unittests/fixtures/test_return_show_cmds.yaml")
+    expected_output = [
+        "show version",
+        "show lldp neighbors",
+        "show aaa counters",
+        "show users detail",
+        "show aaa methods all",
+    ]
     actual_output = tests_tools.return_show_cmds(test_parameters)
     assert expected_output == actual_output
     loginfo_calls = [
+        call("Finding show commands in test suite: test_aaa.py"),
+        call(
+            "The following show commands are required for test cases: "
+            "['show version', 'show lldp neighbors', 'show aaa counters', 'show users detail', 'show aaa methods all']"
+        ),
+    ]
+    loginfo.assert_has_calls(loginfo_calls, any_order=False)
+
+    logdebug_calls = [
         call(
             "Discover the names of test suites from"
             " {'test_suites':"
             " [{'name': 'test_aaa.py',"
             " 'testcases': [{'name': 'test_if_authentication_counters_are_incrementing_on_',"
             " 'description': 'Verify AAA counters are working correctly',"
-            " 'show_cmd': 'show aaa counters', 'expected_output': None,"
+            " 'show_cmds': ['show lldp neighbors', 'show aaa counters'], 'expected_output': None,"
             " 'comment': None, 'result': True},"
             " {'name': 'test_if_aaa_session_logging_is_working_on_',"
             " 'description': 'Verify AAA session logging is working by"
@@ -527,20 +555,16 @@ def test_return_show_cmds(loginfo):
             " 'exec_auth': ['none'], 'show_cmd': 'show aaa methods all', 'expected_output': None,"
             " 'comment': None, 'result': True}]}]}"
         ),
-        call("Find show commands in test suite: test_aaa.py"),
-        call("Found show command show aaa counters"),
-        call("Adding Show command show aaa counters"),
+        call("Found show commands ['show lldp neighbors', 'show aaa counters']"),
+        call("Adding Show commands show lldp neighbors"),
+        call("Adding Show commands show aaa counters"),
         call("Found show command show users detail"),
         call("Adding Show command show users detail"),
         call("Found show command show aaa methods all"),
         call("Adding Show command show aaa methods all"),
         call("Found show command show aaa methods all"),
-        call(
-            "The following show commands are required for test cases: "
-            "['show aaa counters', 'show users detail', 'show aaa methods all']"
-        ),
     ]
-    loginfo.assert_has_calls(loginfo_calls, any_order=False)
+    logdebug.assert_has_calls(logdebug_calls, any_order=False)
 
 
 # def test_init_duts():
