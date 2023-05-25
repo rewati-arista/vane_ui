@@ -485,8 +485,15 @@ class ReportClient:
         columns = len(summary_headers)
         table = self._document.add_table(rows=1, cols=columns, style="Table Grid")
 
-        self._create_header_row(table, summary_headers, report_template)
-        self._create_data_row(table, testcase_results, report_template)
+        if testcase_results:
+            self._create_header_row(table, summary_headers, report_template)
+            self._create_data_row(table, testcase_results, report_template)
+        else:
+            logging.error("Vane ran no test cases against DUTS")
+            print(
+                "Vane ran no test cases against DUTs.  Check your duts.yml file and test case "
+                "filters"
+            )
 
     def _create_header_row(self, table, summary_headers, report_template):
         """Writes header row within Word doc table
