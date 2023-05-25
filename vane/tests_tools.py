@@ -872,11 +872,11 @@ class TestOps:
         except KeyError:
             self.show_clock_flag = False
 
-        self.show_cmds = {self.dut["name"]: ["show version"]}
-        self._show_cmds = {self.dut["name"]: ["show version"]}
+        self.show_cmds = {self.dut_name: ["show version"]}
+        self._show_cmds = {self.dut_name: ["show version"]}
 
         if self.show_clock_flag:
-            self._show_cmds.get(self.dut["name"]).append("show clock")
+            self._show_cmds[self.dut_name].append("show clock")
 
         self.show_output = ""
         self.show_cmd = ""
@@ -884,24 +884,24 @@ class TestOps:
         try:
             self.show_cmd = self.test_parameters["show_cmd"]
             if self.show_cmd:
-                self.show_cmds.get(self.dut["name"]).append(self.show_cmd)
-                self._show_cmds.get(self.dut["name"]).append(self.show_cmd)
+                self.show_cmds[self.dut_name].append(self.show_cmd)
+                self._show_cmds[self.dut_name].append(self.show_cmd)
         except KeyError:
-            self.show_cmds.get(self.dut["name"]).extend(self.test_parameters["show_cmds"])
-            self._show_cmds.get(self.dut["name"]).extend(self.test_parameters["show_cmds"])
+            self.show_cmds[self.dut_name].extend(self.test_parameters["show_cmds"])
+            self._show_cmds[self.dut_name].extend(self.test_parameters["show_cmds"])
 
-        self.show_cmd_txts = {self.dut["name"]: []}
+        self.show_cmd_txts = {self.dut_name: []}
         self.show_cmd_txt = ""
-        self._show_cmd_txts = {self.dut["name"]: []}
+        self._show_cmd_txts = {self.dut_name: []}
 
-        if len(self._show_cmds.get(self.dut["name"])) > 0 and self.dut:
-            self._verify_show_cmd(self._show_cmds.get(self.dut["name"]), self.dut)
+        if len(self._show_cmds[self.dut_name]) > 0 and self.dut:
+            self._verify_show_cmd(self._show_cmds[self.dut_name], self.dut)
             if self.show_cmd:
                 self.show_cmd_txt = self.dut["output"][self.show_cmd]["text"]
-            for show_cmd in self.show_cmds.get(self.dut["name"]):
-                self.show_cmd_txts.get(dut["name"]).append(self.dut["output"][show_cmd]["text"])
-            for show_cmd in self._show_cmds.get(self.dut["name"]):
-                self._show_cmd_txts.get(dut["name"]).append(self.dut["output"][show_cmd]["text"])
+            for show_cmd in self.show_cmds[self.dut_name]:
+                self.show_cmd_txts[self.dut_name].append(self.dut["output"][show_cmd]["text"])
+            for show_cmd in self._show_cmds[self.dut_name]:
+                self._show_cmd_txts[self.dut_name].append(self.dut["output"][show_cmd]["text"])
 
         self.comment = ""
         self.output_msg = ""
@@ -963,7 +963,7 @@ class TestOps:
             index = 1
 
             for command, text in zip(
-                self._show_cmds.get(dut_name), self._show_cmd_txts.get(dut_name)
+                self._show_cmds[dut_name], self._show_cmd_txts[dut_name]
             ):
                 text_data[str(index) + ". " + dut_name + "# " + command] = "\n\n" + text
                 index += 1
@@ -1133,13 +1133,14 @@ class TestOps:
             dut = self.dut
 
         conn = dut["connection"]
+        dut_name = dut["name"]
 
         # for initializing these values for neighbor duts since
         # init only initializes for primary dut
-        self._show_cmd_txts.setdefault(dut["name"], [])
-        self._show_cmds.setdefault(dut["name"], [])
-        self.show_cmd_txts.setdefault(dut["name"], [])
-        self.show_cmds.setdefault(dut["name"], [])
+        self._show_cmd_txts.setdefault(dut_name, [])
+        self._show_cmds.setdefault(dut_name, [])
+        self.show_cmd_txts.setdefault(dut_name, [])
+        self.show_cmds.setdefault(dut_name, [])
 
         # if encoding is json run the commands, store the results
         if encoding == "json":
@@ -1153,8 +1154,8 @@ class TestOps:
             # add the show_clock_cmds to TestOps object's _show_cmds list
             # also add the o/p of show_clock_cmds to TestOps object's _show_cmds_txts list
             for result_dict in show_clock_op:
-                self._show_cmds.get(dut["name"]).append(result_dict["command"])
-                self._show_cmd_txts.get(dut["name"]).append(result_dict["result"]["output"])
+                self._show_cmds[dut_name].append(result_dict["command"])
+                self._show_cmd_txts[dut_name].append(result_dict["result"]["output"])
 
         # run the commands in text mode
         txt_results = conn.enable(show_cmds, "text")
@@ -1162,10 +1163,10 @@ class TestOps:
         # also add the o/p of show_cmds to TestOps object's show_cmds_txts and
         # _show_cmds_txts list
         for result_dict in txt_results:
-            self.show_cmds.get(dut["name"]).append(result_dict["command"])
-            self._show_cmds.get(dut["name"]).append(result_dict["command"])
-            self.show_cmd_txts.get(dut["name"]).append(result_dict["result"]["output"])
-            self._show_cmd_txts.get(dut["name"]).append(result_dict["result"]["output"])
+            self.show_cmds[dut_name].append(result_dict["command"])
+            self._show_cmds[dut_name].append(result_dict["command"])
+            self.show_cmd_txts[dut_name].append(result_dict["result"]["output"])
+            self._show_cmd_txts[dut_name].append(result_dict["result"]["output"])
         if encoding == "text":
             return txt_results
 
