@@ -954,7 +954,7 @@ class TestOps:
         test_id = self.test_parameters["test_id"]
         test_case = self.test_parameters["name"]
 
-        for dut_name in self._show_cmds:
+        for dut_name, _show_cmds in self._show_cmds.items():
             text_file = (
                 f"{report_dir}/TEST RESULTS/{test_id} {test_case}/"
                 f"{test_id} {dut_name} Verification.txt"
@@ -962,9 +962,7 @@ class TestOps:
             text_data = {}
             index = 1
 
-            for command, text in zip(
-                self._show_cmds[dut_name], self._show_cmd_txts[dut_name]
-            ):
+            for command, text in zip(_show_cmds, self._show_cmd_txts[dut_name]):
                 text_data[str(index) + ". " + dut_name + "# " + command] = "\n\n" + text
                 index += 1
 
