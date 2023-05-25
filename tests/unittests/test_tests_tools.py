@@ -14,20 +14,26 @@ from vane import tests_tools
 
 @pytest.fixture
 def loginfo(mocker):
-    """Fixture to mock logger calls from vane.tests_tools"""
+    """Fixture to mock logger info calls from vane.tests_tools"""
     return mocker.patch("vane.vane_logging.logging.info")
 
 
 @pytest.fixture
 def logerr(mocker):
-    """Fixture to mock logger calls from vane.tests_tools"""
+    """Fixture to mock logger error  calls from vane.tests_tools"""
     return mocker.patch("vane.vane_logging.logging.error")
 
 
 @pytest.fixture
 def logdebug(mocker):
-    """Fixture to mock logger calls from vane.tests_tools"""
+    """Fixture to mock logger debug calls from vane.tests_tools"""
     return mocker.patch("vane.vane_logging.logging.debug")
+
+
+@pytest.fixture
+def logcritical(mocker):
+    """Fixture to mock logger critical calls from vane.tests_tools"""
+    return mocker.patch("vane.vane_logging.logging.critical")
 
 
 def read_yaml(yaml_file):
@@ -57,44 +63,6 @@ def read_yaml(yaml_file):
 
 
 # NON TEST-OPS METHODS
-
-
-def test_verify_veos(loginfo, logdebug):
-    """Validates verification of dut instances' model"""
-    dut = {"output": {"show version": {"json": {"modelName": "vEOS"}}}, "name": "Test Dut"}
-    actual_output = tests_tools.verify_veos(dut)
-    loginfo.assert_called_with("Verifying if Test Dut DUT is a VEOS instance. Model is vEOS")
-    logdebug.assert_called_with("Test Dut is a VEOS instance so returning True")
-    assert actual_output
-    dut["output"]["show version"]["json"]["modelName"] = "cEOS"
-    actual_output = tests_tools.verify_veos(dut)
-    loginfo.assert_called_with("Verifying if Test Dut DUT is a VEOS instance. Model is cEOS")
-    logdebug.assert_called_with("Test Dut is not a VEOS instance so returning False")
-    assert not actual_output
-
-
-def test_verify_show_cmd(loginfo, logdebug):
-    """Validates verification of show commands being executed on given dut"""
-    dut = {"output": {"show clock": ""}, "name": "Test Dut"}
-    show_cmd = "show clock"
-    tests_tools.verify_show_cmd(show_cmd, dut)
-    loginfo.assert_called_with(
-        "Verifying if show command show clock was successfully executed on Test Dut dut"
-    )
-    logdebug.assert_called_with("Verified output for show command show clock on Test Dut")
-    # assert False in the verify_show_cmd should not get executed
-
-
-def test_verify_tacacs(loginfo, logdebug):
-    """Validates verification of tacacs servers on duts"""
-    dut = {"output": {"show tacacs": {"json": {"tacacsServers": []}}}, "name": "Test Dut"}
-    actual_output = tests_tools.verify_tacacs(dut)
-    assert not actual_output
-    loginfo.assert_called_with("Verifying if tacacs server(s) are configured on Test Dut dut")
-    dut["output"]["show tacacs"]["json"]["tacacsServers"] = [{"One": "value1"}, {"Two": "value2"}]
-    actual_output = tests_tools.verify_tacacs(dut)
-    assert actual_output
-    logdebug.assert_called_with("2 tacacs servers are configured so returning True")
 
 
 def test_filter_duts(loginfo):
@@ -194,10 +162,11 @@ def test_parametrize_duts(loginfo, logdebug):
             "Creating dut parameters.  \nDuts: [{'role': 'Role1', 'name': 'DLFW3'}, "
             "{'role': 'Role2', 'name': 'Test Dut 2'}] \nIds: ['DLFW3', 'Test Dut 2']"
         ),
-
         call(
-            "Creating dut parameters.  \nDuts: [{'role': 'Role1', 'name': 'DLFW3'}] \nIds: ['DLFW3']"
-        ),]
+            "Creating dut parameters.  \nDuts: [{'role': 'Role1', 'name': 'DLFW3'}]"
+            " \nIds: ['DLFW3']"
+        ),
+    ]
     logdebug.assert_has_calls(logdebug_calls, any_order=False)
 
     # defining expected output
@@ -212,6 +181,10 @@ def test_parametrize_duts(loginfo, logdebug):
     assert expected_dut_parameters == actual_dut_parameters
 
 
+# def test_setup_import_yaml():
+#     pass
+
+
 def test_import_yaml():
     """Validates import yaml method
     FIXTURE NEEDED: test_import_yaml.yaml"""
@@ -222,45 +195,16 @@ def test_import_yaml():
     assert expected_yaml == actual_yaml
 
 
-def test_return_test_defs(logdebug):
-    """Validates if test definitions are being generated correctly
-    Creates a temporary reports/test_definition and deletes it before exiting
-    FIXTURE NEEDED: test_return_test_defs"""
-    logging.info("FIXTURE NEEDED: test_return_test_defs")
-    expected_yaml = {
-        "parameters": {
-            "report_dir": "reports",
-            "test_cases": "test_tacacs.py",
-            "test_dirs": ["sample_network_tests/tacacs"],
-            "test_definitions": "test_definition.yaml",
-        }
-    }
-    os.makedirs(os.path.dirname("reports/test_definition.yaml"), exist_ok=True)
-    actual_output = tests_tools.return_test_defs(expected_yaml)
-    expected_output = read_yaml("tests/unittests/fixtures/test_return_test_defs.yaml")
-    assert (
-        actual_output["test_suites"][0]["testcases"]
-        == expected_output["test_suites"][0]["testcases"]
-    )
-    assert actual_output["test_suites"][0]["name"] == expected_output["test_suites"][0]["name"]
-    assert actual_output == expected_output
-
-    logdebug.assert_called_with(
-        "Return the following test definitions data structure "
-        "{'test_suites': [{'name': 'test_tacacs.py', "
-        "'testcases': [{'name': 'test_if_tacacs_is_sending_messages_on_', "
-        "'description': 'Verify tacacs messages are sending correctly', 'show_cmd': 'show tacacs', "
-        "'expected_output': None, 'report_style': 'modern', "
-        "'test_criteria': 'Verify tacacs messages are sending correctly', "
-        "'criteria': 'names', 'filter': ['DSR01', 'DCBBW1'], 'comment': None, 'result': True}, "
-        "{'name': 'test_if_tacacs_is_receiving_messages_on_', "
-        "'description': 'Verify tacacs messages are received correctly', 'show_cmd': 'show tacacs', "
-        "'expected_output': None, 'report_style': 'modern', "
-        "'test_criteria': 'Verify tacacs messages are received correctly', "
-        "'criteria': 'names', 'filter': ['DSR01', 'DCBBW1'], 'comment': None, 'result': True}], "
-        "'dir_path': 'sample_network_tests/tacacs'}]}"
-    )
-    shutil.rmtree("reports", ignore_errors=True)
+# def test_init_duts():
+#     pass
+# def test_login_duts():
+#     pass
+# def test_send_cmds():
+#     pass
+# def test_remove_cmd():
+#     pass
+# def test_dut_worker():
+#     pass
 
 
 def test_return_interfaces(loginfo, logdebug):
@@ -339,6 +283,211 @@ def test_return_interfaces(loginfo, logdebug):
         ),
     ]
     logdebug.assert_has_calls(logdebug_calls, any_order=False)
+
+
+def test_get_parameters(loginfo, logdebug):
+    """Validates getting test case details from test parameters, suites and name
+    FIXTURES NEEDED: test_return_show_cmds.yaml"""
+    tests_parameters = read_yaml("tests/unittests/fixtures/test_return_show_cmds.yaml")
+    test_suite = "sample_network_tests/aaa/test_aaa.py"
+    test_case = "test_if_exec_authorization_methods_set_on_"
+
+    expected_output = {
+        "name": "test_if_exec_authorization_methods_set_on_",
+        "description": "Verify AAA exec authorization are method-lists set correct",
+        "exec_auth": ["none"],
+        "show_cmd": "show aaa methods all",
+        "expected_output": None,
+        "comment": None,
+        "result": True,
+        "test_suite": "test_aaa.py",
+    }
+
+    actual_output = tests_tools.get_parameters(tests_parameters, test_suite, test_case)
+    assert expected_output == actual_output
+
+    loginfo_calls = [
+        call("Identify test case and return parameters"),
+        call("Return testcases for Test Suite: test_aaa.py"),
+        call("Return parameters for Test Case: test_if_exec_authorization_methods_set_on_"),
+    ]
+    loginfo.assert_has_calls(loginfo_calls, any_order=False)
+
+    logdebug_calls = [
+        call(
+            "Suite_parameters:"
+            " [{'name': 'test_aaa.py',"
+            " 'testcases': [{'name': 'test_if_authentication_counters_are_incrementing_on_',"
+            " 'description': 'Verify AAA counters are working correctly',"
+            " 'show_cmds': ['show lldp neighbors', 'show aaa counters'], 'expected_output': None,"
+            " 'comment': None, 'result': True},"
+            " {'name': 'test_if_aaa_session_logging_is_working_on_',"
+            " 'description': 'Verify AAA session logging is working by"
+            " identifying eapi connection',"
+            " 'show_cmd': 'show users detail', 'expected_output': 'commandApi',"
+            " 'comment': None, 'result': True},"
+            " {'name': 'test_if_commands_authorization_methods_set_on_',"
+            " 'description': 'Verify AAA command authorization are method-lists set correct',"
+            " 'cmd_auth': ['none'], 'show_cmd': 'show aaa methods all', 'expected_output': None,"
+            " 'comment': None, 'result': True},"
+            " {'name': 'test_if_exec_authorization_methods_set_on_',"
+            " 'description': 'Verify AAA exec authorization are method-lists set correct',"
+            " 'exec_auth': ['none'], 'show_cmd': 'show aaa methods all', 'expected_output': None,"
+            " 'comment': None, 'result': True}]}]"
+        ),
+        call(
+            "Case_parameters: {'name': 'test_if_exec_authorization_methods_set_on_',"
+            " 'description': 'Verify AAA exec authorization are method-lists set correct',"
+            " 'exec_auth': ['none'], 'show_cmd': 'show aaa methods all', 'expected_output': None,"
+            " 'comment': None, 'result': True}"
+        ),
+    ]
+    logdebug.assert_has_calls(logdebug_calls, any_order=False)
+
+
+def test_verify_show_cmd(loginfo, logdebug, logcritical):
+    """Validates verification of show commands being executed on given dut"""
+    dut = {"output": {"show clock": ""}, "name": "Test Dut"}
+    show_cmd = "show clock"
+    tests_tools.verify_show_cmd(show_cmd, dut)
+    loginfo.assert_called_with(
+        "Verifying if show command show clock was successfully executed on Test Dut dut"
+    )
+    logdebug.assert_called_with("Verified output for show command show clock on Test Dut")
+
+    show_cmd = "show lldp neighbors"
+
+    # handling the assert False raised in the verify_show_cmd method
+    # when show_cmd is not executed on the dut
+    with pytest.raises(AssertionError):
+        tests_tools.verify_show_cmd(show_cmd, dut)
+    logcritical.assert_called_with("Show command show lldp neighbors not executed on Test Dut")
+
+
+def test_verify_tacacs(loginfo, logdebug):
+    """Validates verification of tacacs servers on duts"""
+    dut = {"output": {"show tacacs": {"json": {"tacacsServers": []}}}, "name": "Test Dut"}
+    actual_output = tests_tools.verify_tacacs(dut)
+    assert not actual_output
+    loginfo.assert_called_with("Verifying if tacacs server(s) are configured on Test Dut dut")
+    dut["output"]["show tacacs"]["json"]["tacacsServers"] = [{"One": "value1"}, {"Two": "value2"}]
+    actual_output = tests_tools.verify_tacacs(dut)
+    assert actual_output
+    logdebug.assert_called_with("2 tacacs servers are configured so returning True")
+
+
+def test_verify_veos(loginfo, logdebug):
+    """Validates verification of dut instances' model"""
+    dut = {"output": {"show version": {"json": {"modelName": "vEOS"}}}, "name": "Test Dut"}
+    actual_output = tests_tools.verify_veos(dut)
+    loginfo.assert_called_with("Verifying if Test Dut DUT is a VEOS instance. Model is vEOS")
+    logdebug.assert_called_with("Test Dut is a VEOS instance so returning True")
+    assert actual_output
+    dut["output"]["show version"]["json"]["modelName"] = "cEOS"
+    actual_output = tests_tools.verify_veos(dut)
+    loginfo.assert_called_with("Verifying if Test Dut DUT is a VEOS instance. Model is cEOS")
+    logdebug.assert_called_with("Test Dut is not a VEOS instance so returning False")
+    assert not actual_output
+
+
+def test_return_show_cmds(loginfo, logdebug):
+    """Validates if correct show commands get returned given test suites
+    FIXTURES NEEDED: test_return_show_cmds.yaml"""
+    test_parameters = read_yaml("tests/unittests/fixtures/test_return_show_cmds.yaml")
+    expected_output = [
+        "show version",
+        "show lldp neighbors",
+        "show aaa counters",
+        "show users detail",
+        "show aaa methods all",
+    ]
+    actual_output = tests_tools.return_show_cmds(test_parameters)
+    assert expected_output == actual_output
+    loginfo_calls = [
+        call("Finding show commands in test suite: test_aaa.py"),
+        call(
+            "The following show commands are required for test cases: "
+            "['show version', 'show lldp neighbors', 'show aaa counters', "
+            "'show users detail', 'show aaa methods all']"
+        ),
+    ]
+    loginfo.assert_has_calls(loginfo_calls, any_order=False)
+
+    logdebug_calls = [
+        call(
+            "Discover the names of test suites from"
+            " {'test_suites':"
+            " [{'name': 'test_aaa.py',"
+            " 'testcases': [{'name': 'test_if_authentication_counters_are_incrementing_on_',"
+            " 'description': 'Verify AAA counters are working correctly',"
+            " 'show_cmds': ['show lldp neighbors', 'show aaa counters'], 'expected_output': None,"
+            " 'comment': None, 'result': True},"
+            " {'name': 'test_if_aaa_session_logging_is_working_on_',"
+            " 'description': 'Verify AAA session logging is working by"
+            " identifying eapi connection',"
+            " 'show_cmd': 'show users detail', 'expected_output': 'commandApi',"
+            " 'comment': None, 'result': True},"
+            " {'name': 'test_if_commands_authorization_methods_set_on_',"
+            " 'description': 'Verify AAA command authorization are method-lists set correct',"
+            " 'cmd_auth': ['none'], 'show_cmd': 'show aaa methods all', 'expected_output': None,"
+            " 'comment': None, 'result': True},"
+            " {'name': 'test_if_exec_authorization_methods_set_on_',"
+            " 'description': 'Verify AAA exec authorization are method-lists set correct',"
+            " 'exec_auth': ['none'], 'show_cmd': 'show aaa methods all', 'expected_output': None,"
+            " 'comment': None, 'result': True}]}]}"
+        ),
+        call("Found show commands ['show lldp neighbors', 'show aaa counters']"),
+        call("Adding Show commands show lldp neighbors"),
+        call("Adding Show commands show aaa counters"),
+        call("Found show command show users detail"),
+        call("Adding Show command show users detail"),
+        call("Found show command show aaa methods all"),
+        call("Adding Show command show aaa methods all"),
+        call("Found show command show aaa methods all"),
+    ]
+    logdebug.assert_has_calls(logdebug_calls, any_order=False)
+
+
+def test_return_test_defs(logdebug):
+    """Validates if test definitions are being generated correctly
+    Creates a temporary reports/test_definition and deletes it before exiting
+    FIXTURE NEEDED: test_return_test_defs"""
+    logging.info("FIXTURE NEEDED: test_return_test_defs")
+    expected_yaml = {
+        "parameters": {
+            "report_dir": "reports",
+            "test_cases": "test_tacacs.py",
+            "test_dirs": ["sample_network_tests/tacacs"],
+            "test_definitions": "test_definition.yaml",
+        }
+    }
+    os.makedirs(os.path.dirname("reports/test_definition.yaml"), exist_ok=True)
+    actual_output = tests_tools.return_test_defs(expected_yaml)
+    expected_output = read_yaml("tests/unittests/fixtures/test_return_test_defs.yaml")
+    assert (
+        actual_output["test_suites"][0]["testcases"]
+        == expected_output["test_suites"][0]["testcases"]
+    )
+    assert actual_output["test_suites"][0]["name"] == expected_output["test_suites"][0]["name"]
+    assert actual_output == expected_output
+
+    logdebug.assert_called_with(
+        "Return the following test definitions data structure "
+        "{'test_suites': [{'name': 'test_tacacs.py', "
+        "'testcases': [{'name': 'test_if_tacacs_is_sending_messages_on_', "
+        "'description': 'Verify tacacs messages are sending correctly', 'show_cmd': 'show tacacs', "
+        "'expected_output': None, 'report_style': 'modern', "
+        "'test_criteria': 'Verify tacacs messages are sending correctly', "
+        "'criteria': 'names', 'filter': ['DSR01', 'DCBBW1'], 'comment': None, 'result': True}, "
+        "{'name': 'test_if_tacacs_is_receiving_messages_on_', "
+        "'description': 'Verify tacacs messages are received correctly', "
+        "'show_cmd': 'show tacacs', "
+        "'expected_output': None, 'report_style': 'modern', "
+        "'test_criteria': 'Verify tacacs messages are received correctly', "
+        "'criteria': 'names', 'filter': ['DSR01', 'DCBBW1'], 'comment': None, 'result': True}], "
+        "'dir_path': 'sample_network_tests/tacacs'}]}"
+    )
+    shutil.rmtree("reports", ignore_errors=True)
 
 
 def test_export_yaml():
@@ -450,150 +599,432 @@ def test_create_duts_file():
     os.remove(file)
 
 
-def test_get_parameters(loginfo, logdebug):
-    """Validates getting test case details from test parameters, suites and name
-    FIXTURES NEEDED: test_return_show_cmds.yaml"""
-    tests_parameters = read_yaml("tests/unittests/fixtures/test_return_show_cmds.yaml")
-    test_suite = "sample_network_tests/aaa/test_aaa.py"
-    test_case = "test_if_exec_authorization_methods_set_on_"
+# TEST-OPS METHODS
 
-    expected_output = {
-        "name": "test_if_exec_authorization_methods_set_on_",
-        "description": "Verify AAA exec authorization are method-lists set correct",
-        "exec_auth": ["none"],
-        "show_cmd": "show aaa methods all",
-        "expected_output": None,
-        "comment": None,
-        "result": True,
-        "test_suite": "test_aaa.py",
+
+# ASK FOR NAME CHANGE TO show_cmds
+def test_test_ops_verify_show_cmd(loginfo, logdebug, logcritical):
+    """Validates verification of show commands being executed on given dut"""
+
+    # creating test ops object
+    test_definitions = {
+        "test_suites": [
+            {
+                "name": "test_memory.py",
+                "testcases": [
+                    {
+                        "name": "test_test_ops_verify_show_cmd",
+                        "description": "Verify memory is not exceeding high utilization",
+                        "show_cmd": "show version",
+                        "expected_output": 80,
+                        "report_style": "modern",
+                        "test_criteria": "Verify memory is not exceeding high utilization",
+                        "criteria": "names",
+                        "filter": ["DSR01", "DCBBW1"],
+                        "comment": None,
+                        "result": True,
+                    }
+                ],
+            }
+        ]
+    }
+    test_suite = "test_memory.py"
+    dut = {
+        "name": "DCBBW1",
+        "mgmt_ip": "10.255.31.234",
+        "username": "cvpadmin",
+        "role": "unknown",
+        "neighbors": [
+            {"neighborDevice": "DSR01", "neighborPort": "Ethernet1", "port": "Ethernet1"},
+            {"neighborDevice": "BLFW1", "neighborPort": "Ethernet1", "port": "Ethernet3"},
+            {"neighborDevice": "BLFW2", "neighborPort": "Ethernet1", "port": "Ethernet4"},
+        ],
+        "results_dir": "reports/results",
+        "report_dir": "reports",
+        "eapi_file": "tests/unittests/fixtures/eapi.conf",
+        "output": {
+            "interface_list": [
+                {
+                    "hostname": "DCBBW1",
+                    "interface_name": "Ethernet1",
+                    "z_hostname": "DSR01",
+                    "z_interface_name": "Ethernet1",
+                    "media_type": "",
+                },
+                {
+                    "hostname": "DCBBW1",
+                    "interface_name": "Ethernet3",
+                    "z_hostname": "BLFW1",
+                    "z_interface_name": "Ethernet1",
+                    "media_type": "",
+                },
+                {
+                    "hostname": "DCBBW1",
+                    "interface_name": "Ethernet4",
+                    "z_hostname": "BLFW2",
+                    "z_interface_name": "Ethernet1",
+                    "media_type": "",
+                },
+            ],
+            "show version": {
+                "json": {
+                    "imageFormatVersion": "1.0",
+                    "uptime": 277003.72,
+                    "modelName": "vEOS-lab",
+                    "internalVersion": "4.27.2F-26069621.4272F",
+                    "memTotal": 3938900,
+                    "mfgName": "Arista",
+                    "serialNumber": "SN-DCBBW1",
+                    "systemMacAddress": "a4:86:49:d7:e2:d9",
+                    "bootupTimestamp": 1684776615.0,
+                    "memFree": 2755568,
+                    "version": "4.27.2F",
+                    "configMacAddress": "00:00:00:00:00:00",
+                    "isIntlVersion": False,
+                    "imageOptimization": "None",
+                    "internalBuildId": "2fd003fd-04c4-4b44-9c26-417e6ca42009",
+                    "hardwareRevision": "",
+                    "hwMacAddress": "00:00:00:00:00:00",
+                    "architecture": "x86_64",
+                },
+                "text": "Arista vEOS-lab\nHardware version: \nSerial number: SN-DCBBW1\nHardware MAC address: a486.49d7.e2d9\nSystem MAC address: a486.49d7.e2d9\n\nSoftware image version: 4.27.2F\nArchitecture: x86_64\nInternal build version: 4.27.2F-26069621.4272F\nInternal build ID: 2fd003fd-04c4-4b44-9c26-417e6ca42009\nImage format version: 1.0\nImage optimization: None\n\nUptime: 3 days, 4 hours and 56 minutes\nTotal memory: 3938900 kB\nFree memory: 2755560 kB\n\n",
+            },
+            "show clock": {
+                "json": {
+                    "clockSource": {"local": True},
+                    "timezone": "UTC",
+                    "utcTime": 1685053619.06094,
+                    "localTime": {
+                        "dayOfWeek": 3,
+                        "dayOfYear": 145,
+                        "sec": 59,
+                        "min": 26,
+                        "hour": 22,
+                        "year": 2023,
+                        "dayOfMonth": 25,
+                        "daylightSavingsAdjust": 0,
+                        "month": 5,
+                    },
+                },
+                "text": "Thu May 25 22:26:59 2023\nTimezone: UTC\nClock source: local\n",
+            },
+        },
     }
 
-    actual_output = tests_tools.get_parameters(tests_parameters, test_suite, test_case)
+    tops = tests_tools.TestOps(test_definitions, test_suite, dut)
+
+    # handling the true case
+    show_cmds = ["show version"]
+    tops._verify_show_cmd(show_cmds, dut)
+    loginfo.assert_called_with(
+        "Verifying if show command ['show version'] were successfully executed on DCBBW1 dut"
+    )
+    logdebug.assert_called_with("Verified output for show command show version on DCBBW1")
+
+    # handling the false case
+    show_cmd = ["show lldp neighbors"]
+
+    # handling the assert False raised in the verify_show_cmd method
+    # when show_cmd is not executed on the dut
+    with pytest.raises(AssertionError):
+        tops._verify_show_cmd(show_cmd, dut)
+    logcritical.assert_called_with("Show command show lldp neighbors not executed on DCBBW1")
+
+
+# def test_write_results():
+#     pass
+# def test_write_text_results():
+#     pass
+
+
+def test_test_ops_get_parameters(loginfo, logdebug):
+    """Validates getting test case details from test parameters, suites and name"""
+    test_definitions = {
+        "test_suites": [
+            {
+                "name": "test_memory.py",
+                "testcases": [
+                    {
+                        "name": "test_test_ops_get_parameters",
+                        "description": "Verify memory is not exceeding high utilization",
+                        "show_cmd": "show version",
+                        "expected_output": 80,
+                        "report_style": "modern",
+                        "test_criteria": "Verify memory is not exceeding high utilization",
+                        "criteria": "names",
+                        "filter": ["DSR01", "DCBBW1"],
+                        "comment": None,
+                        "result": True,
+                    }
+                ],
+            }
+        ]
+    }
+    test_suite = "test_memory.py"
+    dut = {
+        "name": "DCBBW1",
+        "mgmt_ip": "10.255.31.234",
+        "username": "cvpadmin",
+        "role": "unknown",
+        "neighbors": [
+            {"neighborDevice": "DSR01", "neighborPort": "Ethernet1", "port": "Ethernet1"},
+            {"neighborDevice": "BLFW1", "neighborPort": "Ethernet1", "port": "Ethernet3"},
+            {"neighborDevice": "BLFW2", "neighborPort": "Ethernet1", "port": "Ethernet4"},
+        ],
+        "results_dir": "reports/results",
+        "report_dir": "reports",
+        "eapi_file": "tests/unittests/fixtures/eapi.conf",
+        "output": {
+            "interface_list": [
+                {
+                    "hostname": "DCBBW1",
+                    "interface_name": "Ethernet1",
+                    "z_hostname": "DSR01",
+                    "z_interface_name": "Ethernet1",
+                    "media_type": "",
+                },
+                {
+                    "hostname": "DCBBW1",
+                    "interface_name": "Ethernet3",
+                    "z_hostname": "BLFW1",
+                    "z_interface_name": "Ethernet1",
+                    "media_type": "",
+                },
+                {
+                    "hostname": "DCBBW1",
+                    "interface_name": "Ethernet4",
+                    "z_hostname": "BLFW2",
+                    "z_interface_name": "Ethernet1",
+                    "media_type": "",
+                },
+            ],
+            "show version": {
+                "json": {
+                    "imageFormatVersion": "1.0",
+                    "uptime": 277003.72,
+                    "modelName": "vEOS-lab",
+                    "internalVersion": "4.27.2F-26069621.4272F",
+                    "memTotal": 3938900,
+                    "mfgName": "Arista",
+                    "serialNumber": "SN-DCBBW1",
+                    "systemMacAddress": "a4:86:49:d7:e2:d9",
+                    "bootupTimestamp": 1684776615.0,
+                    "memFree": 2755568,
+                    "version": "4.27.2F",
+                    "configMacAddress": "00:00:00:00:00:00",
+                    "isIntlVersion": False,
+                    "imageOptimization": "None",
+                    "internalBuildId": "2fd003fd-04c4-4b44-9c26-417e6ca42009",
+                    "hardwareRevision": "",
+                    "hwMacAddress": "00:00:00:00:00:00",
+                    "architecture": "x86_64",
+                },
+                "text": "Arista vEOS-lab\nHardware version: \nSerial number: SN-DCBBW1\nHardware MAC address: a486.49d7.e2d9\nSystem MAC address: a486.49d7.e2d9\n\nSoftware image version: 4.27.2F\nArchitecture: x86_64\nInternal build version: 4.27.2F-26069621.4272F\nInternal build ID: 2fd003fd-04c4-4b44-9c26-417e6ca42009\nImage format version: 1.0\nImage optimization: None\n\nUptime: 3 days, 4 hours and 56 minutes\nTotal memory: 3938900 kB\nFree memory: 2755560 kB\n\n",
+            },
+            "show clock": {
+                "json": {
+                    "clockSource": {"local": True},
+                    "timezone": "UTC",
+                    "utcTime": 1685053619.06094,
+                    "localTime": {
+                        "dayOfWeek": 3,
+                        "dayOfYear": 145,
+                        "sec": 59,
+                        "min": 26,
+                        "hour": 22,
+                        "year": 2023,
+                        "dayOfMonth": 25,
+                        "daylightSavingsAdjust": 0,
+                        "month": 5,
+                    },
+                },
+                "text": "Thu May 25 22:26:59 2023\nTimezone: UTC\nClock source: local\n",
+            },
+        },
+    }
+
+    tops = tests_tools.TestOps(test_definitions, test_suite, dut)
+
+    expected_output = {
+        "name": "test_test_ops_get_parameters",
+        "description": "Verify memory is not exceeding high utilization",
+        "show_cmd": "show version",
+        "expected_output": 80,
+        "report_style": "modern",
+        "test_criteria": "Verify memory is not exceeding high utilization",
+        "criteria": "names",
+        "filter": ["DSR01", "DCBBW1"],
+        "comment": None,
+        "result": True,
+        "test_suite": "test_memory.py",
+    }
+
+    actual_output = tops._get_parameters(
+        test_definitions, test_suite, "test_test_ops_get_parameters"
+    )
     assert expected_output == actual_output
 
     loginfo_calls = [
         call("Identify test case and return parameters"),
-        call("Return testcases for Test Suite: test_aaa.py"),
-        call("Return parameters for Test Case: test_if_exec_authorization_methods_set_on_"),
+        call("Returning parameters for Test Case: test_test_ops_get_parameters"),
+        call(
+            "Verifying if show command ['show version', 'show version'] were successfully executed on DCBBW1 dut"
+        ),
+        call("Identify test case and return parameters"),
+        call("Returning parameters for Test Case: test_test_ops_get_parameters"),
     ]
     loginfo.assert_has_calls(loginfo_calls, any_order=False)
 
     logdebug_calls = [
+        call("Return testcases for Test Suite: test_memory.py"),
         call(
-            "Suite_parameters:"
-            " [{'name': 'test_aaa.py',"
-            " 'testcases': [{'name': 'test_if_authentication_counters_are_incrementing_on_',"
-            " 'description': 'Verify AAA counters are working correctly',"
-            " 'show_cmds': ['show lldp neighbors', 'show aaa counters'], 'expected_output': None,"
-            " 'comment': None, 'result': True},"
-            " {'name': 'test_if_aaa_session_logging_is_working_on_',"
-            " 'description': 'Verify AAA session logging is working by"
-            " identifying eapi connection',"
-            " 'show_cmd': 'show users detail', 'expected_output': 'commandApi',"
-            " 'comment': None, 'result': True},"
-            " {'name': 'test_if_commands_authorization_methods_set_on_',"
-            " 'description': 'Verify AAA command authorization are method-lists set correct',"
-            " 'cmd_auth': ['none'], 'show_cmd': 'show aaa methods all', 'expected_output': None,"
-            " 'comment': None, 'result': True},"
-            " {'name': 'test_if_exec_authorization_methods_set_on_',"
-            " 'description': 'Verify AAA exec authorization are method-lists set correct',"
-            " 'exec_auth': ['none'], 'show_cmd': 'show aaa methods all', 'expected_output': None,"
-            " 'comment': None, 'result': True}]}]"
+            "Suite_parameters: [{'name': 'test_memory.py', 'testcases': [{'name': 'test_test_ops_get_parameters', 'description': 'Verify memory is not exceeding high utilization', 'show_cmd': 'show version', 'expected_output': 80, 'report_style': 'modern', 'test_criteria': 'Verify memory is not exceeding high utilization', 'criteria': 'names', 'filter': ['DSR01', 'DCBBW1'], 'comment': None, 'result': True}]}]"
         ),
         call(
-            "Case_parameters: {'name': 'test_if_exec_authorization_methods_set_on_',"
-            " 'description': 'Verify AAA exec authorization are method-lists set correct',"
-            " 'exec_auth': ['none'], 'show_cmd': 'show aaa methods all', 'expected_output': None,"
-            " 'comment': None, 'result': True}"
+            "Case_parameters: {'name': 'test_test_ops_get_parameters', 'description': 'Verify memory is not exceeding high utilization', 'show_cmd': 'show version', 'expected_output': 80, 'report_style': 'modern', 'test_criteria': 'Verify memory is not exceeding high utilization', 'criteria': 'names', 'filter': ['DSR01', 'DCBBW1'], 'comment': None, 'result': True}"
+        ),
+        call("Verified output for show command show version on DCBBW1"),
+        call("Verified output for show command show version on DCBBW1"),
+        call("Return testcases for Test Suite: test_memory.py"),
+        call(
+            "Suite_parameters: [{'name': 'test_memory.py', 'testcases': [{'name': 'test_test_ops_get_parameters', 'description': 'Verify memory is not exceeding high utilization', 'show_cmd': 'show version', 'expected_output': 80, 'report_style': 'modern', 'test_criteria': 'Verify memory is not exceeding high utilization', 'criteria': 'names', 'filter': ['DSR01', 'DCBBW1'], 'comment': None, 'result': True}]}]"
+        ),
+        call(
+            "Case_parameters: {'name': 'test_test_ops_get_parameters', 'description': 'Verify memory is not exceeding high utilization', 'show_cmd': 'show version', 'expected_output': 80, 'report_style': 'modern', 'test_criteria': 'Verify memory is not exceeding high utilization', 'criteria': 'names', 'filter': ['DSR01', 'DCBBW1'], 'comment': None, 'result': True}"
         ),
     ]
     logdebug.assert_has_calls(logdebug_calls, any_order=False)
 
 
-def test_return_show_cmds(loginfo, logdebug):
-    """Validates if correct show commands get returned given test suites
-    FIXTURES NEEDED: test_return_show_cmds.yaml"""
-    test_parameters = read_yaml("tests/unittests/fixtures/test_return_show_cmds.yaml")
-    expected_output = [
-        "show version",
-        "show lldp neighbors",
-        "show aaa counters",
-        "show users detail",
-        "show aaa methods all",
-    ]
-    actual_output = tests_tools.return_show_cmds(test_parameters)
-    assert expected_output == actual_output
-    loginfo_calls = [
-        call("Finding show commands in test suite: test_aaa.py"),
-        call(
-            "The following show commands are required for test cases: "
-            "['show version', 'show lldp neighbors', 'show aaa counters', 'show users detail', 'show aaa methods all']"
-        ),
-    ]
-    loginfo.assert_has_calls(loginfo_calls, any_order=False)
-
-    logdebug_calls = [
-        call(
-            "Discover the names of test suites from"
-            " {'test_suites':"
-            " [{'name': 'test_aaa.py',"
-            " 'testcases': [{'name': 'test_if_authentication_counters_are_incrementing_on_',"
-            " 'description': 'Verify AAA counters are working correctly',"
-            " 'show_cmds': ['show lldp neighbors', 'show aaa counters'], 'expected_output': None,"
-            " 'comment': None, 'result': True},"
-            " {'name': 'test_if_aaa_session_logging_is_working_on_',"
-            " 'description': 'Verify AAA session logging is working by"
-            " identifying eapi connection',"
-            " 'show_cmd': 'show users detail', 'expected_output': 'commandApi',"
-            " 'comment': None, 'result': True},"
-            " {'name': 'test_if_commands_authorization_methods_set_on_',"
-            " 'description': 'Verify AAA command authorization are method-lists set correct',"
-            " 'cmd_auth': ['none'], 'show_cmd': 'show aaa methods all', 'expected_output': None,"
-            " 'comment': None, 'result': True},"
-            " {'name': 'test_if_exec_authorization_methods_set_on_',"
-            " 'description': 'Verify AAA exec authorization are method-lists set correct',"
-            " 'exec_auth': ['none'], 'show_cmd': 'show aaa methods all', 'expected_output': None,"
-            " 'comment': None, 'result': True}]}]}"
-        ),
-        call("Found show commands ['show lldp neighbors', 'show aaa counters']"),
-        call("Adding Show commands show lldp neighbors"),
-        call("Adding Show commands show aaa counters"),
-        call("Found show command show users detail"),
-        call("Adding Show command show users detail"),
-        call("Found show command show aaa methods all"),
-        call("Adding Show command show aaa methods all"),
-        call("Found show command show aaa methods all"),
-    ]
-    logdebug.assert_has_calls(logdebug_calls, any_order=False)
-
-
-# def test_init_duts():
+# def test_generate_report(self, dut_name, output):
 #     pass
-# def test_login_duts():
-#     pass
-# def test_dut_worker():
-#     pass
-# def test_send_cmds():
-#     pass
-# def test_remove_cmd():
+# def test_html_report():
 #     pass
 
 
-# TEST-OPS METHODS
+# CHECK FOR BETTER WAY OF TEST DEFINITION
+def test_test_ops_verify_veos(loginfo, logdebug):
+    """Validates verification of the model of the dut"""
 
-# def test_test_ops_verify_show_cmd():
+    # creating test ops object
+    test_definitions = {
+        "test_suites": [
+            {
+                "name": "test_memory.py",
+                "testcases": [
+                    {
+                        "name": "test_test_ops_verify_veos",
+                        "description": "Verify memory is not exceeding high utilization",
+                        "show_cmd": "show version",
+                        "expected_output": 80,
+                        "report_style": "modern",
+                        "test_criteria": "Verify memory is not exceeding high utilization",
+                        "criteria": "names",
+                        "filter": ["DSR01", "DCBBW1"],
+                        "comment": None,
+                        "result": True,
+                    }
+                ],
+            }
+        ]
+    }
+    test_suite = "test_memory.py"
+    dut = {
+        "name": "DCBBW1",
+        "mgmt_ip": "10.255.31.234",
+        "username": "cvpadmin",
+        "role": "unknown",
+        "neighbors": [
+            {"neighborDevice": "DSR01", "neighborPort": "Ethernet1", "port": "Ethernet1"},
+            {"neighborDevice": "BLFW1", "neighborPort": "Ethernet1", "port": "Ethernet3"},
+            {"neighborDevice": "BLFW2", "neighborPort": "Ethernet1", "port": "Ethernet4"},
+        ],
+        "results_dir": "reports/results",
+        "report_dir": "reports",
+        "eapi_file": "tests/unittests/fixtures/eapi.conf",
+        "output": {
+            "interface_list": [
+                {
+                    "hostname": "DCBBW1",
+                    "interface_name": "Ethernet1",
+                    "z_hostname": "DSR01",
+                    "z_interface_name": "Ethernet1",
+                    "media_type": "",
+                },
+                {
+                    "hostname": "DCBBW1",
+                    "interface_name": "Ethernet3",
+                    "z_hostname": "BLFW1",
+                    "z_interface_name": "Ethernet1",
+                    "media_type": "",
+                },
+                {
+                    "hostname": "DCBBW1",
+                    "interface_name": "Ethernet4",
+                    "z_hostname": "BLFW2",
+                    "z_interface_name": "Ethernet1",
+                    "media_type": "",
+                },
+            ],
+            "show version": {
+                "json": {
+                    "imageFormatVersion": "1.0",
+                    "uptime": 277003.72,
+                    "modelName": "vEOS-lab",
+                    "internalVersion": "4.27.2F-26069621.4272F",
+                    "memTotal": 3938900,
+                    "mfgName": "Arista",
+                    "serialNumber": "SN-DCBBW1",
+                    "systemMacAddress": "a4:86:49:d7:e2:d9",
+                    "bootupTimestamp": 1684776615.0,
+                    "memFree": 2755568,
+                    "version": "4.27.2F",
+                    "configMacAddress": "00:00:00:00:00:00",
+                    "isIntlVersion": False,
+                    "imageOptimization": "None",
+                    "internalBuildId": "2fd003fd-04c4-4b44-9c26-417e6ca42009",
+                    "hardwareRevision": "",
+                    "hwMacAddress": "00:00:00:00:00:00",
+                    "architecture": "x86_64",
+                },
+                "text": "Arista vEOS-lab\nHardware version: \nSerial number: SN-DCBBW1\nHardware MAC address: a486.49d7.e2d9\nSystem MAC address: a486.49d7.e2d9\n\nSoftware image version: 4.27.2F\nArchitecture: x86_64\nInternal build version: 4.27.2F-26069621.4272F\nInternal build ID: 2fd003fd-04c4-4b44-9c26-417e6ca42009\nImage format version: 1.0\nImage optimization: None\n\nUptime: 3 days, 4 hours and 56 minutes\nTotal memory: 3938900 kB\nFree memory: 2755560 kB\n\n",
+            },
+            "show clock": {
+                "json": {
+                    "clockSource": {"local": True},
+                    "timezone": "UTC",
+                    "utcTime": 1685053619.06094,
+                    "localTime": {
+                        "dayOfWeek": 3,
+                        "dayOfYear": 145,
+                        "sec": 59,
+                        "min": 26,
+                        "hour": 22,
+                        "year": 2023,
+                        "dayOfMonth": 25,
+                        "daylightSavingsAdjust": 0,
+                        "month": 5,
+                    },
+                },
+                "text": "Thu May 25 22:26:59 2023\nTimezone: UTC\nClock source: local\n",
+            },
+        },
+    }
+
+    tops = tests_tools.TestOps(test_definitions, test_suite, dut)
+
+    # handling the true case
+    tops.verify_veos()
+    loginfo.assert_called_with("Verifying if DCBBW1 DUT is a VEOS instance. Model is vEOS-lab")
+    logdebug.assert_called_with("DCBBW1 is a VEOS instance so returning True")
+
+    # handling the false case
+    dut["output"]["show version"]["json"]["modelName"] = "cEOS"
+    tops.verify_veos()
+    logdebug.assert_called_with("DCBBW1 is not a VEOS instance so returning False")
+
+
+# def test_parse_test_steps(self, func):
 #     pass
-# def _write_results():
-#     pass
-#  def _write_text_results():
-#     pass
-#  def _get_parameters():
-#     pass
-# def generate_report(self, dut_name, output):
-#     pass
-# def verify_veos(self):
-#     pass
-# def parse_test_steps(self, func):
-#     pass
-# def run_show_cmds(self, show_cmds, encoding="json"):
+# def test_run_show_cmds(self, show_cmds, encoding="json"):
 #     pass
