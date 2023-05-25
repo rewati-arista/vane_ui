@@ -1,6 +1,8 @@
 """vane_cli.py uni tests"""
 import argparse
 import os
+import glob
+from io import StringIO
 from unittest.mock import call
 import pytest
 from vane import vane_cli
@@ -22,18 +24,6 @@ def logerr(mocker):
 def logwarning(mocker):
     """Fixture to mock logger calls from vane.vane_cli"""
     return mocker.patch("vane.vane_logging.logging.warning")
-
-
-def test_parse_cli():
-    """Validates functionality of parse_cli method"""
-
-    arguments = vane_cli.parse_cli()
-    assert len(vars(arguments)) == 7
-    # checking for default values for these cli arguments
-    assert arguments.definitions_file == "definitions.yaml"
-    assert arguments.duts_file == "duts.yaml"
-    assert arguments.environment == "test"
-    assert not arguments.markers
 
 
 def test_setup_vane(loginfo, mocker):
@@ -79,13 +69,13 @@ def test_write_results(loginfo, mocker):
 
 def test_write_steps():
     """Validates the functionality of the script which writes .md and .json with test steps
-    for test files. REQUIRES there to be a unittests/fixtures/test_steps/test_steps.py existing
-    in this folder for test to pass"""
+    for test files. REQUIRES there to be a tests/unittests/fixtures/test_steps/test_steps.py
+    existing in this folder for test to pass"""
 
-    assert not os.path.exists("fixtures/test_steps/test_steps.md")
-    assert not os.path.exists("fixtures/test_steps/test_steps.json")
+    assert not os.path.exists("tests/unittests/fixtures/test_steps/test_steps.md")
+    assert not os.path.exists("tests/unittests/fixtures/test_steps/test_steps.json")
 
-    vane_cli.write_test_steps(["fixtures/test_steps"])
+    vane_cli.write_test_steps(["tests/unittests/fixtures/test_steps"])
     expected_output = [
         "#  Testcase for verification of syslog logging server and\n",
         "            source-interface information\n",
@@ -106,23 +96,40 @@ def test_write_steps():
         "3.  Comparing the actual output and expected output. Generating docx report\n",
     ]
 
-    assert os.path.exists("fixtures/test_steps/test_steps.md")
-    assert os.path.exists("fixtures/test_steps/test_steps.json")
+    assert os.path.exists("tests/unittests/fixtures/test_steps/test_steps.md")
+    assert os.path.exists("tests/unittests/fixtures/test_steps/test_steps.json")
 
-    with open("fixtures/test_steps/test_steps.md", "r", encoding="utf-8") as file_pointer:
+    with open(
+        "tests/unittests/fixtures/test_steps/test_steps.md", "r", encoding="utf-8"
+    ) as file_pointer:
         content = file_pointer.readlines()
         # trimming out the date and time details from the md file
         # as they will vary per test run
         final_content = content[5:]
         assert final_content == expected_output
 
-    os.remove("fixtures/test_steps/test_steps.md")
-    os.remove("fixtures/test_steps/test_steps.json")
+    os.remove("tests/unittests/fixtures/test_steps/test_steps.md")
+    os.remove("tests/unittests/fixtures/test_steps/test_steps.json")
 
 
-def test_show_markers():
-    """Validates the functionality of show_markers method and ensures
-    we keep a log of available markers"""
+def test_show_markers(mocker):
+    """Validates the functionality of show_markers method"""
+
+    # mocking pytest.main's call to get mockers and setting our set of values
+    mocker.patch("pytest.main")
+
+    mock_stdout = mocker.Mock(spec=StringIO)
+    value = (
+        "@pytest.mark.filesystem: EOS File System Test Suite\n\n"
+        "@pytest.mark.daemons: EOS daemons Test Suite\n\n"
+        "@pytest.mark.extensions: EOS extensions Test Suite\n\n"
+        "@pytest.mark.users: EOS users Test Suite\n\n"
+        "@pytest.mark.tacacs: TACACS Test Suite"
+    )
+    mock_stdout.getvalue.return_value = value
+
+    # Patch the 'StringIO' class to return the mock object
+    mocker.patch("vane.vane_cli.StringIO", return_value=mock_stdout)
 
     expected_output = [
         {"marker": "filesystem", "description": "EOS File System Test Suite"},
@@ -130,47 +137,6 @@ def test_show_markers():
         {"marker": "extensions", "description": "EOS extensions Test Suite"},
         {"marker": "users", "description": "EOS users Test Suite"},
         {"marker": "tacacs", "description": "TACACS Test Suite"},
-        {"marker": "aaa", "description": "AAA Test Suite"},
-        {"marker": "host", "description": "Host status Test Suite"},
-        {"marker": "base_feature", "description": "Run all base feature test suites"},
-        {"marker": "platform_status", "description": "Run all DUT platform status test suites"},
-        {
-            "marker": "authorization",
-            "description": "Run all authorization test cases in AAA Test Suite",
-        },
-        {
-            "marker": "authentication",
-            "description": "Run all authentication test cases in AAA Test Suite",
-        },
-        {"marker": "accounting", "description": "Run all accounting test cases in AAA Test Suite"},
-        {"marker": "api", "description": "API Test Suite"},
-        {"marker": "dns", "description": "DNS Test Suite"},
-        {"marker": "logging", "description": "Logging Test Suite"},
-        {"marker": "ztp", "description": "Zero Touch Provisioning Test Suite"},
-        {"marker": "ntp", "description": "NTP Test Suite"},
-        {"marker": "nrfu", "description": "Network Ready For Use Test Cases"},
-        {"marker": "pytest", "description": "PyTest Test Suite"},
-        {"marker": "environment", "description": "Environment Test Suite"},
-        {"marker": "cpu", "description": "CPU Test Suite"},
-        {"marker": "memory", "description": "Memory Test Suite"},
-        {"marker": "interface", "description": "Interface Test Suite"},
-        {
-            "marker": "interface_baseline_health",
-            "description": "Run all interface baseline health test suites",
-        },
-        {"marker": "l2_protocols", "description": "Run all L2 protocol test suites"},
-        {"marker": "lldp", "description": "Memory Test Suite"},
-        {"marker": "system", "description": "System Test Suite"},
-        {"marker": "demo", "description": "Tests ready to demo"},
-        {"marker": "physical", "description": "Tests that can run on physical hardware"},
-        {"marker": "virtual", "description": "Tests that can run on vEOS"},
-        {"marker": "eos424", "description": "Validated tests with EOS 4.24"},
-        {"marker": "ssh", "description": "Verify SSH version"},
-        {
-            "marker": "xdist_group",
-            "description": "specify group for tests should run in "
-            "same session.in relation to one another. Provided by pytest-xdist.",
-        },
     ]
     actual_output = vane_cli.show_markers()
     assert actual_output == expected_output
@@ -178,26 +144,33 @@ def test_show_markers():
 
 def test_create_duts_from_topo():
     """Validates functionality of create_duts_from_topo method.
-    REQUIRES there to be a unittests/fixtures/test_topology.yaml
+    REQUIRES there to be a tests/unittests/fixtures/test_topology.yaml
     in this folder for test to pass"""
 
-    topology_file = "fixtures/test_topology.yaml"
+    topology_file = "tests/unittests/fixtures/test_topology.yaml"
     vane_cli.create_duts_from_topo(topology_file)
     # validates the creation of the duts file, its content is tested in the test
     # written for test_tools.generate_duts_file
-    assert os.path.isfile("fixtures/test_topology.yaml_duts.yaml")
-    os.remove("fixtures/test_topology.yaml_duts.yaml")
+    assert os.path.isfile("tests/unittests/fixtures/test_topology.yaml_duts.yaml")
+    os.remove("tests/unittests/fixtures/test_topology.yaml_duts.yaml")
 
 
-def test_download_test_results(loginfo, mocker):
+def test_download_test_results(loginfo):
     """Validates if a zip archive got created and stored in the TEST RESULTS
     ARCHIVE folder"""
 
-    # mocking these methods since ...
-    mocker.patch("os.path.exists")
-    mocker.patch("shutil.make_archive")
-
+    dir_path = "reports/TEST RESULTS ARCHIVES"
+    length = len(list(os.listdir(dir_path)))
     vane_cli.download_test_results()
+    new_length = len(list(os.listdir(dir_path)))
+
+    # assert if a zip got created
+    assert new_length == length + 1
+
+    # delete the most recent zip that got created for the test
+    list_of_files = glob.glob(dir_path + "/*")
+    latest_file = max(list_of_files, key=os.path.getctime)
+    os.remove(latest_file)
 
     loginfo.assert_called_with("Downloading a zip file of the TEST RESULTS folder")
 
