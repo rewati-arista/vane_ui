@@ -602,7 +602,6 @@ def test_create_duts_file():
 # TEST-OPS METHODS
 
 
-# ASK FOR NAME CHANGE TO show_cmds
 def test_test_ops_verify_show_cmd(loginfo, logdebug, logcritical):
     """Validates verification of show commands being executed on given dut"""
 
@@ -902,7 +901,6 @@ def test_test_ops_get_parameters(loginfo, logdebug):
 #     pass
 
 
-# CHECK FOR BETTER WAY OF TEST DEFINITION
 def test_test_ops_verify_veos(loginfo, logdebug):
     """Validates verification of the model of the dut"""
 
@@ -1028,3 +1026,9 @@ def test_test_ops_verify_veos(loginfo, logdebug):
 #     pass
 # def test_run_show_cmds(self, show_cmds, encoding="json"):
 #     pass
+
+# GET duts out 
+# mock get parameters
+# CHECK FOR BETTER WAY OF TEST DEFINITION
+# ASK FOR NAME CHANGE TO show_cmds
+
