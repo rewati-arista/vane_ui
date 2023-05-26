@@ -5,6 +5,7 @@ import glob
 from io import StringIO
 from unittest.mock import call
 import pytest
+import vane
 from vane import vane_cli
 
 
@@ -49,10 +50,21 @@ def test_run_tests(loginfo, mocker):
     """Validates functionality of run_tests method"""
 
     # mocking these methods since they have been tested in tests_client tests
-    mocker.patch("vane.tests_client.TestsClient")
+    mocker_object = mocker.patch("vane.tests_client.TestsClient")
     mocker.patch("vane.vane_cli.setup_vane")
 
-    vane_cli.run_tests("", "")
+    vane_cli.run_tests("path/to/definitions/file", "path/to/duts/file")
+
+    mocker_object.assert_called_once_with("path/to/definitions/file", "path/to/duts/file")
+
+    # Assert that the generate_test_definitions, setup_test_runner,
+    # and test_runner method was called on the
+    # returned TestClient instance
+
+    test_client_instance = mocker_object.return_value
+    test_client_instance.generate_test_definitions.assert_called_once()
+    test_client_instance.setup_test_runner.assert_called_once()
+    test_client_instance.test_runner.assert_called_once()
 
     loginfo.assert_called_with("Using class TestsClient to create vane_tests_client object")
 
@@ -61,9 +73,18 @@ def test_write_results(loginfo, mocker):
     """Validates functionality of write_results method"""
 
     # mocking these methods since they have been tested in report_client tests
-    mocker.patch("vane.report_client.ReportClient")
+    mocker_object = mocker.patch("vane.report_client.ReportClient")
 
-    vane_cli.write_results("")
+    vane_cli.write_results("path/to/definitions/file")
+
+    mocker_object.assert_called_once_with("path/to/definitions/file")
+
+    # Assert that the write_result_doc method was called on the
+    # returned ReportClient instance
+
+    report_client_instance = mocker_object.return_value
+    report_client_instance.write_result_doc.assert_called_once()
+
     loginfo.assert_called_with("Using class ReportClient to create vane_report_client object")
 
 
@@ -162,10 +183,10 @@ def test_download_test_results(loginfo):
     dir_path = "reports/TEST RESULTS ARCHIVES"
     length = len(list(os.listdir(dir_path)))
     vane_cli.download_test_results()
-    new_length = len(list(os.listdir(dir_path)))
+    new_length = len(os.listdir(dir_path))
 
     # assert if a zip got created
-    assert new_length == length + 1
+    assert new_length == (length + 1)
 
     # delete the most recent zip that got created for the test
     list_of_files = glob.glob(dir_path + "/*")
@@ -175,106 +196,36 @@ def test_download_test_results(loginfo):
     loginfo.assert_called_with("Downloading a zip file of the TEST RESULTS folder")
 
 
-def test_main(loginfo, logwarning, mocker):
-    """Validates the main method gets executed correctly and for given cli flag
-    correct steps get executed"""
+def test_main_definitions_and_duts(loginfo, logwarning, mocker):
+    """Tests the --definitions-file and --duts-file flag"""
 
-    # mocking these common methods across all subtests defined below
     mocker.patch("vane.vane_cli.run_tests")
     mocker.patch("vane.vane_cli.write_results")
     mocker.patch("vane.vane_cli.download_test_results")
 
-    def test_main_definitions_and_duts(mocker):
-        """Tests the --definitions-file and --duts-file flag"""
-        # mocking parse cli to test --definitions-file and --duts-file flag
-        mocker.patch(
-            "vane.vane_cli.parse_cli",
-            return_value=argparse.Namespace(
-                definitions_file="definitions_sample.yaml",
-                duts_file="duts_sample.yaml",
-                environment="test",
-                generate_duts_file=None,
-                generate_duts_from_topo=None,
-                generate_test_steps=None,
-                markers=False,
-            ),
-        )
-        vane_cli.main()
+    # mocking parse cli to test --definitions-file and --duts-file flag
+    mocker.patch(
+        "vane.vane_cli.parse_cli",
+        return_value=argparse.Namespace(
+            definitions_file="definitions_sample.yaml",
+            duts_file="duts_sample.yaml",
+            environment="test",
+            generate_duts_file=None,
+            generate_duts_from_topo=None,
+            generate_test_steps=None,
+            markers=False,
+        ),
+    )
+    vane_cli.main()
 
-    def test_main_create_duts_file(mocker):
-        """Tests the --generate-duts-file flag"""
-        mocker.patch("vane.tests_tools.create_duts_file")
-        # mocking parse cli to test --generate-duts-file
-        mocker.patch(
-            "vane.vane_cli.parse_cli",
-            return_value=argparse.Namespace(
-                definitions_file="definitions_sample.yaml",
-                duts_file="duts_sample.yaml",
-                environment="test",
-                generate_duts_file=["topology.yaml", "inventory.yaml"],
-                generate_duts_from_topo=None,
-                generate_test_steps=None,
-                markers=False,
-            ),
-        )
-        vane_cli.main()
-
-    def test_main_generate_duts_from_topo(mocker):
-        """Tests the --generate-duts-from-topo flag"""
-        mocker.patch("vane.vane_cli.create_duts_from_topo")
-        # mocking parse cli to test --generate-duts-from-topo
-        mocker.patch(
-            "vane.vane_cli.parse_cli",
-            return_value=argparse.Namespace(
-                definitions_file="definitions_sample.yaml",
-                duts_file="duts_sample.yaml",
-                environment="test",
-                generate_duts_file=None,
-                generate_duts_from_topo=["topology.yaml"],
-                generate_test_steps=None,
-                markers=False,
-            ),
-        )
-        vane_cli.main()
-
-    def test_main_write_test_steps(mocker):
-        """Tests the --generate-test-steps flag"""
-        mocker.patch("vane.vane_cli.write_test_steps")
-        # mocking parse cli to test --generate-test-steps
-        mocker.patch(
-            "vane.vane_cli.parse_cli",
-            return_value=argparse.Namespace(
-                definitions_file="definitions_sample.yaml",
-                duts_file="duts_sample.yaml",
-                environment="test",
-                generate_duts_file=None,
-                generate_duts_from_topo=None,
-                generate_test_steps="test_directory",
-                markers=False,
-            ),
-        )
-        vane_cli.main()
-
-    test_main_definitions_and_duts(mocker)
-    test_main_create_duts_file(mocker)
-    test_main_generate_duts_from_topo(mocker)
-    test_main_write_test_steps(mocker)
+    assert vane.config.ENVIRONMENT == "test"
+    assert vane.config.DEFINITIONS_FILE == "definitions_sample.yaml"
+    assert vane.config.DUTS_FILE == "duts_sample.yaml"
 
     # assert info logs to ensure all the above methods executed without errors
     loginfo_calls = [
         call("Reading in input from command-line"),
         call("\n\n!VANE has completed without errors!\n\n"),
-        call("Reading in input from command-line"),
-        call(
-            "Generating DUTS File from topology: topology.yaml and "
-            "inventory: inventory.yaml file.\n"
-        ),
-        call("\n\n!VANE has completed without errors!\n\n"),
-        call("Reading in input from command-line"),
-        call("Generating DUTS File from topology: topology.yaml file.\n"),
-        call("\n\n!VANE has completed without errors!\n\n"),
-        call("Reading in input from command-line"),
-        call("Generating test steps for test cases within test_directory test directory\n"),
     ]
     loginfo.assert_has_calls(loginfo_calls, any_order=False)
 
@@ -282,9 +233,119 @@ def test_main(loginfo, logwarning, mocker):
     logwarning_calls = [
         call("Changing Definitions file name to definitions_sample.yaml"),
         call("Changing DUTS file name to duts_sample.yaml"),
-        call("Changing Definitions file name to definitions_sample.yaml"),
-        call("Changing DUTS file name to duts_sample.yaml"),
+    ]
+    logwarning.assert_has_calls(logwarning_calls, any_order=False)
+
+
+def test_main_create_duts_file(loginfo, logwarning, mocker):
+    """Tests the --generate-duts-file flag"""
+
+    mocker.patch("vane.vane_cli.run_tests")
+    mocker.patch("vane.vane_cli.write_results")
+    mocker.patch("vane.vane_cli.download_test_results")
+    mocker.patch("vane.tests_tools.create_duts_file", return_value="duts.yml")
+
+    # mocking parse cli to test --generate-duts-file
+    mocker.patch(
+        "vane.vane_cli.parse_cli",
+        return_value=argparse.Namespace(
+            definitions_file="definitions_sample.yaml",
+            duts_file="duts_sample.yaml",
+            environment="test",
+            generate_duts_file=["topology.yaml", "inventory.yaml"],
+            generate_duts_from_topo=None,
+            generate_test_steps=None,
+            markers=False,
+        ),
+    )
+    vane_cli.main()
+
+    assert vane.config.DUTS_FILE == "duts.yml"
+
+    # assert info logs to ensure all the above methods executed without errors
+    loginfo_calls = [
+        call("Reading in input from command-line"),
+        call(
+            "Generating DUTS File from topology: topology.yaml and "
+            "inventory: inventory.yaml file.\n"
+        ),
+        call("\n\n!VANE has completed without errors!\n\n"),
+    ]
+    loginfo.assert_has_calls(loginfo_calls, any_order=False)
+
+    # assert warning logs to ensure all the above methods executed without errors
+    logwarning_calls = [
         call("Changing Definitions file name to definitions_sample.yaml"),
         call("Changing DUTS file name to duts_sample.yaml"),
     ]
     logwarning.assert_has_calls(logwarning_calls, any_order=False)
+
+
+def test_main_generate_duts_from_topo(loginfo, logwarning, mocker):
+    """Tests the --generate-duts-from-topo flag"""
+
+    mocker.patch("vane.vane_cli.run_tests")
+    mocker.patch("vane.vane_cli.write_results")
+    mocker.patch("vane.vane_cli.download_test_results")
+    mocker.patch("vane.vane_cli.create_duts_from_topo")
+
+    # mocking parse cli to test --generate-duts-from-topo
+    mocker.patch(
+        "vane.vane_cli.parse_cli",
+        return_value=argparse.Namespace(
+            definitions_file="definitions_sample.yaml",
+            duts_file="duts_sample.yaml",
+            environment="test",
+            generate_duts_file=None,
+            generate_duts_from_topo=["topology.yaml"],
+            generate_test_steps=None,
+            markers=False,
+        ),
+    )
+    vane_cli.main()
+
+    # assert info logs to ensure all the above methods executed without errors
+    loginfo_calls = [
+        call("Reading in input from command-line"),
+        call("Generating DUTS File from topology: topology.yaml file.\n"),
+        call("\n\n!VANE has completed without errors!\n\n"),
+    ]
+    loginfo.assert_has_calls(loginfo_calls, any_order=False)
+
+    # assert warning logs to ensure all the above methods executed without errors
+    logwarning_calls = [
+        call("Changing Definitions file name to definitions_sample.yaml"),
+        call("Changing DUTS file name to duts_sample.yaml"),
+    ]
+    logwarning.assert_has_calls(logwarning_calls, any_order=False)
+
+
+def test_main_write_test_steps(loginfo, mocker):
+    """Tests the --generate-test-steps flag"""
+
+    mocker.patch("vane.vane_cli.run_tests")
+    mocker.patch("vane.vane_cli.write_results")
+    mocker.patch("vane.vane_cli.download_test_results")
+    mocker.patch("vane.vane_cli.write_test_steps")
+
+    # mocking parse cli to test --generate-test-steps
+    mocker.patch(
+        "vane.vane_cli.parse_cli",
+        return_value=argparse.Namespace(
+            definitions_file="definitions_sample.yaml",
+            duts_file="duts_sample.yaml",
+            environment="test",
+            generate_duts_file=None,
+            generate_duts_from_topo=None,
+            generate_test_steps="test_directory",
+            markers=False,
+        ),
+    )
+    vane_cli.main()
+
+    # assert info logs to ensure all the above methods executed without errors
+    loginfo_calls = [
+        call("Reading in input from command-line"),
+        call("Generating test steps for test cases within test_directory test directory\n"),
+    ]
+    loginfo.assert_has_calls(loginfo_calls, any_order=False)
