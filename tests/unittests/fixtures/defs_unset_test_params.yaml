@@ -1,7 +1,6 @@
 parameters:
   eapi_file: tests/unittests/fixtures/eapi.conf
   eapi_template: tests/fixtures/templates/eapi.conf.j2
-  excel_report: null
   html_report: ""
   json_report: ""
   mark: demo

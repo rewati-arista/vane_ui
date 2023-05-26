@@ -8,6 +8,7 @@ tests_client.py unit tests
 # pylint: disable=redefined-outer-name, protected-access, import-error
 
 import os
+import shutil
 import tempfile
 import unittest
 
@@ -270,7 +271,7 @@ def test_test_runner_usage_err(mocker, capsys):
     assert pytest_exit.value.code == 1
 
 
-def test__set_test_parameters(loginfo):
+def test__set_test_parameters(loginfo, logwarn):
     """Validate _set_test_parameters with various values"""
 
     # pylint: disable-next=fixme
@@ -286,7 +287,7 @@ def test__set_test_parameters(loginfo):
     # Run _set_test_parameters
     client._set_test_parameters()
 
-    # Validate the following messages are logged in order
+    # Validate the following info messages are logged in order
     loginfo_calls = [
         call("Use data-model to create test parameters"),
         call("Setting test parameters"),
@@ -302,6 +303,9 @@ def test__set_test_parameters(loginfo):
         call("Set PyTest -m to: demo"),
     ]
     loginfo.assert_has_calls(loginfo_calls, any_order=False)
+
+    # Validate warning message logged for excel report
+    logwarn.assert_called_with(f"--excelreport report will NOT be created")
 
 
 def test__set_test_parameters_unset(loginfo, logwarn):
@@ -538,14 +542,18 @@ def test__write_file_neg(loginfo, logerr, capsys):
     logerr.assert_has_calls(logerr_calls, any_order=False)
 
 
-def test__remove_result_files(loginfo):
+def test__remove_result_files(loginfo, logwarn):
     """Validate _remove_result_files removes pre-existing results files"""
 
     # Create a tests_client client
     client = vane.tests_client.TestsClient("tests/unittests/fixtures/definitions.yaml", DUTS)
 
+    # Make sure the reports/TEST RESULTS dir exists
+    result_dir = "tests/unittests/fixtures/reports/tests_client_results"
+    if not os.path.exists(result_dir):
+        os.makedirs(result_dir)
+
     # Prepopulate the unittest results dir with "result-*" files
-    result_dir = "tests/unittests/fixtures/reports/results"
     files = []
     for _ in range(10):
         # pylint: disable-next=consider-using-with
@@ -554,6 +562,9 @@ def test__remove_result_files(loginfo):
 
     # Call the function to remove the results files
     client._remove_result_files()
+
+    # # Remove the result directory from the file system
+    # shutil.rmtree(result_dir, ignore_errors=True)
 
     # Verify the result files were deleted
     loginfo_calls = []

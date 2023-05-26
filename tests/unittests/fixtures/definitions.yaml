@@ -8,7 +8,7 @@ parameters:
   processes: null
   report_dir: tests/unittests/fixtures/reports
   results_file: result.yml
-  results_dir: tests/unittests/fixtures/reports/results
+  results_dir: tests/unittests/fixtures/reports/tests_client_results
   report_test_steps: false
   setup_show: false
   show_log: show_output.log
