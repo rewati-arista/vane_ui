@@ -119,7 +119,7 @@ class TestsClient:
                         new_file = os.path.join(root, test_definitions)
                         with open(new_file, "w", encoding="utf-8") as outfile:
                             yaml.safe_dump(yaml_new, outfile, sort_keys=False)
-                        logging.info("Regenerared test definition files")
+                        logging.info("Regenerated test definition files")
 
     def generate_test_definitions(self):
         """
