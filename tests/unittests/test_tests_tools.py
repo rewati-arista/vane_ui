@@ -601,120 +601,35 @@ def test_create_duts_file():
 
 # TEST-OPS METHODS
 
+# global variables
 
-def test_test_ops_verify_show_cmd(loginfo, logdebug, logcritical):
+TEST_DEFINITION = read_yaml("tests/unittests/fixtures/test_test_definitions.yaml")
+TEST_SUITE= "test_memory.py"
+DUT = read_yaml("tests/unittests/fixtures/test_duts.yaml")
+
+#utility method for creating tops object
+
+def return_test_ops_object(mocker):
+
+    # creating test ops object and mocking inspect_stack call
+    mocker.patch("inspect.stack", return_value = ["", ["", "", "", "test_memory_utilization_on_"]])
+
+    mocker_object = mocker.patch("vane.tests_tools.TestOps._get_parameters", return_value = read_yaml("tests/unittests/fixtures/test_test_parameters.yaml"))
+    with mocker.patch("vane.tests_tools.TestOps._get_parameters", mocker_object):
+        tops = tests_tools.TestOps(TEST_DEFINITION, TEST_SUITE, DUT)
+   
+    return tops
+
+
+# ASK FOR NAME CHANGE TO show_cmds
+def test_test_ops_verify_show_cmd(loginfo, logdebug, logcritical, mocker):
     """Validates verification of show commands being executed on given dut"""
 
-    # creating test ops object
-    test_definitions = {
-        "test_suites": [
-            {
-                "name": "test_memory.py",
-                "testcases": [
-                    {
-                        "name": "test_test_ops_verify_show_cmd",
-                        "description": "Verify memory is not exceeding high utilization",
-                        "show_cmd": "show version",
-                        "expected_output": 80,
-                        "report_style": "modern",
-                        "test_criteria": "Verify memory is not exceeding high utilization",
-                        "criteria": "names",
-                        "filter": ["DSR01", "DCBBW1"],
-                        "comment": None,
-                        "result": True,
-                    }
-                ],
-            }
-        ]
-    }
-    test_suite = "test_memory.py"
-    dut = {
-        "name": "DCBBW1",
-        "mgmt_ip": "10.255.31.234",
-        "username": "cvpadmin",
-        "role": "unknown",
-        "neighbors": [
-            {"neighborDevice": "DSR01", "neighborPort": "Ethernet1", "port": "Ethernet1"},
-            {"neighborDevice": "BLFW1", "neighborPort": "Ethernet1", "port": "Ethernet3"},
-            {"neighborDevice": "BLFW2", "neighborPort": "Ethernet1", "port": "Ethernet4"},
-        ],
-        "results_dir": "reports/results",
-        "report_dir": "reports",
-        "eapi_file": "tests/unittests/fixtures/eapi.conf",
-        "output": {
-            "interface_list": [
-                {
-                    "hostname": "DCBBW1",
-                    "interface_name": "Ethernet1",
-                    "z_hostname": "DSR01",
-                    "z_interface_name": "Ethernet1",
-                    "media_type": "",
-                },
-                {
-                    "hostname": "DCBBW1",
-                    "interface_name": "Ethernet3",
-                    "z_hostname": "BLFW1",
-                    "z_interface_name": "Ethernet1",
-                    "media_type": "",
-                },
-                {
-                    "hostname": "DCBBW1",
-                    "interface_name": "Ethernet4",
-                    "z_hostname": "BLFW2",
-                    "z_interface_name": "Ethernet1",
-                    "media_type": "",
-                },
-            ],
-            "show version": {
-                "json": {
-                    "imageFormatVersion": "1.0",
-                    "uptime": 277003.72,
-                    "modelName": "vEOS-lab",
-                    "internalVersion": "4.27.2F-26069621.4272F",
-                    "memTotal": 3938900,
-                    "mfgName": "Arista",
-                    "serialNumber": "SN-DCBBW1",
-                    "systemMacAddress": "a4:86:49:d7:e2:d9",
-                    "bootupTimestamp": 1684776615.0,
-                    "memFree": 2755568,
-                    "version": "4.27.2F",
-                    "configMacAddress": "00:00:00:00:00:00",
-                    "isIntlVersion": False,
-                    "imageOptimization": "None",
-                    "internalBuildId": "2fd003fd-04c4-4b44-9c26-417e6ca42009",
-                    "hardwareRevision": "",
-                    "hwMacAddress": "00:00:00:00:00:00",
-                    "architecture": "x86_64",
-                },
-                "text": "Arista vEOS-lab\nHardware version: \nSerial number: SN-DCBBW1\nHardware MAC address: a486.49d7.e2d9\nSystem MAC address: a486.49d7.e2d9\n\nSoftware image version: 4.27.2F\nArchitecture: x86_64\nInternal build version: 4.27.2F-26069621.4272F\nInternal build ID: 2fd003fd-04c4-4b44-9c26-417e6ca42009\nImage format version: 1.0\nImage optimization: None\n\nUptime: 3 days, 4 hours and 56 minutes\nTotal memory: 3938900 kB\nFree memory: 2755560 kB\n\n",
-            },
-            "show clock": {
-                "json": {
-                    "clockSource": {"local": True},
-                    "timezone": "UTC",
-                    "utcTime": 1685053619.06094,
-                    "localTime": {
-                        "dayOfWeek": 3,
-                        "dayOfYear": 145,
-                        "sec": 59,
-                        "min": 26,
-                        "hour": 22,
-                        "year": 2023,
-                        "dayOfMonth": 25,
-                        "daylightSavingsAdjust": 0,
-                        "month": 5,
-                    },
-                },
-                "text": "Thu May 25 22:26:59 2023\nTimezone: UTC\nClock source: local\n",
-            },
-        },
-    }
-
-    tops = tests_tools.TestOps(test_definitions, test_suite, dut)
+    tops = return_test_ops_object(mocker)
 
     # handling the true case
     show_cmds = ["show version"]
-    tops._verify_show_cmd(show_cmds, dut)
+    tops._verify_show_cmd(show_cmds, DUT)
     loginfo.assert_called_with(
         "Verifying if show command ['show version'] were successfully executed on DCBBW1 dut"
     )
@@ -726,7 +641,7 @@ def test_test_ops_verify_show_cmd(loginfo, logdebug, logcritical):
     # handling the assert False raised in the verify_show_cmd method
     # when show_cmd is not executed on the dut
     with pytest.raises(AssertionError):
-        tops._verify_show_cmd(show_cmd, dut)
+        tops._verify_show_cmd(show_cmd, DUT)
     logcritical.assert_called_with("Show command show lldp neighbors not executed on DCBBW1")
 
 
@@ -736,116 +651,13 @@ def test_test_ops_verify_show_cmd(loginfo, logdebug, logcritical):
 #     pass
 
 
-def test_test_ops_get_parameters(loginfo, logdebug):
+def test_test_ops_get_parameters(loginfo, logdebug, mocker):
     """Validates getting test case details from test parameters, suites and name"""
-    test_definitions = {
-        "test_suites": [
-            {
-                "name": "test_memory.py",
-                "testcases": [
-                    {
-                        "name": "test_test_ops_get_parameters",
-                        "description": "Verify memory is not exceeding high utilization",
-                        "show_cmd": "show version",
-                        "expected_output": 80,
-                        "report_style": "modern",
-                        "test_criteria": "Verify memory is not exceeding high utilization",
-                        "criteria": "names",
-                        "filter": ["DSR01", "DCBBW1"],
-                        "comment": None,
-                        "result": True,
-                    }
-                ],
-            }
-        ]
-    }
-    test_suite = "test_memory.py"
-    dut = {
-        "name": "DCBBW1",
-        "mgmt_ip": "10.255.31.234",
-        "username": "cvpadmin",
-        "role": "unknown",
-        "neighbors": [
-            {"neighborDevice": "DSR01", "neighborPort": "Ethernet1", "port": "Ethernet1"},
-            {"neighborDevice": "BLFW1", "neighborPort": "Ethernet1", "port": "Ethernet3"},
-            {"neighborDevice": "BLFW2", "neighborPort": "Ethernet1", "port": "Ethernet4"},
-        ],
-        "results_dir": "reports/results",
-        "report_dir": "reports",
-        "eapi_file": "tests/unittests/fixtures/eapi.conf",
-        "output": {
-            "interface_list": [
-                {
-                    "hostname": "DCBBW1",
-                    "interface_name": "Ethernet1",
-                    "z_hostname": "DSR01",
-                    "z_interface_name": "Ethernet1",
-                    "media_type": "",
-                },
-                {
-                    "hostname": "DCBBW1",
-                    "interface_name": "Ethernet3",
-                    "z_hostname": "BLFW1",
-                    "z_interface_name": "Ethernet1",
-                    "media_type": "",
-                },
-                {
-                    "hostname": "DCBBW1",
-                    "interface_name": "Ethernet4",
-                    "z_hostname": "BLFW2",
-                    "z_interface_name": "Ethernet1",
-                    "media_type": "",
-                },
-            ],
-            "show version": {
-                "json": {
-                    "imageFormatVersion": "1.0",
-                    "uptime": 277003.72,
-                    "modelName": "vEOS-lab",
-                    "internalVersion": "4.27.2F-26069621.4272F",
-                    "memTotal": 3938900,
-                    "mfgName": "Arista",
-                    "serialNumber": "SN-DCBBW1",
-                    "systemMacAddress": "a4:86:49:d7:e2:d9",
-                    "bootupTimestamp": 1684776615.0,
-                    "memFree": 2755568,
-                    "version": "4.27.2F",
-                    "configMacAddress": "00:00:00:00:00:00",
-                    "isIntlVersion": False,
-                    "imageOptimization": "None",
-                    "internalBuildId": "2fd003fd-04c4-4b44-9c26-417e6ca42009",
-                    "hardwareRevision": "",
-                    "hwMacAddress": "00:00:00:00:00:00",
-                    "architecture": "x86_64",
-                },
-                "text": "Arista vEOS-lab\nHardware version: \nSerial number: SN-DCBBW1\nHardware MAC address: a486.49d7.e2d9\nSystem MAC address: a486.49d7.e2d9\n\nSoftware image version: 4.27.2F\nArchitecture: x86_64\nInternal build version: 4.27.2F-26069621.4272F\nInternal build ID: 2fd003fd-04c4-4b44-9c26-417e6ca42009\nImage format version: 1.0\nImage optimization: None\n\nUptime: 3 days, 4 hours and 56 minutes\nTotal memory: 3938900 kB\nFree memory: 2755560 kB\n\n",
-            },
-            "show clock": {
-                "json": {
-                    "clockSource": {"local": True},
-                    "timezone": "UTC",
-                    "utcTime": 1685053619.06094,
-                    "localTime": {
-                        "dayOfWeek": 3,
-                        "dayOfYear": 145,
-                        "sec": 59,
-                        "min": 26,
-                        "hour": 22,
-                        "year": 2023,
-                        "dayOfMonth": 25,
-                        "daylightSavingsAdjust": 0,
-                        "month": 5,
-                    },
-                },
-                "text": "Thu May 25 22:26:59 2023\nTimezone: UTC\nClock source: local\n",
-            },
-        },
-    }
 
-    tops = tests_tools.TestOps(test_definitions, test_suite, dut)
+    tops = return_test_ops_object(mocker)
 
     expected_output = {
-        "name": "test_test_ops_get_parameters",
+        "name": "test_memory_utilization_on_",
         "description": "Verify memory is not exceeding high utilization",
         "show_cmd": "show version",
         "expected_output": 80,
@@ -859,37 +671,28 @@ def test_test_ops_get_parameters(loginfo, logdebug):
     }
 
     actual_output = tops._get_parameters(
-        test_definitions, test_suite, "test_test_ops_get_parameters"
+        TEST_DEFINITION, TEST_SUITE, "test_memory_utilization_on_"
     )
     assert expected_output == actual_output
 
     loginfo_calls = [
-        call("Identify test case and return parameters"),
-        call("Returning parameters for Test Case: test_test_ops_get_parameters"),
         call(
             "Verifying if show command ['show version', 'show version'] were successfully executed on DCBBW1 dut"
         ),
         call("Identify test case and return parameters"),
-        call("Returning parameters for Test Case: test_test_ops_get_parameters"),
+        call("Returning parameters for Test Case: test_memory_utilization_on_"),
     ]
     loginfo.assert_has_calls(loginfo_calls, any_order=False)
 
     logdebug_calls = [
-        call("Return testcases for Test Suite: test_memory.py"),
-        call(
-            "Suite_parameters: [{'name': 'test_memory.py', 'testcases': [{'name': 'test_test_ops_get_parameters', 'description': 'Verify memory is not exceeding high utilization', 'show_cmd': 'show version', 'expected_output': 80, 'report_style': 'modern', 'test_criteria': 'Verify memory is not exceeding high utilization', 'criteria': 'names', 'filter': ['DSR01', 'DCBBW1'], 'comment': None, 'result': True}]}]"
-        ),
-        call(
-            "Case_parameters: {'name': 'test_test_ops_get_parameters', 'description': 'Verify memory is not exceeding high utilization', 'show_cmd': 'show version', 'expected_output': 80, 'report_style': 'modern', 'test_criteria': 'Verify memory is not exceeding high utilization', 'criteria': 'names', 'filter': ['DSR01', 'DCBBW1'], 'comment': None, 'result': True}"
-        ),
         call("Verified output for show command show version on DCBBW1"),
         call("Verified output for show command show version on DCBBW1"),
         call("Return testcases for Test Suite: test_memory.py"),
         call(
-            "Suite_parameters: [{'name': 'test_memory.py', 'testcases': [{'name': 'test_test_ops_get_parameters', 'description': 'Verify memory is not exceeding high utilization', 'show_cmd': 'show version', 'expected_output': 80, 'report_style': 'modern', 'test_criteria': 'Verify memory is not exceeding high utilization', 'criteria': 'names', 'filter': ['DSR01', 'DCBBW1'], 'comment': None, 'result': True}]}]"
+            "Suite_parameters: [{'name': 'test_memory.py', 'testcases': [{'name': 'test_memory_utilization_on_', 'description': 'Verify memory is not exceeding high utilization', 'show_cmd': 'show version', 'expected_output': 80, 'report_style': 'modern', 'test_criteria': 'Verify memory is not exceeding high utilization', 'criteria': 'names', 'filter': ['DSR01', 'DCBBW1'], 'comment': None, 'result': True}]}]"
         ),
         call(
-            "Case_parameters: {'name': 'test_test_ops_get_parameters', 'description': 'Verify memory is not exceeding high utilization', 'show_cmd': 'show version', 'expected_output': 80, 'report_style': 'modern', 'test_criteria': 'Verify memory is not exceeding high utilization', 'criteria': 'names', 'filter': ['DSR01', 'DCBBW1'], 'comment': None, 'result': True}"
+            "Case_parameters: {'name': 'test_memory_utilization_on_', 'description': 'Verify memory is not exceeding high utilization', 'show_cmd': 'show version', 'expected_output': 80, 'report_style': 'modern', 'test_criteria': 'Verify memory is not exceeding high utilization', 'criteria': 'names', 'filter': ['DSR01', 'DCBBW1'], 'comment': None, 'result': True}"
         ),
     ]
     logdebug.assert_has_calls(logdebug_calls, any_order=False)
@@ -901,115 +704,10 @@ def test_test_ops_get_parameters(loginfo, logdebug):
 #     pass
 
 
-def test_test_ops_verify_veos(loginfo, logdebug):
+def test_test_ops_verify_veos(loginfo, logdebug, mocker):
     """Validates verification of the model of the dut"""
 
-    # creating test ops object
-    test_definitions = {
-        "test_suites": [
-            {
-                "name": "test_memory.py",
-                "testcases": [
-                    {
-                        "name": "test_test_ops_verify_veos",
-                        "description": "Verify memory is not exceeding high utilization",
-                        "show_cmd": "show version",
-                        "expected_output": 80,
-                        "report_style": "modern",
-                        "test_criteria": "Verify memory is not exceeding high utilization",
-                        "criteria": "names",
-                        "filter": ["DSR01", "DCBBW1"],
-                        "comment": None,
-                        "result": True,
-                    }
-                ],
-            }
-        ]
-    }
-    test_suite = "test_memory.py"
-    dut = {
-        "name": "DCBBW1",
-        "mgmt_ip": "10.255.31.234",
-        "username": "cvpadmin",
-        "role": "unknown",
-        "neighbors": [
-            {"neighborDevice": "DSR01", "neighborPort": "Ethernet1", "port": "Ethernet1"},
-            {"neighborDevice": "BLFW1", "neighborPort": "Ethernet1", "port": "Ethernet3"},
-            {"neighborDevice": "BLFW2", "neighborPort": "Ethernet1", "port": "Ethernet4"},
-        ],
-        "results_dir": "reports/results",
-        "report_dir": "reports",
-        "eapi_file": "tests/unittests/fixtures/eapi.conf",
-        "output": {
-            "interface_list": [
-                {
-                    "hostname": "DCBBW1",
-                    "interface_name": "Ethernet1",
-                    "z_hostname": "DSR01",
-                    "z_interface_name": "Ethernet1",
-                    "media_type": "",
-                },
-                {
-                    "hostname": "DCBBW1",
-                    "interface_name": "Ethernet3",
-                    "z_hostname": "BLFW1",
-                    "z_interface_name": "Ethernet1",
-                    "media_type": "",
-                },
-                {
-                    "hostname": "DCBBW1",
-                    "interface_name": "Ethernet4",
-                    "z_hostname": "BLFW2",
-                    "z_interface_name": "Ethernet1",
-                    "media_type": "",
-                },
-            ],
-            "show version": {
-                "json": {
-                    "imageFormatVersion": "1.0",
-                    "uptime": 277003.72,
-                    "modelName": "vEOS-lab",
-                    "internalVersion": "4.27.2F-26069621.4272F",
-                    "memTotal": 3938900,
-                    "mfgName": "Arista",
-                    "serialNumber": "SN-DCBBW1",
-                    "systemMacAddress": "a4:86:49:d7:e2:d9",
-                    "bootupTimestamp": 1684776615.0,
-                    "memFree": 2755568,
-                    "version": "4.27.2F",
-                    "configMacAddress": "00:00:00:00:00:00",
-                    "isIntlVersion": False,
-                    "imageOptimization": "None",
-                    "internalBuildId": "2fd003fd-04c4-4b44-9c26-417e6ca42009",
-                    "hardwareRevision": "",
-                    "hwMacAddress": "00:00:00:00:00:00",
-                    "architecture": "x86_64",
-                },
-                "text": "Arista vEOS-lab\nHardware version: \nSerial number: SN-DCBBW1\nHardware MAC address: a486.49d7.e2d9\nSystem MAC address: a486.49d7.e2d9\n\nSoftware image version: 4.27.2F\nArchitecture: x86_64\nInternal build version: 4.27.2F-26069621.4272F\nInternal build ID: 2fd003fd-04c4-4b44-9c26-417e6ca42009\nImage format version: 1.0\nImage optimization: None\n\nUptime: 3 days, 4 hours and 56 minutes\nTotal memory: 3938900 kB\nFree memory: 2755560 kB\n\n",
-            },
-            "show clock": {
-                "json": {
-                    "clockSource": {"local": True},
-                    "timezone": "UTC",
-                    "utcTime": 1685053619.06094,
-                    "localTime": {
-                        "dayOfWeek": 3,
-                        "dayOfYear": 145,
-                        "sec": 59,
-                        "min": 26,
-                        "hour": 22,
-                        "year": 2023,
-                        "dayOfMonth": 25,
-                        "daylightSavingsAdjust": 0,
-                        "month": 5,
-                    },
-                },
-                "text": "Thu May 25 22:26:59 2023\nTimezone: UTC\nClock source: local\n",
-            },
-        },
-    }
-
-    tops = tests_tools.TestOps(test_definitions, test_suite, dut)
+    tops = return_test_ops_object(mocker)
 
     # handling the true case
     tops.verify_veos()
@@ -1017,7 +715,7 @@ def test_test_ops_verify_veos(loginfo, logdebug):
     logdebug.assert_called_with("DCBBW1 is a VEOS instance so returning True")
 
     # handling the false case
-    dut["output"]["show version"]["json"]["modelName"] = "cEOS"
+    DUT["output"]["show version"]["json"]["modelName"] = "cEOS"
     tops.verify_veos()
     logdebug.assert_called_with("DCBBW1 is not a VEOS instance so returning False")
 
@@ -1027,8 +725,7 @@ def test_test_ops_verify_veos(loginfo, logdebug):
 # def test_run_show_cmds(self, show_cmds, encoding="json"):
 #     pass
 
-# GET duts out 
 # mock get parameters
-# CHECK FOR BETTER WAY OF TEST DEFINITION
-# ASK FOR NAME CHANGE TO show_cmds
+# KEY ERRORS 
+
 
