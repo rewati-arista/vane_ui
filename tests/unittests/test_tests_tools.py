@@ -614,17 +614,16 @@ def return_test_ops_object(mocker):
     # creating test ops object and mocking inspect_stack call
     mocker.patch("inspect.stack", return_value = ["", ["", "", "", "test_memory_utilization_on_"]])
 
-    mocker_object = mocker.patch("vane.tests_tools.TestOps._get_parameters", return_value = read_yaml("tests/unittests/fixtures/test_test_parameters.yaml"))
-    with mocker.patch("vane.tests_tools.TestOps._get_parameters", mocker_object):
-        tops = tests_tools.TestOps(TEST_DEFINITION, TEST_SUITE, DUT)
+    tops = tests_tools.TestOps(TEST_DEFINITION, TEST_SUITE, DUT)
    
     return tops
 
 
-# ASK FOR NAME CHANGE TO show_cmds
 def test_test_ops_verify_show_cmd(loginfo, logdebug, logcritical, mocker):
     """Validates verification of show commands being executed on given dut"""
 
+    # mocking the call to _get_parameters in init()
+    mocker.patch("vane.tests_tools.TestOps._get_parameters", return_value = read_yaml("tests/unittests/fixtures/test_test_parameters.yaml"))
     tops = return_test_ops_object(mocker)
 
     # handling the true case
@@ -654,6 +653,8 @@ def test_test_ops_verify_show_cmd(loginfo, logdebug, logcritical, mocker):
 def test_test_ops_get_parameters(loginfo, logdebug, mocker):
     """Validates getting test case details from test parameters, suites and name"""
 
+    # mocking the call to _verify_show_cmd in init()
+    mocker.patch("vane.tests_tools.TestOps._verify_show_cmd", return_value = True)
     tops = return_test_ops_object(mocker)
 
     expected_output = {
@@ -676,17 +677,12 @@ def test_test_ops_get_parameters(loginfo, logdebug, mocker):
     assert expected_output == actual_output
 
     loginfo_calls = [
-        call(
-            "Verifying if show command ['show version', 'show version'] were successfully executed on DCBBW1 dut"
-        ),
         call("Identify test case and return parameters"),
         call("Returning parameters for Test Case: test_memory_utilization_on_"),
     ]
     loginfo.assert_has_calls(loginfo_calls, any_order=False)
 
     logdebug_calls = [
-        call("Verified output for show command show version on DCBBW1"),
-        call("Verified output for show command show version on DCBBW1"),
         call("Return testcases for Test Suite: test_memory.py"),
         call(
             "Suite_parameters: [{'name': 'test_memory.py', 'testcases': [{'name': 'test_memory_utilization_on_', 'description': 'Verify memory is not exceeding high utilization', 'show_cmd': 'show version', 'expected_output': 80, 'report_style': 'modern', 'test_criteria': 'Verify memory is not exceeding high utilization', 'criteria': 'names', 'filter': ['DSR01', 'DCBBW1'], 'comment': None, 'result': True}]}]"
@@ -707,6 +703,9 @@ def test_test_ops_get_parameters(loginfo, logdebug, mocker):
 def test_test_ops_verify_veos(loginfo, logdebug, mocker):
     """Validates verification of the model of the dut"""
 
+    # mocking the call to _verify_show_cmd and _get_parameters in init()
+    mocker.patch("vane.tests_tools.TestOps._get_parameters", return_value = read_yaml("tests/unittests/fixtures/test_test_parameters.yaml"))
+    mocker.patch("vane.tests_tools.TestOps._verify_show_cmd", return_value = True)
     tops = return_test_ops_object(mocker)
 
     # handling the true case
@@ -725,7 +724,7 @@ def test_test_ops_verify_veos(loginfo, logdebug, mocker):
 # def test_run_show_cmds(self, show_cmds, encoding="json"):
 #     pass
 
-# mock get parameters
 # KEY ERRORS 
+# ASK FOR NAME CHANGE TO show_cmds
 
 
