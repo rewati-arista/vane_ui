@@ -31,12 +31,20 @@ def test_setup_vane(loginfo, mocker):
     """Validates functionality of setup_vane method"""
 
     # mocking these methods since they have been tested in tests_tools tests
-    mocker.patch("vane.tests_tools.import_yaml")
-    mocker.patch("vane.tests_tools.return_test_defs")
-    mocker.patch("vane.tests_tools.return_show_cmds")
-    mocker.patch("vane.tests_tools.init_duts")
+
+    mocker_object = mocker.patch("vane.tests_tools.import_yaml")
+    mocker_object.side_effect = ["Duts_file", "Test_parameters"]
+    mocker.patch("vane.tests_tools.return_test_defs", return_value="Test definitions")
+    mocker.patch("vane.tests_tools.return_show_cmds", return_value="show_commands")
+    mocker.patch("vane.tests_tools.init_duts", return_value="Dut object")
 
     vane_cli.setup_vane()
+
+    # assert the vane.configs got set correctly
+    assert vane.config.test_duts == "Duts_file"
+    assert vane.config.test_parameters == "Test_parameters"
+    assert vane.config.test_defs == "Test definitions"
+    assert vane.config.dut_objs == "Dut object"
 
     # assert logs to ensure the method executed without errors
     loginfo_calls = [
