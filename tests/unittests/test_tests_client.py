@@ -548,7 +548,7 @@ def test__remove_result_files(loginfo, logwarn):
     # Create a tests_client client
     client = vane.tests_client.TestsClient("tests/unittests/fixtures/definitions.yaml", DUTS)
 
-    # Make sure the reports/TEST RESULTS dir exists
+    # Make sure the reports/tests_client_results dir exists
     result_dir = "tests/unittests/fixtures/reports/tests_client_results"
     if not os.path.exists(result_dir):
         os.makedirs(result_dir)
@@ -593,10 +593,13 @@ def test_remove_test_results_dir(loginfo):
         os.makedirs(results_dir)
 
     # Prepopulate the TEST RESULTS directory with "result-*" files
-    files = []
+    files = []  # List to hold NamedTemporaryFiles (unused otherwise)
     for _ in range(10):
         # pylint: disable-next=consider-using-with
         tmpf = tempfile.NamedTemporaryFile(prefix="result-", dir=results_dir)
+        # Save the tempf object so the files stay around until the end of the test, or until we
+        # manually delete them. Setting delete=False on the NamedTemporaryFile call does not work,
+        # as that would leave the files behind if the _remove_test_results_dir() operation fails
         files.append(tmpf)
 
     # Call _remove_test_results_dir
