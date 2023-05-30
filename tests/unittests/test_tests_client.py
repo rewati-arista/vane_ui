@@ -8,7 +8,6 @@ tests_client.py unit tests
 # pylint: disable=redefined-outer-name, protected-access, import-error
 
 import os
-import shutil
 import tempfile
 import unittest
 
@@ -562,9 +561,6 @@ def test__remove_result_files(loginfo, logwarn):
 
     # Call the function to remove the results files
     client._remove_result_files()
-
-    # # Remove the result directory from the file system
-    # shutil.rmtree(result_dir, ignore_errors=True)
 
     # Verify the result files were deleted
     loginfo_calls = []
