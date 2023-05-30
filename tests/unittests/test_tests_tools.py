@@ -604,18 +604,19 @@ def test_create_duts_file():
 # global variables
 
 TEST_DEFINITION = read_yaml("tests/unittests/fixtures/test_test_definitions.yaml")
-TEST_SUITE= "test_memory.py"
+TEST_SUITE = "test_memory.py"
 DUT = read_yaml("tests/unittests/fixtures/test_duts.yaml")
 
-#utility method for creating tops object
+# utility method for creating tops object
+
 
 def return_test_ops_object(mocker):
-
+    """Utility function to create tops object needed for testing TestOps methods"""
     # creating test ops object and mocking inspect_stack call
-    mocker.patch("inspect.stack", return_value = ["", ["", "", "", "test_memory_utilization_on_"]])
+    mocker.patch("inspect.stack", return_value=["", ["", "", "", "test_memory_utilization_on_"]])
 
     tops = tests_tools.TestOps(TEST_DEFINITION, TEST_SUITE, DUT)
-   
+
     return tops
 
 
@@ -623,7 +624,10 @@ def test_test_ops_verify_show_cmd(loginfo, logdebug, logcritical, mocker):
     """Validates verification of show commands being executed on given dut"""
 
     # mocking the call to _get_parameters in init()
-    mocker.patch("vane.tests_tools.TestOps._get_parameters", return_value = read_yaml("tests/unittests/fixtures/test_test_parameters.yaml"))
+    mocker.patch(
+        "vane.tests_tools.TestOps._get_parameters",
+        return_value=read_yaml("tests/unittests/fixtures/test_test_parameters.yaml"),
+    )
     tops = return_test_ops_object(mocker)
 
     # handling the true case
@@ -654,7 +658,7 @@ def test_test_ops_get_parameters(loginfo, logdebug, mocker):
     """Validates getting test case details from test parameters, suites and name"""
 
     # mocking the call to _verify_show_cmd in init()
-    mocker.patch("vane.tests_tools.TestOps._verify_show_cmd", return_value = True)
+    mocker.patch("vane.tests_tools.TestOps._verify_show_cmd", return_value=True)
     tops = return_test_ops_object(mocker)
 
     expected_output = {
@@ -671,9 +675,7 @@ def test_test_ops_get_parameters(loginfo, logdebug, mocker):
         "test_suite": "test_memory.py",
     }
 
-    actual_output = tops._get_parameters(
-        TEST_DEFINITION, TEST_SUITE, "test_memory_utilization_on_"
-    )
+    actual_output = tops._get_parameters(TEST_DEFINITION, TEST_SUITE, "test_memory_utilization_on_")
     assert expected_output == actual_output
 
     loginfo_calls = [
@@ -685,10 +687,21 @@ def test_test_ops_get_parameters(loginfo, logdebug, mocker):
     logdebug_calls = [
         call("Return testcases for Test Suite: test_memory.py"),
         call(
-            "Suite_parameters: [{'name': 'test_memory.py', 'testcases': [{'name': 'test_memory_utilization_on_', 'description': 'Verify memory is not exceeding high utilization', 'show_cmd': 'show version', 'expected_output': 80, 'report_style': 'modern', 'test_criteria': 'Verify memory is not exceeding high utilization', 'criteria': 'names', 'filter': ['DSR01', 'DCBBW1'], 'comment': None, 'result': True}]}]"
+            "Suite_parameters: [{'name': 'test_memory.py', 'testcases': "
+            "[{'name': 'test_memory_utilization_on_', "
+            "'description': 'Verify memory is not exceeding high utilization', "
+            "'show_cmd': 'show version', 'expected_output': 80, 'report_style': 'modern', "
+            "'test_criteria': 'Verify memory is not exceeding high utilization', "
+            "'criteria': 'names', 'filter': ['DSR01', 'DCBBW1'], 'comment': None, "
+            "'result': True}]}]"
         ),
         call(
-            "Case_parameters: {'name': 'test_memory_utilization_on_', 'description': 'Verify memory is not exceeding high utilization', 'show_cmd': 'show version', 'expected_output': 80, 'report_style': 'modern', 'test_criteria': 'Verify memory is not exceeding high utilization', 'criteria': 'names', 'filter': ['DSR01', 'DCBBW1'], 'comment': None, 'result': True}"
+            "Case_parameters: {'name': 'test_memory_utilization_on_', "
+            "'description': 'Verify memory is not exceeding high utilization', "
+            "'show_cmd': 'show version', 'expected_output': 80, 'report_style': 'modern', "
+            "'test_criteria': 'Verify memory is not exceeding high utilization', "
+            "'criteria': 'names', 'filter': ['DSR01', 'DCBBW1'], 'comment': None, "
+            "'result': True}"
         ),
     ]
     logdebug.assert_has_calls(logdebug_calls, any_order=False)
@@ -704,8 +717,11 @@ def test_test_ops_verify_veos(loginfo, logdebug, mocker):
     """Validates verification of the model of the dut"""
 
     # mocking the call to _verify_show_cmd and _get_parameters in init()
-    mocker.patch("vane.tests_tools.TestOps._get_parameters", return_value = read_yaml("tests/unittests/fixtures/test_test_parameters.yaml"))
-    mocker.patch("vane.tests_tools.TestOps._verify_show_cmd", return_value = True)
+    mocker.patch(
+        "vane.tests_tools.TestOps._get_parameters",
+        return_value=read_yaml("tests/unittests/fixtures/test_test_parameters.yaml"),
+    )
+    mocker.patch("vane.tests_tools.TestOps._verify_show_cmd", return_value=True)
     tops = return_test_ops_object(mocker)
 
     # handling the true case
@@ -724,7 +740,5 @@ def test_test_ops_verify_veos(loginfo, logdebug, mocker):
 # def test_run_show_cmds(self, show_cmds, encoding="json"):
 #     pass
 
-# KEY ERRORS 
+# KEY ERRORS
 # ASK FOR NAME CHANGE TO show_cmds
-
-
