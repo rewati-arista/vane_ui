@@ -304,7 +304,7 @@ def test__set_test_parameters(loginfo, logwarn):
     loginfo.assert_has_calls(loginfo_calls, any_order=False)
 
     # Validate warning message logged for excel report
-    logwarn.assert_called_with(f"--excelreport report will NOT be created")
+    logwarn.assert_called_with("--excelreport report will NOT be created")
 
 
 def test__set_test_parameters_unset(loginfo, logwarn):
@@ -541,7 +541,7 @@ def test__write_file_neg(loginfo, logerr, capsys):
     logerr.assert_has_calls(logerr_calls, any_order=False)
 
 
-def test__remove_result_files(loginfo, logwarn):
+def test__remove_result_files(loginfo):
     """Validate _remove_result_files removes pre-existing results files"""
 
     # Create a tests_client client
