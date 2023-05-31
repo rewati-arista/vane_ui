@@ -1060,12 +1060,11 @@ class TestOps:
         print("\n\nSHOW OUTPUT COLLECTED IN TEST CASE:")
         print("===================================")
 
-        dut_name = self.test_parameters["dut"]
-        index = 1
-
-        for command, text in zip(self._show_cmds, self._show_cmd_txts):
-            print(f"{index}. {dut_name}# {command}\n\n{text}")
-            index += 1
+        for dut_name, _show_cmds in self._show_cmds.items():
+            index = 1
+            for command, text in zip(_show_cmds, self._show_cmd_txts[dut_name]):
+                print(f"{index}. {dut_name}# {command}\n\n{text}")
+                index += 1
 
     def verify_veos(self):
         """Verify DUT is a VEOS instance
