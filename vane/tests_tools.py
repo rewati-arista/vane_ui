@@ -1095,12 +1095,28 @@ class TestOps:
         Args:
             func (obj): function reference with body to inspect for test steps
         """
-        source_lines, _ = inspect.getsourcelines(func)
 
-        for line in source_lines:
-            match = re.match(r"\s*TS:(.*)", line)
-            if match:
-                self.test_steps.append(match.group(1))
+        # Extracting lines from the function
+        comments = []
+        lines, _ = inspect.getsourcelines(func)
+
+        # converting list of strings into a single string
+        content = " ".join([str(elem) for elem in lines])
+
+        # Pattern to match to extract TS
+        pattern = re.compile('(TS:.*?)(?:"""|Args:)', re.DOTALL)
+
+        # Find all matches to pattern
+        comments = pattern.findall(content)
+
+        # Format each item in list
+        comments = [x.strip() for x in comments]
+        if not comments:
+            comments.append("N/a no Test Steps found")
+
+        for step in comments:
+            # Add Test steps to list to be added to file
+            self.test_steps.append(step.lstrip("TS:"))
 
         logging.info(f"These are test steps {self.test_steps}")
 
