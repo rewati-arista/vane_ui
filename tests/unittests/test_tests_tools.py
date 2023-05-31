@@ -11,7 +11,7 @@ from tests.unittests.fixtures.test_steps import test_steps
 from vane import tests_tools
 
 
-# Test Utility functions
+# TEST UTILITY FUNCTIONS
 
 
 @pytest.fixture
@@ -244,6 +244,7 @@ def test_login_duts(loginfo, mocker):
     test_duts = read_yaml("tests/unittests/fixtures/test_duts_two.yaml")
 
     # mocking method calls in login_duts
+
     mocker.patch(
         "vane.tests_tools.import_yaml",
         return_value={"DSR01": "network_configs", "DCBBW1": "network_configs"},
@@ -307,6 +308,7 @@ def test_send_cmds(loginfo, logdebug, logerror, mocker):
     """Validates the functionality of send_cmds method"""
 
     # mocking call to run commands method on connection object
+
     mocker_object = mocker.patch("vane.device_interface.PyeapiConn.run_commands")
     mocker_object.side_effect = [
         "output_in_json",
@@ -321,6 +323,7 @@ def test_send_cmds(loginfo, logdebug, logerror, mocker):
     )
 
     # asserting return values when encoding is json
+
     assert show_cmds_output == "output_in_json"
     assert show_cmd_list_output == show_cmds
     loginfo.assert_called_with("Ran all show commands on dut")
@@ -336,10 +339,12 @@ def test_send_cmds(loginfo, logdebug, logerror, mocker):
     )
 
     # asserting return values when encoding is text
+
     assert show_cmds_output == "output_in_text"
     assert show_cmd_list_output == show_cmds
 
     # asserting when run_commands raises an exception
+
     show_cmds_output, show_cmd_list_output = tests_tools.send_cmds(
         show_cmds, vane.device_interface.PyeapiConn, "text"
     )
@@ -392,6 +397,7 @@ def test_dut_worker(logdebug, mocker):
     test_duts = read_yaml("tests/unittests/fixtures/test_duts_two.yaml")
 
     # mocking methods called in dut_worker
+
     mocker_object = mocker.patch("vane.tests_tools.send_cmds")
     mocker_object.side_effect = [
         [["version_output_json"], ["show version"]],
@@ -402,6 +408,7 @@ def test_dut_worker(logdebug, mocker):
     tests_tools.dut_worker(dut, show_cmds, test_duts)
 
     # assert values
+
     assert dut["output"]["interface_list"] == []
     assert dut["output"]["show version"]["json"] == "version_output_json"
     assert dut["output"]["show clock"]["json"] == ""
@@ -580,6 +587,7 @@ def test_verify_show_cmd(loginfo, logdebug, logcritical):
 
     # handling the assert False raised in the verify_show_cmd method
     # when show_cmd is not executed on the dut
+
     with pytest.raises(AssertionError):
         tests_tools.verify_show_cmd(show_cmd, dut)
     logcritical.assert_called_with("Show command show lldp neighbors not executed on Test Dut")
@@ -828,11 +836,13 @@ TEST_DEFINITION = read_yaml("tests/unittests/fixtures/test_test_definitions.yaml
 TEST_SUITE = "test_memory.py"
 DUT = read_yaml("tests/unittests/fixtures/test_duts.yaml")
 
+
 # utility method for creating tops object
 
 
 def return_test_ops_object(mocker):
     """Utility function to create tops object needed for testing TestOps methods"""
+
     # creating test ops object and mocking inspect_stack call
     mocker.patch("inspect.stack", return_value=["", ["", "", "", "test_memory_utilization_on_"]])
 
@@ -845,6 +855,7 @@ def test_init(mocker):
     "Validates that TestOPs object gets initialized correctly"
 
     # mocking the call to _verify_show_cmd and _get_parameters in init()
+
     mocker.patch(
         "vane.tests_tools.TestOps._get_parameters",
         return_value=read_yaml("tests/unittests/fixtures/test_test_parameters.yaml"),
@@ -853,6 +864,7 @@ def test_init(mocker):
     tops = return_test_ops_object(mocker)
 
     # assert all the object values are set correctly
+
     assert tops.test_case == "test_memory_utilization_on_"
     assert tops.test_parameters == read_yaml("tests/unittests/fixtures/test_test_parameters.yaml")
     assert tops.expected_output == 80
@@ -924,6 +936,7 @@ def test_test_ops_verify_show_cmd(loginfo, logdebug, logcritical, mocker):
     """Validates verification of show commands being executed on given dut"""
 
     # mocking the call to _get_parameters in init()
+
     mocker.patch(
         "vane.tests_tools.TestOps._get_parameters",
         return_value=read_yaml("tests/unittests/fixtures/test_test_parameters.yaml"),
@@ -931,6 +944,7 @@ def test_test_ops_verify_show_cmd(loginfo, logdebug, logcritical, mocker):
     tops = return_test_ops_object(mocker)
 
     # handling the true case
+
     show_cmds = ["show version"]
     tops._verify_show_cmd(show_cmds, DUT)
     loginfo.assert_called_with(
@@ -939,10 +953,12 @@ def test_test_ops_verify_show_cmd(loginfo, logdebug, logcritical, mocker):
     logdebug.assert_called_with("Verified output for show command show version on DCBBW1")
 
     # handling the false case
+
     show_cmd = ["show lldp neighbors"]
 
     # handling the assert False raised in the verify_show_cmd method
     # when show_cmd is not executed on the dut
+
     with pytest.raises(AssertionError):
         tops._verify_show_cmd(show_cmd, DUT)
     logcritical.assert_called_with("Show command show lldp neighbors not executed on DCBBW1")
@@ -952,6 +968,7 @@ def test_write_results(loginfo, logdebug, mocker):
     "Validates functionality of write_results method"
 
     # mocking the call to _verify_show_cmd and _get_parameters in init()
+
     mocker.patch(
         "vane.tests_tools.TestOps._get_parameters",
         return_value=read_yaml("tests/unittests/fixtures/test_test_parameters.yaml"),
@@ -959,18 +976,21 @@ def test_write_results(loginfo, logdebug, mocker):
     mocker.patch("vane.tests_tools.TestOps._verify_show_cmd", return_value=True)
 
     # mocking call to export_yaml
+
     mocker_object = mocker.patch("vane.tests_tools.export_yaml")
 
     tops = return_test_ops_object(mocker)
     tops._write_results()
 
     # assert the logs
+
     loginfo.assert_called_with("Preparing to write results")
     logdebug.assert_called_with(
         "Creating results file named reports/results/result-test_memory_utilization_on_-DSR01.yml"
     )
 
     # assert export_yaml got called with correctly processed arguments
+
     test_params = read_yaml("tests/unittests/fixtures/test_test_parameters.yaml")
     mocker_object.assert_called_once_with(
         "reports/results/result-test_memory_utilization_on_-DSR01.yml", test_params
@@ -985,6 +1005,7 @@ def test_test_ops_get_parameters(loginfo, logdebug, mocker):
     """Validates getting test case details from test parameters, suites and name"""
 
     # mocking the call to _verify_show_cmd in init()
+
     mocker.patch("vane.tests_tools.TestOps._verify_show_cmd", return_value=True)
     tops = return_test_ops_object(mocker)
 
@@ -1046,6 +1067,7 @@ def test_test_ops_verify_veos(loginfo, logdebug, mocker):
     """Validates verification of the model of the dut"""
 
     # mocking the call to _verify_show_cmd and _get_parameters in init()
+
     mocker.patch(
         "vane.tests_tools.TestOps._get_parameters",
         return_value=read_yaml("tests/unittests/fixtures/test_test_parameters.yaml"),
@@ -1054,11 +1076,13 @@ def test_test_ops_verify_veos(loginfo, logdebug, mocker):
     tops = return_test_ops_object(mocker)
 
     # handling the true case
+
     tops.verify_veos()
     loginfo.assert_called_with("Verifying if DCBBW1 DUT is a VEOS instance. Model is vEOS-lab")
     logdebug.assert_called_with("DCBBW1 is a VEOS instance so returning True")
 
     # handling the false case
+
     DUT["output"]["show version"]["json"]["modelName"] = "cEOS"
     tops.verify_veos()
     logdebug.assert_called_with("DCBBW1 is not a VEOS instance so returning False")
@@ -1069,6 +1093,7 @@ def test_parse_test_steps(loginfo, mocker):
     FIXTURE NEEDED: tests/unittests/fixtures/test_steps/test_steps.py"""
 
     # mocking the call to _verify_show_cmd and _get_parameters in init()
+
     mocker.patch(
         "vane.tests_tools.TestOps._get_parameters",
         return_value=read_yaml("tests/unittests/fixtures/test_test_parameters.yaml"),
