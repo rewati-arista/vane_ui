@@ -23,6 +23,7 @@ parameters:
   template_definitions: tests_definitions.yaml
   test_definitions: test_definition.yaml
   verbose: true
+  network_configs: tests/unittests/fixtures/test_network_configs.yaml
   spreadsheet: tests/fixtures/spreadsheets/PS-LLD-Questionnaire-Template.xlsx
   xcel_definitions: tests/fixtures/spreadsheets/xcel_definitions.yaml
   xcel_schema: tests/fixtures/spreadsheets/xcel_schema.yaml

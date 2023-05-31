@@ -236,14 +236,71 @@ def test_init_duts(loginfo, logdebug, mocker):
     logdebug.assert_has_calls(logdebug_calls, any_order=False)
 
 
-def test_login_duts():
+def test_login_duts(loginfo, mocker):
     """Validates the functionality of login_duts
     FIXTURE NEEDED: test_import_yaml.yaml, test_duts_two.yaml"""
 
     test_parameters = read_yaml("tests/unittests/fixtures/test_import_yaml.yaml")
     test_duts = read_yaml("tests/unittests/fixtures/test_duts_two.yaml")
 
-    tests_tools.login_duts(test_parameters, test_duts)
+    # mocking method calls in login_duts
+    mocker.patch(
+        "vane.tests_tools.import_yaml",
+        return_value={"DSR01": "network_configs", "DCBBW1": "network_configs"},
+    )
+
+    mocker_object = mocker.patch("vane.device_interface.NetmikoConn")
+    netmiko_instance = mocker_object.return_value
+
+    mocker_object = mocker.patch("vane.device_interface.PyeapiConn")
+    pyeapi_instance = mocker_object.return_value
+
+    actual_output = tests_tools.login_duts(test_parameters, test_duts)
+
+    # assert values when pyeapi connection
+
+    for index in range(0, 2):
+        dut_info = actual_output[index]
+        assert dut_info["ssh_conn"] == netmiko_instance
+        assert dut_info["connection"] == pyeapi_instance
+        assert dut_info["name"] == test_duts["duts"][index]["name"]
+        assert dut_info["mgmt_ip"] == test_duts["duts"][index]["mgmt_ip"]
+        assert dut_info["username"] == test_duts["duts"][index]["username"]
+        assert dut_info["role"] == test_duts["duts"][index]["role"]
+        assert dut_info["neighbors"] == test_duts["duts"][index]["neighbors"]
+        assert dut_info["results_dir"] == test_parameters["parameters"]["results_dir"]
+        assert dut_info["report_dir"] == test_parameters["parameters"]["report_dir"]
+        assert dut_info["eapi_file"] == test_parameters["parameters"]["eapi_file"]
+        assert dut_info["network_configs"] == "network_configs"
+
+    # assert logs
+
+    loginfo_calls = [
+        call("Using eapi to connect to Arista switches for testing"),
+        call("Connecting to switch: DSR01"),
+        call("Connecting to switch: DCBBW1"),
+    ]
+
+    loginfo.assert_has_calls(loginfo_calls, any_order=False)
+
+    # assert values when ssh connection
+
+    test_parameters["parameters"]["eos_conn"] = "ssh"
+
+    actual_output = tests_tools.login_duts(test_parameters, test_duts)
+
+    for index in range(0, 2):
+        dut_info = actual_output[index]
+        assert dut_info["connection"] == netmiko_instance
+
+    # assert values when neither pyeapi nor ssh connection
+
+    test_parameters["parameters"]["eos_conn"] = "invalid_connection_type"
+
+    try:
+        actual_output = tests_tools.login_duts(test_parameters, test_duts)
+    except ValueError as exception:
+        assert str(exception) == "Invalid EOS conn type invalid_connection_type specified"
 
 
 def test_send_cmds(loginfo, logdebug, logerror, mocker):
@@ -288,10 +345,10 @@ def test_send_cmds(loginfo, logdebug, logerror, mocker):
     )
     assert show_cmds_output == ""
     assert show_cmd_list_output == []
-    loginfo_calls = [
+    logdebug_calls = [
         call("New show_cmds: []"),
     ]
-    loginfo.assert_has_calls(loginfo_calls, any_order=False)
+    logdebug.assert_has_calls(logdebug_calls, any_order=False)
 
     logerror.assert_called_with("Error running all cmds: show version is erring")
 
@@ -312,8 +369,63 @@ def test_remove_cmd():
     assert expected_output == actual_output
 
 
-# def test_dut_worker():
-#     pass
+def test_dut_worker(logdebug, mocker):
+    """Validates functionality of dut_worker method
+    FIXTURE NEEDED: test_duts_two.yaml"""
+    dut = {
+        "connection": "vane.device_interface.PyeapiConn",
+        "name": "DSR01",
+        "mgmt_ip": "10.255.50.212",
+        "username": "cvpadmin",
+        "role": "unknown",
+        "neighbors": [
+            {"neighborDevice": "DCBBW1", "neighborPort": "Ethernet1", "port": "Ethernet1"},
+            {"neighborDevice": "DCBBW2", "neighborPort": "Ethernet1", "port": "Ethernet2"},
+            {"neighborDevice": "DCBBE1", "neighborPort": "Ethernet1", "port": "Ethernet3"},
+            {"neighborDevice": "DCBBE2", "neighborPort": "Ethernet1", "port": "Ethernet4"},
+        ],
+        "results_dir": "reports/results",
+        "report_dir": "reports",
+        "eapi_file": "tests/unittests/fixtures/eapi.conf",
+    }
+    show_cmds = ["show version", "show clock"]
+    test_duts = read_yaml("tests/unittests/fixtures/test_duts_two.yaml")
+
+    # mocking methods called in dut_worker
+    mocker_object = mocker.patch("vane.tests_tools.send_cmds")
+    mocker_object.side_effect = [
+        [["version_output_json"], ["show version"]],
+        [[{"output": "clock_output_text"}], ["show clock"]],
+    ]
+    mocker.patch("vane.tests_tools.return_interfaces", return_value=[])
+
+    tests_tools.dut_worker(dut, show_cmds, test_duts)
+
+    # assert values
+    assert dut["output"]["interface_list"] == []
+    assert dut["output"]["show version"]["json"] == "version_output_json"
+    assert dut["output"]["show clock"]["json"] == ""
+    assert dut["output"]["show version"]["text"] == ""
+    assert dut["output"]["show clock"]["text"] == "clock_output_text"
+
+    logdebug_calls = [
+        call("List of show commands ['show version', 'show clock']"),
+        call("Returned from send_cmds_json ['show version']"),
+        call("Returned from send_cmds_txt ['show clock']"),
+        call("Executing show command: show version for test test_show_version"),
+        call("Adding output of show version to duts data structure"),
+        call("Found cmd: show version at index 0 of ['show version']"),
+        call("length of cmds: 1 vs length of output 1"),
+        call("Adding cmd show version to dut and data version_output_json"),
+        call("No text output for show version"),
+        call("Executing show command: show clock for test test_show_clock"),
+        call("Adding output of show clock to duts data structure"),
+        call("No json output for show clock"),
+        call("Found cmd: show clock at index 0 of ['show clock']"),
+        call("length of cmds: 1 vs length of output 1"),
+        call("Adding cmd show clock to dut and data clock_output_text"),
+    ]
+    logdebug.assert_has_calls(logdebug_calls, any_order=False)
 
 
 def test_return_interfaces(loginfo, logdebug):
@@ -990,3 +1102,5 @@ def test_parse_test_steps(loginfo, mocker):
 
 # mock init calls?
 # key errors (also in init)
+# why not once called with on netmiko
+# output and no output (text vs json)
