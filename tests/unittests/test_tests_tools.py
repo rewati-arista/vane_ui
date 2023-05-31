@@ -6,6 +6,8 @@ import sys
 from unittest.mock import call
 import pytest
 import yaml
+import vane
+from tests.unittests.fixtures.test_steps import test_steps
 from vane import tests_tools
 
 
@@ -34,6 +36,12 @@ def logdebug(mocker):
 def logcritical(mocker):
     """Fixture to mock logger critical calls from vane.tests_tools"""
     return mocker.patch("vane.vane_logging.logging.critical")
+
+
+@pytest.fixture
+def logerror(mocker):
+    """Fixture to mock logger critical calls from vane.tests_tools"""
+    return mocker.patch("vane.vane_logging.logging.error")
 
 
 def read_yaml(yaml_file):
@@ -193,16 +201,117 @@ def test_import_yaml():
     expected_yaml = read_yaml(yaml_file)
     actual_yaml = tests_tools.import_yaml(yaml_file)
     assert expected_yaml == actual_yaml
+    logging.info(f"ACTUAL {actual_yaml}")
 
 
-# def test_init_duts():
-#     pass
-# def test_login_duts():
-#     pass
-# def test_send_cmds():
-#     pass
-# def test_remove_cmd():
-#     pass
+def test_init_duts(loginfo, logdebug, mocker):
+    """Validates the functionality of init_duts
+    FIXTURE NEEDED: test_import_yaml.yaml, test_duts_two.yaml"""
+    show_cmds = ["show version", "show clock"]
+    test_parameters = read_yaml("tests/unittests/fixtures/test_import_yaml.yaml")
+    test_duts = read_yaml("tests/unittests/fixtures/test_duts_two.yaml")
+
+    mocker.patch("vane.tests_tools.login_duts", return_value="DUTS")
+    mocker.patch("vane.tests_tools.dut_worker")
+    actual_output = tests_tools.init_duts(show_cmds, test_parameters, test_duts)
+
+    assert actual_output == "DUTS"
+
+    loginfo_calls = [
+        call(
+            "Find DUTs and then execute inputted show commands "
+            "on each dut. Return structured data of DUTs output "
+            "data, hostname, and connection."
+        ),
+        call("Returning duts data structure"),
+    ]
+    loginfo.assert_has_calls(loginfo_calls, any_order=False)
+
+    logdebug_calls = [
+        call("Duts login info: DUTS and create 4 workers"),
+        call("Passing the following show commands to workers: ['show version', 'show clock']"),
+        call("Future object generated successfully"),
+        call("Return duts data structure: DUTS"),
+    ]
+    logdebug.assert_has_calls(logdebug_calls, any_order=False)
+
+
+def test_login_duts():
+    """Validates the functionality of login_duts
+    FIXTURE NEEDED: test_import_yaml.yaml, test_duts_two.yaml"""
+
+    test_parameters = read_yaml("tests/unittests/fixtures/test_import_yaml.yaml")
+    test_duts = read_yaml("tests/unittests/fixtures/test_duts_two.yaml")
+
+    tests_tools.login_duts(test_parameters, test_duts)
+
+
+def test_send_cmds(loginfo, logdebug, logerror, mocker):
+    """Validates the functionality of send_cmds method"""
+
+    # mocking call to run commands method on connection object
+    mocker_object = mocker.patch("vane.device_interface.PyeapiConn.run_commands")
+    mocker_object.side_effect = [
+        "output_in_json",
+        "output_in_text",
+        Exception("show version is erring"),
+        "",
+    ]
+
+    show_cmds = ["show version"]
+    show_cmds_output, show_cmd_list_output = tests_tools.send_cmds(
+        show_cmds, vane.device_interface.PyeapiConn, "json"
+    )
+
+    # asserting return values when encoding is json
+    assert show_cmds_output == "output_in_json"
+    assert show_cmd_list_output == show_cmds
+    loginfo.assert_called_with("Ran all show commands on dut")
+    logdebug_calls = [
+        call("List of show commands in show_cmds with encoding json: ['show version']"),
+        call("Ran all show cmds with encoding json: ['show version']"),
+        call("Return all show cmds: output_in_json"),
+    ]
+    logdebug.assert_has_calls(logdebug_calls, any_order=False)
+
+    show_cmds_output, show_cmd_list_output = tests_tools.send_cmds(
+        show_cmds, vane.device_interface.PyeapiConn, "text"
+    )
+
+    # asserting return values when encoding is text
+    assert show_cmds_output == "output_in_text"
+    assert show_cmd_list_output == show_cmds
+
+    # asserting when run_commands raises an exception
+    show_cmds_output, show_cmd_list_output = tests_tools.send_cmds(
+        show_cmds, vane.device_interface.PyeapiConn, "text"
+    )
+    assert show_cmds_output == ""
+    assert show_cmd_list_output == []
+    loginfo_calls = [
+        call("New show_cmds: []"),
+    ]
+    loginfo.assert_has_calls(loginfo_calls, any_order=False)
+
+    logerror.assert_called_with("Error running all cmds: show version is erring")
+
+
+def test_remove_cmd():
+    """Validates functionality of remove_cmd method"""
+
+    error = "show lldp neighbors has an error in it"
+    show_cmds = ["show version", "show clock", "show lldp neighbors", "show lldp neighbors status"]
+    expected_output = ["show version", "show clock", "show lldp neighbors status"]
+    actual_output = tests_tools.remove_cmd(error, show_cmds)
+    assert expected_output == actual_output
+
+    error = "show lldp neighbors status has an error in it"
+    show_cmds = ["show version", "show clock", "show lldp neighbors", "show lldp neighbors status"]
+    expected_output = ["show version", "show clock", "show lldp neighbors"]
+    actual_output = tests_tools.remove_cmd(error, show_cmds)
+    assert expected_output == actual_output
+
+
 # def test_dut_worker():
 #     pass
 
@@ -620,6 +729,85 @@ def return_test_ops_object(mocker):
     return tops
 
 
+def test_init(mocker):
+    "Validates that TestOPs object gets initialized correctly"
+
+    # mocking the call to _verify_show_cmd and _get_parameters in init()
+    mocker.patch(
+        "vane.tests_tools.TestOps._get_parameters",
+        return_value=read_yaml("tests/unittests/fixtures/test_test_parameters.yaml"),
+    )
+    mocker.patch("vane.tests_tools.TestOps._verify_show_cmd", return_value=True)
+    tops = return_test_ops_object(mocker)
+
+    # assert all the object values are set correctly
+    assert tops.test_case == "test_memory_utilization_on_"
+    assert tops.test_parameters == read_yaml("tests/unittests/fixtures/test_test_parameters.yaml")
+    assert tops.expected_output == 80
+    assert tops.dut == read_yaml("tests/unittests/fixtures/test_duts.yaml")
+    assert tops.dut_name == "DCBBW1"
+    assert tops.interface_list == [
+        {
+            "hostname": "DCBBW1",
+            "interface_name": "Ethernet1",
+            "media_type": "",
+            "z_hostname": "DSR01",
+            "z_interface_name": "Ethernet1",
+        },
+        {
+            "hostname": "DCBBW1",
+            "interface_name": "Ethernet3",
+            "media_type": "",
+            "z_hostname": "BLFW1",
+            "z_interface_name": "Ethernet1",
+        },
+        {
+            "hostname": "DCBBW1",
+            "interface_name": "Ethernet4",
+            "media_type": "",
+            "z_hostname": "BLFW2",
+            "z_interface_name": "Ethernet1",
+        },
+    ]
+    assert tops.results_dir == "reports/results"
+    assert tops.report_dir == "reports"
+
+    assert tops.show_cmds == ["show version", "show version"]
+    assert tops._show_cmds == ["show version", "show version"]
+    assert tops.show_cmd == "show version"
+
+    output = """Arista vEOS-lab
+Hardware version: 
+Serial number: SN-DCBBW1
+Hardware MAC address: a486.49d7.e2d9
+System MAC address: a486.49d7.e2d9
+
+Software image version: 4.27.2F
+Architecture: x86_64
+Internal build version: 4.27.2F-26069621.4272F
+Internal build ID: 2fd003fd-04c4-4b44-9c26-417e6ca42009
+Image format version: 1.0
+Image optimization: None
+
+Uptime: 3 days, 4 hours and 56 minutes
+Total memory: 3938900 kB
+Free memory: 2755560 kB\n\n"""
+
+    assert tops.show_cmd_txts == tops._show_cmd_txts == [output, output]
+    assert tops.show_cmd_txt == output
+
+    assert tops.show_output == ""
+    assert not tops.test_steps
+
+    assert tops.comment == ""
+    assert tops.output_msg == ""
+    assert not tops.actual_results
+    assert not tops.expected_results
+    assert tops.actual_output == ""
+    assert not tops.test_result
+    assert tops.test_id == tops.test_parameters.get("test_id", None)
+
+
 def test_test_ops_verify_show_cmd(loginfo, logdebug, logcritical, mocker):
     """Validates verification of show commands being executed on given dut"""
 
@@ -648,8 +836,35 @@ def test_test_ops_verify_show_cmd(loginfo, logdebug, logcritical, mocker):
     logcritical.assert_called_with("Show command show lldp neighbors not executed on DCBBW1")
 
 
-# def test_write_results():
-#     pass
+def test_write_results(loginfo, logdebug, mocker):
+    "Validates functionality of write_results method"
+
+    # mocking the call to _verify_show_cmd and _get_parameters in init()
+    mocker.patch(
+        "vane.tests_tools.TestOps._get_parameters",
+        return_value=read_yaml("tests/unittests/fixtures/test_test_parameters.yaml"),
+    )
+    mocker.patch("vane.tests_tools.TestOps._verify_show_cmd", return_value=True)
+
+    # mocking call to export_yaml
+    mocker_object = mocker.patch("vane.tests_tools.export_yaml")
+
+    tops = return_test_ops_object(mocker)
+    tops._write_results()
+
+    # assert the logs
+    loginfo.assert_called_with("Preparing to write results")
+    logdebug.assert_called_with(
+        "Creating results file named reports/results/result-test_memory_utilization_on_-DSR01.yml"
+    )
+
+    # assert export_yaml got called with correctly processed arguments
+    test_params = read_yaml("tests/unittests/fixtures/test_test_parameters.yaml")
+    mocker_object.assert_called_once_with(
+        "reports/results/result-test_memory_utilization_on_-DSR01.yml", test_params
+    )
+
+
 # def test_write_text_results():
 #     pass
 
@@ -709,6 +924,8 @@ def test_test_ops_get_parameters(loginfo, logdebug, mocker):
 
 # def test_generate_report(self, dut_name, output):
 #     pass
+
+
 # def test_html_report():
 #     pass
 
@@ -735,10 +952,41 @@ def test_test_ops_verify_veos(loginfo, logdebug, mocker):
     logdebug.assert_called_with("DCBBW1 is not a VEOS instance so returning False")
 
 
-# def test_parse_test_steps(self, func):
-#     pass
+def test_parse_test_steps(loginfo, mocker):
+    """Validates verification of the parse_test_steps method
+    FIXTURE NEEDED: tests/unittests/fixtures/test_steps/test_steps.py"""
+
+    # mocking the call to _verify_show_cmd and _get_parameters in init()
+    mocker.patch(
+        "vane.tests_tools.TestOps._get_parameters",
+        return_value=read_yaml("tests/unittests/fixtures/test_test_parameters.yaml"),
+    )
+    mocker.patch("vane.tests_tools.TestOps._verify_show_cmd", return_value=True)
+    tops = return_test_ops_object(mocker)
+    tops.parse_test_steps(test_steps.TestSyslogFunctionality.test_syslog_functionality_on_server)
+
+    # assert the test steps log call
+    loginfo.assert_called_with(
+        "These are test steps "
+        "[' Creating Testops class object and initializing the variable', "
+        "' Running Tcpdump on syslog server and entering in config mode\\n"
+        "             and existing to verify logging event are captured.',"
+        " ' Comparing the actual output and expected output. Generating docx report']"
+    )
+
+
 # def test_run_show_cmds(self, show_cmds, encoding="json"):
 #     pass
 
-# KEY ERRORS
+# will write test for run_show_cmd, write_text_results, generate_report,
+# html, test_setup_import_yaml once change is in
+# name fixtures
+
 # ASK FOR NAME CHANGE TO show_cmds
+# ask about duplicate functions (verify veos/tacacs/show command/get params)
+
+# BUG in parse_test_Steps
+# HTML report will need changes
+
+# mock init calls?
+# key errors (also in init)

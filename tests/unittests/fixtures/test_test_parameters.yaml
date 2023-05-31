@@ -11,3 +11,4 @@ result: true
 show_cmd: show version
 test_criteria: Verify memory is not exceeding high utilization
 test_suite: test_memory.py
+dut: "DSR01"

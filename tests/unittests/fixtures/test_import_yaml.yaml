@@ -7,16 +7,16 @@ parameters:
   json_report: reports/report
   mark: 
   processes: null
-  report_dir: reports
+  report_dir: reports 
   results_file: result.yml
   results_dir: reports/results
   setup_show: false
-  show_clock: false
+  show_clock: true
   show_log: show_output.log
   stdout: false
   test_cases: test_cpu.py
   test_dirs: 
-  - tests/systests/cpu
+  - sample_network_tests/cpu
   report_test_steps: true
   generate_test_definitions: false
   master_definitions: master_def.yaml
