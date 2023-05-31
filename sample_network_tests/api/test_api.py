@@ -204,7 +204,7 @@ class APITests:
                 f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
             )
 
-            tops.actual_output = {"https_server_enabled": self.output["httpsServer"]["port"]}
+            tops.actual_output = {"https_server_enabled": self.output["enabled"]}
 
         except (AttributeError, LookupError, EapiError) as exp:
             tops.actual_output = str(exp)
@@ -217,7 +217,7 @@ class APITests:
             )
 
         """
-        TS: Check HTTPS Server port
+        TS: Check HTTPS Server is enabled
         """
         if tops.actual_output == tops.expected_output:
             tops.test_result = True
