@@ -757,15 +757,18 @@ def test_export_text():
     text_data = {
         "report_dir": "reports",
         "test_cases": "test_tacacs.py",
-        "test_dirs": ["../systests/tacacs"],
+        "test_dirs": ["../sample_network_tests/tacacs"],
         "test_definitions": "test_definition.yaml",
     }
-    expected_data = ""
+
+    divider = "================================================================"
+    heading = f"{divider}\nThese commands were run when PRIMARY DUT was DUT1\n{divider}\n\n"
+    expected_data = heading
     for key, value in text_data.items():
         expected_data += str(key) + str(value) + "\n"
 
     assert not os.path.exists(text_file)
-    tests_tools.export_text(text_file, text_data)
+    tests_tools.export_text(text_file, text_data, "DUT1")
 
     # check if text file got created
     assert os.path.exists(text_file)
@@ -844,6 +847,15 @@ def test_create_duts_file():
 TEST_DEFINITION = read_yaml("tests/unittests/fixtures/fixture_test_definitions.yaml")
 TEST_SUITE = "test_memory.py"
 DUT = read_yaml("tests/unittests/fixtures/fixture_detail_duts.yaml")
+OUTPUT = (
+    "Arista vEOS-lab\nHardware version: \nSerial number: SN-DCBBW1\n"
+    "Hardware MAC address: a486.49d7.e2d9\nSystem MAC address: a486.49d7.e2d9\n\n"
+    "Software image version: 4.27.2F\nArchitecture: x86_64\n"
+    "Internal build version: 4.27.2F-26069621.4272F\n"
+    "Internal build ID: 2fd003fd-04c4-4b44-9c26-417e6ca42009\nImage format version: 1.0\n"
+    "Image optimization: None\n\nUptime: 3 days, 4 hours and 56 minutes\n"
+    "Total memory: 3938900 kB\nFree memory: 2755560 kB\n\n"
+)
 
 
 # utility method for creating tops object
@@ -907,29 +919,13 @@ def test_init(mocker):
     assert tops.results_dir == "reports/results"
     assert tops.report_dir == "reports"
 
-    assert tops.show_cmds == ["show version", "show version"]
-    assert tops._show_cmds == ["show version", "show version"]
+    assert tops.show_cmds == {"DCBBW1": ["show version", "show version"]}
+    assert tops._show_cmds == {"DCBBW1": ["show version", "show version"]}
     assert tops.show_cmd == "show version"
 
-    output = """Arista vEOS-lab
-Hardware version: 
-Serial number: SN-DCBBW1
-Hardware MAC address: a486.49d7.e2d9
-System MAC address: a486.49d7.e2d9
+    assert tops.show_cmd_txts == tops._show_cmd_txts == {"DCBBW1": [OUTPUT, OUTPUT]}
 
-Software image version: 4.27.2F
-Architecture: x86_64
-Internal build version: 4.27.2F-26069621.4272F
-Internal build ID: 2fd003fd-04c4-4b44-9c26-417e6ca42009
-Image format version: 1.0
-Image optimization: None
-
-Uptime: 3 days, 4 hours and 56 minutes
-Total memory: 3938900 kB
-Free memory: 2755560 kB\n\n"""
-
-    assert tops.show_cmd_txts == tops._show_cmd_txts == [output, output]
-    assert tops.show_cmd_txt == output
+    assert tops.show_cmd_txt == OUTPUT
 
     assert tops.show_output == ""
     assert not tops.test_steps
@@ -1008,8 +1004,33 @@ def test_write_results(loginfo, logdebug, mocker):
     )
 
 
-# def test_write_text_results():
-#     pass
+def test_write_text_results(mocker):
+    "Validates functionality of write_text_results method"
+
+    # mocking the call to _verify_show_cmd and _get_parameters in init()
+
+    mocker.patch(
+        "vane.tests_tools.TestOps._get_parameters",
+        return_value=read_yaml("tests/unittests/fixtures/fixture_testops_test_parameters.yaml"),
+    )
+    mocker.patch("vane.tests_tools.TestOps._verify_show_cmd", return_value=True)
+
+    # mocking call to export_yaml
+
+    mocker_object = mocker.patch("vane.tests_tools.export_text")
+
+    tops = return_test_ops_object(mocker)
+    tops._write_text_results()
+
+    # assert export_text got called with correctly processed arguments
+
+    text_file = "reports/TEST RESULTS/1 test_memory_utilization_on_/1 DCBBW1 Verification.txt"
+    text_data = {
+        "1. DCBBW1# show version": "\n\n" + OUTPUT,
+        "2. DCBBW1# show version": "\n\n" + OUTPUT,
+    }
+    dut_name = "DCBBW1"
+    mocker_object.assert_called_once_with(text_file, text_data, dut_name)
 
 
 def test_test_ops_get_parameters(loginfo, logdebug, mocker):
@@ -1066,12 +1087,85 @@ def test_test_ops_get_parameters(loginfo, logdebug, mocker):
     logdebug.assert_has_calls(logdebug_calls, any_order=False)
 
 
-# def test_generate_report(self, dut_name, output):
-#     pass
+def test_generate_report(logdebug, mocker):
+    """Validates functionality of generate_report method"""
+    mocker.patch(
+        "vane.tests_tools.TestOps._get_parameters",
+        return_value=read_yaml("tests/unittests/fixtures/fixture_testops_test_parameters.yaml"),
+    )
+    mocker.patch("vane.tests_tools.TestOps._verify_show_cmd", return_value=True)
+    mocker_object_one = mocker.patch("vane.tests_tools.TestOps._html_report")
+    mocker_object_two = mocker.patch("vane.tests_tools.TestOps._write_results")
+    mocker_object_three = mocker.patch("vane.tests_tools.TestOps._write_text_results")
+    tops = return_test_ops_object(mocker)
+
+    expected_output = {
+        "comment": "",
+        "criteria": "names",
+        "description": "Verify memory is not exceeding high utilization",
+        "expected_output": 80,
+        "filter": ["DSR01", "DCBBW1"],
+        "name": "test_memory_utilization_on_",
+        "report_style": "modern",
+        "result": True,
+        "show_cmd": "show version:\n\n" + OUTPUT,
+        "test_criteria": "Verify memory is not exceeding high utilization",
+        "test_suite": "test_memory.py",
+        "dut": "DCBBW1",
+        "test_result": False,
+        "output_msg": "",
+        "actual_output": "",
+        "test_id": 1,
+        "show_cmd_txts": {
+            "DCBBW1": [
+                OUTPUT,
+                OUTPUT,
+            ]
+        },
+        "test_steps": [],
+        "show_cmds": {"DCBBW1": ["show version", "show version"]},
+        "fail_or_skip_reason": "",
+    }
+
+    tops.generate_report("DCBBW1", "Output")
+
+    # assert method calls and values
+
+    assert tops.test_parameters == expected_output
+
+    mocker_object_one.assert_called_once()
+    mocker_object_two.assert_called_once()
+    mocker_object_three.assert_called_once()
+
+    logdebug.assert_called_with("Output on device DCBBW1 after SSH connection is: Output")
 
 
-# def test_html_report():
-#     pass
+def test_html_report(mocker, capsys):
+    """Validates html_report functionality"""
+
+    mocker.patch(
+        "vane.tests_tools.TestOps._get_parameters",
+        return_value=read_yaml("tests/unittests/fixtures/fixture_testops_test_parameters.yaml"),
+    )
+    mocker.patch("vane.tests_tools.TestOps._verify_show_cmd", return_value=True)
+    tops = return_test_ops_object(mocker)
+
+    tops._html_report()
+
+    # Capture the standard output
+    captured_output = capsys.readouterr()
+
+    show_output = (
+        f"SHOW OUTPUT COLLECTED IN TEST CASE:\n===================================\n"
+        f"1. DCBBW1# show version\n\n{OUTPUT}\n2. DCBBW1# show version\n\n{OUTPUT}"
+    )
+
+    # Assert that the expected prints occurred
+    assert "OUTPUT MESSAGES:" in captured_output.out
+    assert "\nEXPECTED OUTPUT:\n================\n80\n" in captured_output.out
+    assert "ACTUAL OUTPUT:" in captured_output.out
+
+    assert show_output in captured_output.out
 
 
 def test_test_ops_verify_veos(loginfo, logdebug, mocker):
@@ -1123,17 +1217,108 @@ def test_parse_test_steps(loginfo, mocker):
     )
 
 
-# def test_run_show_cmds(self, show_cmds, encoding="json"):
-#     pass
+def test_run_show_cmds(mocker):
+    """Validates the functionality of run_show_cmds method"""
+    mocker.patch(
+        "vane.tests_tools.TestOps._get_parameters",
+        return_value=read_yaml("tests/unittests/fixtures/fixture_testops_test_parameters.yaml"),
+    )
+    mocker.patch("vane.tests_tools.TestOps._verify_show_cmd", return_value=True)
 
+    mocker_object = mocker.patch("vane.device_interface.PyeapiConn.enable")
+    mocker_object.side_effect = [
+        [
+            {
+                "command": "show interfaces status",
+                "result": {"interfaceStatuses": "Management1"},
+                "encoding": "json",
+            }
+        ],
+        [
+            {
+                "command": "show clock",
+                "result": {
+                    "output": "Thu Jun  1 14:03:59 2023\nTimezone: UTC\nClock source: local\n"
+                },
+                "encoding": "text",
+            }
+        ],
+        [
+            {
+                "command": "show lldp neighbors",
+                "result": {"output": "TEXT_result"},
+                "encoding": "text",
+            },
+            {
+                "command": "show interfaces status",
+                "result": {"output": "TEXT_result"},
+                "encoding": "text",
+            },
+        ],
+        [
+            {
+                "command": "show lldp neighbors",
+                "result": {"output": "TEXT_result"},
+                "encoding": "text",
+            },
+            {
+                "command": "show interfaces status",
+                "result": {"output": "TEXT_result"},
+                "encoding": "text",
+            },
+        ],
+    ]
 
-# will write test for run_show_cmd, write_text_results, generate_report,
-# html_report
+    tops = return_test_ops_object(mocker)
 
-# test_setup_import_yaml once Shachi confirms
-# key errors (also in init)
+    show_cmds = ["show interfaces status"]
+    dut = {"connection": vane.device_interface.PyeapiConn, "name": "neighbor"}
+    tops.show_clock_flag = True
+    actual_output = tops.run_show_cmds(show_cmds, dut, "json")
 
-# Ask for name change show_cmds in _verify_show_cmds
-# Naming is very confusing: test_params, test_duts, test_definitions in dut_worker
-# ask about duplicate functions (verify veos/show command/get params)
-# output and no output (text vs json)
+    # assert return values
+    assert actual_output == [
+        {
+            "command": "show interfaces status",
+            "result": {"interfaceStatuses": "Management1"},
+            "encoding": "json",
+        }
+    ]
+    assert tops.show_cmds == {
+        "DCBBW1": ["show version", "show version"],
+        "neighbor": ["show lldp neighbors", "show interfaces status"],
+    }
+    assert tops._show_cmds == {
+        "DCBBW1": ["show version", "show version"],
+        "neighbor": ["show clock", "show lldp neighbors", "show interfaces status"],
+    }
+
+    assert tops.show_cmd_txts == {
+        "DCBBW1": [
+            OUTPUT,
+            OUTPUT,
+        ],
+        "neighbor": ["TEXT_result", "TEXT_result"],
+    }
+    assert tops._show_cmd_txts == {
+        "DCBBW1": [OUTPUT, OUTPUT],
+        "neighbor": [
+            "Thu Jun  1 14:03:59 2023\nTimezone: UTC\nClock source: local\n",
+            "TEXT_result",
+            "TEXT_result",
+        ],
+    }
+
+    tops.show_clock_flag = False
+    show_cmds = ["show lldp neighbors", "show interfaces status"]
+    actual_output = tops.run_show_cmds(show_cmds, dut, "text")
+
+    # assert return values
+    assert actual_output == [
+        {"command": "show lldp neighbors", "result": {"output": "TEXT_result"}, "encoding": "text"},
+        {
+            "command": "show interfaces status",
+            "result": {"output": "TEXT_result"},
+            "encoding": "text",
+        },
+    ]
