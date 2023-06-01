@@ -29,6 +29,7 @@ disable=
     redefined-outer-name,
     protected-access,
     too-many-lines,
+    too-many-function-args,
 
 
 [MISCELLANEOUS]
