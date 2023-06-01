@@ -15,9 +15,9 @@ duts:
     neighborPort: Ethernet1
     port: Ethernet4
   password: cvp123!
-  role: unknown
   transport: https
   username: cvpadmin
+  role: unknown
 - mgmt_ip: 10.255.31.234
   name: DCBBW1
   neighbors:
@@ -31,7 +31,7 @@ duts:
     neighborPort: Ethernet1
     port: Ethernet4
   password: cvp123!
-  role: unknown
   transport: https
   username: cvpadmin
+  role: unknown
 servers: []

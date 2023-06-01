@@ -195,21 +195,19 @@ def test_parametrize_duts(loginfo, logdebug):
 
 def test_import_yaml():
     """Validates import yaml method
-    FIXTURE NEEDED: test_import_yaml.yaml"""
-    logging.info("FIXTURE NEEDED: test_import_yaml.yaml")
-    yaml_file = "tests/unittests/fixtures/test_import_yaml.yaml"
+    FIXTURE NEEDED: fixture_definitions.yaml"""
+    yaml_file = "tests/unittests/fixtures/fixture_definitions.yaml"
     expected_yaml = read_yaml(yaml_file)
     actual_yaml = tests_tools.import_yaml(yaml_file)
     assert expected_yaml == actual_yaml
-    logging.info(f"ACTUAL {actual_yaml}")
 
 
 def test_init_duts(loginfo, logdebug, mocker):
     """Validates the functionality of init_duts
-    FIXTURE NEEDED: test_import_yaml.yaml, test_duts_two.yaml"""
+    FIXTURE NEEDED: fixture_definitions.yaml, fixture_duts.yaml"""
     show_cmds = ["show version", "show clock"]
-    test_parameters = read_yaml("tests/unittests/fixtures/test_import_yaml.yaml")
-    test_duts = read_yaml("tests/unittests/fixtures/test_duts_two.yaml")
+    test_parameters = read_yaml("tests/unittests/fixtures/fixture_definitions.yaml")
+    test_duts = read_yaml("tests/unittests/fixtures/fixture_duts.yaml")
 
     mocker.patch("vane.tests_tools.login_duts", return_value="DUTS")
     mocker.patch("vane.tests_tools.dut_worker")
@@ -238,10 +236,10 @@ def test_init_duts(loginfo, logdebug, mocker):
 
 def test_login_duts(loginfo, mocker):
     """Validates the functionality of login_duts
-    FIXTURE NEEDED: test_import_yaml.yaml, test_duts_two.yaml"""
+    FIXTURE NEEDED: fixture_definitions.yaml, fixture_duts.yaml"""
 
-    test_parameters = read_yaml("tests/unittests/fixtures/test_import_yaml.yaml")
-    test_duts = read_yaml("tests/unittests/fixtures/test_duts_two.yaml")
+    test_parameters = read_yaml("tests/unittests/fixtures/fixture_definitions.yaml")
+    test_duts = read_yaml("tests/unittests/fixtures/fixture_duts.yaml")
 
     # mocking method calls in login_duts
 
@@ -257,6 +255,18 @@ def test_login_duts(loginfo, mocker):
     pyeapi_instance = mocker_object.return_value
 
     actual_output = tests_tools.login_duts(test_parameters, test_duts)
+
+    # assert called to NetmikoCOnn and PyeapiConn were made correctly
+
+    netmiko_instance.set_conn_params.assert_called_with("tests/unittests/fixtures/eapi.conf")
+    assert netmiko_instance.set_conn_params.call_count == 2
+
+    assert netmiko_instance.set_up_conn.call_count == 2
+
+    pyeapi_instance.set_conn_params.assert_called_with("tests/unittests/fixtures/eapi.conf")
+    assert pyeapi_instance.set_conn_params.call_count == 2
+
+    assert pyeapi_instance.set_up_conn.call_count == 2
 
     # assert values when pyeapi connection
 
@@ -376,7 +386,7 @@ def test_remove_cmd():
 
 def test_dut_worker(logdebug, mocker):
     """Validates functionality of dut_worker method
-    FIXTURE NEEDED: test_duts_two.yaml"""
+    FIXTURE NEEDED: fixture_duts.yaml"""
     dut = {
         "connection": "vane.device_interface.PyeapiConn",
         "name": "DSR01",
@@ -394,7 +404,7 @@ def test_dut_worker(logdebug, mocker):
         "eapi_file": "tests/unittests/fixtures/eapi.conf",
     }
     show_cmds = ["show version", "show clock"]
-    test_duts = read_yaml("tests/unittests/fixtures/test_duts_two.yaml")
+    test_duts = read_yaml("tests/unittests/fixtures/fixture_duts.yaml")
 
     # mocking methods called in dut_worker
 
@@ -437,8 +447,8 @@ def test_dut_worker(logdebug, mocker):
 
 def test_return_interfaces(loginfo, logdebug):
     """Validates if interfaces are being read properly from test parameters
-    FIXTURE NEEDED: test_return_interfaces_input.yaml"""
-    test_parameters = read_yaml("tests/unittests/fixtures/test_return_interfaces_input.yaml")
+    FIXTURE NEEDED: fixture_duts.yaml"""
+    test_parameters = read_yaml("tests/unittests/fixtures/fixture_duts.yaml")
     actual_output = tests_tools.return_interfaces("DSR01", test_parameters)
     excepted_output = [
         {
@@ -515,8 +525,8 @@ def test_return_interfaces(loginfo, logdebug):
 
 def test_get_parameters(loginfo, logdebug):
     """Validates getting test case details from test parameters, suites and name
-    FIXTURES NEEDED: test_return_show_cmds.yaml"""
-    tests_parameters = read_yaml("tests/unittests/fixtures/test_return_show_cmds.yaml")
+    FIXTURES NEEDED: fixture_test_parameters.yaml"""
+    tests_parameters = read_yaml("tests/unittests/fixtures/fixture_test_parameters.yaml")
     test_suite = "sample_network_tests/aaa/test_aaa.py"
     test_case = "test_if_exec_authorization_methods_set_on_"
 
@@ -561,7 +571,7 @@ def test_get_parameters(loginfo, logdebug):
             " {'name': 'test_if_exec_authorization_methods_set_on_',"
             " 'description': 'Verify AAA exec authorization are method-lists set correct',"
             " 'exec_auth': ['none'], 'show_cmd': 'show aaa methods all', 'expected_output': None,"
-            " 'comment': None, 'result': True}]}]"
+            " 'comment': None, 'result': True}], 'dir_path': 'sample_network_tests/aaa'}]"
         ),
         call(
             "Case_parameters: {'name': 'test_if_exec_authorization_methods_set_on_',"
@@ -621,8 +631,8 @@ def test_verify_veos(loginfo, logdebug):
 
 def test_return_show_cmds(loginfo, logdebug):
     """Validates if correct show commands get returned given test suites
-    FIXTURES NEEDED: test_return_show_cmds.yaml"""
-    test_parameters = read_yaml("tests/unittests/fixtures/test_return_show_cmds.yaml")
+    FIXTURES NEEDED: fixture_test_parameters.yaml"""
+    test_parameters = read_yaml("tests/unittests/fixtures/fixture_test_parameters.yaml")
     expected_output = [
         "show version",
         "show lldp neighbors",
@@ -663,7 +673,7 @@ def test_return_show_cmds(loginfo, logdebug):
             " {'name': 'test_if_exec_authorization_methods_set_on_',"
             " 'description': 'Verify AAA exec authorization are method-lists set correct',"
             " 'exec_auth': ['none'], 'show_cmd': 'show aaa methods all', 'expected_output': None,"
-            " 'comment': None, 'result': True}]}]}"
+            " 'comment': None, 'result': True}], 'dir_path': 'sample_network_tests/aaa'}]}"
         ),
         call("Found show commands ['show lldp neighbors', 'show aaa counters']"),
         call("Adding Show commands show lldp neighbors"),
@@ -680,8 +690,7 @@ def test_return_show_cmds(loginfo, logdebug):
 def test_return_test_defs(logdebug):
     """Validates if test definitions are being generated correctly
     Creates a temporary reports/test_definition and deletes it before exiting
-    FIXTURE NEEDED: test_return_test_defs"""
-    logging.info("FIXTURE NEEDED: test_return_test_defs")
+    FIXTURE NEEDED: fixture_tacacs_test_def.yaml"""
     expected_yaml = {
         "parameters": {
             "report_dir": "reports",
@@ -692,7 +701,7 @@ def test_return_test_defs(logdebug):
     }
     os.makedirs(os.path.dirname("reports/test_definition.yaml"), exist_ok=True)
     actual_output = tests_tools.return_test_defs(expected_yaml)
-    expected_output = read_yaml("tests/unittests/fixtures/test_return_test_defs.yaml")
+    expected_output = read_yaml("tests/unittests/fixtures/fixture_tacacs_test_def.yaml")
     assert (
         actual_output["test_suites"][0]["testcases"]
         == expected_output["test_suites"][0]["testcases"]
@@ -800,9 +809,9 @@ def test_generate_duts_file():
 
 def test_create_duts_file():
     """Validates generation of duts file from topology and inventory file
-    FIXTURES NEEDED: test_topology.yaml, test_inventory.yaml"""
-    topology_data = "tests/unittests/fixtures/test_topology.yaml"
-    inventory_data = "tests/unittests/fixtures/test_inventory.yaml"
+    FIXTURES NEEDED: fixture_topology.yaml, fixture_inventory.yaml"""
+    topology_data = "tests/unittests/fixtures/fixture_topology.yaml"
+    inventory_data = "tests/unittests/fixtures/fixture_inventory.yaml"
 
     expected_data = {
         "duts": [
@@ -832,9 +841,9 @@ def test_create_duts_file():
 
 # global variables
 
-TEST_DEFINITION = read_yaml("tests/unittests/fixtures/test_test_definitions.yaml")
+TEST_DEFINITION = read_yaml("tests/unittests/fixtures/fixture_test_definitions.yaml")
 TEST_SUITE = "test_memory.py"
-DUT = read_yaml("tests/unittests/fixtures/test_duts.yaml")
+DUT = read_yaml("tests/unittests/fixtures/fixture_detail_duts.yaml")
 
 
 # utility method for creating tops object
@@ -858,7 +867,7 @@ def test_init(mocker):
 
     mocker.patch(
         "vane.tests_tools.TestOps._get_parameters",
-        return_value=read_yaml("tests/unittests/fixtures/test_test_parameters.yaml"),
+        return_value=read_yaml("tests/unittests/fixtures/fixture_testops_test_parameters.yaml"),
     )
     mocker.patch("vane.tests_tools.TestOps._verify_show_cmd", return_value=True)
     tops = return_test_ops_object(mocker)
@@ -866,9 +875,11 @@ def test_init(mocker):
     # assert all the object values are set correctly
 
     assert tops.test_case == "test_memory_utilization_on_"
-    assert tops.test_parameters == read_yaml("tests/unittests/fixtures/test_test_parameters.yaml")
+    assert tops.test_parameters == read_yaml(
+        "tests/unittests/fixtures/fixture_testops_test_parameters.yaml"
+    )
     assert tops.expected_output == 80
-    assert tops.dut == read_yaml("tests/unittests/fixtures/test_duts.yaml")
+    assert tops.dut == read_yaml("tests/unittests/fixtures/fixture_detail_duts.yaml")
     assert tops.dut_name == "DCBBW1"
     assert tops.interface_list == [
         {
@@ -939,7 +950,7 @@ def test_test_ops_verify_show_cmd(loginfo, logdebug, logcritical, mocker):
 
     mocker.patch(
         "vane.tests_tools.TestOps._get_parameters",
-        return_value=read_yaml("tests/unittests/fixtures/test_test_parameters.yaml"),
+        return_value=read_yaml("tests/unittests/fixtures/fixture_testops_test_parameters.yaml"),
     )
     tops = return_test_ops_object(mocker)
 
@@ -971,7 +982,7 @@ def test_write_results(loginfo, logdebug, mocker):
 
     mocker.patch(
         "vane.tests_tools.TestOps._get_parameters",
-        return_value=read_yaml("tests/unittests/fixtures/test_test_parameters.yaml"),
+        return_value=read_yaml("tests/unittests/fixtures/fixture_testops_test_parameters.yaml"),
     )
     mocker.patch("vane.tests_tools.TestOps._verify_show_cmd", return_value=True)
 
@@ -991,7 +1002,7 @@ def test_write_results(loginfo, logdebug, mocker):
 
     # assert export_yaml got called with correctly processed arguments
 
-    test_params = read_yaml("tests/unittests/fixtures/test_test_parameters.yaml")
+    test_params = read_yaml("tests/unittests/fixtures/fixture_testops_test_parameters.yaml")
     mocker_object.assert_called_once_with(
         "reports/results/result-test_memory_utilization_on_-DSR01.yml", test_params
     )
@@ -1070,7 +1081,7 @@ def test_test_ops_verify_veos(loginfo, logdebug, mocker):
 
     mocker.patch(
         "vane.tests_tools.TestOps._get_parameters",
-        return_value=read_yaml("tests/unittests/fixtures/test_test_parameters.yaml"),
+        return_value=read_yaml("tests/unittests/fixtures/fixture_testops_test_parameters.yaml"),
     )
     mocker.patch("vane.tests_tools.TestOps._verify_show_cmd", return_value=True)
     tops = return_test_ops_object(mocker)
@@ -1096,7 +1107,7 @@ def test_parse_test_steps(loginfo, mocker):
 
     mocker.patch(
         "vane.tests_tools.TestOps._get_parameters",
-        return_value=read_yaml("tests/unittests/fixtures/test_test_parameters.yaml"),
+        return_value=read_yaml("tests/unittests/fixtures/fixture_testops_test_parameters.yaml"),
     )
     mocker.patch("vane.tests_tools.TestOps._verify_show_cmd", return_value=True)
     tops = return_test_ops_object(mocker)
@@ -1115,17 +1126,14 @@ def test_parse_test_steps(loginfo, mocker):
 # def test_run_show_cmds(self, show_cmds, encoding="json"):
 #     pass
 
+
 # will write test for run_show_cmd, write_text_results, generate_report,
-# html, test_setup_import_yaml once change is in
-# name fixtures
+# html_report
 
-# ASK FOR NAME CHANGE TO show_cmds
-# ask about duplicate functions (verify veos/tacacs/show command/get params)
-
-# BUG in parse_test_Steps
-# HTML report will need changes
-
-# mock init calls?
+# test_setup_import_yaml once Shachi confirms
 # key errors (also in init)
-# why not once called with on netmiko
+
+# Ask for name change show_cmds in _verify_show_cmds
+# Naming is very confusing: test_params, test_duts, test_definitions in dut_worker
+# ask about duplicate functions (verify veos/show command/get params)
 # output and no output (text vs json)

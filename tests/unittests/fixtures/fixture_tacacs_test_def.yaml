@@ -7,7 +7,6 @@ test_suites:
       expected_output: null
       report_style: modern
       test_criteria: Verify tacacs messages are sending correctly
-      # Optionally filter duts by criteria: name, role, regex, or names
       criteria: names
       filter: 
         - DSR01
@@ -20,7 +19,6 @@ test_suites:
       expected_output: null
       report_style: modern
       test_criteria: Verify tacacs messages are received correctly
-      # Optionally filter duts by criteria: name, role, regex, or names
       criteria: names
       filter: 
         - DSR01
