@@ -218,6 +218,15 @@ def test_yaml_read_invalid_yaml(mocker, logerr):
     logerr.assert_called_with("EXITING TEST RUNNER")
 
 
+def test_import_yaml_success(mocker):
+    """Validates import yaml method"""
+    mocked_file_data = mocker.mock_open(read_data="a: 1\nb: 2\n")
+    mocker.patch("builtins.open", mocked_file_data)
+    expected_yaml = {"a": 1, "b": 2}
+    actual_yaml = tests_tools.import_yaml("yaml_file")
+    assert expected_yaml == actual_yaml
+
+
 def test_import_yaml_non_existing_file(mocker, logerr):
     """Validates import yaml method with non-existing file"""
     sys_exis_mocked = mocker.patch("sys.exit")
