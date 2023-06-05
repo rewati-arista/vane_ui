@@ -1169,13 +1169,35 @@ class TestOps:
             return txt_results
 
         return json_results
-    
-    def remove_ansi_escape_codes(self, text):
-        ansi_escape_pattern = re.compile(r'\x1b\[\?1h\x1b=')
-        return ansi_escape_pattern.sub('', text)
-    
-    def report_ssh_output(self, output, server_ip):
 
+    def remove_ansi_escape_codes(self, text, dut_name):
+        """Removes ansi_escape_codes from ssh output and demarcates outputs
+        for different commands"""
+
+        lines = text.splitlines()
+        clean_output = []
+        final_output = []
+        flag = True
+        for line in lines:
+            # deals with first command (handled separately since no problematic characters)
+            if flag and dut_name in line:
+                flag = False
+                clean_output = []
+            # deals with all other commands
+            elif re.search(r"[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]", line) and dut_name in line:
+                command_output = "\n".join(clean_output)
+                final_output.append(command_output)
+                clean_output = []
+            # deals with Last Login line AND lines after commands with problematic characters
+            elif "Last login" in line or re.search(r"[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]", line):
+                continue
+            # deals with all other lines
+            else:
+                clean_output.append(line)
+        return final_output
+
+    def report_ssh_output(self, output, server_ip, show_cmds):
+        """This method collects evidence output of ssh output"""
         # process the dut name from the ip address provided to ssh
 
         duts_data = import_yaml("duts.yaml")["duts"]
@@ -1183,20 +1205,10 @@ class TestOps:
             if server_ip == dut["mgmt_ip"]:
                 dut_name = dut["name"]
 
-        
-        # Example usage
-        text_with_escape_code = "This is a [?1h= sample string."
-        clean_text = self.remove_ansi_escape_codes(text_with_escape_code)
-        logging.info(f"REWATI {clean_text}")
+        output = self.remove_ansi_escape_codes(output, dut_name)
 
-
-
-        # self.show_cmds[dut_name].append("SSH OUTPUT")
-        # self._show_cmds[dut_name].append("SSH OUTPUT")
-        # self.show_cmd_txts[dut_name].append("")
-        # self._show_cmd_txts[dut_name].append("")
-
-    
-
-
-        
+        for command, text in zip(show_cmds, output):
+            self.show_cmds[dut_name].append(command)
+            self._show_cmds[dut_name].append(command)
+            self.show_cmd_txts[dut_name].append(text)
+            self._show_cmd_txts[dut_name].append(text)
