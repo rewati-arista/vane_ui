@@ -1289,7 +1289,7 @@ def test_test_ops_parse_test_steps(loginfo, mocker):
     )
 
 
-def test_test_ops_run_show_cmds(mocker):
+def test_test_ops_run_show_cmds_json(mocker):
     """Validates the functionality of run_show_cmds method"""
     mocker.patch(
         "vane.tests_tools.TestOps._get_parameters",
@@ -1314,18 +1314,6 @@ def test_test_ops_run_show_cmds(mocker):
                 },
                 "encoding": "text",
             }
-        ],
-        [
-            {
-                "command": "show lldp neighbors",
-                "result": {"output": "TEXT_result"},
-                "encoding": "text",
-            },
-            {
-                "command": "show interfaces status",
-                "result": {"output": "TEXT_result"},
-                "encoding": "text",
-            },
         ],
         [
             {
@@ -1381,8 +1369,37 @@ def test_test_ops_run_show_cmds(mocker):
         ],
     }
 
+
+def test_test_ops_run_show_cmds_text(mocker):
+    """Validates the functionality of run_show_cmds method"""
+    mocker.patch(
+        "vane.tests_tools.TestOps._get_parameters",
+        return_value=read_yaml("tests/unittests/fixtures/fixture_testops_test_parameters.yaml"),
+    )
+    mocker.patch("vane.tests_tools.TestOps._verify_show_cmd", return_value=True)
+
+    mocker_object = mocker.patch("vane.device_interface.PyeapiConn.enable")
+    mocker_object.side_effect = [
+        [
+            {
+                "command": "show lldp neighbors",
+                "result": {"output": "TEXT_result"},
+                "encoding": "text",
+            },
+            {
+                "command": "show interfaces status",
+                "result": {"output": "TEXT_result"},
+                "encoding": "text",
+            },
+        ],
+    ]
+
+    tops = create_test_ops_instance(mocker)
+
+    dut = {"connection": vane.device_interface.PyeapiConn, "name": "neighbor"}
     tops.show_clock_flag = False
     show_cmds = ["show lldp neighbors", "show interfaces status"]
+
     actual_output = tops.run_show_cmds(show_cmds, dut, "text")
 
     # assert return values
@@ -1394,3 +1411,26 @@ def test_test_ops_run_show_cmds(mocker):
             "encoding": "text",
         },
     ]
+    assert tops.show_cmds == {
+        "DCBBW1": ["show version", "show version"],
+        "neighbor": ["show lldp neighbors", "show interfaces status"],
+    }
+    assert tops._show_cmds == {
+        "DCBBW1": ["show version", "show version"],
+        "neighbor": ["show lldp neighbors", "show interfaces status"],
+    }
+
+    assert tops.show_cmd_txts == {
+        "DCBBW1": [
+            OUTPUT,
+            OUTPUT,
+        ],
+        "neighbor": ["TEXT_result", "TEXT_result"],
+    }
+    assert tops._show_cmd_txts == {
+        "DCBBW1": [
+            OUTPUT,
+            OUTPUT,
+        ],
+        "neighbor": ["TEXT_result", "TEXT_result"],
+    }
