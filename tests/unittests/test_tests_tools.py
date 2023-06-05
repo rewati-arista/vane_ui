@@ -908,7 +908,7 @@ OUTPUT = (
 # utility method for creating tops object
 
 
-def return_test_ops_object(mocker):
+def create_test_ops_instance(mocker):
     """Utility function to create tops object needed for testing TestOps methods"""
 
     # creating test ops object and mocking inspect_stack call
@@ -929,7 +929,7 @@ def test_init(mocker):
         return_value=read_yaml("tests/unittests/fixtures/fixture_testops_test_parameters.yaml"),
     )
     mocker.patch("vane.tests_tools.TestOps._verify_show_cmd", return_value=True)
-    tops = return_test_ops_object(mocker)
+    tops = create_test_ops_instance(mocker)
 
     # assert all the object values are set correctly
 
@@ -995,7 +995,7 @@ def test_test_ops_verify_show_cmd(loginfo, logdebug, logcritical, mocker):
         "vane.tests_tools.TestOps._get_parameters",
         return_value=read_yaml("tests/unittests/fixtures/fixture_testops_test_parameters.yaml"),
     )
-    tops = return_test_ops_object(mocker)
+    tops = create_test_ops_instance(mocker)
 
     # handling the true case
 
@@ -1033,7 +1033,7 @@ def test_write_results(loginfo, logdebug, mocker):
 
     mocker_object = mocker.patch("vane.tests_tools.export_yaml")
 
-    tops = return_test_ops_object(mocker)
+    tops = create_test_ops_instance(mocker)
     tops._write_results()
 
     # assert the logs
@@ -1066,7 +1066,7 @@ def test_write_text_results(mocker):
 
     mocker_object = mocker.patch("vane.tests_tools.export_text")
 
-    tops = return_test_ops_object(mocker)
+    tops = create_test_ops_instance(mocker)
     tops._write_text_results()
 
     # assert export_text got called with correctly processed arguments
@@ -1086,7 +1086,7 @@ def test_test_ops_get_parameters(loginfo, logdebug, mocker):
     # mocking the call to _verify_show_cmd in init()
 
     mocker.patch("vane.tests_tools.TestOps._verify_show_cmd", return_value=True)
-    tops = return_test_ops_object(mocker)
+    tops = create_test_ops_instance(mocker)
 
     expected_output = {
         "name": "test_memory_utilization_on_",
@@ -1144,7 +1144,7 @@ def test_generate_report(logdebug, mocker):
     mocker_object_one = mocker.patch("vane.tests_tools.TestOps._html_report")
     mocker_object_two = mocker.patch("vane.tests_tools.TestOps._write_results")
     mocker_object_three = mocker.patch("vane.tests_tools.TestOps._write_text_results")
-    tops = return_test_ops_object(mocker)
+    tops = create_test_ops_instance(mocker)
 
     expected_output = {
         "comment": "",
@@ -1195,7 +1195,7 @@ def test_html_report(mocker, capsys):
         return_value=read_yaml("tests/unittests/fixtures/fixture_testops_test_parameters.yaml"),
     )
     mocker.patch("vane.tests_tools.TestOps._verify_show_cmd", return_value=True)
-    tops = return_test_ops_object(mocker)
+    tops = create_test_ops_instance(mocker)
 
     tops._html_report()
 
@@ -1225,7 +1225,7 @@ def test_test_ops_verify_veos(loginfo, logdebug, mocker):
         return_value=read_yaml("tests/unittests/fixtures/fixture_testops_test_parameters.yaml"),
     )
     mocker.patch("vane.tests_tools.TestOps._verify_show_cmd", return_value=True)
-    tops = return_test_ops_object(mocker)
+    tops = create_test_ops_instance(mocker)
 
     # handling the true case
 
@@ -1251,7 +1251,7 @@ def test_parse_test_steps(loginfo, mocker):
         return_value=read_yaml("tests/unittests/fixtures/fixture_testops_test_parameters.yaml"),
     )
     mocker.patch("vane.tests_tools.TestOps._verify_show_cmd", return_value=True)
-    tops = return_test_ops_object(mocker)
+    tops = create_test_ops_instance(mocker)
     tops.parse_test_steps(test_steps.TestSyslogFunctionality.test_syslog_functionality_on_server)
 
     # assert the test steps log call
@@ -1316,7 +1316,7 @@ def test_run_show_cmds(mocker):
         ],
     ]
 
-    tops = return_test_ops_object(mocker)
+    tops = create_test_ops_instance(mocker)
 
     show_cmds = ["show interfaces status"]
     dut = {"connection": vane.device_interface.PyeapiConn, "name": "neighbor"}
