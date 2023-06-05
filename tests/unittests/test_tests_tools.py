@@ -391,18 +391,24 @@ def test_send_cmds_exception(logdebug, logerror, mocker):
     logerror.assert_called_with("Error running all cmds: show version is erring")
 
 
-def test_remove_cmd():
+error = ["show lldp neighbors has an error in it", "show lldp neighbors status has an error in it"]
+show_cmds = [
+    ["show version", "show clock", "show lldp neighbors", "show lldp neighbors status"],
+    ["show version", "show clock", "show lldp neighbors", "show lldp neighbors status"],
+]
+expected_output = [
+    ["show version", "show clock", "show lldp neighbors status"],
+    ["show version", "show clock", "show lldp neighbors"],
+]
+
+
+@pytest.mark.parametrize(
+    "error, show_cmds, expected_output",
+    [(error[0], show_cmds[0], expected_output[0]), (error[1], show_cmds[1], expected_output[1])],
+)
+def test_remove_cmd(error, show_cmds, expected_output):
     """Validates functionality of remove_cmd method"""
 
-    error = "show lldp neighbors has an error in it"
-    show_cmds = ["show version", "show clock", "show lldp neighbors", "show lldp neighbors status"]
-    expected_output = ["show version", "show clock", "show lldp neighbors status"]
-    actual_output = tests_tools.remove_cmd(error, show_cmds)
-    assert expected_output == actual_output
-
-    error = "show lldp neighbors status has an error in it"
-    show_cmds = ["show version", "show clock", "show lldp neighbors", "show lldp neighbors status"]
-    expected_output = ["show version", "show clock", "show lldp neighbors"]
     actual_output = tests_tools.remove_cmd(error, show_cmds)
     assert expected_output == actual_output
 
