@@ -636,26 +636,40 @@ def test_verify_show_cmd_fail(logcritical):
     logcritical.assert_called_with("Show command show lldp neighbors not executed on Test Dut")
 
 
-def test_verify_tacacs(loginfo, logdebug):
+def test_verify_tacacs_exists(loginfo, logdebug):
+    """Validates verification of tacacs servers on duts"""
+    dut = {
+        "output": {
+            "show tacacs": {"json": {"tacacsServers": [{"One": "value1"}, {"Two": "value2"}]}}
+        },
+        "name": "Test Dut",
+    }
+    actual_output = tests_tools.verify_tacacs(dut)
+    assert actual_output
+    loginfo.assert_called_with("Verifying if tacacs server(s) are configured on Test Dut dut")
+    logdebug.assert_called_with("2 tacacs servers are configured so returning True")
+
+
+def test_verify_tacacs_not_exist(loginfo):
     """Validates verification of tacacs servers on duts"""
     dut = {"output": {"show tacacs": {"json": {"tacacsServers": []}}}, "name": "Test Dut"}
     actual_output = tests_tools.verify_tacacs(dut)
     assert not actual_output
     loginfo.assert_called_with("Verifying if tacacs server(s) are configured on Test Dut dut")
-    dut["output"]["show tacacs"]["json"]["tacacsServers"] = [{"One": "value1"}, {"Two": "value2"}]
-    actual_output = tests_tools.verify_tacacs(dut)
-    assert actual_output
-    logdebug.assert_called_with("2 tacacs servers are configured so returning True")
 
 
-def test_verify_veos(loginfo, logdebug):
+def test_verify_veos_pass(loginfo, logdebug):
     """Validates verification of dut instances' model"""
-    dut = {"output": {"show version": {"json": {"modelName": "vEOS"}}}, "name": "Test Dut"}
+    dut = {"output": {"show version": {"json": {"modelName": "vEOS-Lab"}}}, "name": "Test Dut"}
     actual_output = tests_tools.verify_veos(dut)
-    loginfo.assert_called_with("Verifying if Test Dut DUT is a VEOS instance. Model is vEOS")
+    loginfo.assert_called_with("Verifying if Test Dut DUT is a VEOS instance. Model is vEOS-Lab")
     logdebug.assert_called_with("Test Dut is a VEOS instance so returning True")
     assert actual_output
-    dut["output"]["show version"]["json"]["modelName"] = "cEOS"
+
+
+def test_verify_veos_fail(loginfo, logdebug):
+    """Validates verification of dut instances' model"""
+    dut = {"output": {"show version": {"json": {"modelName": "cEOS"}}}, "name": "Test Dut"}
     actual_output = tests_tools.verify_veos(dut)
     loginfo.assert_called_with("Verifying if Test Dut DUT is a VEOS instance. Model is cEOS")
     logdebug.assert_called_with("Test Dut is not a VEOS instance so returning False")
