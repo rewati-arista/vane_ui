@@ -193,13 +193,37 @@ def test_parametrize_duts(loginfo, logdebug):
 #     pass
 
 
-def test_import_yaml():
-    """Validates import yaml method
-    FIXTURE NEEDED: fixture_definitions.yaml"""
-    yaml_file = "tests/unittests/fixtures/fixture_definitions.yaml"
-    expected_yaml = read_yaml(yaml_file)
-    actual_yaml = tests_tools.import_yaml(yaml_file)
+@pytest.mark.parametrize(
+    "input_file_data, expected_yaml",
+    [
+        ("", None),
+        ("a: 1", {"a": 1}),
+    ],
+)
+def test_yaml_read_valid_yaml(mocker, input_file_data, expected_yaml):
+    """Validates read yaml method"""
+    mocked_file_data = mocker.mock_open(read_data=input_file_data)
+    mocker.patch("builtins.open", mocked_file_data)
+    actual_yaml = tests_tools.import_yaml("yaml_file")
     assert expected_yaml == actual_yaml
+
+
+def test_yaml_read_invalid_yaml(mocker, logerr):
+    """Validates yaml read method with invalid yaml"""
+    mocked_file_data = mocker.mock_open(read_data="a: a: b:")
+    mocker.patch("builtins.open", mocked_file_data)
+    sys_exis_mocked = mocker.patch("sys.exit")
+    tests_tools.import_yaml("yaml_file")
+    sys_exis_mocked.assert_called_with(1)
+    logerr.assert_called_with("EXITING TEST RUNNER")
+
+
+def test_import_yaml_non_existing_file(mocker, logerr):
+    """Validates import yaml method with non-existing file"""
+    sys_exis_mocked = mocker.patch("sys.exit")
+    tests_tools.import_yaml("tests/unittests/fixtures/non_existing_file.yaml")
+    sys_exis_mocked.assert_called_with(1)
+    logerr.assert_called_with("EXITING TEST RUNNER")
 
 
 def test_init_duts(loginfo, logdebug, mocker):
