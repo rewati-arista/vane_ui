@@ -1175,29 +1175,37 @@ class TestOps:
         for different commands"""
 
         lines = text.splitlines()
+        # stores output of command under consideration
         clean_output = []
+        # saves output of all commands
         final_output = []
         flag = True
         for line in lines:
-            # deals with first command (handled separately since no problematic characters)
+            # deals with content till first command
+            # (recognized first command differently since
+            # no problematic characters in first command)
             if flag and dut_name in line:
                 flag = False
                 clean_output = []
             # deals with all other commands
             elif re.search(r"[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]", line) and dut_name in line:
+                # adds the command output (for previous command)
+                # saved in clean_output into final_output
+                # and re-initializes clean_output to store output of next command
                 command_output = "\n".join(clean_output)
                 final_output.append(command_output)
                 clean_output = []
-            # deals with Last Login line AND lines after commands with problematic characters
-            elif "Last login" in line or re.search(r"[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]", line):
+            # deals with lines after commands with problematic characters
+            elif re.search(r"[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]", line):
                 continue
-            # deals with all other lines
+            # deals with all other lines (that is, command output lines)
             else:
                 clean_output.append(line)
         return final_output
 
     def report_ssh_output(self, output, server_ip, show_cmds):
         """This method collects evidence output of ssh output"""
+
         # process the dut name from the ip address provided to ssh
 
         duts_data = import_yaml("duts.yaml")["duts"]
@@ -1206,6 +1214,8 @@ class TestOps:
                 dut_name = dut["name"]
 
         output = self.remove_ansi_escape_codes(output, dut_name)
+
+        # add commands and their outputs to evidence (.docs reports and Verification.txts)
 
         for command, text in zip(show_cmds, output):
             self.show_cmds[dut_name].append(command)
