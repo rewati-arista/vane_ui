@@ -11,6 +11,8 @@
       criteria: names
       filter: 
         - DSR01
-        - DCBBW1
       comment: null
       result: True
+      server_ip: 10.255.50.212
+      server_user: cvpadmin
+      server_password: cvp123!

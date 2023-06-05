@@ -1169,3 +1169,34 @@ class TestOps:
             return txt_results
 
         return json_results
+    
+    def remove_ansi_escape_codes(self, text):
+        ansi_escape_pattern = re.compile(r'\x1b\[\?1h\x1b=')
+        return ansi_escape_pattern.sub('', text)
+    
+    def report_ssh_output(self, output, server_ip):
+
+        # process the dut name from the ip address provided to ssh
+
+        duts_data = import_yaml("duts.yaml")["duts"]
+        for dut in duts_data:
+            if server_ip == dut["mgmt_ip"]:
+                dut_name = dut["name"]
+
+        
+        # Example usage
+        text_with_escape_code = "This is a [?1h= sample string."
+        clean_text = self.remove_ansi_escape_codes(text_with_escape_code)
+        logging.info(f"REWATI {clean_text}")
+
+
+
+        # self.show_cmds[dut_name].append("SSH OUTPUT")
+        # self._show_cmds[dut_name].append("SSH OUTPUT")
+        # self.show_cmd_txts[dut_name].append("")
+        # self._show_cmd_txts[dut_name].append("")
+
+    
+
+
+        

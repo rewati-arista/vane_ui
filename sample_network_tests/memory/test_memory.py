@@ -36,6 +36,7 @@ from pyeapi.eapilib import EapiError
 from vane import tests_tools
 from vane.vane_logging import logging
 from vane.config import dut_objs, test_defs
+from vane_tests_utils.utils import utils
 
 
 TEST_SUITE = "test_memory.py"
@@ -79,6 +80,22 @@ class MemoryTests:
             memory_total = self.output["memTotal"]
             memory_free = self.output["memFree"]
             tops.actual_output = (float(memory_free) / float(memory_total)) * 100
+
+            server_ip = tops.test_parameters["server_ip"]
+            server_user = tops.test_parameters["server_user"]
+            server_password = tops.test_parameters["server_password"]
+
+            show_cmds = ["show version\n", "show lldp neighbors\n"]
+            output = utils.get_ssh_cmd_output(
+                server_ip,
+                server_user,
+                server_password,
+                show_cmds,
+            )
+
+            logging.info(f"SSH OUTPUT {output} TYPE {type(output)}")
+
+            tops.report_ssh_output(output, server_ip)
 
         except (AssertionError, AttributeError, LookupError, EapiError) as exception:
             logging.error(
