@@ -919,7 +919,7 @@ def create_test_ops_instance(mocker):
     return tops
 
 
-def test_init(mocker):
+def test_test_ops_constructor(mocker):
     "Validates that TestOPs object gets initialized correctly"
 
     # mocking the call to _verify_show_cmd and _get_parameters in init()
@@ -1018,7 +1018,7 @@ def test_test_ops_verify_show_cmd(loginfo, logdebug, logcritical, mocker):
     logcritical.assert_called_with("Show command show lldp neighbors not executed on DCBBW1")
 
 
-def test_write_results(loginfo, logdebug, mocker):
+def test_test_ops_write_results(loginfo, logdebug, mocker):
     "Validates functionality of write_results method"
 
     # mocking the call to _verify_show_cmd and _get_parameters in init()
@@ -1051,7 +1051,7 @@ def test_write_results(loginfo, logdebug, mocker):
     )
 
 
-def test_write_text_results(mocker):
+def test_test_ops_write_text_results(mocker):
     "Validates functionality of write_text_results method"
 
     # mocking the call to _verify_show_cmd and _get_parameters in init()
@@ -1134,7 +1134,7 @@ def test_test_ops_get_parameters(loginfo, logdebug, mocker):
     logdebug.assert_has_calls(logdebug_calls, any_order=False)
 
 
-def test_generate_report(logdebug, mocker):
+def test_test_ops_generate_report(logdebug, mocker):
     """Validates functionality of generate_report method"""
     mocker.patch(
         "vane.tests_tools.TestOps._get_parameters",
@@ -1187,7 +1187,7 @@ def test_generate_report(logdebug, mocker):
     logdebug.assert_called_with("Output on device DCBBW1 after SSH connection is: Output")
 
 
-def test_html_report(mocker, capsys):
+def test_test_ops_html_report(mocker, capsys):
     """Validates html_report functionality"""
 
     mocker.patch(
@@ -1240,7 +1240,7 @@ def test_test_ops_verify_veos(loginfo, logdebug, mocker):
     logdebug.assert_called_with("DCBBW1 is not a VEOS instance so returning False")
 
 
-def test_parse_test_steps(loginfo, mocker):
+def test_test_ops_parse_test_steps(loginfo, mocker):
     """Validates verification of the parse_test_steps method
     FIXTURE NEEDED: tests/unittests/fixtures/test_steps/test_steps.py"""
 
@@ -1264,7 +1264,7 @@ def test_parse_test_steps(loginfo, mocker):
     )
 
 
-def test_run_show_cmds(mocker):
+def test_test_ops_run_show_cmds(mocker):
     """Validates the functionality of run_show_cmds method"""
     mocker.patch(
         "vane.tests_tools.TestOps._get_parameters",
