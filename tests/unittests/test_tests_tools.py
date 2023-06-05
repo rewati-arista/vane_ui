@@ -314,18 +314,12 @@ def test_login_duts(loginfo, mocker):
         assert str(exception) == "Invalid EOS conn type invalid_connection_type specified"
 
 
-def test_send_cmds(loginfo, logdebug, logerror, mocker):
+def test_send_cmds_json(loginfo, logdebug, mocker):
     """Validates the functionality of send_cmds method"""
 
     # mocking call to run commands method on connection object
 
-    mocker_object = mocker.patch("vane.device_interface.PyeapiConn.run_commands")
-    mocker_object.side_effect = [
-        "output_in_json",
-        "output_in_text",
-        Exception("show version is erring"),
-        "",
-    ]
+    mocker.patch("vane.device_interface.PyeapiConn.run_commands", return_value="output_in_json")
 
     show_cmds = ["show version"]
     show_cmds_output, show_cmd_list_output = tests_tools.send_cmds(
@@ -344,6 +338,15 @@ def test_send_cmds(loginfo, logdebug, logerror, mocker):
     ]
     logdebug.assert_has_calls(logdebug_calls, any_order=False)
 
+
+def test_send_cmds_text(loginfo, logdebug, mocker):
+    """Validates the functionality of send_cmds method"""
+
+    # mocking call to run commands method on connection object
+
+    mocker.patch("vane.device_interface.PyeapiConn.run_commands", return_value="output_in_text")
+
+    show_cmds = ["show version"]
     show_cmds_output, show_cmd_list_output = tests_tools.send_cmds(
         show_cmds, vane.device_interface.PyeapiConn, "text"
     )
@@ -352,12 +355,32 @@ def test_send_cmds(loginfo, logdebug, logerror, mocker):
 
     assert show_cmds_output == "output_in_text"
     assert show_cmd_list_output == show_cmds
+    loginfo.assert_called_with("Ran all show commands on dut")
+    logdebug_calls = [
+        call("List of show commands in show_cmds with encoding text: ['show version']"),
+        call("Ran all show cmds with encoding text: ['show version']"),
+        call("Return all show cmds: output_in_text"),
+    ]
+    logdebug.assert_has_calls(logdebug_calls, any_order=False)
 
-    # asserting when run_commands raises an exception
 
+def test_send_cmds_exception(logdebug, logerror, mocker):
+    """Validates the functionality of send_cmds method"""
+
+    # mocking call to run commands method on connection object
+
+    mocker_object = mocker.patch("vane.device_interface.PyeapiConn.run_commands")
+    mocker_object.side_effect = [
+        Exception("show version is erring"),
+        "",
+    ]
+
+    show_cmds = ["show version"]
     show_cmds_output, show_cmd_list_output = tests_tools.send_cmds(
         show_cmds, vane.device_interface.PyeapiConn, "text"
     )
+
+    # asserting when run_commands raises an exception
     assert show_cmds_output == ""
     assert show_cmd_list_output == []
     logdebug_calls = [
