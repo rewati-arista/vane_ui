@@ -612,7 +612,7 @@ def test_get_parameters(loginfo, logdebug):
     logdebug.assert_has_calls(logdebug_calls, any_order=False)
 
 
-def test_verify_show_cmd(loginfo, logdebug, logcritical):
+def test_verify_show_cmd_pass(loginfo, logdebug):
     """Validates verification of show commands being executed on given dut"""
     dut = {"output": {"show clock": ""}, "name": "Test Dut"}
     show_cmd = "show clock"
@@ -622,6 +622,10 @@ def test_verify_show_cmd(loginfo, logdebug, logcritical):
     )
     logdebug.assert_called_with("Verified output for show command show clock on Test Dut")
 
+
+def test_verify_show_cmd_fail(logcritical):
+    """Validates verification of show commands being executed on given dut"""
+    dut = {"output": {"show clock": ""}, "name": "Test Dut"}
     show_cmd = "show lldp neighbors"
 
     # handling the assert False raised in the verify_show_cmd method
