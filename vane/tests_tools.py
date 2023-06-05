@@ -41,6 +41,8 @@ import re
 import pprint
 import yaml
 
+from vane_tests_utils.utils import utils
+
 from vane import config, device_interface
 from vane.vane_logging import logging
 
@@ -1170,41 +1172,74 @@ class TestOps:
 
         return json_results
 
-    def remove_ansi_escape_codes(self, text, dut_name):
+    def remove_ansi_escape_codes(self, output, dut_name):
         """Removes ansi_escape_codes from ssh output and demarcates outputs
-        for different commands"""
+        for different commands
 
-        lines = text.splitlines()
+        Args:
+        output: ssh output of the different commands run on the dut
+        dut_name: dut's name
+
+        Returns: A list with outputs of the commands executed on the dut
+        """
+
+        lines = output.splitlines()
+
         # stores output of command under consideration
         clean_output = []
+
         # saves output of all commands
         final_output = []
+
         flag = True
+
         for line in lines:
-            # deals with content till first command
-            # (recognized first command differently since
-            # no problematic characters in first command)
+            # deals with content till first command (recognized first command differently since
+            # no problematic characters in the first command line)
             if flag and dut_name in line:
                 flag = False
                 clean_output = []
             # deals with all other commands
             elif re.search(r"[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]", line) and dut_name in line:
-                # adds the command output (for previous command)
-                # saved in clean_output into final_output
-                # and re-initializes clean_output to store output of next command
+                # adds the command output (for previous command) saved in clean_output into
+                # final_output and re-initializes clean_output to store output of next command
                 command_output = "\n".join(clean_output)
                 final_output.append(command_output)
                 clean_output = []
-            # deals with lines after commands with problematic characters
+            # deals with the line after command line with problematic characters
             elif re.search(r"[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]", line):
                 continue
             # deals with all other lines (that is, command output lines)
             else:
                 clean_output.append(line)
+
         return final_output
 
-    def report_ssh_output(self, output, server_ip, show_cmds):
-        """This method collects evidence output of ssh output"""
+    def report_ssh_output(self, server_ip, server_user, server_password, cmds):
+        """This method runs the given commands on the dut via ssh and collects
+        evidence of the ssh output
+
+        Args:
+        server_ip: ip of the dut to connect to
+        server_user/server_password: credentials of the dut to connect to
+        cmds: commands to run on the dut
+
+        Returns: A list with outputs of the commands executed on the dut
+        """
+
+        # append show clock to list of commands if the flag is set
+
+        if self.show_clock_flag:
+            cmds.insert(0, "show clock\n")
+
+        # execute the commands on the dut via ssh
+
+        output = utils.get_ssh_cmd_output(
+            server_ip,
+            server_user,
+            server_password,
+            cmds,
+        )
 
         # process the dut name from the ip address provided to ssh
 
@@ -1213,12 +1248,23 @@ class TestOps:
             if server_ip == dut["mgmt_ip"]:
                 dut_name = dut["name"]
 
+        # clean the ssh output and demarcate the outputs between different commands
+
         output = self.remove_ansi_escape_codes(output, dut_name)
 
-        # add commands and their outputs to evidence (.docs reports and Verification.txts)
+        # add commands and their outputs to evidence (.docx reports and Verification.txts)
 
-        for command, text in zip(show_cmds, output):
-            self.show_cmds[dut_name].append(command)
-            self._show_cmds[dut_name].append(command)
-            self.show_cmd_txts[dut_name].append(text)
-            self._show_cmd_txts[dut_name].append(text)
+        index = 0
+        for command, text in zip(cmds, output):
+            # add show clock output only to evidence files
+            if self.show_clock_flag and index == 0:
+                self._show_cmds[dut_name].append(command)
+                self._show_cmd_txts[dut_name].append(text)
+            else:
+                self._show_cmds[dut_name].append(command)
+                self._show_cmd_txts[dut_name].append(text)
+                self.show_cmds[dut_name].append(command)
+                self.show_cmd_txts[dut_name].append(text)
+            index += 1
+
+        return output
