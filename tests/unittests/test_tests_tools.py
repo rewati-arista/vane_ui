@@ -986,7 +986,7 @@ def test_test_ops_constructor(mocker):
     assert tops.test_id == tops.test_parameters.get("test_id", None)
 
 
-def test_test_ops_verify_show_cmd(loginfo, logdebug, logcritical, mocker):
+def test_test_ops_verify_show_cmd_pass(loginfo, logdebug, mocker):
     """Validates verification of show commands being executed on given dut"""
 
     # mocking the call to _get_parameters in init()
@@ -1005,6 +1005,18 @@ def test_test_ops_verify_show_cmd(loginfo, logdebug, logcritical, mocker):
         "Verifying if show command ['show version'] were successfully executed on DCBBW1 dut"
     )
     logdebug.assert_called_with("Verified output for show command show version on DCBBW1")
+
+
+def test_test_ops_verify_show_cmd_fail(logcritical, mocker):
+    """Validates verification of show commands being executed on given dut"""
+
+    # mocking the call to _get_parameters in init()
+
+    mocker.patch(
+        "vane.tests_tools.TestOps._get_parameters",
+        return_value=read_yaml("tests/unittests/fixtures/fixture_testops_test_parameters.yaml"),
+    )
+    tops = create_test_ops_instance(mocker)
 
     # handling the false case
 
@@ -1215,7 +1227,7 @@ def test_test_ops_html_report(mocker, capsys):
     assert show_output in captured_output.out
 
 
-def test_test_ops_verify_veos(loginfo, logdebug, mocker):
+def test_test_ops_verify_veos_pass(loginfo, logdebug, mocker):
     """Validates verification of the model of the dut"""
 
     # mocking the call to _verify_show_cmd and _get_parameters in init()
@@ -1232,6 +1244,19 @@ def test_test_ops_verify_veos(loginfo, logdebug, mocker):
     tops.verify_veos()
     loginfo.assert_called_with("Verifying if DCBBW1 DUT is a VEOS instance. Model is vEOS-lab")
     logdebug.assert_called_with("DCBBW1 is a VEOS instance so returning True")
+
+
+def test_test_ops_verify_veos_fail(logdebug, mocker):
+    """Validates verification of the model of the dut"""
+
+    # mocking the call to _verify_show_cmd and _get_parameters in init()
+
+    mocker.patch(
+        "vane.tests_tools.TestOps._get_parameters",
+        return_value=read_yaml("tests/unittests/fixtures/fixture_testops_test_parameters.yaml"),
+    )
+    mocker.patch("vane.tests_tools.TestOps._verify_show_cmd", return_value=True)
+    tops = create_test_ops_instance(mocker)
 
     # handling the false case
 
