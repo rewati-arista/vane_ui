@@ -212,9 +212,9 @@ def test_yaml_read_invalid_yaml(mocker, logerr):
     """Validates yaml read method with invalid yaml"""
     mocked_file_data = mocker.mock_open(read_data="a: a: b:")
     mocker.patch("builtins.open", mocked_file_data)
-    sys_exis_mocked = mocker.patch("sys.exit")
+    sys_exit_mocked = mocker.patch("sys.exit")
     tests_tools.import_yaml("yaml_file")
-    sys_exis_mocked.assert_called_with(1)
+    sys_exit_mocked.assert_called_with(1)
     logerr.assert_called_with("EXITING TEST RUNNER")
 
 
@@ -229,9 +229,9 @@ def test_import_yaml_success(mocker):
 
 def test_import_yaml_non_existing_file(mocker, logerr):
     """Validates import yaml method with non-existing file"""
-    sys_exis_mocked = mocker.patch("sys.exit")
+    sys_exit_mocked = mocker.patch("sys.exit")
     tests_tools.import_yaml("tests/unittests/fixtures/non_existing_file.yaml")
-    sys_exis_mocked.assert_called_with(1)
+    sys_exit_mocked.assert_called_with(1)
     logerr.assert_called_with("EXITING TEST RUNNER")
 
 
