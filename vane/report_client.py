@@ -1244,7 +1244,7 @@ class ReportClient:
 
         if tc_name[-3:] == "on ":
             tc_name = tc_name[:-3]
-        
+
         logging.debug(f"Formattted test case name is {tc_name}")
 
         return tc_name
