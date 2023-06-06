@@ -196,7 +196,7 @@ def test_parametrize_duts(loginfo, logdebug):
 @pytest.mark.parametrize(
     "input_file_data, expected_yaml",
     [
-        ("", None),
+        ("", {}),
         ("a: 1", {"a": 1}),
     ],
 )
