@@ -41,9 +41,7 @@ import re
 import pprint
 import yaml
 
-from vane_tests_utils.utils import utils
-
-from vane import config, device_interface
+from vane import config, device_interface, utils
 from vane.vane_logging import logging
 
 
@@ -1112,6 +1110,15 @@ class TestOps:
 
         logging.info(f"These are test steps {self.test_steps}")
 
+    def set_evidence_default(self, dut_name):
+        """For initializing evidence values for neighbor duts since
+        init only initializes for primary dut"""
+
+        self._show_cmd_txts.setdefault(dut_name, [])
+        self._show_cmds.setdefault(dut_name, [])
+        self.show_cmd_txts.setdefault(dut_name, [])
+        self.show_cmds.setdefault(dut_name, [])
+
     def run_show_cmds(self, show_cmds, dut=None, encoding="json"):
         """run_show_cmds is a wrapper which runs the 'show_cmds' using enable() pyeapi
         method on the specified dut and if no dut is passed then on primary dut.
@@ -1135,12 +1142,10 @@ class TestOps:
         conn = dut["connection"]
         dut_name = dut["name"]
 
-        # for initializing these values for neighbor duts since
+        # initializing evidence values for other duts since
         # init only initializes for primary dut
-        self._show_cmd_txts.setdefault(dut_name, [])
-        self._show_cmds.setdefault(dut_name, [])
-        self.show_cmd_txts.setdefault(dut_name, [])
-        self.show_cmds.setdefault(dut_name, [])
+
+        self.set_evidence_default(dut_name)
 
         # if encoding is json run the commands, store the results
         if encoding == "json":
@@ -1191,31 +1196,30 @@ class TestOps:
         # saves output of all commands
         final_output = []
 
-        flag = True
+        flag = False
+        regex_pattern = dut_name + "[>#]"
 
         for line in lines:
-            # deals with content till first command (recognized first command differently since
-            # no problematic characters in the first command line)
-            if flag and dut_name in line:
-                flag = False
+            # deals with all lines containing commands to be executed
+            # ASSUMPTION: they contain dutname>/#
+            if re.search(regex_pattern, line):
+                # ignores the content before first command otherwise
+                # processes the output and appends to final_output
+                if flag:
+                    command_output = "\n".join(clean_output)
+                    final_output.append(command_output)
                 clean_output = []
-            # deals with all other commands
-            elif re.search(r"[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]", line) and dut_name in line:
-                # adds the command output (for previous command) saved in clean_output into
-                # final_output and re-initializes clean_output to store output of next command
-                command_output = "\n".join(clean_output)
-                final_output.append(command_output)
-                clean_output = []
-            # deals with the line after command line with problematic characters
+                flag = True
+            # deals with the lines that only have problematic characters
             elif re.search(r"[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]", line):
                 continue
-            # deals with all other lines (that is, command output lines)
+            # deals with command outputs
             else:
                 clean_output.append(line)
 
         return final_output
 
-    def report_ssh_output(self, server_ip, server_user, server_password, cmds):
+    def report_ssh_output(self, server_ip, server_user, server_password, cmds, dut_objs):
         """This method runs the given commands on the dut via ssh and collects
         evidence of the ssh output
 
@@ -1234,28 +1238,36 @@ class TestOps:
 
         # execute the commands on the dut via ssh
 
-        output = utils.get_ssh_cmd_output(
+        ssh_output = utils.get_ssh_cmd_output(
             server_ip,
             server_user,
             server_password,
             cmds,
         )
 
-        # process the dut name from the ip address provided to ssh
+        # process the dut name (needed for evidence collection
+        # from the ip address provided to ssh
 
-        duts_data = import_yaml("duts.yaml")["duts"]
-        for dut in duts_data:
-            if server_ip == dut["mgmt_ip"]:
-                dut_name = dut["name"]
+        dut = {}
+        for dut_obj in dut_objs:
+            if dut_obj["mgmt_ip"] == server_ip:
+                dut = dut_obj
+                break
+        dut_name = dut["name"]
 
         # clean the ssh output and demarcate the outputs between different commands
 
-        output = self.remove_ansi_escape_codes(output, dut_name)
+        formatted_output = self.remove_ansi_escape_codes(ssh_output, dut_name)
+
+        # initializing evidence values for other duts since
+        # init only initializes for primary dut
+
+        self.set_evidence_default(dut_name)
 
         # add commands and their outputs to evidence (.docx reports and Verification.txts)
 
         index = 0
-        for command, text in zip(cmds, output):
+        for command, text in zip(cmds, formatted_output):
             # add show clock output only to evidence files
             if self.show_clock_flag and index == 0:
                 self._show_cmds[dut_name].append(command)
@@ -1267,4 +1279,4 @@ class TestOps:
                 self.show_cmd_txts[dut_name].append(text)
             index += 1
 
-        return output
+        return ssh_output
