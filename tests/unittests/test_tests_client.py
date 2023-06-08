@@ -20,6 +20,11 @@ import vane.tests_client
 # Common duts file
 DUTS = "tests/fixtures/duts.yaml"
 
+# Basic default definitions file
+#   Standard definitions file with no errors or missing data that should work for
+#   most basic test cases
+DEFAULT_DEFS = "tests/unittests/fixtures/definitions.yaml"
+
 
 @pytest.fixture
 def loginfo(mocker):
@@ -42,7 +47,7 @@ def logerr(mocker):
 def test_constructor():
     """Verify instance of TestsClient Object can be created"""
 
-    client = vane.tests_client.TestsClient("tests/unittests/fixtures/definitions.yaml", DUTS)
+    client = vane.tests_client.TestsClient(DEFAULT_DEFS, DUTS)
 
     methods = [
         "_get_markers",
@@ -86,7 +91,7 @@ def test_write_test_def_file(loginfo):
     """Validate creating test definitions using master definitions"""
 
     # Load a definitions file with generate_test_definitions set to false, to create a client
-    client = vane.tests_client.TestsClient("tests/unittests/fixtures/definitions.yaml", DUTS)
+    client = vane.tests_client.TestsClient(DEFAULT_DEFS, DUTS)
 
     # Set the definitions information to be passed to write_test_def_file
     template_definitions = "test_definition.yaml"
@@ -119,7 +124,7 @@ def test_generate_test_definitions(loginfo):
     """Validate creating test definitions using master definitions"""
 
     # Load a definitions file with generate_test_definitions set to false
-    client = vane.tests_client.TestsClient("tests/unittests/fixtures/definitions.yaml", DUTS)
+    client = vane.tests_client.TestsClient(DEFAULT_DEFS, DUTS)
 
     # Generate test definitions
     client.generate_test_definitions()
@@ -205,7 +210,7 @@ def test_test_runner(mocker, capsys, loginfo):
     """Validate test_runner function without generating test definitions"""
 
     # Load a definitions file with generate_test_definitions set to false
-    client = vane.tests_client.TestsClient("tests/unittests/fixtures/definitions.yaml", DUTS)
+    client = vane.tests_client.TestsClient(DEFAULT_DEFS, DUTS)
 
     # Mock a valid test run
     mocker.patch("vane.tests_client.pytest.main", return_value=None)
@@ -226,7 +231,7 @@ def test_test_runner_no_tests(mocker, capsys):
     """Validate test_runner with no tests collected error returned"""
 
     # Load a definitions file with generate_test_definitions set to false
-    client = vane.tests_client.TestsClient("tests/unittests/fixtures/definitions.yaml", DUTS)
+    client = vane.tests_client.TestsClient(DEFAULT_DEFS, DUTS)
 
     # Mock a NO_TESTS_COLLECTED result
     mocker.patch("vane.tests_client.pytest.main", return_value=pytest.ExitCode.NO_TESTS_COLLECTED)
@@ -250,7 +255,7 @@ def test_test_runner_usage_err(mocker, capsys):
     """Validate test_runner with usage error returned"""
 
     # Load a definitions file with generate_test_definitions set to false
-    client = vane.tests_client.TestsClient("tests/unittests/fixtures/definitions.yaml", DUTS)
+    client = vane.tests_client.TestsClient(DEFAULT_DEFS, DUTS)
 
     # Mock a USAGE_ERROR result
     mocker.patch("vane.tests_client.pytest.main", return_value=pytest.ExitCode.USAGE_ERROR)
@@ -545,7 +550,7 @@ def test__remove_result_files(loginfo):
     """Validate _remove_result_files removes pre-existing results files"""
 
     # Create a tests_client client
-    client = vane.tests_client.TestsClient("tests/unittests/fixtures/definitions.yaml", DUTS)
+    client = vane.tests_client.TestsClient(DEFAULT_DEFS, DUTS)
 
     # Make sure the reports/tests_client_results dir exists
     result_dir = "tests/unittests/fixtures/reports/tests_client_results"
@@ -581,7 +586,7 @@ def test_remove_test_results_dir(loginfo):
     """Validate _tremove_test_results_dir removes the TEST RESULTS directory"""
 
     # Create a tests_client client
-    client = vane.tests_client.TestsClient("tests/unittests/fixtures/definitions.yaml", DUTS)
+    client = vane.tests_client.TestsClient(DEFAULT_DEFS, DUTS)
 
     # Make sure the reports/TEST RESULTS dir exists
     results_dir = "reports/TEST RESULTS"
