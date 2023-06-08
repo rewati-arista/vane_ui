@@ -2,8 +2,8 @@ import vane.tests_client as tests_client
 import os
 import configparser
 
-DEFINITIONS = 'tests/unittests/fixtures/definitions.yaml'
-DUTS = 'tests/fixtures/duts.yaml'
+DEFINITIONS = 'sample_network_tests/definitions.yaml'
+DUTS = 'sample_network_tests/duts.yaml'
 TC = tests_client.TestsClient(DEFINITIONS, DUTS)
 
 def test_assert():
@@ -128,7 +128,7 @@ def test_test_parameters_not_set():
     definitions = ['verbose', 'stdout', 'test_cases', 'html_report',
                    'excel_report', 'json_report', 'processes', 'mark',
                    'setup_show']
-    duts_file = 'tests/fixtures/duts.yaml'
+    duts_file = 'sample_network_tests/duts.yaml'
 
     tc = tests_client.TestsClient(DEFINITIONS, duts_file)
 
