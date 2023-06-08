@@ -1210,7 +1210,10 @@ class TestOps:
                     final_output.append(command_output)
                 clean_output = []
                 flag = True
-            # deals with the lines that only have problematic characters
+            # Technically we wont have any problematic characters remaining
+            # after the regex compilation but due to the uncertain nature of these
+            # escape codes, it is safe to keep this extra line of defense
+            # which deals with the lines that may still have problematic characters
             elif re.search(r"[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]", line):
                 continue
             # deals with command outputs
@@ -1245,6 +1248,12 @@ class TestOps:
             cmds,
         )
 
+        # regex compilation to get rid of ansi escape codes
+        clean_ssh_output = re.compile(r"(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]").sub("", ssh_output)
+
+        # additional regex compilation to match our use case
+        clean_ssh_output = re.compile(r"\x1B[>=]").sub("", clean_ssh_output)
+
         # process the dut name (needed for evidence collection
         # from the ip address provided to ssh
 
@@ -1257,7 +1266,7 @@ class TestOps:
 
         # clean the ssh output and demarcate the outputs between different commands
 
-        formatted_output = self.remove_ansi_escape_codes(ssh_output, dut_name)
+        formatted_output = self.remove_ansi_escape_codes(clean_ssh_output, dut_name)
 
         # initializing evidence values for other duts since
         # init only initializes for primary dut
