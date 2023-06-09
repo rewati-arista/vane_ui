@@ -13,6 +13,12 @@ from vane import tests_tools
 
 # TEST UTILITY FUNCTIONS
 
+# Disable redefined-outer-name for using log fixture functions
+# Disable protected-access for testing hidden class functions
+# Disable too-many-lines and too-many-function-args since some test functions
+# need to be long and passed a certain number of arguments
+# pylint: disable=redefined-outer-name, protected-access, too-many-lines, too-many-function-args
+
 
 @pytest.fixture
 def loginfo(mocker):
