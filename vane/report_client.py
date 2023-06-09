@@ -1238,9 +1238,10 @@ class ReportClient:
         """
 
         logging.debug(f"Test case name is {tc_name}")
-        tc_name = " ".join(tc_name.split("_"))[:-3]
+        tc_name = tc_name.replace("_", " ")
         tc_name = tc_name.replace("intf", "interface")
         tc_name = tc_name.capitalize()
+
         logging.debug(f"Formattted test case name is {tc_name}")
 
         return tc_name
