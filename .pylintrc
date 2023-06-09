@@ -26,7 +26,6 @@ disable=
     too-many-nested-blocks,
     too-many-branches,
     too-many-statements,
-    redefined-outer-name,
 
 
 [MISCELLANEOUS]

@@ -8,6 +8,9 @@ import pytest
 import vane
 from vane import vane_cli
 
+# Disable redefined-outer-name for using log fixture functions
+# pylint: disable=redefined-outer-name
+
 
 @pytest.fixture
 def loginfo(mocker):
