@@ -1177,7 +1177,7 @@ class TestOps:
 
         return json_results
 
-    def remove_ansi_escape_codes(self, output, dut_name):
+    def remove_ansi_escape_codes(self, output, cmds):
         """Removes ansi_escape_codes from ssh output and demarcates outputs
         for different commands
 
@@ -1188,6 +1188,17 @@ class TestOps:
         Returns: A list with outputs of the commands executed on the dut
         """
 
+        # filter out commands and replace with a keyword for demarcation
+        for cmd in cmds:
+            if re.search(cmd, output):
+                logging.info("HERE")
+                logging.info(f"REWATI {output}")
+                output = re.compile(cmd).sub("SSH-COMMAND", output)
+                logging.info(f"REWATI {output}")
+
+        logging.info(f"REWATI {output}")
+
+
         lines = output.splitlines()
 
         # stores output of command under consideration
@@ -1197,7 +1208,7 @@ class TestOps:
         final_output = []
 
         flag = False
-        regex_pattern = dut_name + "[>#]"
+        regex_pattern = "SSH-COMMAND"
 
         for line in lines:
             # deals with all lines containing commands to be executed
@@ -1248,11 +1259,16 @@ class TestOps:
             cmds,
         )
 
+        ssh_output = "Activate the web console with: systemctl enable --now cockpit.socket\r\n\r\nLast login: Thu Jun  8 13:03:23 2023 from 10.8.0.50\r\r\n[arista@ip-10-255-89-244 ~]$ ping 10.255.115.174 -c 3\r\nPING 10.255.115.174 (10.255.115.174) 56(84) bytes of data.\r\n64 bytes from 10.255.115.174: icmp_seq=1 ttl=64 time=0.521 ms\r\n64 bytes from 10.255.115.174: icmp_seq=2 ttl=64 time=0.498 ms\r\n64 bytes from 10.255.115.174: icmp_seq=3 ttl=64 time=0.559 ms\r\n\r\n--- 10.255.115.174 ping statistics ---\r\n3 packets transmitted, 3 received, 0% packet loss, time 2038ms\r\nrtt min/avg/max/mdev = 0.498/0.526/0.559/0.025 ms\r\n[arista@ip-10-255-89-244 ~]$ snmpwalk 192.168.0.14 -v 3 -u Arista -l AuthPriv -a \r sha -A arista123 -x aes -X arista123 | grep hrProcessorLoad\r\nHOST-RESOURCES-MIB::\x1b[01;31m\x1b[KhrProcessorLoad\x1b[m\x1b[K.1 = INTEGER: 4\r\nHOST-RESOURCES-MIB::\x1b[01;31m\x1b[KhrProcessorLoad\x1b[m\x1b[K.2 = INTEGER: 4\r\nHOST-RESOURCES-MIB::\x1b[01;31m\x1b[KhrProcessorLoad\x1b[m\x1b[K.3 = INTEGER: 4\r\n[arista@ip-10-255-89-244 ~]$ "
+
+        logging.info(f"NOT CLEAN OUTPUT {ssh_output}")
         # regex compilation to get rid of ansi escape codes
         clean_ssh_output = re.compile(r"(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]").sub("", ssh_output)
 
         # additional regex compilation to match our use case
         clean_ssh_output = re.compile(r"\x1B[>=]").sub("", clean_ssh_output)
+
+        logging.info(f"CLEAN OUTPUT {clean_ssh_output}")
 
         # process the dut name (needed for evidence collection
         # from the ip address provided to ssh
@@ -1265,8 +1281,9 @@ class TestOps:
         dut_name = dut["name"]
 
         # clean the ssh output and demarcate the outputs between different commands
+        cmds = ["ping 10.255.115.174 -c 3", "snmpwalk 192.168.0.14 -v 3 -u Arista -l AuthPriv -a \r sha -A arista123 -x aes -X arista123 \| grep hrProcessorLoad"]
 
-        formatted_output = self.remove_ansi_escape_codes(clean_ssh_output, dut_name)
+        formatted_output = self.remove_ansi_escape_codes(clean_ssh_output, cmds)
 
         # initializing evidence values for other duts since
         # init only initializes for primary dut
@@ -1276,6 +1293,9 @@ class TestOps:
         # add commands and their outputs to evidence (.docx reports and Verification.txts)
 
         index = 0
+        self.show_clock_flag = False
+        
+        logging.info(f"OUTPUT: {formatted_output}")
         for command, text in zip(cmds, formatted_output):
             # add show clock output only to evidence files
             if self.show_clock_flag and index == 0:
