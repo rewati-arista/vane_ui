@@ -1177,7 +1177,7 @@ class TestOps:
 
         return json_results
 
-    def remove_ansi_escape_codes(self, output, cmds):
+    def demarcate_ssh_output(self, output, cmds):
         """Removes ansi_escape_codes from ssh output and demarcates outputs
         for different commands
 
@@ -1278,7 +1278,7 @@ class TestOps:
 
         # clean the ssh output and demarcate the outputs between different commands
 
-        formatted_output = self.remove_ansi_escape_codes(clean_ssh_output, cmds)
+        formatted_output = self.demarcate_ssh_output(clean_ssh_output, cmds)
 
         # initializing evidence values for other duts since
         # init only initializes for primary dut
