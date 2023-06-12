@@ -170,12 +170,14 @@ def import_yaml(yaml_file):
         yaml_file (str): Name of YAML file
 
     Returns:
-        yaml_data (dict): YAML data structure
+        yaml_data (dict): Dictionary containing yaml data
     """
     logging.info(f"Opening {yaml_file} for read")
 
     try:
         yaml_data = yaml_read(yaml_file)
+        if yaml_data is None:
+            yaml_data = {}
         return yaml_data
     except OSError as err:
         print(f">>> {yaml_file} YAML FILE MISSING")
