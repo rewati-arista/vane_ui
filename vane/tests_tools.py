@@ -1188,18 +1188,18 @@ class TestOps:
         Returns: A list with outputs of the commands executed on the dut
         """
 
+        # remove the \n at the end of commands
+        for index, cmd in enumerate(cmds):
+            cmds[index] = cmds[index][:-1]
+
+        # handle the \r characters in middle of commands in the ssh output
+        # for long commands
+        output = re.sub(r" \r ", " ", output)
+
         # filter out commands and replace with a keyword for demarcation
         for cmd in cmds:
-            if re.search(cmd, output):
-                logging.info("HERE")
-                logging.info(f"REWATI {output}")
-                output = re.compile(cmd).sub("SSH-COMMAND", output)
-                logging.info(f"REWATI {output}")
-
-        logging.info(f"REWATI {output}")
-
-
-        lines = output.splitlines()
+            if cmd in output:
+                output = output.replace(cmd, "SSH-COMMAND")
 
         # stores output of command under consideration
         clean_output = []
@@ -1210,9 +1210,10 @@ class TestOps:
         flag = False
         regex_pattern = "SSH-COMMAND"
 
+        lines = output.splitlines()
+
         for line in lines:
             # deals with all lines containing commands to be executed
-            # ASSUMPTION: they contain dutname>/#
             if re.search(regex_pattern, line):
                 # ignores the content before first command otherwise
                 # processes the output and appends to final_output
@@ -1221,15 +1222,15 @@ class TestOps:
                     final_output.append(command_output)
                 clean_output = []
                 flag = True
-            # Technically we wont have any problematic characters remaining
-            # after the regex compilation but due to the uncertain nature of these
-            # escape codes, it is safe to keep this extra line of defense
-            # which deals with the lines that may still have problematic characters
-            elif re.search(r"[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]", line):
-                continue
             # deals with command outputs
             else:
                 clean_output.append(line)
+
+        if clean_output:
+            # remove the last empty prompt present in clean_output
+            # and then joins it to form the last command's output
+            command_output = "\n".join(clean_output[:-1])
+            final_output.append(command_output)
 
         return final_output
 
@@ -1259,18 +1260,13 @@ class TestOps:
             cmds,
         )
 
-        ssh_output = "Activate the web console with: systemctl enable --now cockpit.socket\r\n\r\nLast login: Thu Jun  8 13:03:23 2023 from 10.8.0.50\r\r\n[arista@ip-10-255-89-244 ~]$ ping 10.255.115.174 -c 3\r\nPING 10.255.115.174 (10.255.115.174) 56(84) bytes of data.\r\n64 bytes from 10.255.115.174: icmp_seq=1 ttl=64 time=0.521 ms\r\n64 bytes from 10.255.115.174: icmp_seq=2 ttl=64 time=0.498 ms\r\n64 bytes from 10.255.115.174: icmp_seq=3 ttl=64 time=0.559 ms\r\n\r\n--- 10.255.115.174 ping statistics ---\r\n3 packets transmitted, 3 received, 0% packet loss, time 2038ms\r\nrtt min/avg/max/mdev = 0.498/0.526/0.559/0.025 ms\r\n[arista@ip-10-255-89-244 ~]$ snmpwalk 192.168.0.14 -v 3 -u Arista -l AuthPriv -a \r sha -A arista123 -x aes -X arista123 | grep hrProcessorLoad\r\nHOST-RESOURCES-MIB::\x1b[01;31m\x1b[KhrProcessorLoad\x1b[m\x1b[K.1 = INTEGER: 4\r\nHOST-RESOURCES-MIB::\x1b[01;31m\x1b[KhrProcessorLoad\x1b[m\x1b[K.2 = INTEGER: 4\r\nHOST-RESOURCES-MIB::\x1b[01;31m\x1b[KhrProcessorLoad\x1b[m\x1b[K.3 = INTEGER: 4\r\n[arista@ip-10-255-89-244 ~]$ "
-
-        logging.info(f"NOT CLEAN OUTPUT {ssh_output}")
         # regex compilation to get rid of ansi escape codes
         clean_ssh_output = re.compile(r"(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]").sub("", ssh_output)
 
         # additional regex compilation to match our use case
         clean_ssh_output = re.compile(r"\x1B[>=]").sub("", clean_ssh_output)
 
-        logging.info(f"CLEAN OUTPUT {clean_ssh_output}")
-
-        # process the dut name (needed for evidence collection
+        # process the dut name (needed for evidence collection)
         # from the ip address provided to ssh
 
         dut = {}
@@ -1281,7 +1277,6 @@ class TestOps:
         dut_name = dut["name"]
 
         # clean the ssh output and demarcate the outputs between different commands
-        cmds = ["ping 10.255.115.174 -c 3", "snmpwalk 192.168.0.14 -v 3 -u Arista -l AuthPriv -a \r sha -A arista123 -x aes -X arista123 \| grep hrProcessorLoad"]
 
         formatted_output = self.remove_ansi_escape_codes(clean_ssh_output, cmds)
 
@@ -1293,9 +1288,7 @@ class TestOps:
         # add commands and their outputs to evidence (.docx reports and Verification.txts)
 
         index = 0
-        self.show_clock_flag = False
-        
-        logging.info(f"OUTPUT: {formatted_output}")
+
         for command, text in zip(cmds, formatted_output):
             # add show clock output only to evidence files
             if self.show_clock_flag and index == 0:
