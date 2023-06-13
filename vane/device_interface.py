@@ -34,12 +34,15 @@
    2. ssh driver - uses Netmiko package
 """
 
+import os
 import configparser
 import json
 import pyeapi
 from netmiko.ssh_autodetect import SSHDetect
 from netmiko import Netmiko
+import netmiko
 from vane.utils import make_iterable
+
 
 error_responses = [
     '% This is an unconverted command\n{\n    "errors": '
@@ -178,21 +181,31 @@ class NetmikoConn(DeviceConn):
         if not self._config.has_section(name):
             raise AttributeError("connection profile not found")
 
+        self.name = device_name
         device_attributes = dict(self._config.items(name))
 
         default_device_type = "arista_eos"
+
+        try:
+            os.makedirs("netmiko-logs")
+        except FileExistsError:
+            pass
+
+        logfile = f"netmiko-logs/netmiko-session-{device_name}.log"
         remote_device = {
             "device_type": device_attributes.get("device_type", default_device_type),
             "host": device_attributes["host"],
             "username": device_attributes["username"],
             "password": device_attributes["password"],
             "secret": device_attributes.get("enable_mode_secret", ""),
+            "session_log": logfile,
         }
         if remote_device["device_type"] == "autodetect":
             guesser = SSHDetect(**remote_device)
             remote_device["device_type"] = guesser.autodetect()
         # pylint: disable=attribute-defined-outside-init
         self._connection = Netmiko(**remote_device)
+
 
     def get_cmds(self, cmds):
         """get_cmds: converts cmds to json cmds
@@ -214,7 +227,14 @@ class NetmikoConn(DeviceConn):
         and collects the output as list"""
 
         for i, cmd in enumerate(local_cmds):
-            output = self._connection.send_command(cmd)
+
+            try:
+                output = self._connection.send_command(cmds)
+            except netmiko.ssh_exception.NetmikoTimeoutException:
+                #try resetting connection and see if it works
+                self.set_up_conn(self.name)
+                output = self._connection.send_command(cmds)
+
             if output not in error_responses and encoding == "json":
                 output = json.loads(output)
             else:
@@ -230,19 +250,24 @@ class NetmikoConn(DeviceConn):
 
     def send_str_cmds(self, cmds, cmds_op, encoding="json"):
         """send_str_cmds: sends one command to device conn"""
-        output = self._connection.send_command(cmds)
 
-        if output not in error_responses and encoding == "json":
-            output = json.loads(output)
+        try:
+            output = self._connection.send_command(cmds)
+        except netmiko.ssh_exception.NetmikoTimeoutException:
+            #try resetting connection and see if it works
+            self.set_up_conn(self.name)
+            output = self._connection.send_command(cmds)
+
+        if output not in error_responses:
+            if encoding == "json":
+                output = json.loads(output)
+                cmds_op.append(output)
+            elif encoding == "text":
+                text_ob = {"output": output}
+                cmds_op.append(text_ob)
         else:
             err_msg = f"Could not execute {cmds} . Got error: {output}"
             raise CommandError(err_msg, cmds)
-
-        if encoding == "text":
-            text_ob = {"output": output}
-            cmds_op.append(text_ob)
-        else:
-            cmds_op.append(output)
 
         return cmds_op
 
@@ -267,10 +292,10 @@ class NetmikoConn(DeviceConn):
         cmds_op = []
         if isinstance(cmds, list):
             # pylint: disable=assignment-from-no-return
-            cmds_op = self.send_list_cmds(cmds=cmds, local_cmds=local_cmds, cmds_op=cmds_op)
+            cmds_op = self.send_list_cmds(cmds=local_cmds, cmds_op=cmds_op, encoding=encoding)
         elif isinstance(cmds, str):
             # pylint: disable=assignment-from-no-return
-            cmds_op = self.send_str_cmds(cmds=cmds, cmds_op=cmds_op)
+            cmds_op = self.send_str_cmds(cmds=cmds, cmds_op=cmds_op, encoding=encoding)
 
         return cmds_op
 
