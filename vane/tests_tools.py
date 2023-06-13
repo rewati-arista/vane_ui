@@ -304,6 +304,7 @@ def login_duts(test_parameters, test_duts):
         login_ptr["results_dir"] = test_parameters["parameters"]["results_dir"]
         login_ptr["report_dir"] = test_parameters["parameters"]["report_dir"]
         login_ptr["eapi_file"] = eapi_file
+
         if name in network_configs:
             login_ptr["network_configs"] = network_configs[name]
 
@@ -436,14 +437,22 @@ def dut_worker(dut, show_cmds, test_parameters):
 
         if show_cmd in show_cmds_txt:
             cmd_index = show_cmds_txt.index(show_cmd)
-            show_output_txt = show_cmd_txt_list[cmd_index]
-            dut["output"][show_cmd]["text"] = show_output_txt["output"]
 
-            logging.warning(f"Adding text cmd {show_cmd} to dut and data {show_output_txt}")
+            logging.debug(f"Found cmd: {show_cmd} at index {cmd_index} of {show_cmds_txt}")
+            logging.debug(
+                f"length of cmds: {len(show_cmds_txt)} vs length of "
+                f"output {len(show_cmd_txt_list)}"
+            )
+
+            show_output_txt = show_cmd_txt_list[cmd_index]["output"]
+            dut["output"][show_cmd]["text"] = show_output_txt
+
+            logging.debug(f"Adding cmd {show_cmd} to dut and data {show_output_txt}")
+
         else:
             dut["output"][show_cmd]["text"] = ""
 
-            logging.warning(f"No text output for {show_cmd}")
+            logging.debug(f"No text output for {show_cmd}")
 
     logging.info(f"{name} updated with show output {dut}")
 
