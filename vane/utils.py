@@ -35,8 +35,6 @@ Collection of misc functions that dont fit anywhere else but are still required.
 import sys
 import collections
 
-CMD_WAIT = 5
-
 
 def make_iterable(value):
     """Converts the supplied value to a list object
