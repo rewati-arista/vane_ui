@@ -38,9 +38,9 @@ import os
 import configparser
 import json
 import pyeapi
+import netmiko
 from netmiko.ssh_autodetect import SSHDetect
 from netmiko import Netmiko
-import netmiko
 from vane.utils import make_iterable
 
 
@@ -215,30 +215,31 @@ class NetmikoConn(DeviceConn):
 
         if isinstance(cmds, list):
             local_cmds = cmds.copy()
-            for i, cmd in enumerate(local_cmds):
+            for i, cmd in enumerate(cmds):
                 local_cmds[i] = cmd + pipe_json
-
         elif isinstance(cmds, str):
-            cmds = cmds + pipe_json
+            local_cmds = cmds + pipe_json
+
         return cmds, local_cmds
 
-    def send_list_cmds(self, cmds, local_cmds, cmds_op, encoding="json"):
+    def send_list_cmds(self, cmds, encoding="json"):
         """send_list_cmds: sends the list of commands to device conn
         and collects the output as list"""
 
-        for i, cmd in enumerate(local_cmds):
+        cmds_op = []
 
+        for i, cmd in enumerate(cmds):
             try:
-                output = self._connection.send_command(cmds)
-            except netmiko.ssh_exception.NetmikoTimeoutException:
+                output = self._connection.send_command(cmd)
+            except netmiko.exceptions.NetmikoTimeoutException:
                 #try resetting connection and see if it works
                 self.set_up_conn(self.name)
-                output = self._connection.send_command(cmds)
+                output = self._connection.send_command(cmd)
 
             if output not in error_responses and encoding == "json":
                 output = json.loads(output)
             else:
-                err_msg = f"Could not execute {cmd[i]} .Got error: {output}"
+                err_msg = f"Could not execute {cmds[i]} .Got error: {output}"
                 raise CommandError(err_msg, cmds)
 
             if encoding == "text":
@@ -248,12 +249,15 @@ class NetmikoConn(DeviceConn):
             else:
                 cmds_op.append(output)
 
-    def send_str_cmds(self, cmds, cmds_op, encoding="json"):
+        return cmds_op
+
+    def send_str_cmds(self, cmds, encoding="json"):
         """send_str_cmds: sends one command to device conn"""
 
+        cmds_op = []
         try:
             output = self._connection.send_command(cmds)
-        except netmiko.ssh_exception.NetmikoTimeoutException:
+        except netmiko.exceptions.NetmikoTimeoutException:
             #try resetting connection and see if it works
             self.set_up_conn(self.name)
             output = self._connection.send_command(cmds)
@@ -289,13 +293,12 @@ class NetmikoConn(DeviceConn):
         elif encoding == "text" and isinstance(cmds, list):
             local_cmds = cmds.copy()
 
-        cmds_op = []
         if isinstance(cmds, list):
             # pylint: disable=assignment-from-no-return
-            cmds_op = self.send_list_cmds(cmds=local_cmds, cmds_op=cmds_op, encoding=encoding)
+            cmds_op = self.send_list_cmds(cmds=local_cmds, encoding=encoding)
         elif isinstance(cmds, str):
             # pylint: disable=assignment-from-no-return
-            cmds_op = self.send_str_cmds(cmds=cmds, cmds_op=cmds_op, encoding=encoding)
+            cmds_op = self.send_str_cmds(cmds=cmds, encoding=encoding)
 
         return cmds_op
 
