@@ -1064,7 +1064,7 @@ class ReportClient:
             para = self._document.add_paragraph()
             self._write_text(
                 para,
-                report_value.strip(),
+                report_value,
                 font="Courier New",
                 font_size=10,
                 left_indent=Inches(0.25),
