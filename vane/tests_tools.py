@@ -41,6 +41,7 @@ import re
 import pprint
 import yaml
 
+from jinja2 import Template
 from vane import config, device_interface
 from vane.vane_logging import logging
 
@@ -690,6 +691,7 @@ def return_test_defs(test_parameters):
                     test_def = import_yaml(file_path)
                     for test_suite in test_def:
                         test_suite["dir_path"] = f"{dir_path}"
+                        import_config(dir_path, test_suite)
                     test_defs["test_suites"] += test_def
 
     export_yaml(report_dir + "/" + test_definitions_file, test_defs)
@@ -697,6 +699,36 @@ def return_test_defs(test_parameters):
     logging.debug(f"Return the following test definitions data structure {test_defs}")
 
     return test_defs
+
+
+def import_config(dir_path, test_suite):
+    """Check for setup file.  If setup file exists import configuration for reporting
+
+    Args:
+        dir_path (str): Path to test case directory
+        test_suite (dict): Test case definition parameters
+    """
+
+    for testcase in test_suite["testcases"]:
+        if "test_setup" in testcase:
+            setup_file = f"{dir_path}/{testcase['test_setup']}"
+            logging.info(
+                f"Importing setup file: {setup_file} into test case: {testcase['name']} definition"
+            )
+            setup_config = setup_import_yaml(setup_file)
+            logging.debug(f"Configuration setup is {setup_config}")
+
+            testcase["configuration"] = ""
+            for dev_name in setup_config:
+                testcase["configuration"] += f"{dev_name}:\n"
+                setup_schema = setup_config[dev_name]["schema"]
+
+                if setup_schema is None:
+                    testcase["configuration"] += f"{setup_config[dev_name]['template']}\n"
+                else:
+                    setup_template = Template(setup_config[dev_name]["template"])
+                    formatted_config = setup_template.render(setup_schema)
+                    testcase["configuration"] += f"{formatted_config}\n"
 
 
 def export_yaml(yaml_file, yaml_data):
