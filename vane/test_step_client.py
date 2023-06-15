@@ -85,9 +85,9 @@ class TestStepClient:
         Args:
             test_files (list): List of test file names collected directory walk
         """
-        logging.info("Parsing files for test steps and defintions")
+        logging.info("Parsing files for test steps and definitions")
         for test_file in test_files:
-            logging.debug(f"Parsing file: {test_file} for test steps and defintions")
+            logging.debug(f"Parsing file: {test_file} for test steps and definitions")
             comments = []
             with open(test_file, "r", encoding="utf_8") as infile:
                 content = infile.read()
