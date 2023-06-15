@@ -18,12 +18,12 @@ import vane.tests_client
 
 
 # Common duts file
-DUTS = "tests/fixtures/duts.yaml"
+DUTS = "tests/unittests/fixtures/tests_client_duts.yaml"
 
 # Basic default definitions file
 #   Standard definitions file with no errors or missing data that should work for
 #   most basic test cases
-DEFAULT_DEFS = "tests/unittests/fixtures/definitions.yaml"
+DEFAULT_DEFS = "tests/unittests/fixtures/tests_client_definitions.yaml"
 
 
 @pytest.fixture
