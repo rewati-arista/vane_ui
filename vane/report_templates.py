@@ -119,10 +119,10 @@ REPORT_TEMPLATES = {
             "output_name": "procedure",
             "summary": True,
         },
-        "expected_output": {
+        "input": {
             "required": False,
             "format": "dict_string",
-            "default": "None",
+            "default": "No user defined input",
             "output_name": "input",
         },
         "show_cmd_txts": {
@@ -131,13 +131,13 @@ REPORT_TEMPLATES = {
             "default": [],
             "output_name": "dut output",
         },
-        "criteria": {
+        "test_criteria": {
             "required": True,
             "format": "string",
             "default": "None",
             "output_name": "expected output",
         },
-        "fail_or_skip_reason": {
+        "output_msg": {
             "required": True,
             "format": "string",
             "default": "None",
