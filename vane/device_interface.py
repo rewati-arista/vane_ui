@@ -206,7 +206,6 @@ class NetmikoConn(DeviceConn):
         # pylint: disable=attribute-defined-outside-init
         self._connection = Netmiko(**remote_device)
 
-
     def get_cmds(self, cmds):
         """get_cmds: converts cmds to json cmds
         cmds can be a list of commands or just one command (str)
@@ -232,7 +231,7 @@ class NetmikoConn(DeviceConn):
             try:
                 output = self._connection.send_command(cmd)
             except netmiko.exceptions.NetmikoTimeoutException:
-                #try resetting connection and see if it works
+                # try resetting connection and see if it works
                 self.set_up_conn(self.name)
                 output = self._connection.send_command(cmd)
 
@@ -258,7 +257,7 @@ class NetmikoConn(DeviceConn):
         try:
             output = self._connection.send_command(cmds)
         except netmiko.exceptions.NetmikoTimeoutException:
-            #try resetting connection and see if it works
+            # try resetting connection and see if it works
             self.set_up_conn(self.name)
             output = self._connection.send_command(cmds)
 
@@ -351,8 +350,8 @@ class NetmikoConn(DeviceConn):
                 try:
                     resp = self.run_commands(command, encoding, send_enable, **kwargs)
                     results.append({"command": command, "result": resp[0], "encoding": encoding})
-                except CommandError as exc:
-                    #if encoding is json probably we need to run this cmd using text
+                except CommandError:
+                    # if encoding is json probably we need to run this cmd using text
                     if encoding == "json":
                         resp = self.run_commands(command, "text", send_enable, **kwargs)
                         results.append({"command": command, "result": resp[0], "encoding": "text"})
