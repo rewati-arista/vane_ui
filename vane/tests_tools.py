@@ -883,7 +883,7 @@ class TestOps:
         except KeyError:
             self.show_clock_flag = False
 
-        self.show_cmds = {self.dut_name: ["show version"]}
+        self.show_cmds = {self.dut_name: []}
         self._show_cmds = {self.dut_name: ["show version"]}
 
         if self.show_clock_flag:
