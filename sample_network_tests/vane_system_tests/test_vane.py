@@ -61,7 +61,7 @@ class VaneTests:
             """
             TS: Run cmds using eapi and ssh using json encoding
             """
-            eapi_output = tops.run_show_cmds(tops.show_cmds[tops.dut_name])
+            eapi_output = tops.run_show_cmds(tops.show_cmds[tops.dut_name], conn_type="eapi")
             ssh_output = tops.run_show_cmds(tops.show_cmds[tops.dut_name], conn_type="ssh")
 
             """
@@ -103,7 +103,9 @@ class VaneTests:
             """
             TS: Run cmds using eapi and ssh using text encoding
             """
-            eapi_output = tops.run_show_cmds(tops.show_cmds[tops.dut_name], encoding="text")
+            eapi_output = tops.run_show_cmds(
+                tops.show_cmds[tops.dut_name], conn_type="eapi", encoding="text"
+            )
             ssh_output = tops.run_show_cmds(
                 tops.show_cmds[tops.dut_name], conn_type="ssh", encoding="text"
             )
@@ -206,3 +208,45 @@ class VaneTests:
         tops.test_result = tops.actual_output != ""
         tops.generate_report(tops.dut_name, tops.output_msg)
         assert tops.actual_output != ""
+
+    def test_if_ssh_run_commands_func(self, dut, tests_definitions):
+        """TD: Verifies ssh connection run_commands() func
+
+        Args:
+          dut (dict): Encapsulates dut details including name, connection
+        """
+
+        tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
+
+        try:
+            tops.show_cmds[tops.dut_name] = ["show ntp status", "show bgp summary"]
+
+            """
+            TS: Run cmds using eapi and ssh run_commands
+            """
+            run_commands_op = dut["ssh_conn"].run_commands(tops.show_cmds[tops.dut_name])
+            eapi_output = tops.run_show_cmds(tops.show_cmds[tops.dut_name], conn_type="eapi")
+            eapi_op = []
+            for output in eapi_output:
+                eapi_op.append(output["result"])
+
+            """
+            TS: Compare eapi and ssh outputs
+            """
+            tops.actual_output, tops.expected_output = (run_commands_op, eapi_op)
+
+        except (AttributeError, LookupError, EapiError) as exception:
+            logging.error(
+                f"On device {tops.dut_name}: Error while running testcase on DUT is: "
+                f"{str(exception)}"
+            )
+            tops.actual_output = str(exception)
+            tops.output_msg += (
+                f"EXCEPTION encountered on device {tops.dut_name}, while "
+                f"investigating if ssh can be used to run cmds. Vane recorded error: {exception}"
+            )
+
+        tops.parse_test_steps(self.test_if_ssh_run_commands_func)
+        tops.test_result = tops.actual_output == tops.expected_output
+        tops.generate_report(tops.dut_name, tops.output_msg)
+        assert tops.actual_output == tops.expected_output

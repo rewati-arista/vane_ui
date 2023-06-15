@@ -26,3 +26,9 @@
       test_criteria: Verify ping cmd can be run using ssh
       input:
         ping_ip: google.com
+    - name: test_if_ssh_run_commands_func
+      description: Verify ssh conn run_commands func
+      show_cmd: null
+      expected_output: null
+      report_style: modern
+      test_criteria: Verify ssh conn run_commands func

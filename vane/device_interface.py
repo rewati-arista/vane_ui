@@ -235,18 +235,18 @@ class NetmikoConn(DeviceConn):
                 self.set_up_conn(self.name)
                 output = self._connection.send_command(cmd)
 
-            if output not in error_responses and encoding == "json":
-                output = json.loads(output)
+            if output not in error_responses:
+                if encoding == "json":
+                    output = json.loads(output)
+                    cmds_op.append(output)
+                elif encoding == "text":
+                    # for text encoding, creating the format
+                    # similar to one returned by eapi format
+                    text_ob = {"output": output}
+                    cmds_op.append(text_ob)
             else:
-                err_msg = f"Could not execute {cmds[i]} .Got error: {output}"
+                err_msg = f"Could not execute {cmds[i]}.Got error: {output}"
                 raise CommandError(err_msg, cmds)
-
-            if encoding == "text":
-                # for text encoding, creating the format similar to one returned by eapi format
-                text_ob = {"output": output}
-                cmds_op.append(text_ob)
-            else:
-                cmds_op.append(output)
 
         return cmds_op
 
