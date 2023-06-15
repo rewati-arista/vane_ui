@@ -286,10 +286,12 @@ def login_duts(test_parameters, test_duts):
         netmiko_conn.set_up_conn(name)
         login_ptr["ssh_conn"] = netmiko_conn
 
+        pyeapi_conn = device_interface.PyeapiConn()
+        pyeapi_conn.set_conn_params(eapi_file)
+        pyeapi_conn.set_up_conn(name)
+        login_ptr["eapi_conn"] = pyeapi_conn
+
         if eos_conn == "eapi":
-            pyeapi_conn = device_interface.PyeapiConn()
-            pyeapi_conn.set_conn_params(eapi_file)
-            pyeapi_conn.set_up_conn(name)
             login_ptr["connection"] = pyeapi_conn
         elif eos_conn == "ssh":
             login_ptr["connection"] = netmiko_conn
@@ -1136,9 +1138,21 @@ class TestOps:
 
         logging.info(f"These are test steps {self.test_steps}")
 
-    def run_show_cmds(self, show_cmds, dut=None, encoding="json"):
-        """run_show_cmds is a wrapper which runs the 'show_cmds' using enable() pyeapi
-        method on the specified dut and if no dut is passed then on primary dut.
+    def set_evidence_default(self, dut_name):
+        """For initializing evidence values for neighbor duts since
+        init only initializes for primary dut"""
+
+        self._show_cmd_txts.setdefault(dut_name, [])
+        self._show_cmds.setdefault(dut_name, [])
+        self.show_cmd_txts.setdefault(dut_name, [])
+        self.show_cmds.setdefault(dut_name, [])
+
+    def run_show_cmds(self, show_cmds, dut=None, encoding="json", conn_type="eapi"):
+        """run_show_cmds is a wrapper which runs the 'show_cmds'
+        conn_type determines how the cmds are being run
+        if conn_type is eapi then pyeapi is used on specified dut
+        if conn_type is ssh then netmiko connection in dut object is used
+        if no dut is passed then cmds are run on primary dut
         It returns the output of these 'show_cmds' in the encoding requested.
         Also it checks show_clock_flag
         to see if 'show_clock' cmd needs to be run. It stores the text output for
@@ -1148,6 +1162,7 @@ class TestOps:
         Args: show_cmds: list of show commands to be run
         dut: the device to run the show command on
         encoding: json or text, with json being default
+        conn_type: eapi or ssh, with eapi being default
 
         Returns: A dict object that includes the response for each command along
         with the encoding
@@ -1156,15 +1171,19 @@ class TestOps:
         if dut is None:
             dut = self.dut
 
-        conn = dut["connection"]
+        if conn_type == "eapi":
+            conn = dut["eapi_conn"]
+        elif conn_type == "ssh":
+            conn = dut["ssh_conn"]
+        else:
+            raise ValueError(f"conn_type [{conn_type}] not supported")
+
         dut_name = dut["name"]
 
-        # for initializing these values for neighbor duts since
+        # initializing evidence values for other duts since
         # init only initializes for primary dut
-        self._show_cmd_txts.setdefault(dut_name, [])
-        self._show_cmds.setdefault(dut_name, [])
-        self.show_cmd_txts.setdefault(dut_name, [])
-        self.show_cmds.setdefault(dut_name, [])
+
+        self.set_evidence_default(dut_name)
 
         # if encoding is json run the commands, store the results
         if encoding == "json":
@@ -1182,12 +1201,11 @@ class TestOps:
                 self._show_cmd_txts[dut_name].append(result_dict["result"]["output"])
 
         # run the commands in text mode
-        txt_results = conn.enable(show_cmds, "text")
+        txt_results = conn.enable(show_cmds, encoding="text")
         # add the show_cmds to TestOps object's show_cmds and _show_cmds list
         # also add the o/p of show_cmds to TestOps object's show_cmds_txts and
         # _show_cmds_txts list
         for result_dict in txt_results:
-            self.show_cmds[dut_name].append(result_dict["command"])
             self._show_cmds[dut_name].append(result_dict["command"])
             self.show_cmd_txts[dut_name].append(result_dict["result"]["output"])
             self._show_cmd_txts[dut_name].append(result_dict["result"]["output"])

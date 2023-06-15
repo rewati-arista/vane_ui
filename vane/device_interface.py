@@ -34,12 +34,15 @@
    2. ssh driver - uses Netmiko package
 """
 
+import os
 import configparser
 import json
 import pyeapi
+import netmiko
 from netmiko.ssh_autodetect import SSHDetect
 from netmiko import Netmiko
 from vane.utils import make_iterable
+
 
 error_responses = [
     '% This is an unconverted command\n{\n    "errors": '
@@ -178,15 +181,24 @@ class NetmikoConn(DeviceConn):
         if not self._config.has_section(name):
             raise AttributeError("connection profile not found")
 
+        self.name = device_name
         device_attributes = dict(self._config.items(name))
 
         default_device_type = "arista_eos"
+
+        try:
+            os.makedirs("netmiko-logs")
+        except FileExistsError:
+            pass
+
+        logfile = f"netmiko-logs/netmiko-session-{device_name}.log"
         remote_device = {
             "device_type": device_attributes.get("device_type", default_device_type),
             "host": device_attributes["host"],
             "username": device_attributes["username"],
             "password": device_attributes["password"],
             "secret": device_attributes.get("enable_mode_secret", ""),
+            "session_log": logfile,
         }
         if remote_device["device_type"] == "autodetect":
             guesser = SSHDetect(**remote_device)
@@ -202,47 +214,63 @@ class NetmikoConn(DeviceConn):
 
         if isinstance(cmds, list):
             local_cmds = cmds.copy()
-            for i, cmd in enumerate(local_cmds):
+            for i, cmd in enumerate(cmds):
                 local_cmds[i] = cmd + pipe_json
-
         elif isinstance(cmds, str):
-            cmds = cmds + pipe_json
+            local_cmds = cmds + pipe_json
+
         return cmds, local_cmds
 
-    def send_list_cmds(self, cmds, local_cmds, cmds_op, encoding="json"):
+    def send_list_cmds(self, cmds, encoding="json"):
         """send_list_cmds: sends the list of commands to device conn
         and collects the output as list"""
 
-        for i, cmd in enumerate(local_cmds):
-            output = self._connection.send_command(cmd)
-            if output not in error_responses and encoding == "json":
-                output = json.loads(output)
+        cmds_op = []
+
+        for i, cmd in enumerate(cmds):
+            try:
+                output = self._connection.send_command(cmd)
+            except netmiko.exceptions.NetmikoTimeoutException:
+                # try resetting connection and see if it works
+                self.set_up_conn(self.name)
+                output = self._connection.send_command(cmd)
+
+            if output not in error_responses:
+                if encoding == "json":
+                    output = json.loads(output)
+                    cmds_op.append(output)
+                elif encoding == "text":
+                    # for text encoding, creating the format
+                    # similar to one returned by eapi format
+                    text_ob = {"output": output}
+                    cmds_op.append(text_ob)
             else:
-                err_msg = f"Could not execute {cmd[i]} .Got error: {output}"
+                err_msg = f"Could not execute {cmds[i]}.Got error: {output}"
                 raise CommandError(err_msg, cmds)
 
-            if encoding == "text":
-                # for text encoding, creating the format similar to one returned by eapi format
+        return cmds_op
+
+    def send_str_cmds(self, cmds, encoding="json"):
+        """send_str_cmds: sends one command to device conn"""
+
+        cmds_op = []
+        try:
+            output = self._connection.send_command(cmds)
+        except netmiko.exceptions.NetmikoTimeoutException:
+            # try resetting connection and see if it works
+            self.set_up_conn(self.name)
+            output = self._connection.send_command(cmds)
+
+        if output not in error_responses:
+            if encoding == "json":
+                output = json.loads(output)
+                cmds_op.append(output)
+            elif encoding == "text":
                 text_ob = {"output": output}
                 cmds_op.append(text_ob)
-            else:
-                cmds_op.append(output)
-
-    def send_str_cmds(self, cmds, cmds_op, encoding="json"):
-        """send_str_cmds: sends one command to device conn"""
-        output = self._connection.send_command(cmds)
-
-        if output not in error_responses and encoding == "json":
-            output = json.loads(output)
         else:
             err_msg = f"Could not execute {cmds} . Got error: {output}"
             raise CommandError(err_msg, cmds)
-
-        if encoding == "text":
-            text_ob = {"output": output}
-            cmds_op.append(text_ob)
-        else:
-            cmds_op.append(output)
 
         return cmds_op
 
@@ -260,17 +288,18 @@ class NetmikoConn(DeviceConn):
         if encoding == "json":
             # for json encoding, lets try to run cmds using | json
             cmds, local_cmds = self.get_cmds(cmds=cmds)
-
         elif encoding == "text" and isinstance(cmds, list):
             local_cmds = cmds.copy()
+        else:
+            # when cmds is a string and encoding is text
+            local_cmds = cmds
 
-        cmds_op = []
         if isinstance(cmds, list):
             # pylint: disable=assignment-from-no-return
-            cmds_op = self.send_list_cmds(cmds=cmds, local_cmds=local_cmds, cmds_op=cmds_op)
+            cmds_op = self.send_list_cmds(cmds=local_cmds, encoding=encoding)
         elif isinstance(cmds, str):
             # pylint: disable=assignment-from-no-return
-            cmds_op = self.send_str_cmds(cmds=cmds, cmds_op=cmds_op)
+            cmds_op = self.send_str_cmds(cmds=local_cmds, encoding=encoding)
 
         return cmds_op
 
@@ -321,9 +350,9 @@ class NetmikoConn(DeviceConn):
                 try:
                     resp = self.run_commands(command, encoding, send_enable, **kwargs)
                     results.append({"command": command, "result": resp[0], "encoding": encoding})
-                except CommandError as exc:
-                    # pylint: disable=no-member
-                    if exc.error_code == 1003:
+                except CommandError:
+                    # if encoding is json probably we need to run this cmd using text
+                    if encoding == "json":
                         resp = self.run_commands(command, "text", send_enable, **kwargs)
                         results.append({"command": command, "result": resp[0], "encoding": "text"})
                     else:
