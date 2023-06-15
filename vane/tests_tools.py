@@ -1180,7 +1180,6 @@ class TestOps:
         # also add the o/p of show_cmds to TestOps object's show_cmds_txts and
         # _show_cmds_txts list
         for result_dict in txt_results:
-            self.show_cmds[dut_name].append(result_dict["command"])
             self._show_cmds[dut_name].append(result_dict["command"])
             self.show_cmd_txts[dut_name].append(result_dict["result"]["output"])
             self._show_cmd_txts[dut_name].append(result_dict["result"]["output"])

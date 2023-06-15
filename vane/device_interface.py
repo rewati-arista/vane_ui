@@ -289,16 +289,18 @@ class NetmikoConn(DeviceConn):
         if encoding == "json":
             # for json encoding, lets try to run cmds using | json
             cmds, local_cmds = self.get_cmds(cmds=cmds)
-
         elif encoding == "text" and isinstance(cmds, list):
             local_cmds = cmds.copy()
+        else:
+            # when cmds is a string and encoding is text
+            local_cmds = cmds
 
         if isinstance(cmds, list):
             # pylint: disable=assignment-from-no-return
             cmds_op = self.send_list_cmds(cmds=local_cmds, encoding=encoding)
         elif isinstance(cmds, str):
             # pylint: disable=assignment-from-no-return
-            cmds_op = self.send_str_cmds(cmds=cmds, encoding=encoding)
+            cmds_op = self.send_str_cmds(cmds=local_cmds, encoding=encoding)
 
         return cmds_op
 
@@ -350,8 +352,8 @@ class NetmikoConn(DeviceConn):
                     resp = self.run_commands(command, encoding, send_enable, **kwargs)
                     results.append({"command": command, "result": resp[0], "encoding": encoding})
                 except CommandError as exc:
-                    # pylint: disable=no-member
-                    if exc.error_code == 1003:
+                    #if encoding is json probably we need to run this cmd using text
+                    if encoding == "json":
                         resp = self.run_commands(command, "text", send_enable, **kwargs)
                         results.append({"command": command, "result": resp[0], "encoding": "text"})
                     else:
