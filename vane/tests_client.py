@@ -198,21 +198,23 @@ class TestsClient:
         """Set verbosity for test run"""
 
         verbose = self.data_model["parameters"]["verbose"]
-        logging.info(f"Setting PyTest parameter verbosity to {verbose}")
+        logging.info(f"Setting PyTest parameter verbosity (extension: -v) to {verbose}")
         self._set_cmdline_no_input(verbose, "-v")
 
     def _set_stdout(self):
         """Set stdout for test run"""
 
         stdout = self.data_model["parameters"]["stdout"]
-        logging.info(f"Setting PyTest parameter standard out to {stdout}")
+        logging.info(f"Setting PyTest parameter standard out (extension: -s) to {stdout}")
         self._set_cmdline_no_input(stdout, "-s")
 
     def _set_setup_show(self):
         """Set setup-show for test run"""
 
         setup_show = self.data_model["parameters"]["setup_show"]
-        logging.info(f"Setting PyTest parameter setup show to {setup_show}")
+        logging.info(
+            f"Setting PyTest parameter setup show (extension: --setup-show) to {setup_show}"
+        )
         self._set_cmdline_no_input(setup_show, "--setup-show")
 
     def _set_cmdline_no_input(self, parameter, ext):
@@ -222,7 +224,6 @@ class TestsClient:
           parameter (bool): Enable/disable pytest parameter
           ext(str): PyTest command line extension
         """
-        logging.info(f"PyTest command line extension: {ext} is set to: {parameter}")
         if parameter and ext not in self.test_parameters:
             self.test_parameters.append(ext)
         if not parameter and ext in self.test_parameters:
@@ -266,7 +267,9 @@ class TestsClient:
 
         excel_report = self.data_model["parameters"].get("excel_report")
         excel_name = f"--excelreport={report_dir}/{excel_report}.xlsx"
-        logging.info(f"Setting PyTest parameter Excel report to {excel_report}")
+        logging.info(
+            f"Setting PyTest parameter Excel report (extension: --excelreport)to {excel_report}"
+        )
         self._set_cmdline_report(excel_report, excel_name, "--excelreport")
 
     def _set_json_report(self):
@@ -274,7 +277,7 @@ class TestsClient:
 
         json_report = self.data_model["parameters"].get("json_report")
         json_name = f"--json={json_report}.json"
-        logging.info(f"Setting PyTest parameter JSON report to {json_report}")
+        logging.info(f"Setting PyTest parameter JSON report (extension: --json) to {json_report}")
         self._set_cmdline_report(json_report, json_name, "--json")
 
     def _set_cmdline_report(self, parameter, report, ext):
@@ -294,7 +297,7 @@ class TestsClient:
     def _set_processes(self):
         """Set processes for test run"""
         processes = self.data_model["parameters"]["processes"]
-        logging.info(f"Setting PyTest parameter processes to {processes}")
+        logging.info(f"Setting PyTest parameter processes (extension: -n) to {processes}")
         self._set_cmdline_input(processes, "-n")
 
     def _get_markers(self):
@@ -311,7 +314,7 @@ class TestsClient:
         if mark and mark not in self._get_markers():
             print(f"Marker {mark} is not supported. Update marker parameter in definition file")
             sys.exit(0)
-        logging.info(f"Setting PyTest parameter marker to {mark}")
+        logging.info(f"Setting PyTest parameter marker (extension: -m) to {mark}")
         self._set_cmdline_input(mark, "-m")
 
     def _set_junit(self, report_dir):
@@ -327,7 +330,6 @@ class TestsClient:
         """Set command line params for test run"""
         list_out = [x for x in self.test_parameters if ext in x]
 
-        logging.info(f"PyTest command line extension: {ext} is set to: {parameter}")
         if parameter and len(list_out) == 0:
             self.test_parameters.append(f"{ext} {parameter}")
         elif parameter and len(list_out) > 0:
