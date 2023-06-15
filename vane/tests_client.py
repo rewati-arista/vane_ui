@@ -198,7 +198,7 @@ class TestsClient:
         """Set verbosity for test run"""
 
         verbose = self.data_model["parameters"]["verbose"]
-        logging.info(f"Setting PyTest parameter varbosity to {verbose}")
+        logging.info(f"Setting PyTest parameter verbosity to {verbose}")
         self._set_cmdline_no_input(verbose, "-v")
 
     def _set_stdout(self):
@@ -327,21 +327,18 @@ class TestsClient:
         """Set command line params for test run"""
         list_out = [x for x in self.test_parameters if ext in x]
 
+        logging.info(f"PyTest command line extension: {ext} is set to: {parameter}")
         if parameter and len(list_out) == 0:
-            logging.info(f"Set PyTest {ext} to: {parameter}")
             self.test_parameters.append(f"{ext} {parameter}")
         elif parameter and len(list_out) > 0:
             for list_item in list_out:
                 parameter_index = self.test_parameters.index(list_item)
                 self.test_parameters.pop(parameter_index)
-            logging.info(f"Set PyTest {ext} to: {parameter}")
             self.test_parameters.append(f"{ext} {parameter}")
         elif not parameter and len(list_out) > 0:
             for list_item in list_out:
                 parameter_index = self.test_parameters.index(list_item)
                 self.test_parameters.pop(parameter_index)
-        else:
-            logging.info(f"Not Setting PyTest {ext}")
 
     def _set_test_parameters(self):
         """Use data-model to create test parameters"""
