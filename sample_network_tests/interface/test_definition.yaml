@@ -23,12 +23,12 @@
         - DSR01
         - DCBBW1
     - name: test_if_intf_phy_status_connected_on_
-      description: Verify the interfaces of interest link statuses are connected
+      description: Verify the interfaces of interest physical state is link up
       # interface physical status
       expected_output: linkUp
       show_cmd: show interfaces phy detail
       report_style: modern
-      test_criteria: Verify the interfaces of interest link statuses are connected
+      test_criteria: Verify the interfaces of interest physical state is link up
       criteria: names
       filter: 
         - DSR01
@@ -122,12 +122,12 @@
         - DSR01
         - DCBBW1
     - name: test_interface_utilization_on_
-      description: Verifies interfaces L1 errors (Rx, Giants, Tx, Runts, FCS, Align)
+      description: Verify input and output bandwidth utilization of interfaces
       # Number of tolerable errors
       expected_output: 70
       show_cmd: show interfaces
       report_style: modern
-      test_criteria: Verifies interfaces L1 errors (Rx, Giants, Tx, Runts, FCS, Align)
+      test_criteria: Verify input and output bandwidth utilization of interfaces
       criteria: names
       filter: 
         - DSR01

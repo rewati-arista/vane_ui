@@ -535,7 +535,7 @@ class InterfaceCountersTests:
     @pytest.mark.physical
     @pytest.mark.parametrize("dut", test7_duts, ids=test7_ids)
     def test_if_intf_counters_has_frame_too_long_errors_on_(self, dut, tests_definitions):
-        """TD: Verify the interfaces of interest have no frameLong errors
+        """TD: Verify the interfaces of interest have no frameTooLongs errors
 
         Args:
             dut (dict): Encapsulates dut details including name, connection
@@ -811,7 +811,8 @@ class InterfaceCountersTests:
     @pytest.mark.physical
     @pytest.mark.parametrize("dut", test11_duts, ids=test11_ids)
     def test_if_interface_errors_on_(self, dut, tests_definitions):
-        """TD: Verify the interfaces of interest have no inDiscards
+        """TD: Verify the interfaces of interest have no L1 (Rx, Tx, FCS, Alignment) errors
+        and have correct number Giant, Runt Frames.
 
         Args:
             dut (dict): Encapsulates dut details including name, connection
@@ -970,7 +971,7 @@ class InterfaceCountersTests:
 
     @pytest.mark.parametrize("dut", test12_duts, ids=test12_ids)
     def test_interface_utilization_on_(self, dut, tests_definitions):
-        """TD: Verify the interfaces of interest have no inDiscards
+        """TD: Verify input and output bandwidth utilization of interfaces
 
         Args:
             dut (dict): Encapsulates dut details including name, connection
