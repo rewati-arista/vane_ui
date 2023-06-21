@@ -94,6 +94,11 @@ def remove_comments(input_string):
     Returns: output_string - is the input_string with lines starting
     with # removed.
     """
+
+    # if input_string is empty
+    if not input_string:
+        return input_string
+
     output_string_arr = [] 
     for line in input_string.splitlines():
         if not line.strip().startswith('#'):

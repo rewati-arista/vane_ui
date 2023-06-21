@@ -115,7 +115,8 @@ def setup_via_name(duts, setup_config, checkpoint):
         setup_schema = remove_comments(setup_config[dev_name]["schema"])
 
         if setup_schema is None:
-            config = setup_config[dev_name]["template"].splitlines()
+            temp_wo_comments = remove_comments(setup_config[dev_name]["template"])
+            config = temp_wo_comments.splitlines()
         else:
             template = remove_comments(setup_config[dev_name]["template"])
             setup_template = Template(template)
@@ -138,7 +139,8 @@ def setup_via_role(duts, setup_config, checkpoint):
                 continue
             setup_schema = remove_comments(setup_config[role]["schema"])
             if setup_schema is None:
-                config = setup_config[role]["template"].splitlines()
+                temp_wo_comments = remove_comments(setup_config[role]["template"])
+                config = temp_wo_comments.splitlines()
             else:
                 template = remove_comments(setup_config[role]["template"])
                 setup_template = Template(template)
