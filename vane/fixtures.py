@@ -230,9 +230,7 @@ def setup_testsuite(request, duts):
         if suite["name"] == testsuite:
             setup_config_file = suite.get("test_setup", "")
             if setup_config_file != "":
-                setup_config = tests_tools.import_yaml(
-                    f"{suite['dir_path']}/{setup_config_file}"
-                )
+                setup_config = tests_tools.import_yaml(f"{suite['dir_path']}/{setup_config_file}")
                 checkpoint = perform_setup(duts, testsuite, setup_config)
     yield
     perform_teardown(duts, checkpoint, setup_config)

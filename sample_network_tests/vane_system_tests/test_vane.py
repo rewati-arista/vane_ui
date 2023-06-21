@@ -31,8 +31,6 @@
 
 """ Tests to validate vane functionality."""
 
-import pdb
-import pprint
 import pytest
 from pyeapi.eapilib import EapiError
 from vane import tests_tools
@@ -57,9 +55,8 @@ class VaneTests:
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
 
         try:
-
             """
-            TS: Run cmds 'show hostname' again 
+            TS: Run cmds 'show hostname' again
             """
             self.output = tops.run_show_cmds(tops.show_cmd)
 
@@ -73,7 +70,8 @@ class VaneTests:
             tops.actual_output = str(exception)
             tops.output_msg += (
                 f"EXCEPTION encountered on device {tops.dut_name}, while "
-                f"investigating if setup commnets can be specified. Vane recorded error: {exception}"
+                f"investigating if setup commnets can be specified. "
+                f"Vane recorded error: {exception}"
             )
 
         """
