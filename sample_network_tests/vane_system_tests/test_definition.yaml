@@ -1,0 +1,9 @@
+- name: test_vane.py
+  testcases:
+    - name: test_if_setup_comments_work
+      test_setup: test_setup.yaml
+      description: Verify setup comments work
+      show_cmd: show hostname
+      expected_output: temp-hostname
+      report_style: modern
+      test_criteria: Verify setup comments are filtered properly
