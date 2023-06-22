@@ -29,7 +29,6 @@
 
 ''' vane - Network Certification Tool
 '''
-from importlib import metadata
 
-__version__ = metadata.version(__package__)
+__version__ = '0.9'
 __author__ = 'Arista Networks, Inc.'
