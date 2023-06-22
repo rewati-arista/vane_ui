@@ -81,9 +81,9 @@ class UsersTests:
                 else:
                     tops.output_msg += (
                         f"On router {tops.dut_name} {username} "
-                        f"username configured is "
-                        f"{tops.actual_output}, while the correct username "
-                        f"should be {tops.expected_output}.\n\n"
+                        f"actual username configured is "
+                        f"{tops.actual_output}, while the expected username "
+                        f"is {tops.expected_output}.\n\n"
                     )
             except (AttributeError, LookupError, EapiError) as exp:
                 tops.actual_output = str(exp)
