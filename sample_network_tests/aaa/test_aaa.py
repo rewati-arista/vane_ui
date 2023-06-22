@@ -193,7 +193,8 @@ class AAATests:
                 else:
                     tops.output_msg += (
                         f"\nOn router {tops.dut_name} identified eAPi AAA session: "
-                        f"{tops.actual_output} while correct session is {tops.expected_output}.\n\n"
+                        f"{tops.actual_output} while the expected session "
+                        f"is {tops.expected_output}.\n\n"
                     )
                 tops.actual_results.append(tops.actual_output)
                 tops.expected_results.append(tops.expected_output)
@@ -276,7 +277,7 @@ class AAATests:
             tops.output_msg += (
                 f"On router {tops.dut_name} EOS command authorization method "
                 f"list is set to: {tops.actual_output}, while "
-                f"correct authorization method list is {tops.expected_output}.\n\n"
+                f"the expected authorization method list is {tops.expected_output}.\n\n"
             )
         """
         TS: Creating test report based on results
@@ -331,7 +332,7 @@ class AAATests:
             tops.output_msg += (
                 f"On router {tops.dut_name} EOS exec authorization method "
                 f"list is set to: {tops.actual_output}, while "
-                f"correct exec authorization method list is {tops.expected_output}.\n\n"
+                f"the expected exec authorization method list is {tops.expected_output}.\n\n"
             )
         """
         TS: Creating test report based on results
@@ -385,7 +386,7 @@ class AAATests:
             tops.output_msg += (
                 f"On router {tops.dut_name} EOS login authentication method "
                 f"list is set to: {tops.actual_output}, while "
-                f"correct EOS login authentication method list is {tops.expected_output}.\n\n"
+                f"the expected EOS login authentication method list is {tops.expected_output}.\n\n"
             )
 
         """
@@ -434,7 +435,7 @@ class AAATests:
                     tops.output_msg += (
                         f"On router {tops.dut_name} EOS login authentication method "
                         f"list is set to: {tops.actual_output}, while "
-                        f"correct EOS login authentication method list is "
+                        f"the expected EOS login authentication method list is "
                         f" {tops.expected_output}.\n\n"
                     )
             else:
@@ -514,7 +515,7 @@ class AAATests:
             tops.output_msg += (
                 f"On router {tops.dut_name} EOS dot1x authentication method "
                 f"list is set to: {tops.actual_output}, while "
-                f"correct EOS dot1x authentication method list is {tops.expected_output}.\n\n"
+                f"the expected EOS dot1x authentication method list is {tops.expected_output}.\n\n"
             )
         """
         TS: Creating test report based on results
@@ -569,7 +570,7 @@ class AAATests:
             tops.output_msg += (
                 f"On router {tops.dut_name} EOS enable authentication method "
                 f"list is set to: {tops.actual_output}, while "
-                f"correct EOS enable authentication method list is {tops.expected_output}.\n\n"
+                f"the expected EOS enable authentication method list is {tops.expected_output}.\n\n"
             )
         """
         TS: Creating test report based on results
@@ -634,7 +635,7 @@ class AAATests:
             tops.output_msg += (
                 f"On router {tops.dut_name} default system and "
                 f"console system accounting method list "
-                f"is {tops.actual_output}, while correct default system and "
+                f"is {tops.actual_output}, while the expected default system and "
                 f"console system accounting method list "
                 f"is {tops.expected_output}.\n\n"
             )
@@ -702,7 +703,7 @@ class AAATests:
             tops.output_msg += (
                 f"On router {tops.dut_name} default exec and "
                 f"console exec accounting method list "
-                f"is {tops.actual_output}, while correct default exec "
+                f"is {tops.actual_output}, while the expected default exec "
                 f"and console exec accounting method list "
                 f"is {tops.expected_output}.\n\n"
             )
@@ -770,7 +771,7 @@ class AAATests:
             tops.output_msg += (
                 f"On router {tops.dut_name} default privilege and "
                 f"console privilege accounting method list "
-                f"is {tops.actual_output}, while correct default privilege and "
+                f"is {tops.actual_output}, while the expected default privilege and "
                 f"console privilege accounting method list "
                 f"is {tops.expected_output}.\n\n"
             )
@@ -838,7 +839,7 @@ class AAATests:
             tops.output_msg += (
                 f"On router {tops.dut_name} default dot1x and "
                 f"console dot1x accounting method list "
-                f"is {tops.actual_output}, while correct default dot1x and "
+                f"is {tops.actual_output}, while the expected default dot1x and "
                 f"console dot1x accounting method list "
                 f"is {tops.expected_output}.\n\n"
             )
