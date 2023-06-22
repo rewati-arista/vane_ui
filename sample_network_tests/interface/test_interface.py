@@ -145,7 +145,7 @@ class InterfaceStatusTests:
                 tops.output_msg += (
                     f"On interface {interface_name}: interface link "
                     f"line protocol status is set to: {tops.actual_output}"
-                    f", while correct state is {tops.expected_output}.\n\n"
+                    f", while the expected status is {tops.expected_output}.\n\n"
                 )
 
             tops.actual_results.append(tops.actual_output)
@@ -214,7 +214,7 @@ class InterfaceStatusTests:
                 tops.output_msg += (
                     f"On interface {interface_name}: interface link "
                     f" status is set to: {tops.actual_output}"
-                    f", while correct state is {tops.expected_output}.\n\n"
+                    f", while the expected status is {tops.expected_output}.\n\n"
                 )
 
             tops.actual_results.append(tops.actual_output)
@@ -281,7 +281,7 @@ class InterfacePhyTests:
                         tops.output_msg += (
                             f"On interface {interface_name}: "
                             f"physical detail PHY state is set to: "
-                            f"{tops.actual_output}, while correct state is "
+                            f"{tops.actual_output}, while the expected state is "
                             f"{tops.expected_output}.\n\n"
                         )
                     tops.actual_results.append(tops.actual_output)
@@ -375,7 +375,7 @@ class InterfaceCountersTests:
                 tops.output_msg += (
                     f"On interface {interface_name}: interface "
                     f"counter errors has {tops.actual_output} inErrors"
-                    f", while correct inErrors are {tops.expected_output}.\n\n"
+                    f", while the expected inErrors are {tops.expected_output}.\n\n"
                 )
 
             tops.actual_results.append(tops.actual_output)
@@ -443,7 +443,7 @@ class InterfaceCountersTests:
                 tops.output_msg += (
                     f"On interface {interface_name}: interface "
                     f"counter errors has {tops.actual_output} outErrors"
-                    f", while correct outErrors are {tops.expected_output}.\n\n"
+                    f", while the expected outErrors are {tops.expected_output}.\n\n"
                 )
 
             tops.actual_results.append(tops.actual_output)
@@ -511,7 +511,7 @@ class InterfaceCountersTests:
                 tops.output_msg += (
                     f"On interface {interface_name}: interface "
                     f"counter errors has {tops.actual_output} "
-                    "frameTooShorts, while correct frameTooShorts is "
+                    "frameTooShorts, while the expected frameTooShorts is "
                     f"{tops.expected_output}.\n\n"
                 )
 
@@ -580,7 +580,7 @@ class InterfaceCountersTests:
                 tops.output_msg += (
                     f"On interface {interface_name}: interface "
                     f"counter errors has {tops.actual_output} "
-                    "frameTooLongs, while correct frameTooLongs is "
+                    "frameTooLongs, while the expected frameTooLongs is "
                     f"{tops.expected_output}.\n\n"
                 )
 
@@ -649,7 +649,7 @@ class InterfaceCountersTests:
                 tops.output_msg += (
                     f"On interface {interface_name}: interface "
                     f"counter errors has {tops.actual_output} "
-                    "fcsErrors, while correct fcsErrors is "
+                    "fcsErrors, while the expected fcsErrors is "
                     f"{tops.expected_output}.\n\n"
                 )
 
@@ -718,7 +718,7 @@ class InterfaceCountersTests:
                 tops.output_msg += (
                     f"On interface {interface_name}: interface "
                     f"counter errors has {tops.actual_output} "
-                    "alignmentErrors, while correct alignmentErrors is "
+                    "alignmentErrors, while the expected alignmentErrors is "
                     f"{tops.expected_output}.\n\n"
                 )
 
@@ -787,7 +787,7 @@ class InterfaceCountersTests:
                 tops.output_msg += (
                     f"On interface {interface_name}: interface "
                     f"counter errors has {tops.actual_output} "
-                    "symbolErrors, while correct symbolErrors is "
+                    "symbolErrors, while the expected symbolErrors is "
                     f"{tops.expected_output}.\n\n"
                 )
 
@@ -844,7 +844,7 @@ class InterfaceCountersTests:
                 else:
                     tops.output_msg += (
                         f"On interface {interface_name}: interface "
-                        f"Rx errors is {tops.actual_output}, while correct Rx errors is "
+                        f"Rx errors is {tops.actual_output}, while the expected Rx errors is "
                         f"{tops.expected_output}.\n\n"
                     )
 
@@ -863,7 +863,7 @@ class InterfaceCountersTests:
                 else:
                     tops.output_msg += (
                         f"On interface {interface_name}: interface "
-                        f"Giant Frames is {tops.actual_output}, while correct Giant Frames is "
+                        f"Giant Frames is {tops.actual_output}, while the expected Giant Frames is "
                         f"{tops.expected_output}.\n\n"
                     )
 
@@ -880,7 +880,7 @@ class InterfaceCountersTests:
                 else:
                     tops.output_msg += (
                         f"On interface {interface_name}: interface "
-                        f"Tx Errors is {tops.actual_output}, while correct Tx Errors is "
+                        f"Tx Errors is {tops.actual_output}, while the expected Tx Errors is "
                         f"{tops.expected_output}.\n\n"
                     )
 
@@ -899,7 +899,7 @@ class InterfaceCountersTests:
                 else:
                     tops.output_msg += (
                         f"On interface {interface_name}: interface "
-                        f"Runt Frames is {tops.actual_output}, while correct Runt Frames is "
+                        f"Runt Frames is {tops.actual_output}, while the expected Runt Frames is "
                         f"{tops.expected_output}.\n\n"
                     )
 
@@ -918,7 +918,7 @@ class InterfaceCountersTests:
                 else:
                     tops.output_msg += (
                         f"On interface {interface_name}: interface "
-                        f"FCS Errors is {tops.actual_output}, while correct FCS Errors is "
+                        f"FCS Errors is {tops.actual_output}, while the expected FCS Errors is "
                         f"{tops.expected_output}.\n\n"
                     )
 
@@ -938,7 +938,7 @@ class InterfaceCountersTests:
                     tops.output_msg += (
                         f"On interface {interface_name}: interface "
                         f"Alignment Errors is {tops.actual_output}, "
-                        f"while correct Alignment Errors is "
+                        f"while the expected Alignment Errors is "
                         f"{tops.expected_output}.\n\n"
                     )
 
@@ -1015,7 +1015,7 @@ class InterfaceCountersTests:
                     tops.output_msg += (
                         f"On interface {interface_name}: input bandwidth "
                         f"utilization is {tops.actual_output}%, "
-                        f"while correct bandwidth utilization "
+                        f"while the expected bandwidth utilization "
                         f"should be less than {tops.expected_output}%.\n\n"
                     )
 
@@ -1033,7 +1033,7 @@ class InterfaceCountersTests:
                     tops.output_msg += (
                         f"On interface {interface_name}: output bandwidth "
                         f"utilization is {tops.actual_output}%, "
-                        f"which is correct.\n\n"
+                        f"which is the expected.\n\n"
                     )
                 else:
                     tops.output_msg += (
@@ -1126,7 +1126,7 @@ class InterfaceDiscardTests:
                 tops.output_msg += (
                     f"On interface {interface_name}: interface "
                     f"counter discards has {tops.actual_output} "
-                    f"outDiscards, while correct outDiscards is |{tops.expected_output}|.\n\n"
+                    f"outDiscards, while the expected outDiscards is |{tops.expected_output}|.\n\n"
                 )
 
             tops.actual_results.append(tops.actual_output)
@@ -1194,7 +1194,7 @@ class InterfaceDiscardTests:
                 tops.output_msg += (
                     f"On interface {interface_name}: interface "
                     f"counter discards has {tops.actual_output} "
-                    f"inDiscards, while correct inDiscards is {tops.expected_output}.\n\n"
+                    f"inDiscards, while the expected inDiscards is {tops.expected_output}.\n\n"
                 )
 
             tops.actual_results.append(tops.actual_output)
@@ -1267,7 +1267,7 @@ class InterfaceMtuTests:
             else:
                 tops.output_msg += (
                     f"On interface {interface_name}: interface "
-                    f"MTU is {tops.actual_output}, while correct MTU is "
+                    f"MTU is {tops.actual_output}, while the expected MTU is "
                     f"{tops.expected_output}.\n\n"
                 )
 
