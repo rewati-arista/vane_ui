@@ -83,9 +83,7 @@ class EnvironmentTests:
                 """
 
                 self.output = dut["output"][tops.show_cmd]
-                assert (
-                    self.output
-                ), "System environment temperature details are not collected."
+                assert self.output, "System environment temperature details are not collected."
                 logging.info(
                     f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
                 )
@@ -113,8 +111,8 @@ class EnvironmentTests:
             else:
                 tops.test_result = False
                 tops.output_msg = (
-                    f"On router {tops.dut_name} system temperature status "
-                    f"is {tops.actual_output} while it should be "
+                    f"On router {tops.dut_name} the actual system temperature status "
+                    f"is {tops.actual_output} while the expected temperature status is "
                     f"{tops.expected_output}.\n"
                 )
 
@@ -124,8 +122,7 @@ class EnvironmentTests:
             tops.expected_output = "N/A"
 
             tops.comment = tops.output_msg = self.output = (
-                "INVALID TEST: CloudEOS router "
-                f"{tops.dut_name} does not require cooling.\n"
+                "INVALID TEST: CloudEOS router " f"{tops.dut_name} does not require cooling.\n"
             )
 
         tops.parse_test_steps(self.test_if_system_environment_temp_is_in_spec_on_)
@@ -150,9 +147,7 @@ class EnvironmentTests:
                 """
 
                 self.output = dut["output"][tops.show_cmd]
-                assert (
-                    self.output
-                ), "System environment temperature details are not collected."
+                assert self.output, "System environment temperature details are not collected."
                 logging.info(
                     f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
                 )
@@ -176,9 +171,9 @@ class EnvironmentTests:
                                 )
                             else:
                                 tops.output_msg += (
-                                    f"{sensor_name} Sensor {sensor} temperature alert status "
-                                    f"is {tops.actual_output} while it should be "
-                                    f"{tops.expected_output}.\n"
+                                    f"{sensor_name} Sensor {sensor} actual temperature alert "
+                                    f"status is {tops.actual_output} while the expected "
+                                    f"temperature alert status is {tops.expected_output}.\n"
                                 )
 
                             tops.actual_results.append(tops.actual_output)
@@ -206,8 +201,7 @@ class EnvironmentTests:
             tops.expected_output = "N/A"
 
             tops.comment = tops.output_msg = self.output = (
-                "INVALID TEST: CloudEOS router "
-                f"{tops.dut_name} does not require cooling.\n"
+                "INVALID TEST: CloudEOS router " f"{tops.dut_name} does not require cooling.\n"
             )
 
         tops.parse_test_steps(self.test_if_sensors_temp_is_in_spec_on_)
@@ -231,9 +225,7 @@ class EnvironmentTests:
                 TS: Run show command 'show system environment power' on dut
                 """
                 self.output = dut["output"][tops.show_cmd]
-                assert (
-                    self.output
-                ), "System environment power details are not collected."
+                assert self.output, "System environment power details are not collected."
                 logging.info(
                     f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
                 )
@@ -249,8 +241,8 @@ class EnvironmentTests:
                         )
                     else:
                         tops.output_msg += (
-                            f"Power-Supply {power_supply} state is "
-                            f"{tops.actual_output} while it should be in "
+                            f"Power-Supply {power_supply} actual state is "
+                            f"{tops.actual_output} while expected Power-Supply state is "
                             f"{tops.expected_output}.\n"
                         )
 
@@ -307,9 +299,7 @@ class EnvironmentTests:
                 """
 
                 self.output = dut["output"][tops.show_cmd]
-                assert (
-                    self.output
-                ), "System environment cooling details are not collected."
+                assert self.output, "System environment cooling details are not collected."
                 logging.info(
                     f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
                 )
@@ -325,9 +315,9 @@ class EnvironmentTests:
                 else:
                     tops.test_result = False
                     tops.output_msg = (
-                        f"On router {tops.dut_name} system cooling status "
-                        f"is {tops.actual_output} while it should be "
-                        f"{tops.expected_output}.\n"
+                        f"On router {tops.dut_name} the actual system cooling status "
+                        f"is {tops.actual_output} while the expected "
+                        f"system cooling status is {tops.expected_output}.\n"
                     )
 
             except (
@@ -348,8 +338,7 @@ class EnvironmentTests:
             tops.expected_output = "N/A"
 
             tops.comment = tops.output_msg = self.output = (
-                "INVALID TEST: CloudEOS router "
-                f"{tops.dut_name} does not require cooling.\n"
+                "INVALID TEST: CloudEOS router " f"{tops.dut_name} does not require cooling.\n"
             )
 
         tops.parse_test_steps(self.test_if_system_environment_cooling_is_in_spec_on_)
@@ -374,9 +363,7 @@ class EnvironmentTests:
                 """
 
                 self.output = dut["output"][tops.show_cmd]["json"]
-                assert (
-                    self.output
-                ), "System environment cooling details are not collected."
+                assert self.output, "System environment cooling details are not collected."
                 logging.info(
                     f"On device {tops.dut_name} output of {tops.show_cmd} command is: {self.output}"
                 )
@@ -401,7 +388,7 @@ class EnvironmentTests:
                             else:
                                 tops.output_msg += (
                                     f"{fan_name} fan "
-                                    f"is {tops.actual_output} while it should be "
+                                    f"is {tops.actual_output} while it is expected to be "
                                     f"{tops.expected_output}.\n"
                                 )
 
@@ -430,8 +417,7 @@ class EnvironmentTests:
             tops.expected_output = "N/A"
 
             tops.comment = tops.output_msg = self.output = (
-                "INVALID TEST: CloudEOS router "
-                f"{tops.dut_name} does not require fans.\n"
+                "INVALID TEST: CloudEOS router " f"{tops.dut_name} does not require fans.\n"
             )
 
         tops.parse_test_steps(self.test_if_fan_status_is_in_spec_on_)
