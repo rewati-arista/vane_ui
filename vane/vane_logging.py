@@ -1,14 +1,14 @@
 """ Logger functionality for Vane to add logs to vane.log file"""
 
-import logging
+import logging as log_module
 
-FORMAT = "[%(asctime)s %(filename)s->%(funcName)s():%(lineno)s]%(levelname)s: %(message)s"
-
-logging.basicConfig(
-    level=logging.INFO,
-    filename="vane.log",
-    filemode="w",
-    format=FORMAT,
+logging = log_module.getLogger("vane_logs")
+logging.setLevel(log_module.INFO)
+formatter = log_module.Formatter(
+    "[%(asctime)s %(filename)s->%(funcName)s():%(lineno)s]%(levelname)s: %(message)s"
 )
 
-logging = logging.getLogger("vane_logs")
+# Logger functionality for Vane to add logs to vane.log file
+file_handler = log_module.FileHandler("vane.log", mode="w")
+file_handler.setFormatter(formatter)
+logging.addHandler(file_handler)
