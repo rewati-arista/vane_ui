@@ -57,7 +57,7 @@ def idfn(val):
         [string]: name of the current dut
     """
 
-    logging.info("Invoking idfn to get the name of the current dut")
+    logging.debug("Invoking idfn to get the name of the current dut")
     return val["name"]
 
 
@@ -72,7 +72,7 @@ def dut(request):
         [dict]: a single dut in duts data structure
     """
 
-    logging.info("Invoking fixture to parameterize a dut for a test case")
+    logging.debug("Invoking fixture to parameterize a dut for a test case")
     dutt = request.param
     yield dutt
 
@@ -85,7 +85,7 @@ def duts():
         [dict]: a list of duts
     """
 
-    logging.info("Invoking fixture to get list of duts under test")
+    logging.debug("Invoking fixture to get list of duts")
     duts_dict = {}
     for dutt in dut_objs:
         duts_dict[dutt["name"]] = dutt
@@ -105,7 +105,7 @@ def tests_definitions():
         [dict]: Return test definitions to test case
     """
 
-    logging.info("Invoking fixture to get test definitions for each test case")
+    logging.debug("Invoking fixture to get test definitions for each test case")
     yield test_defs
 
 
@@ -149,9 +149,6 @@ def setup_via_role(duts, setup_config, checkpoint):
         logging.info(f"Performing setup for role: {role}")
         for _, dutt in duts.items():
             if dutt["role"] != role:
-                # We don't log all the skipped duts here as it could clutter the log
-                # e.g. 40 duts, 4 roles x 10 each, we would log 120 messages (30 skipped
-                # duts for each role)
                 continue
 
             setup_schema = setup_config[role]["schema"]
@@ -216,9 +213,6 @@ def teardown_via_role(duts, setup_config, checkpoint_restore_cmd, delete_checkpo
         logging.info(f"Performing teardown for role: {role}")
         for _, dutt in duts.items():
             if dutt["role"] != role:
-                # We don't log all the skipped duts here as it could clutter the log
-                # e.g. 40 duts, 4 roles x 10 each, we would log 120 messages (30 skipped
-                # duts for each role)
                 continue
             restore_config = [checkpoint_restore_cmd, delete_checkpoint_cmd]
             logging.info(f"Restoring configuration and deleting checkpoint on dut {dutt['name']}")
@@ -258,7 +252,7 @@ def perform_teardown(duts, checkpoint, setup_config):
 def setup_testsuite(request, duts):
     """Setup the duts using the test suite(class) setup file"""
 
-    logging.info("Performing test suite setup")
+    logging.debug("Performing test suite setup")
     testsuite = get_current_fixture_testclass(request)
     test_suites = test_defs["test_suites"]
     setup_config = []
@@ -282,7 +276,7 @@ def setup_testsuite(request, duts):
 def setup_testcase(request, duts):
     """Setup the duts using the test case(function) setup file"""
 
-    logging.info("Performing test suite setup")
+    logging.debug("Performing test suite setup")
     testname = get_current_fixture_testname(request)
     test_suites = test_defs["test_suites"]
     setup_config = []
