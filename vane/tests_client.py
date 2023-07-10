@@ -156,6 +156,7 @@ class TestsClient:
         self._render_eapi_cfg()
         self._remove_result_files()
         self._remove_test_results_dir()
+        self._remove_test_case_logs()
         self._set_test_parameters()
 
     def test_runner(self):
