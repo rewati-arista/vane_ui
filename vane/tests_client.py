@@ -447,3 +447,15 @@ class TestsClient:
             # Deleting a non-empty folder
             shutil.rmtree(test_results_dir, ignore_errors=True)
             logging.info(f"Deleted {test_results_dir} directory successfully")
+
+    def _remove_test_case_logs(self):
+        """Removing the test case logs"""
+
+        # Get the list of files in the logs folder
+        files = os.listdir("logs")
+
+        # Iterate over the files and delete each one
+        for file_name in files:
+            file_path = os.path.join("logs", file_name)
+            if os.path.isfile(file_path):
+                os.remove(file_path)

@@ -1,19 +1,35 @@
 """ Logger functionality for Vane testcases to add logs to vane html report and vane_test.log"""
 
 import logging
+from vane import config
 
-logger = logging.getLogger("test_case_logs")
-logger.setLevel(logging.INFO)
-formatter_test = logging.Formatter(
-    "[%(asctime)s %(filename)s->%(funcName)s():%(lineno)s]%(levelname)s: %(message)s"
-)
+# pylint: disable=consider-using-with
 
-# Logger functionality for Vane testcases to add logs to vane_test.log file
-file_handler_test = logging.FileHandler("vane_test.log", mode="w")
-file_handler_test.setFormatter(formatter_test)
-logger.addHandler(file_handler_test)
 
-# Logger functionality for Vane testcases to add logs to vane html report"""
-console_handler_test = logging.StreamHandler()
-console_handler_test.setFormatter(formatter_test)
-logger.addHandler(console_handler_test)
+def setup_logger(log_file):
+    """Creating logger per test case basis"""
+    # Creating a logger per test case file
+    logger = logging.getLogger(log_file)
+    logger.setLevel(logging.INFO)
+    formatter_test = logging.Formatter(
+        "[%(asctime)s %(filename)s->%(funcName)s():%(lineno)s]%(levelname)s: %(message)s"
+    )
+
+    # Test cases log do not propagate to vane.logs file
+    logger.propagate = False
+
+    # Create the log file if it doesn't exist
+    path = config.test_parameters["parameters"]["logs"] + log_file
+    open(path, "a", encoding="utf-8").close()
+
+    # Logger functionality for Vane testcases to add logs to test case specific log file
+    file_handler_test = logging.FileHandler(path, mode="w")
+    file_handler_test.setFormatter(formatter_test)
+    logger.addHandler(file_handler_test)
+
+    # Logger functionality for Vane testcases to add logs to vane html report"""
+    console_handler_test = logging.StreamHandler()
+    console_handler_test.setFormatter(formatter_test)
+    logger.addHandler(console_handler_test)
+
+    return logger
