@@ -955,7 +955,6 @@ def create_test_ops_instance(mocker):
     mocker.patch("inspect.stack", return_value=["", ["", "", "", "test_memory_utilization_on_"]])
 
     tops = tests_tools.TestOps(TEST_DEFINITION, TEST_SUITE, DUT)
-    print(tops._show_cmds)
 
     return tops
 
@@ -1011,8 +1010,6 @@ def test_test_ops_constructor(mocker):
     assert tops._show_cmds == {"DCBBW1": ["show version", "show version"]}
     assert tops.show_cmd == "show version"
 
-    print(tops.show_cmd_txts)
-    print(tops._show_cmd_txts)
     assert tops.show_cmd_txts == {"DCBBW1": [OUTPUT]}
     assert tops._show_cmd_txts == {"DCBBW1": [OUTPUT, OUTPUT]}
 
@@ -1382,7 +1379,6 @@ def test_test_ops_run_show_cmds_json(mocker):
     tops.show_cmds = show_cmds
     actual_output = tops.run_show_cmds(show_cmds, dut, "json")
 
-    print(actual_output)
     # assert return values
     assert actual_output == [
         {
@@ -1444,7 +1440,6 @@ def test_test_ops_run_show_cmds_text(mocker):
     tops.show_clock_flag = False
     tops.show_cmds = ["show lldp neighbors", "show interfaces status"]
 
-    print(tops._show_cmds)
     actual_output = tops.run_show_cmds(tops.show_cmds, dut, "text")
 
     # assert return values
@@ -1456,20 +1451,11 @@ def test_test_ops_run_show_cmds_text(mocker):
             "encoding": "text",
         },
     ]
-    print(tops._show_cmds)
     assert tops.show_cmds == ["show lldp neighbors", "show interfaces status"]
     assert tops._show_cmds == {
         "DCBBW1": ["show version", "show version"],
         "neighbor": ["show lldp neighbors", "show interfaces status"],
     }
-
-    print(tops.show_cmd_txts)
-    print(
-        {
-            "DCBBW1": [OUTPUT, OUTPUT],
-            "neighbor": ["TEXT_result", "TEXT_result"],
-        }
-    )
 
     assert tops.show_cmd_txts == {
         "DCBBW1": [
