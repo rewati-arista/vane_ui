@@ -1177,7 +1177,6 @@ class TestOps:
         self._show_cmd_txts.setdefault(dut_name, [])
         self._show_cmds.setdefault(dut_name, [])
         self.show_cmd_txts.setdefault(dut_name, [])
-        self.show_cmds.setdefault(dut_name, [])
 
     def run_show_cmds(self, show_cmds, dut=None, encoding="json", conn_type="eapi"):
         """run_show_cmds is a wrapper which runs the 'show_cmds'
@@ -1217,23 +1216,49 @@ class TestOps:
 
         self.set_evidence_default(dut_name)
 
-        # if encoding is json run the commands, store the results
-        if encoding == "json":
-            json_results = conn.enable(show_cmds)
-
-        # run show clock if flag is set
+        # first run show clock if flag is set
         if self.show_clock_flag:
             show_clock_cmds = ["show clock"]
             # run the show_clock_cmds
-            show_clock_op = conn.enable(show_clock_cmds, "text")
+            try:
+                show_clock_op = conn.enable(show_clock_cmds, "text")
+            except BaseException as e:
+                # add the show clock cmd to _show_cmds
+                self._show_cmds[dut_name] = self._show_cmds[dut_name] + show_clock_cmds
+                # add the exception result to _show_cmds_txts
+                self._show_cmd_txts[dut_name].append(str(e))
+                raise e
+
             # add the show_clock_cmds to TestOps object's _show_cmds list
             # also add the o/p of show_clock_cmds to TestOps object's _show_cmds_txts list
             for result_dict in show_clock_op:
                 self._show_cmds[dut_name].append(result_dict["command"])
                 self._show_cmd_txts[dut_name].append(result_dict["result"]["output"])
 
-        # run the commands in text mode
-        txt_results = conn.enable(show_cmds, encoding="text")
+        # then run commands
+        # if encoding is json run the commands, store the results
+        if encoding == "json":
+            try:
+                json_results = conn.enable(show_cmds)
+            except BaseException as e:
+                # add the show_cmds to TestOps object's _show_cmds list
+                self._show_cmds[dut_name].append(show_cmds)
+                # add the exception result to all the show cmds in show_cmds list
+                for _ in show_cmds:
+                    self._show_cmd_txts[dut_name].append(str(e))
+                raise e
+
+        try:
+            # run the commands in text mode
+            txt_results = conn.enable(show_cmds, encoding="text")
+        except BaseException as e:
+            # add the show_cmds to TestOps object's _show_cmds list
+            self._show_cmds[dut_name].append(show_cmds)
+            # add the exception result to all the show cmds in show_cmds list
+            for _ in show_cmds:
+                self._show_cmd_txts[dut_name].append(str(e))
+            raise e
+
         # add the show_cmds to TestOps object's show_cmds and _show_cmds list
         # also add the o/p of show_cmds to TestOps object's show_cmds_txts and
         # _show_cmds_txts list
