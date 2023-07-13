@@ -6,10 +6,10 @@ import sys
 from unittest.mock import call
 import pytest
 import yaml
+import pyeapi.eapilib
 import vane
 from tests.unittests.fixtures.test_steps import test_steps
 from vane import tests_tools
-import pyeapi.eapilib
 
 
 # TEST UTILITY FUNCTIONS
