@@ -264,7 +264,6 @@ def login_duts(test_parameters, test_duts):
 
     duts = test_duts["duts"]
     logins = []
-    eapi_file = test_parameters["parameters"]["eapi_file"]
 
     network_configs = {}
     if "network_configs" in test_parameters["parameters"]:
@@ -283,13 +282,11 @@ def login_duts(test_parameters, test_duts):
 
         eos_conn = test_parameters["parameters"].get("eos_conn", DEFAULT_EOS_CONN)
         netmiko_conn = device_interface.NetmikoConn()
-        netmiko_conn.set_conn_params(eapi_file)
-        netmiko_conn.set_up_conn(name)
+        netmiko_conn.set_up_conn(dut)
         login_ptr["ssh_conn"] = netmiko_conn
 
         pyeapi_conn = device_interface.PyeapiConn()
-        pyeapi_conn.set_conn_params(eapi_file)
-        pyeapi_conn.set_up_conn(name)
+        pyeapi_conn.set_up_conn(dut)
         login_ptr["eapi_conn"] = pyeapi_conn
 
         if eos_conn == "eapi":
@@ -306,7 +303,6 @@ def login_duts(test_parameters, test_duts):
         login_ptr["neighbors"] = dut["neighbors"]
         login_ptr["results_dir"] = test_parameters["parameters"]["results_dir"]
         login_ptr["report_dir"] = test_parameters["parameters"]["report_dir"]
-        login_ptr["eapi_file"] = eapi_file
 
         if name in network_configs:
             login_ptr["network_configs"] = network_configs[name]
@@ -696,6 +692,8 @@ def return_test_defs(test_parameters):
                         import_config(dir_path, test_suite)
                     test_defs["test_suites"] += test_def
 
+    logging.info(f"Creating {report_dir} reports directory")
+    os.makedirs(report_dir, exist_ok=True)
     export_yaml(report_dir + "/" + test_definitions_file, test_defs)
 
     logging.debug(f"Return the following test definitions data structure {test_defs}")
