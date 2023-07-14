@@ -1236,20 +1236,11 @@ class TestOps:
                 self._show_cmd_txts[dut_name].append(result_dict["result"]["output"])
 
         # then run commands
-        # if encoding is json run the commands, store the results
-        if encoding == "json":
-            try:
-                json_results = conn.enable(show_cmds)
-            except BaseException as e:
-                # add the show_cmds to TestOps object's _show_cmds list
-                self._show_cmds[dut_name].append(show_cmds)
-                # add the exception result to all the show cmds in show_cmds list
-                for _ in show_cmds:
-                    self._show_cmd_txts[dut_name].append(str(e))
-                raise e
-
         try:
-            # run the commands in text mode
+            # if encoding is json run the commands, store the results
+            if encoding == "json":
+                json_results = conn.enable(show_cmds)
+            # also run the commands in text mode
             txt_results = conn.enable(show_cmds, encoding="text")
         except BaseException as e:
             # add the show_cmds to TestOps object's _show_cmds list
