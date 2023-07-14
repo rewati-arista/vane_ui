@@ -98,8 +98,8 @@ def test_write_test_def_file(loginfo):
     test_definitions = "test_definition_regenerated.yaml"  # don't overwrite the file
 
     # Make sure the regenerated file does not exist
-    if os.path.exists(test_dir+"/"+test_definitions):
-        os.remove(test_dir+"/"+test_definitions)
+    if os.path.exists(test_dir + "/" + test_definitions):
+        os.remove(test_dir + "/" + test_definitions)
 
     # Write test def file
     client.write_test_def_file(template_definitions, master_definitions, test_dir, test_definitions)
@@ -117,8 +117,9 @@ def test_write_test_def_file(loginfo):
     # Verify logging message was called
     loginfo.assert_called_with("Regenerated test definition files")
 
-    if os.path.exists(test_dir+"/"+test_definitions):
-        os.remove(test_dir+"/"+test_definitions)
+    if os.path.exists(test_dir + "/" + test_definitions):
+        os.remove(test_dir + "/" + test_definitions)
+
 
 def test_generate_test_definitions(loginfo):
     """Validate creating test definitions using master definitions"""
