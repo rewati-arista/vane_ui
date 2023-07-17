@@ -41,6 +41,7 @@ import re
 import pprint
 import yaml
 
+from jinja2 import Template
 from vane import config, device_interface
 from vane.vane_logging import logging
 
@@ -227,7 +228,6 @@ def login_duts(test_parameters, test_duts):
 
     duts = test_duts["duts"]
     logins = []
-    eapi_file = test_parameters["parameters"]["eapi_file"]
 
     network_configs = {}
     if "network_configs" in test_parameters["parameters"]:
@@ -246,14 +246,14 @@ def login_duts(test_parameters, test_duts):
 
         eos_conn = test_parameters["parameters"].get("eos_conn", DEFAULT_EOS_CONN)
         netmiko_conn = device_interface.NetmikoConn()
-        netmiko_conn.set_conn_params(eapi_file)
-        netmiko_conn.set_up_conn(name)
+        netmiko_conn.set_up_conn(dut)
         login_ptr["ssh_conn"] = netmiko_conn
 
+        pyeapi_conn = device_interface.PyeapiConn()
+        pyeapi_conn.set_up_conn(dut)
+        login_ptr["eapi_conn"] = pyeapi_conn
+
         if eos_conn == "eapi":
-            pyeapi_conn = device_interface.PyeapiConn()
-            pyeapi_conn.set_conn_params(eapi_file)
-            pyeapi_conn.set_up_conn(name)
             login_ptr["connection"] = pyeapi_conn
         elif eos_conn == "ssh":
             login_ptr["connection"] = netmiko_conn
@@ -267,7 +267,7 @@ def login_duts(test_parameters, test_duts):
         login_ptr["neighbors"] = dut["neighbors"]
         login_ptr["results_dir"] = test_parameters["parameters"]["results_dir"]
         login_ptr["report_dir"] = test_parameters["parameters"]["report_dir"]
-        login_ptr["eapi_file"] = eapi_file
+
         if name in network_configs:
             login_ptr["network_configs"] = network_configs[name]
 
@@ -400,14 +400,22 @@ def dut_worker(dut, show_cmds, test_parameters):
 
         if show_cmd in show_cmds_txt:
             cmd_index = show_cmds_txt.index(show_cmd)
-            show_output_txt = show_cmd_txt_list[cmd_index]
-            dut["output"][show_cmd]["text"] = show_output_txt["output"]
 
-            logging.warning(f"Adding text cmd {show_cmd} to dut and data {show_output_txt}")
+            logging.debug(f"Found cmd: {show_cmd} at index {cmd_index} of {show_cmds_txt}")
+            logging.debug(
+                f"length of cmds: {len(show_cmds_txt)} vs length of "
+                f"output {len(show_cmd_txt_list)}"
+            )
+
+            show_output_txt = show_cmd_txt_list[cmd_index]["output"]
+            dut["output"][show_cmd]["text"] = show_output_txt
+
+            logging.debug(f"Adding cmd {show_cmd} to dut and data {show_output_txt}")
+
         else:
             dut["output"][show_cmd]["text"] = ""
 
-            logging.warning(f"No text output for {show_cmd}")
+            logging.debug(f"No text output for {show_cmd}")
 
     logging.info(f"{name} updated with show output {dut}")
 
@@ -645,13 +653,117 @@ def return_test_defs(test_parameters):
                     test_def = import_yaml(file_path)
                     for test_suite in test_def:
                         test_suite["dir_path"] = f"{dir_path}"
+                        import_config(dir_path, test_suite)
                     test_defs["test_suites"] += test_def
 
+    logging.info(f"Creating {report_dir} reports directory")
+    os.makedirs(report_dir, exist_ok=True)
     export_yaml(report_dir + "/" + test_definitions_file, test_defs)
 
     logging.debug(f"Return the following test definitions data structure {test_defs}")
 
     return test_defs
+
+
+def import_config(dir_path, test_suite):
+    """Check for setup file.  If setup file exists import configuration for reporting
+
+    Args:
+        dir_path (str): Path to test case directory
+        test_suite (dict): Test case definition parameters
+    """
+
+    for testcase in test_suite["testcases"]:
+        if "test_setup" in testcase:
+            setup_file = f"{dir_path}/{testcase['test_setup']}"
+            logging.info(
+                f"Importing setup file: {setup_file} into test case: {testcase['name']} definition"
+            )
+
+            setup_config = import_yaml(setup_file)
+            logging.debug(f"Configuration setup is {setup_config}")
+
+            dev_ids = setup_config.get("key", "name")
+            logging.debug(f"Imported configuration will uses {dev_ids}")
+
+            if dev_ids == "name":
+                import_config_from_name(setup_config, testcase)
+            elif dev_ids == "role":
+                import_config_from_role(setup_config, testcase)
+
+
+def import_config_from_name(setup_config, testcase):
+    """Import configuration from a device name
+
+    Args:
+        setup_config (dict): Setup file data structure
+        testcase (dict): test case defintions data structure
+    """
+
+    testcase["configuration"] = ""
+    for dev_name in setup_config:
+        testcase["configuration"] += f"{dev_name}:\n"
+        setup_schema = setup_config[dev_name]["schema"]
+
+        if setup_schema is None:
+            testcase["configuration"] += f"{setup_config[dev_name]['template']}\n"
+        else:
+            setup_template = Template(setup_config[dev_name]["template"])
+            formatted_config = setup_template.render(setup_schema)
+            testcase["configuration"] += f"{formatted_config}\n"
+
+        logging.debug(f"Updated test case data structure with setup: {testcase['configuration']}")
+
+
+def import_config_from_role(setup_config, testcase):
+    """Import configuration from a device role
+
+    Args:
+        setup_config (dict): Setup file data structure
+        testcase (dict): test case defintions data structure
+    """
+
+    testcase["configuration"] = ""
+    for role_name in setup_config:
+        if role_name != "key":
+            logging.debug(f"Setting role to: {role_name}")
+            dev_names = return_duts_with_role(role_name)
+
+            for dev_name in dev_names:
+                testcase["configuration"] += f"{dev_name}:\n"
+                setup_schema = setup_config[role_name]["schema"]
+
+                if setup_schema is None:
+                    testcase["configuration"] += f"{setup_config[role_name]['template']}\n"
+                else:
+                    setup_template = Template(setup_config[role_name]["template"])
+                    formatted_config = setup_template.render(setup_schema)
+                    testcase["configuration"] += f"{formatted_config}\n"
+
+                logging.debug(
+                    f"Updated test case data structure with setup: {testcase['configuration']}"
+                )
+
+
+def return_duts_with_role(role_name):
+    """Create a list of duts with a role
+
+    Args:
+        role_name (str): Role to match in duts data structure
+
+    Returns:
+        list: Hostnames of DUTs with role
+    """
+
+    dev_names = []
+    for dut in config.test_duts["duts"]:
+        dut_role = dut.get("role", "")
+        if dut_role == role_name:
+            dev_names.append(dut["name"])
+
+    logging.debug(f"The following DUTs: {dev_names} have role: {role_name}")
+
+    return dev_names
 
 
 def export_yaml(yaml_file, yaml_data):
@@ -838,7 +950,7 @@ class TestOps:
         except KeyError:
             self.show_clock_flag = False
 
-        self.show_cmds = {self.dut_name: ["show version"]}
+        self.show_cmds = {self.dut_name: []}
         self._show_cmds = {self.dut_name: ["show version"]}
 
         if self.show_clock_flag:
@@ -997,9 +1109,9 @@ class TestOps:
         self.test_parameters["dut"] = self.dut_name
         self.test_parameters["show_cmd"] = self.show_cmd
         self.test_parameters["test_id"] = self.test_id
-        self.test_parameters["show_cmd_txts"] = self.show_cmd_txts
+        self.test_parameters["show_cmd_txts"] = self._show_cmd_txts
         self.test_parameters["test_steps"] = self.test_steps
-        self.test_parameters["show_cmds"] = self.show_cmds
+        self.test_parameters["show_cmds"] = self._show_cmds
 
         if str(self.show_cmd_txt):
             self.test_parameters["show_cmd"] += ":\n\n" + self.show_cmd_txt
@@ -1091,9 +1203,20 @@ class TestOps:
 
         logging.info(f"These are test steps {self.test_steps}")
 
-    def run_show_cmds(self, show_cmds, dut=None, encoding="json"):
-        """run_show_cmds is a wrapper which runs the 'show_cmds' using enable() pyeapi
-        method on the specified dut and if no dut is passed then on primary dut.
+    def set_evidence_default(self, dut_name):
+        """For initializing evidence values for neighbor duts since
+        init only initializes for primary dut"""
+
+        self._show_cmd_txts.setdefault(dut_name, [])
+        self._show_cmds.setdefault(dut_name, [])
+        self.show_cmd_txts.setdefault(dut_name, [])
+
+    def run_show_cmds(self, show_cmds, dut=None, encoding="json", conn_type="eapi"):
+        """run_show_cmds is a wrapper which runs the 'show_cmds'
+        conn_type determines how the cmds are being run
+        if conn_type is eapi then pyeapi is used on specified dut
+        if conn_type is ssh then netmiko connection in dut object is used
+        if no dut is passed then cmds are run on primary dut
         It returns the output of these 'show_cmds' in the encoding requested.
         Also it checks show_clock_flag
         to see if 'show_clock' cmd needs to be run. It stores the text output for
@@ -1103,6 +1226,7 @@ class TestOps:
         Args: show_cmds: list of show commands to be run
         dut: the device to run the show command on
         encoding: json or text, with json being default
+        conn_type: eapi or ssh, with eapi being default
 
         Returns: A dict object that includes the response for each command along
         with the encoding
@@ -1111,38 +1235,58 @@ class TestOps:
         if dut is None:
             dut = self.dut
 
-        conn = dut["connection"]
+        if conn_type == "eapi":
+            conn = dut["eapi_conn"]
+        elif conn_type == "ssh":
+            conn = dut["ssh_conn"]
+        else:
+            raise ValueError(f"conn_type [{conn_type}] not supported")
+
         dut_name = dut["name"]
 
-        # for initializing these values for neighbor duts since
+        # initializing evidence values for other duts since
         # init only initializes for primary dut
-        self._show_cmd_txts.setdefault(dut_name, [])
-        self._show_cmds.setdefault(dut_name, [])
-        self.show_cmd_txts.setdefault(dut_name, [])
-        self.show_cmds.setdefault(dut_name, [])
 
-        # if encoding is json run the commands, store the results
-        if encoding == "json":
-            json_results = conn.enable(show_cmds)
+        self.set_evidence_default(dut_name)
 
-        # run show clock if flag is set
+        # first run show clock if flag is set
         if self.show_clock_flag:
             show_clock_cmds = ["show clock"]
             # run the show_clock_cmds
-            show_clock_op = conn.enable(show_clock_cmds, "text")
+            try:
+                show_clock_op = conn.enable(show_clock_cmds, "text")
+            except BaseException as e:
+                # add the show clock cmd to _show_cmds
+                self._show_cmds[dut_name] = self._show_cmds[dut_name] + show_clock_cmds
+                # add the exception result to _show_cmds_txts
+                self._show_cmd_txts[dut_name].append(str(e))
+                raise e
+
             # add the show_clock_cmds to TestOps object's _show_cmds list
             # also add the o/p of show_clock_cmds to TestOps object's _show_cmds_txts list
             for result_dict in show_clock_op:
                 self._show_cmds[dut_name].append(result_dict["command"])
                 self._show_cmd_txts[dut_name].append(result_dict["result"]["output"])
 
-        # run the commands in text mode
-        txt_results = conn.enable(show_cmds, "text")
+        # then run commands
+        try:
+            # if encoding is json run the commands, store the results
+            if encoding == "json":
+                json_results = conn.enable(show_cmds)
+            # also run the commands in text mode
+            txt_results = conn.enable(show_cmds, encoding="text")
+        except BaseException as e:
+            # add the show_cmds to TestOps object's _show_cmds list
+            self._show_cmds[dut_name].append(show_cmds)
+            # add the exception result to all the show cmds in show_cmds list
+            for _ in show_cmds:
+                self._show_cmd_txts[dut_name].append(str(e))
+            raise e
+
         # add the show_cmds to TestOps object's show_cmds and _show_cmds list
         # also add the o/p of show_cmds to TestOps object's show_cmds_txts and
         # _show_cmds_txts list
         for result_dict in txt_results:
-            self.show_cmds[dut_name].append(result_dict["command"])
             self._show_cmds[dut_name].append(result_dict["command"])
             self.show_cmd_txts[dut_name].append(result_dict["result"]["output"])
             self._show_cmd_txts[dut_name].append(result_dict["result"]["output"])
