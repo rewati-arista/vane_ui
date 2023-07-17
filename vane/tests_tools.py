@@ -127,42 +127,6 @@ def parametrize_duts(test_fname, test_defs, dut_objs):
 
     return dut_parameters
 
-
-def setup_import_yaml(yaml_file):
-    """Import YAML file as python data structure
-    Also remove lines starting from #
-
-    Args:
-        yaml_file (str): Name of YAML file
-
-    Returns:
-        yaml_data (dict): YAML data structure
-    """
-    logging.info(f"Opening {yaml_file} for read")
-
-    temp_file = yaml_file.split(".")[0] + "_temp." + yaml_file.split(".")[1]
-
-    try:
-        # need to read the setup yaml file and filter out comments
-        # here a line is copied to temp file if it does not start with #
-        with open(yaml_file, "r", encoding="utf-8") as input_yaml:
-            with open(temp_file, "w", encoding="utf-8") as temp_yaml:
-                for line in input_yaml.readlines():
-                    if not line.strip().startswith("#"):
-                        temp_yaml.write(line)
-
-        # temp file is now used to load yaml
-        yaml_data = yaml_read(temp_file)
-        os.remove(temp_file)
-        return yaml_data
-
-    except OSError as err:
-        print(f">>> {yaml_file} YAML FILE MISSING")
-        logging.error(f"ERROR YAML FILE: {yaml_file} NOT FOUND. {err}")
-        logging.error("EXITING TEST RUNNER")
-        sys.exit(1)
-
-
 def import_yaml(yaml_file):
     """Import YAML file as python data structure
 
