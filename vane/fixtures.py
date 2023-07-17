@@ -123,7 +123,6 @@ def setup_via_name(duts, setup_config, checkpoint):
 
         setup_schema = remove_comments(setup_config[dev_name]["schema"])
 
-
         if setup_schema is None:
             temp_without_comments = remove_comments(setup_config[dev_name]["template"])
             config = temp_without_comments.splitlines()

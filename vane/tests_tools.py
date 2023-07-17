@@ -128,6 +128,7 @@ def parametrize_duts(test_fname, test_defs, dut_objs):
 
     return dut_parameters
 
+
 def import_yaml(yaml_file):
     """Import YAML file as python data structure
 

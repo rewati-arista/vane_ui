@@ -78,11 +78,11 @@ class VaneTests:
         """
         TS: Compare latest o/p with expected output
         """
-        tops.parse_test_steps(self.test_if_setup_comments_work)
+        tops.parse_test_steps(self.test_if_remove_comments_work)
         tops.test_result = tops.actual_output == tops.expected_output
         tops.generate_report(tops.dut_name, tops.output_msg)
         assert tops.actual_output == tops.expected_output
-        
+
     def test_if_ssh_json_cmds_run(self, dut, tests_definitions):
         """TD: Verifies cmds run using ssh and output is same as eapi
 
