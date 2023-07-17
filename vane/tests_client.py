@@ -43,12 +43,10 @@
     - Excel report: Tabular representation of results. """
 
 import os
-import stat
 import sys
 import shutil
 
 import configparser
-import jinja2
 import pytest
 import yaml
 
@@ -150,10 +148,9 @@ class TestsClient:
             print("Unable to regenerate test definition files.")
 
     def setup_test_runner(self):
-        """Setup eapi cfg, remove result files, set test params"""
+        """Setup remove result files, set test params"""
 
         logging.info("Starting test setup")
-        self._render_eapi_cfg()
         self._remove_result_files()
         self._remove_test_results_dir()
         self._set_test_parameters()
@@ -362,61 +359,6 @@ class TestsClient:
         self._set_mark()
         self._set_junit(report_dir)
         self._set_test_dirs(test_dirs)
-
-    def _render_eapi_cfg(self):
-        """Render .eapi.conf file so pytests can log into devices"""
-
-        logging.info("Render .eapi.conf file for device access")
-        eapi_template = self.data_model["parameters"]["eapi_template"]
-        eapi_file = self.data_model["parameters"]["eapi_file"]
-        duts = self.duts_model["duts"]
-
-        try:
-            logging.info(f"Open {eapi_template} Jinja2 template for reading")
-
-            with open(eapi_template, "r", encoding="utf-8") as jinja_file:
-                logging.info(f"Read and save contents of {eapi_template} Jinja2 template")
-                jinja_template = jinja_file.read()
-                logging.debug(
-                    f"Using {eapi_template} Jinja2 template to "
-                    f"render {eapi_file} file with parameters {duts}"
-                )
-                resource_file = (
-                    jinja2.Environment(autoescape=True)
-                    .from_string(jinja_template)
-                    .render(duts=duts)
-                )
-        except IOError as err_data:
-            print(f">>> ERROR READING {eapi_template}: {err_data}")
-            logging.error(f"ERROR READING {eapi_template}: {err_data}")
-            logging.error("EXITING TEST RUNNER")
-            sys.exit(1)
-
-        self._write_file(resource_file)
-
-    def _write_file(self, file_data):
-        """Write data to a file
-
-        Args:
-            file_data (str): Data to write to file
-        """
-
-        eapi_file = self.data_model["parameters"]["eapi_file"]
-
-        logging.debug(f"Rendered {eapi_file} as: {file_data}")
-        try:
-            logging.info(f"Open {eapi_file} for writing")
-
-            with open(eapi_file, "w", encoding="utf-8") as output_file:
-                output_file.write(file_data)
-        except (IOError, FileNotFoundError) as err_data:
-            print(f">>> ERROR WRITING {eapi_file}: {err_data}")
-            logging.error(f"ERROR WRITING {eapi_file}: {err_data}")
-            logging.error("EXITING TEST RUNNER")
-            sys.exit(1)
-
-        logging.info(f"Change permissions of {eapi_file} to 777")
-        os.chmod(eapi_file, stat.S_IRWXU)
 
     def _remove_result_files(self):
         """Remove pre-existing results file"""

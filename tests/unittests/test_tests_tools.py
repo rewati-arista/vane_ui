@@ -298,13 +298,7 @@ def test_login_duts(loginfo, mocker):
 
     # assert called to NetmikoCOnn and PyeapiConn were made correctly
 
-    netmiko_instance.set_conn_params.assert_called_with("tests/unittests/fixtures/eapi.conf")
-    assert netmiko_instance.set_conn_params.call_count == 2
-
     assert netmiko_instance.set_up_conn.call_count == 2
-
-    pyeapi_instance.set_conn_params.assert_called_with("tests/unittests/fixtures/eapi.conf")
-    assert pyeapi_instance.set_conn_params.call_count == 2
 
     assert pyeapi_instance.set_up_conn.call_count == 2
 
@@ -321,7 +315,6 @@ def test_login_duts(loginfo, mocker):
         assert dut_info["neighbors"] == test_duts["duts"][index]["neighbors"]
         assert dut_info["results_dir"] == test_parameters["parameters"]["results_dir"]
         assert dut_info["report_dir"] == test_parameters["parameters"]["report_dir"]
-        assert dut_info["eapi_file"] == test_parameters["parameters"]["eapi_file"]
         assert dut_info["network_configs"] == "network_configs"
 
     # assert logs
