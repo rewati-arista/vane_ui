@@ -717,20 +717,91 @@ def import_config(dir_path, test_suite):
             logging.info(
                 f"Importing setup file: {setup_file} into test case: {testcase['name']} definition"
             )
-            setup_config = setup_import_yaml(setup_file)
+
+            setup_config = import_yaml(setup_file)
             logging.debug(f"Configuration setup is {setup_config}")
 
-            testcase["configuration"] = ""
-            for dev_name in setup_config:
+            dev_ids = setup_config.get("key", "name")
+            logging.debug(f"Imported configuration will uses {dev_ids}")
+
+            if dev_ids == "name":
+                import_config_from_name(setup_config, testcase)
+            elif dev_ids == "role":
+                import_config_from_role(setup_config, testcase)
+
+
+def import_config_from_name(setup_config, testcase):
+    """Import configuration from a device name
+
+    Args:
+        setup_config (dict): Setup file data structure
+        testcase (dict): test case defintions data structure
+    """
+
+    testcase["configuration"] = ""
+    for dev_name in setup_config:
+        testcase["configuration"] += f"{dev_name}:\n"
+        setup_schema = setup_config[dev_name]["schema"]
+
+        if setup_schema is None:
+            testcase["configuration"] += f"{setup_config[dev_name]['template']}\n"
+        else:
+            setup_template = Template(setup_config[dev_name]["template"])
+            formatted_config = setup_template.render(setup_schema)
+            testcase["configuration"] += f"{formatted_config}\n"
+
+        logging.debug(f"Updated test case data structure with setup: {testcase['configuration']}")
+
+
+def import_config_from_role(setup_config, testcase):
+    """Import configuration from a device role
+
+    Args:
+        setup_config (dict): Setup file data structure
+        testcase (dict): test case defintions data structure
+    """
+
+    testcase["configuration"] = ""
+    for role_name in setup_config:
+        if role_name != "key":
+            logging.debug(f"Setting role to: {role_name}")
+            dev_names = return_duts_with_role(role_name)
+
+            for dev_name in dev_names:
                 testcase["configuration"] += f"{dev_name}:\n"
-                setup_schema = setup_config[dev_name]["schema"]
+                setup_schema = setup_config[role_name]["schema"]
 
                 if setup_schema is None:
-                    testcase["configuration"] += f"{setup_config[dev_name]['template']}\n"
+                    testcase["configuration"] += f"{setup_config[role_name]['template']}\n"
                 else:
-                    setup_template = Template(setup_config[dev_name]["template"])
+                    setup_template = Template(setup_config[role_name]["template"])
                     formatted_config = setup_template.render(setup_schema)
                     testcase["configuration"] += f"{formatted_config}\n"
+
+                logging.debug(
+                    f"Updated test case data structure with setup: {testcase['configuration']}"
+                )
+
+
+def return_duts_with_role(role_name):
+    """Create a list of duts with a role
+
+    Args:
+        role_name (str): Role to match in duts data structure
+
+    Returns:
+        list: Hostnames of DUTs with role
+    """
+
+    dev_names = []
+    for dut in config.test_duts["duts"]:
+        dut_role = dut.get("role", "")
+        if dut_role == role_name:
+            dev_names.append(dut["name"])
+
+    logging.debug(f"The following DUTs: {dev_names} have role: {role_name}")
+
+    return dev_names
 
 
 def export_yaml(yaml_file, yaml_data):
