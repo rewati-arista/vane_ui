@@ -43,7 +43,7 @@ import pytest
 from jinja2 import Template
 from vane import tests_tools
 from vane.config import dut_objs, test_defs
-from vane.utils import get_current_fixture_testclass, get_current_fixture_testname
+from vane.utils import get_current_fixture_testclass, get_current_fixture_testname, remove_comments
 from vane.vane_logging import logging
 
 
@@ -121,13 +121,14 @@ def setup_via_name(duts, setup_config, checkpoint):
             logging.info(f"No dut named {dev_name} found, continuing to setup next dut")
             continue
 
-        setup_schema = setup_config[dev_name]["schema"]
+        setup_schema = remove_comments(setup_config[dev_name]["schema"])
 
         if setup_schema is None:
-            config = setup_config[dev_name]["template"].splitlines()
-
+            temp_without_comments = remove_comments(setup_config[dev_name]["template"])
+            config = temp_without_comments.splitlines()
         else:
-            setup_template = Template(setup_config[dev_name]["template"])
+            template = remove_comments(setup_config[dev_name]["template"])
+            setup_template = Template(template)
             config = setup_template.render(setup_schema).splitlines()
 
         checkpoint_cmd = f"configure checkpoint save {checkpoint}"
@@ -150,12 +151,14 @@ def setup_via_role(duts, setup_config, checkpoint):
         for _, dutt in duts.items():
             if dutt["role"] != role:
                 continue
+            setup_schema = remove_comments(setup_config[role]["schema"])
 
-            setup_schema = setup_config[role]["schema"]
             if setup_schema is None:
-                config = setup_config[role]["template"].splitlines()
+                temp_without_comments = remove_comments(setup_config[role]["template"])
+                config = temp_without_comments.splitlines()
             else:
-                setup_template = Template(setup_config[role]["template"])
+                template = remove_comments(setup_config[role]["template"])
+                setup_template = Template(template)
                 config = setup_template.render(setup_schema).splitlines()
 
             checkpoint_cmd = f"configure checkpoint save {checkpoint}"
@@ -263,9 +266,7 @@ def setup_testsuite(request, duts):
             setup_config_file = suite.get("test_setup", "")
             if setup_config_file != "":
                 logging.info("Applying test suite setup_config file")
-                setup_config = tests_tools.setup_import_yaml(
-                    f"{suite['dir_path']}/{setup_config_file}"
-                )
+                setup_config = tests_tools.import_yaml(f"{suite['dir_path']}/{setup_config_file}")
                 checkpoint = perform_setup(duts, testsuite, setup_config)
                 logging.debug(f"Checkpoint created: {checkpoint}")
     yield
@@ -289,7 +290,7 @@ def setup_testcase(request, duts):
                 setup_config_file = test.get("test_setup", "")
                 if setup_config_file != "":
                     logging.info("Applying test case setup_config file")
-                    setup_config = tests_tools.setup_import_yaml(
+                    setup_config = tests_tools.import_yaml(
                         f"{suite['dir_path']}/{setup_config_file}"
                     )
                     checkpoint = perform_setup(duts, testname, setup_config)
