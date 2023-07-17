@@ -45,7 +45,7 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 class VaneTests:
     """Vane Test Suite"""
 
-    def test_if_setup_comments_work(self, dut, tests_definitions):
+    def test_if_remove_comments_work(self, dut, tests_definitions):
         """TD: Verifies if setup comments work
 
         Args:
