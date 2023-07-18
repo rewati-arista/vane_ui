@@ -484,6 +484,6 @@ def test_remove_test_case_logs(loginfo, mocker):
 
     # Delete the logs directory from fixtures
     shutil.rmtree(logs_dir, ignore_errors=True)
-    
+
     # Verify the introductory log was logged
     loginfo.assert_called_with("Remove any existing log files in logs directory: logs")

@@ -46,6 +46,7 @@ test1_duts = dut_parameters["test_memory_utilization_on_"]["duts"]
 test1_ids = dut_parameters["test_memory_utilization_on_"]["ids"]
 logging = logger.setup_logger("memory.log")
 
+
 @pytest.mark.demo
 @pytest.mark.nrfu
 @pytest.mark.platform_status
