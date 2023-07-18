@@ -8,14 +8,15 @@ from vane import config
 
 def setup_logger(log_file):
     """Creating logger per test case basis"""
-    # Creating a logger per test case file
+
+    # Creating a logger object for the given test case file
     logger = logging.getLogger(log_file)
     logger.setLevel(logging.INFO)
     formatter_test = logging.Formatter(
         "[%(asctime)s %(filename)s->%(funcName)s():%(lineno)s]%(levelname)s: %(message)s"
     )
 
-    # Test cases log do not propagate to vane.logs file
+    # Test cases should not propagate to vane.logs file
     logger.propagate = False
 
     # Create the log file if it doesn't exist
