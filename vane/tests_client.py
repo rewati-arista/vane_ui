@@ -397,6 +397,8 @@ class TestsClient:
         logging.info("Remove any existing log files in logs directory: logs")
 
         # Get the list of files in the logs folder
+        # This folder will always exist as it gets created
+        # in the root logging configuration file
         files = os.listdir("logs")
 
         # Iterate over the files and delete each one
