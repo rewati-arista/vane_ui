@@ -1,7 +1,6 @@
 """ Logger functionality for Vane testcases to add logs to vane html report and vane_test.log"""
 
 import logging
-from vane import config
 
 # pylint: disable=consider-using-with
 
@@ -20,7 +19,7 @@ def setup_logger(log_file):
     logger.propagate = False
 
     # Create the log file if it doesn't exist
-    path = config.test_parameters["parameters"]["logs"] + "/" + log_file
+    path = "logs/" + log_file
     open(path, "a", encoding="utf-8").close()
 
     # Logger functionality for Vane testcases to add logs to test case specific log file
