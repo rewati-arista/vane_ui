@@ -442,7 +442,7 @@ class TestsClient:
     def _remove_test_results_dir(self):
         """Removing the subdirectories and the files within them belonging to TEST RESULTS dir"""
 
-        test_results_dir = "reports/TEST RESULTS"
+        test_results_dir = self.data_model["parameters"]["report_dir"] + "/TEST RESULTS"
 
         if os.path.exists(test_results_dir):
             # Deleting a non-empty folder
