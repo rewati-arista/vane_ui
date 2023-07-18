@@ -452,11 +452,14 @@ class TestsClient:
     def _remove_test_case_logs(self):
         """Removing the test case logs"""
 
+        log_dir = self.data_model["parameters"]["logs"]
+        logging.info(f"Remove any existing log files in logs directory {log_dir}")
+
         # Get the list of files in the logs folder
-        files = os.listdir("logs")
+        files = os.listdir(log_dir)
 
         # Iterate over the files and delete each one
         for file_name in files:
-            file_path = os.path.join("logs", file_name)
+            file_path = os.path.join(log_dir, file_name)
             if os.path.isfile(file_path):
                 os.remove(file_path)
