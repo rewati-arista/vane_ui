@@ -5,7 +5,7 @@ tests_client.py unit tests
 # Disable redefined-outer-name for using loginfo and logerr fixture functions
 # Disable protected-access for testing hidden class functions
 # Disable import-error for missing vane imports (avoid requiring install of vane just for linting)
-# pylint: disable=redefined-outer-name, protected-access, import-error
+# pylint: disable=redefined-outer-name, protected-access, import-error, disable=consider-using-with
 
 import os
 import tempfile
@@ -458,7 +458,7 @@ def test_remove_test_case_logs(loginfo, mocker):
     os.makedirs(logs_dir)
 
     # Create the vane.log file
-    vane_log = open(logs_dir + "/vane.log", "a")
+    vane_log = open(logs_dir + "/vane.log", "a", encoding="utf-8")
     vane_log.close()
 
     # Pre-populate the logs dir with temporary files
