@@ -37,7 +37,7 @@ class UtilsTests:
         assert result == "UtilsTests"
 
     def test_get_current_fixture_testname(self, request):
-        """Verify get current fixture testclass"""
+        """Verify get current fixture testname"""
         result = utils.get_current_fixture_testname(request)
         assert result == "test_get_current_fixture_testname"
 
