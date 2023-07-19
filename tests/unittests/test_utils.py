@@ -22,7 +22,7 @@ class UtilsTests:
 
     def test_make_iterable_from_iterable(self):
         """Verify list is made iterable"""
-        result = utils.make_iterable(["test"])
+        result = utils.make_iterable(["\u2728"])
         assert isinstance(result, Iterable)
         assert len(result) == 1
 
