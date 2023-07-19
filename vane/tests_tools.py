@@ -703,6 +703,8 @@ def import_config_from_name(setup_config, testcase):
 
     testcase["configuration"] = ""
     for dev_name in setup_config:
+        if dev_name == "key":
+            continue
         testcase["configuration"] += f"{dev_name}:\n"
         setup_schema = setup_config[dev_name]["schema"]
 
