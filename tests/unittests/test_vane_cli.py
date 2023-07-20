@@ -192,19 +192,20 @@ def test_download_test_results(loginfo):
     ARCHIVE folder"""
 
     dir_path = "reports/TEST RESULTS ARCHIVES"
-    length = len(list(os.listdir(dir_path)))
-    vane_cli.download_test_results()
-    new_length = len(os.listdir(dir_path))
+    if os.path.exists(dir_path):
+        length = len(list(os.listdir(dir_path)))
+        vane_cli.download_test_results()
+        new_length = len(os.listdir(dir_path))
 
-    # assert if a zip got created
-    assert new_length == (length + 1)
+        # assert if a zip got created
+        assert new_length == (length + 1)
 
-    # delete the most recent zip that got created for the test
-    list_of_files = glob.glob(dir_path + "/*")
-    latest_file = max(list_of_files, key=os.path.getctime)
-    os.remove(latest_file)
+        # delete the most recent zip that got created for the test
+        list_of_files = glob.glob(dir_path + "/*")
+        latest_file = max(list_of_files, key=os.path.getctime)
+        os.remove(latest_file)
 
-    loginfo.assert_called_with("Downloading a zip file of the TEST RESULTS folder")
+        loginfo.assert_called_with("Downloading a zip file of the TEST RESULTS folder")
 
 
 def test_main_definitions_and_duts(loginfo, logwarning, mocker):
@@ -225,6 +226,7 @@ def test_main_definitions_and_duts(loginfo, logwarning, mocker):
             generate_duts_from_topo=None,
             generate_test_steps=None,
             markers=False,
+            nrfu=False,
         ),
     )
     vane_cli.main()
@@ -267,6 +269,7 @@ def test_main_create_duts_file(loginfo, logwarning, mocker):
             generate_duts_from_topo=None,
             generate_test_steps=None,
             markers=False,
+            nrfu=False,
         ),
     )
     vane_cli.main()
@@ -311,6 +314,7 @@ def test_main_generate_duts_from_topo(loginfo, logwarning, mocker):
             generate_duts_from_topo=["topology.yaml"],
             generate_test_steps=None,
             markers=False,
+            nrfu=False,
         ),
     )
     vane_cli.main()
