@@ -73,7 +73,7 @@ def test_write_walk_dir(logdebug, mocker):
     test_steps.walk_dir()
     mocker_object.assert_called_once()
 
-    files = ['test_definition.yaml', 'test_host.py', '__init__.py']
+    files = ["test_definition.yaml", "test_host.py", "__init__.py"]
 
     logdebug_calls = [
         call(f"Walking directory {TEST_DIR} for test cases"),
