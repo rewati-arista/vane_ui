@@ -111,11 +111,7 @@ def parse_cli():
 
     parser.add_argument(
         "--nrfu",
-        help=(
-            "Calls the nrfu client which invokes the interactive CLI for user input,"
-            "and dynamically creates Vane DUTs and definitions data structures"
-            " for running nrfu tests."
-        ),
+        help=("Starts NRFU tests and will prompt users for required input."),
         action="store_true",
     )
 
