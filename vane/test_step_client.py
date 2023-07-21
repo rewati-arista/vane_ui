@@ -130,7 +130,6 @@ class TestStepClient:
         for key in test_comments:
             steps = test_comments.get(key)
             md_file = MdUtils(file_name=f"{os.path.splitext(key)[0]}.md", title=Path(key).stem)
-            logging.info(f"create markdown file: {os.path.splitext(key)[0]}.md")
             md_file.new_line(f"Date generated: {steps[0]}")
             test_steps_list = []
             for step in steps:
