@@ -1,13 +1,14 @@
 """Test class for test_step_client.py"""
 
 from unittest.mock import call
+import os
 import pytest
 from vane import test_step_client
 
 
 # Global test parameters
-TEST_DIR = "sample_network_tests/host"
-TEST_FILE = ["sample_network_tests/host/test_host.py"]
+TEST_DIR = "tests/unittests/fixtures/host"
+TEST_FILE = ["tests/unittests/fixtures/host/test_host.py"]
 TEST_STEP = [
     "01/01/2023 00:00:00",
     "TD: Verify hostname is set on device is correct",
@@ -32,6 +33,17 @@ def loginfo(mocker):
 def logdebug(mocker):
     """Fixture to mock logger debug calls from vane.test_step_client"""
     return mocker.patch("vane.vane_logging.logging.debug")
+
+
+def file_clean_up(fname):
+    """Clean up files created in a test
+
+    Args:
+        fname(str): File name to delete
+    """
+
+    if os.path.isfile(fname):
+        os.remove(fname)
 
 
 def test_test_step_client_constructor(loginfo, logdebug):
@@ -121,7 +133,7 @@ def test_parse_file_no_steps(loginfo, logdebug, mocker):
     mocker_object_two = mocker.patch("vane.test_step_client.TestStepClient.output_md")
 
     test_steps = test_step_client.TestStepClient([TEST_DIR])
-    test_steps.parse_file(["sample_network_tests/host/test_definition.yaml"])
+    test_steps.parse_file(["tests/unittests/fixtures/host/test_definition.yaml"])
     mocker_object_one.assert_called_once()
     mocker_object_two.assert_called_once()
 
@@ -132,7 +144,7 @@ def test_parse_file_no_steps(loginfo, logdebug, mocker):
 
     logdebug_calls = [
         call(
-            "Create JSON and MD files for sample_network_tests/host/test_definition.yaml"
+            "Create JSON and MD files for tests/unittests/fixtures/host/test_definition.yaml"
             f" using {NO_TEST_STEPS}"
         ),
     ]
@@ -142,14 +154,16 @@ def test_parse_file_no_steps(loginfo, logdebug, mocker):
 def test_output_json():
     "Unit Test for TestStepClient object module output_json"
 
-    with open("tests/unittests/fixtures/test_host.json", encoding="utf_8") as f_name:
+    with open("tests/unittests/fixtures/expected_test_host.json", encoding="utf_8") as f_name:
         expected_output = f_name.read()
 
     test_steps = test_step_client.TestStepClient([TEST_DIR])
     test_steps.output_json({TEST_FILE[0]: TEST_STEP})
 
-    with open("sample_network_tests/host/test_host.json", encoding="utf_8") as j_file:
+    with open("tests/unittests/fixtures/host/test_host.json", encoding="utf_8") as j_file:
         actual_output = j_file.read()
+
+    file_clean_up("tests/unittests/fixtures/host/test_host.json")
 
     assert expected_output == actual_output
 
@@ -157,14 +171,16 @@ def test_output_json():
 def test_output_md():
     "Unit Test for TestStepClient object module output_md"
 
-    with open("tests/unittests/fixtures/test_host.md", encoding="utf_8") as f_name:
+    with open("tests/unittests/fixtures/expected_test_host.md", encoding="utf_8") as f_name:
         expected_output = f_name.read()
 
     test_steps = test_step_client.TestStepClient([TEST_DIR])
     test_steps.output_md({TEST_FILE[0]: TEST_STEP})
 
-    with open("sample_network_tests/host/test_host.md", encoding="utf_8") as f_name:
+    with open("tests/unittests/fixtures/host/test_host.md", encoding="utf_8") as f_name:
         actual_output = f_name.read()
+
+    file_clean_up("tests/unittests/fixtures/host/test_host.md")
 
     assert expected_output == actual_output
 
@@ -172,14 +188,18 @@ def test_output_md():
 def test_output_md_no_steps():
     "Unit Test for TestStepClient object module output_md"
 
-    with open("tests/unittests/fixtures/test_host_no_steps.md", encoding="utf_8") as f_name:
+    with open(
+        "tests/unittests/fixtures/expected_test_host_no_steps.md", encoding="utf_8"
+    ) as f_name:
         expected_output = f_name.read()
 
     test_steps = test_step_client.TestStepClient([TEST_DIR])
     test_steps.output_md({TEST_FILE[0]: NO_TEST_STEPS})
 
-    with open("sample_network_tests/host/test_host.md", encoding="utf_8") as f_name:
+    with open("tests/unittests/fixtures/host/test_host.md", encoding="utf_8") as f_name:
         actual_output = f_name.read()
+
+    file_clean_up("tests/unittests/fixtures/host/test_host.md")
 
     assert expected_output == actual_output
 
@@ -187,8 +207,8 @@ def test_output_md_no_steps():
 def test_output_md_multiple_tests():
     "Unit Test for TestStepClient object module output_md"
 
-    test_dirs = ["sample_network_tests/api"]
-    test_files = "sample_network_tests/api/api.py"
+    test_dirs = ["tests/unittests/fixtures/api"]
+    test_files = "tests/unittests/fixtures/api/api.py"
     test_step = [
         "01/01/2023 00:00:00",
         "TD: Verify management api https server is running",
@@ -213,13 +233,15 @@ def test_output_md_multiple_tests():
         "TS: Creating test report based on results",
     ]
 
-    with open("tests/unittests/fixtures/test_api.md", encoding="utf_8") as f_name:
+    with open("tests/unittests/fixtures/expected_test_api.md", encoding="utf_8") as f_name:
         expected_output = f_name.read()
 
     test_steps = test_step_client.TestStepClient(test_dirs)
     test_steps.output_md({test_files: test_step})
 
-    with open("sample_network_tests/api/api.md", encoding="utf_8") as f_name:
+    with open("tests/unittests/fixtures/api/api.md", encoding="utf_8") as f_name:
         actual_output = f_name.read()
+
+    file_clean_up("tests/unittests/fixtures/api/api.md")
 
     assert expected_output == actual_output
