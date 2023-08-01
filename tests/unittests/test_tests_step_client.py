@@ -85,7 +85,12 @@ def test_walk_dir(logdebug, mocker):
     test_steps.walk_dir()
     mocker_object.assert_called_once()
 
-    files = ["test_definition.yaml", "__init__.py", "test_host.py"]
+    files = [
+        "test_definition.yaml",
+        "test_host.py",
+        "test_definition_regenerated.yaml",
+        "__init__.py",
+    ]
 
     logdebug_calls = [
         call(f"Set Test Step Client object directory to {[TEST_DIR]}"),
