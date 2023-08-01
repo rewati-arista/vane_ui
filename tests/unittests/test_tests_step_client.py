@@ -77,7 +77,7 @@ def test_write_test_steps(loginfo, mocker):
     loginfo.assert_has_calls(loginfo_calls, any_order=False)
 
 
-def test_write_walk_dir(logdebug, mocker):
+def test_walk_dir(logdebug, mocker):
     "Unit Test for TestStepClient object, method walk_dir"
 
     mocker_object = mocker.patch("vane.test_step_client.TestStepClient.parse_file")
@@ -85,9 +85,10 @@ def test_write_walk_dir(logdebug, mocker):
     test_steps.walk_dir()
     mocker_object.assert_called_once()
 
-    files = ["test_definition.yaml", "test_host.py", "__init__.py"]
+    files = ["test_definition.yaml", "__init__.py", "test_host.py"]
 
     logdebug_calls = [
+        call(f"Set Test Step Client object directory to {[TEST_DIR]}"),
         call(f"Walking directory {TEST_DIR} for test cases"),
         call(f"Discovered files {files} in directory {TEST_DIR}"),
         call(f"Discovered test files: {TEST_FILE} for parsing"),
