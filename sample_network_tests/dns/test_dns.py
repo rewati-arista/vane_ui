@@ -92,12 +92,12 @@ class DNSTests:
                 if tops.actual_output == tops.expected_output:
                     result = True
                     tops.output_msg += (
-                        f"\nOn router {tops.dut_name}, DNS resolution is" f"{result} for {url}.\n"
+                        f"\nOn router {tops.dut_name}, DNS resolution is {result} for {url}.\n"
                     )
                 else:
                     result = False
                     tops.output_msg += (
-                        f"\nOn router {tops.dut_name}, DNS resolution is" f"{result} for {url}.\n"
+                        f"\nOn router {tops.dut_name}, DNS resolution is {result} for {url}.\n"
                     )
 
                 tops.actual_results.append(tops.actual_output)
@@ -167,15 +167,13 @@ class DNSTests:
                     result = True
                     tops.output_msg += (
                         f"\nOn router {tops.dut_name}, verifying DNS "
-                        f"server reachability for {dns_server} is "
-                        f"{result}.\n"
+                        f"server reachability for {dns_server} is {result}.\n"
                     )
                 else:
                     result = False
                     tops.output_msg += (
                         f"\nOn router {tops.dut_name}, verifying DNS "
-                        f"server reachability for {dns_server} is "
-                        f"{result}.\n"
+                        f"server reachability for {dns_server} is {result}.\n"
                     )
 
                 tops.actual_results.append(tops.actual_output)
@@ -277,7 +275,7 @@ class DNSTests:
             if tops.actual_results == tops.expected_results:
                 tops.test_result = True
                 tops.output_msg += (
-                    f"{tops.dut_name} has the dns config " f"{dns_cfg} which is correct.\n\n"
+                    f"{tops.dut_name} has the dns config {dns_cfg} which is correct.\n\n"
                 )
             else:
                 tops.test_result = False

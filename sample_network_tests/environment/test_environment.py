@@ -121,9 +121,11 @@ class EnvironmentTests:
             tops.actual_output = "N/A"
             tops.expected_output = "N/A"
 
-            tops.comment = tops.output_msg = self.output = (
-                "INVALID TEST: CloudEOS router " f"{tops.dut_name} does not require cooling.\n"
-            )
+            tops.comment = (
+                tops.output_msg
+            ) = (
+                self.output
+            ) = f"INVALID TEST: CloudEOS router {tops.dut_name} does not require cooling.\n"
 
         tops.parse_test_steps(self.test_if_system_environment_temp_is_in_spec_on_)
         tops.generate_report(tops.dut_name, self.output)
@@ -200,9 +202,11 @@ class EnvironmentTests:
             tops.actual_output = "N/A"
             tops.expected_output = "N/A"
 
-            tops.comment = tops.output_msg = self.output = (
-                "INVALID TEST: CloudEOS router " f"{tops.dut_name} does not require cooling.\n"
-            )
+            tops.comment = (
+                tops.output_msg
+            ) = (
+                self.output
+            ) = f"INVALID TEST: CloudEOS router {tops.dut_name} does not require cooling.\n"
 
         tops.parse_test_steps(self.test_if_sensors_temp_is_in_spec_on_)
         tops.test_result = tops.actual_output == tops.expected_output
@@ -337,9 +341,11 @@ class EnvironmentTests:
             tops.actual_output = "N/A"
             tops.expected_output = "N/A"
 
-            tops.comment = tops.output_msg = self.output = (
-                "INVALID TEST: CloudEOS router " f"{tops.dut_name} does not require cooling.\n"
-            )
+            tops.comment = (
+                tops.output_msg
+            ) = (
+                self.output
+            ) = f"INVALID TEST: CloudEOS router {tops.dut_name} does not require cooling.\n"
 
         tops.parse_test_steps(self.test_if_system_environment_cooling_is_in_spec_on_)
         tops.generate_report(tops.dut_name, self.output)
@@ -416,9 +422,11 @@ class EnvironmentTests:
             tops.actual_output = "N/A"
             tops.expected_output = "N/A"
 
-            tops.comment = tops.output_msg = self.output = (
-                "INVALID TEST: CloudEOS router " f"{tops.dut_name} does not require fans.\n"
-            )
+            tops.comment = (
+                tops.output_msg
+            ) = (
+                self.output
+            ) = f"INVALID TEST: CloudEOS router {tops.dut_name} does not require fans.\n"
 
         tops.parse_test_steps(self.test_if_fan_status_is_in_spec_on_)
         tops.test_result = tops.actual_output == tops.expected_output

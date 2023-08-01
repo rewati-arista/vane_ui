@@ -311,7 +311,7 @@ class NTPTests:
             if tops.actual_results == tops.expected_results:
                 tops.test_result = True
                 tops.output_msg += (
-                    f"{tops.dut_name} has the ntp config " f"{ntp_cfg} which is correct.\n\n"
+                    f"{tops.dut_name} has the ntp config {ntp_cfg} which is correct.\n\n"
                 )
             else:
                 tops.test_result = False
