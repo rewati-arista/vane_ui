@@ -43,4 +43,3 @@ TS: Verify LLDP system name
 """
 TS: Creating test report based on results
 """
-
