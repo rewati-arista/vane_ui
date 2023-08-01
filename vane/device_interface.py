@@ -356,15 +356,7 @@ class NetmikoConn(DeviceConn):
         commands = make_iterable(commands)
         commands = list(commands)
 
-        # push the configure command onto the command stack
-        commands.insert(0, "configure terminal")
-        response = self.run_commands(commands, **kwargs)
-        # pylint: disable=no-member
-        if self.autorefresh:
-            # pylint: disable=no-member
-            self.refresh()
-
-        # pop the configure command output off the stack
-        response.pop(0)
+        self._connection.enable()
+        response = self._connection.send_config_set(commands)
 
         return response
