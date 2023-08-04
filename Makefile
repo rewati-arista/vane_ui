@@ -15,7 +15,6 @@
 #       make rpm -- build RPM package
 #       make sdist -- build python source distribution
 #       make sample_network_tests -- runs the system tests
-#       make tests -- run all of the tests
 #       make unittest -- runs the unit tests
 #
 # Notes:
@@ -98,9 +97,6 @@ unittest:
 .PHONY: coverage_report
 coverage_report:
 	$(COVERAGE) report -m
-
-.PHONY: tests
-tests: unittest sample_network_tests
 
 .PHONY: install
 install:
