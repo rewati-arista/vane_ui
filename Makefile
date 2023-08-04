@@ -14,7 +14,7 @@
 #       make pylint -- source code checks
 #       make rpm -- build RPM package
 #       make sdist -- build python source distribution
-#       make systest -- runs the system tests
+#       make sample_network_tests -- runs the system tests
 #       make tests -- run all of the tests
 #       make unittest -- runs the unit tests
 #
@@ -100,7 +100,7 @@ coverage_report:
 	$(COVERAGE) report -m
 
 .PHONY: tests
-tests: unittest systest
+tests: unittest sample_network_tests
 
 .PHONY: install
 install:
