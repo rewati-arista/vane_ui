@@ -43,7 +43,7 @@ An alias, `activate`, has also been created for the command `source $(poetry env
 In either case, the prompt will change to indicate the virtual environment is active by prefixing
 the project name and python version, and Vane work can now be done in the environment.
 
-Running the unit tests:
+Running the unit tests (validating Vane Framework):
 ```
     (vane-py3.9) vane # make unittest
 ```
@@ -54,7 +54,7 @@ uses the Arista Cloud Test environment for testing.
 
 Running the system tests:
 ```
-    (vane-py3.9) vane # make systest
+    (vane-py3.9) vane # make sample_network_tests
 ```
 
 Running the unit and system tests together.
