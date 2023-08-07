@@ -29,7 +29,7 @@ jobs:
           password: ${{secrets.GITHUB_TOKEN}}
 
       - name: Build the container for creating the RPM images
-        run: docker build -t ghcr.io/aristanetworksvane-cvp-build:latest -f Dockerfile.buildCVP . --build-arg UID=$(id -u) --build-arg GID=$(id -g)
+        run: docker build -t ghcr.io/aristanetworksvane-cvp-build:latest -f Dockerfile.CVPbuild . --build-arg UID=$(id -u) --build-arg GID=$(id -g)
 
   # create_cvp_container:
   #
