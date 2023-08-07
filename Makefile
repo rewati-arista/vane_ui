@@ -134,9 +134,6 @@ docker_build_cvp:
 docker_stop_cvp:
 	- docker stop $(CONTAINER_NAME_CVP)
 
-basename_cvp:
-	@echo $(BASENAME_CVP)
-
 cvp: docker_stop_cvp docker_build_cvp
 
 rpm-cvp: rpmcommon-cvp rpm-build
