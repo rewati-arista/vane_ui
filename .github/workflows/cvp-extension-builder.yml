@@ -11,6 +11,11 @@ on:
     # branches:
     #   - main
 
+env:
+  CVP_BUILD_IMAGE: ghcr.io/aristanetworks/vane-cvp-build:latest
+  CVP_IMAGE: vane-cvp
+  CVP_IMAGE_FILE: vane-cvp.tar.gz
+
 jobs:
 
   create_centos_build_container:
@@ -31,8 +36,8 @@ jobs:
 
       - name: Build the Centos container for creating the RPM images and push to GitHub container registry
         run: |
-          docker build -t ghcr.io/aristanetworks/vane-cvp-build:latest -f Dockerfile.build-CVP . --build-arg UID=$(id -u) --build-arg GID=$(id -g)
-          docker push ghcr.io/aristanetworks/vane-cvp-build:latest
+          docker build -t $CVP_BUILD_IMAGE -f Dockerfile.build-CVP . --build-arg UID=$(id -u) --build-arg GID=$(id -g)
+          docker push $CVP_BUILD_IMAGE
 
   create_cvp_container:
 
@@ -45,14 +50,14 @@ jobs:
 
       - name: Build the CVP Vane container and save it as a tar.gz file
         run: |
-          docker build -t vane-cvp -f Dockerfile.CVP . --network=host
-          docker save vane-cvp | gzip > vane-cvp.tar.gz
+          docker build -t $CVP_IMAGE -f Dockerfile.CVP . --network=host
+          docker save $CVP_IMAGE | gzip > $CVP_IMAGE_FILE
 
       - name: Upload the CVP Vane container tar.gz artifact for later use
         uses: actions/upload-artifact@v3
         with:
-          name: vane-cvp-gz
-          path: vane-cvp.tar.gz
+          name: $CVP_IMAGE_FILE
+          path: $CVP_IMAGE_FILE
 
   package_cvp_container:
 
@@ -60,13 +65,29 @@ jobs:
 
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/aristanetworks/vane-cvp-build:latest
+      image: ${{ env.CVP_BUILD_IMAGE }}
 
     steps:
-      - name: Download the CVP Vane container tar.gz artifact we created in the previous job
+      - name: Check out the repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Download the CVP Vane image file artifact we created in the previous job
         uses: actions/download-artifact@v3
         with:
-          name: vane-cvp-gz
+          name: $CVP_IMAGE_FILE
 
-      - name: List the directory
-        run: ls -la
+      - name: Build the CVP rpm package
+        run: |
+          make rpm-cvp
+
+      - name: Get the name of the rpm package as an env variable
+        run: |
+          RPM_NAME=$(basename rpms/*.rpm) >> $GITHUB_ENV
+
+      - name: Save the rpm package as an artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.RPM_NAME }}
+          path: rpms/${{ env.RPM_NAME }}
