@@ -12,7 +12,7 @@ on:
     #   - main
 
 jobs:
-  create_build_container:
+  create_containers:
 
     runs-on: ubuntu-latest
     steps:
@@ -28,27 +28,30 @@ jobs:
           username: ${{github.actor}}
           password: ${{secrets.GITHUB_TOKEN}}
 
-      - name: List directory
-        run: ls -la
-
-      - name: Build the container for creating the RPM images
+      - name: Build the Centos container for creating the RPM images and push to GitHub container registry
         run: |
           docker build -t ghcr.io/aristanetworks/vane-cvp-build:latest -f Dockerfile.build-CVP . --build-arg UID=$(id -u) --build-arg GID=$(id -g)
           docker push ghcr.io/aristanetworks/vane-cvp-build:latest
 
-  # create_cvp_container:
-  #
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Check out the repository
-  #       uses: actions/checkout@v3
-  #       with:
-  #         fetch-depth: 0
-  #
-  #     - name: Build the container for creating the RPM images
-  #       run: docker build -t vane-cvp -f Dockerfile.CVP . --network=host
-  #
-  #     - name: Save the container as a tar.gz file
-  #       run: docker save vane-cvp | gzip > vane-cvp.tar.gz
-  #
-  # package_cvp_container:
+      - name: Build the CVP Vane container and save it as a tar.gz file
+        run: |
+          docker build -t vane-cvp -f Dockerfile.CVP . --network=host
+          docker save vane-cvp | gzip > vane-cvp.tar.gz
+
+      - name: Upload the CVP Vane container tar.gz artifact for later use
+        uses: actions/upload-artifact@v3
+        with:
+          name: vane-cvp-gz
+          path: vane-cvp.tar.gz
+
+  package_cvp_container:
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download the CVP Vane container tar.gz artifact we created in the previous job
+        uses:actions/download-artifact@v3
+        with:
+          name: vane-cvp-gz
+
+      - name: List the directory
+        run: ls -la
