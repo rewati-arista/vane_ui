@@ -58,6 +58,7 @@ jobs:
         with:
           name: ${{ env.CVP_IMAGE_FILE }}
           path: ${{ env.CVP_IMAGE_FILE }}
+          retention-days: 2
 
   package_cvp_container:
 
@@ -84,14 +85,16 @@ jobs:
 
       - name: Build the CVP rpm package
         run: |
+          RPM_NAME=$(make basename_cvp) >> $GITHUB_ENV
           make rpm-cvp
 
-      - name: Export the name of the rpm package as an env variable
-        run: |
-          RPM_NAME=$(basename rpms/*.rpm) >> $GITHUB_ENV
+      # - name: Export the name of the rpm package as an env variable
+      #   run: |
+      #     RPM_NAME=$(basename rpms/*.rpm) >> $GITHUB_ENV
 
       - name: Save the rpm package as an artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.RPM_NAME }}
+          # name: ${{ env.RPM_NAME }}
+          name: vane-cvp.rpm
           path: rpms/${{ env.RPM_NAME }}
