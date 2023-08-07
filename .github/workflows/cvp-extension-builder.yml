@@ -1,0 +1,49 @@
+name: cvp-extension-builder
+run-name: Build CVP extension RPM package
+
+# Run the unittests when a pull request is merged, and post the coverage
+# results badge to the repo page
+
+on:
+  push:
+    branches:
+      - gar-cvp-package
+    # branches:
+    #   - main
+
+jobs:
+  create_build_container:
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+
+      # - name: Build the container for creating the RPM images
+      #   run: docker build -t vane-cvp-build -f Dockerfile.buildCVP . --build-arg UID=$(id -u) --build-arg GID=$(id -g)
+
+  # create_cvp_container:
+  #
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Check out the repository
+  #       uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+  #
+  #     - name: Build the container for creating the RPM images
+  #       run: docker build -t vane-cvp -f Dockerfile.CVP . --network=host
+  #
+  #     - name: Save the container as a tar.gz file
+  #       run: docker save vane-cvp | gzip > vane-cvp.tar.gz
+  #
+  # package_cvp_container:
