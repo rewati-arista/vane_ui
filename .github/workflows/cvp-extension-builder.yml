@@ -61,11 +61,14 @@ jobs:
 
   package_cvp_container:
 
+    # This job depends on the previous two containers being built
     needs: [create_centos_build_container, create_cvp_container]
 
     runs-on: ubuntu-latest
     container:
-      image: ${{ vars.CVP_BUILD_IMAGE }}
+      # Can't use variable here because it is not part of the "environment" yet
+      # image: ghcr.io/aristanetworks/vane-cvp-build:latest
+      image: ${{ env.CVP_BUILD_IMAGE }}
 
     steps:
       - name: Check out the repository
@@ -76,13 +79,13 @@ jobs:
       - name: Download the CVP Vane image file artifact we created in the previous job
         uses: actions/download-artifact@v3
         with:
-          name: $CVP_IMAGE_FILE
+          name: ${{ env.CVP_IMAGE_FILE }}
 
       - name: Build the CVP rpm package
         run: |
           make rpm-cvp
 
-      - name: Get the name of the rpm package as an env variable
+      - name: Export the name of the rpm package as an env variable
         run: |
           RPM_NAME=$(basename rpms/*.rpm) >> $GITHUB_ENV
 
