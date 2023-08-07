@@ -192,7 +192,7 @@ def test_download_test_results(loginfo):
     ARCHIVE folder"""
 
     dir_path = "reports/TEST RESULTS ARCHIVES"
-    if os.path.isdir(dir_path):
+    if os.path.exists(dir_path):
         length = len(list(os.listdir(dir_path)))
         vane_cli.download_test_results()
         new_length = len(os.listdir(dir_path))
@@ -226,6 +226,7 @@ def test_main_definitions_and_duts(loginfo, logwarning, mocker):
             generate_duts_from_topo=None,
             generate_test_steps=None,
             markers=False,
+            nrfu=False,
         ),
     )
     vane_cli.main()
@@ -268,6 +269,7 @@ def test_main_create_duts_file(loginfo, logwarning, mocker):
             generate_duts_from_topo=None,
             generate_test_steps=None,
             markers=False,
+            nrfu=False,
         ),
     )
     vane_cli.main()
@@ -312,6 +314,7 @@ def test_main_generate_duts_from_topo(loginfo, logwarning, mocker):
             generate_duts_from_topo=["topology.yaml"],
             generate_test_steps=None,
             markers=False,
+            nrfu=False,
         ),
     )
     vane_cli.main()
