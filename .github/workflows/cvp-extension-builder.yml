@@ -59,6 +59,9 @@ jobs:
     needs: [create_centos_build_container, create_cvp_container]
 
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/aristanetworks/vane-cvp-build:latest
+
     steps:
       - name: Download the CVP Vane container tar.gz artifact we created in the previous job
         uses: actions/download-artifact@v3
