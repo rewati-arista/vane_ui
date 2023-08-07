@@ -56,8 +56,8 @@ jobs:
       - name: Upload the CVP Vane container tar.gz artifact for later use
         uses: actions/upload-artifact@v3
         with:
-          name: $CVP_IMAGE_FILE
-          path: $CVP_IMAGE_FILE
+          name: ${{ env.CVP_IMAGE_FILE }}
+          path: ${{ env.CVP_IMAGE_FILE }}
 
   package_cvp_container:
 
