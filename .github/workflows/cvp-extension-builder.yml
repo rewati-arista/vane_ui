@@ -65,7 +65,7 @@ jobs:
 
     runs-on: ubuntu-latest
     container:
-      image: $CVP_BUILD_IMAGE
+      image: ${{ vars.CVP_BUILD_IMAGE }}
 
     steps:
       - name: Check out the repository
