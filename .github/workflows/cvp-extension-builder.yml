@@ -93,5 +93,5 @@ jobs:
       - name: Save the rpm package as an artifact
         uses: actions/upload-artifact@v3
         with:
-          name: $RPM_NAME
-          path: rpms/$RPM_NAME
+          name: ${{ env.RPM_NAME }}
+          path: rpms/${{ env.RPM_NAME }}
