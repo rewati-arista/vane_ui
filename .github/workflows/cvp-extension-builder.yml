@@ -95,6 +95,7 @@ jobs:
       - name: Save the rpm package as an artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.RPM_NAME }}-artifact
+          # name: ${{ env.RPM_NAME }}-artifact
+          name: $RPM_NAME
           # name: vane-cvp.rpm
           path: rpms/${{ env.RPM_NAME }}
