@@ -12,7 +12,8 @@ on:
     #   - main
 
 jobs:
-  create_containers:
+
+  create_centos_build_container:
 
     runs-on: ubuntu-latest
     steps:
@@ -33,6 +34,15 @@ jobs:
           docker build -t ghcr.io/aristanetworks/vane-cvp-build:latest -f Dockerfile.build-CVP . --build-arg UID=$(id -u) --build-arg GID=$(id -g)
           docker push ghcr.io/aristanetworks/vane-cvp-build:latest
 
+  create_cvp_container:
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
       - name: Build the CVP Vane container and save it as a tar.gz file
         run: |
           docker build -t vane-cvp -f Dockerfile.CVP . --network=host
@@ -45,6 +55,8 @@ jobs:
           path: vane-cvp.tar.gz
 
   package_cvp_container:
+
+    needs: [create_centos_build_container, create_cvp_container]
 
     runs-on: ubuntu-latest
     steps:
