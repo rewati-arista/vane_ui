@@ -31,8 +31,8 @@ jobs:
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
-          username: ${{github.actor}}
-          password: ${{secrets.GITHUB_TOKEN}}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build the Centos container for creating the RPM images and push to GitHub container registry
         run: |
@@ -66,9 +66,10 @@ jobs:
 
     runs-on: ubuntu-latest
     container:
-      # Can't use variable here because it is not part of the "environment" yet
-      # image: ghcr.io/aristanetworks/vane-cvp-build:latest
-      image: ${{ env.CVP_BUILD_IMAGE }}
+      # Build the RPM in the vane-cvp-build container (a centos container to match the
+      # CVP environment)
+      # Can't use the CVP_BUILD_IMAGE variable here because we are not in an "environment" yet
+      image: ghcr.io/aristanetworks/vane-cvp-build:latest
 
     steps:
       - name: Check out the repository
