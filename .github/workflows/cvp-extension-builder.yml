@@ -16,7 +16,6 @@ on:
   push:
     branches:
       - example-rpm-package-testing-branch
-      - gar-cvp-package
 
 # Variables
 env:
