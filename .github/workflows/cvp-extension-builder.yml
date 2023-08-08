@@ -1,23 +1,34 @@
 name: cvp-extension-builder
 run-name: Build CVP extension RPM package
 
-# Run the unittests when a pull request is merged, and post the coverage
-# results badge to the repo page
+# Build the CVP extension RPM package when a pull request is merged to main
+# and save the RPM package in the artifacts of the workflow
 
 on:
+  # This is the default trigger, to run when a pull request on the 'main' branch is closed
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+  # For testing, put the name of the testing branch here, and remove branch names afterwards
   push:
     branches:
+      - example-rpm-package-testing-branch
       - gar-cvp-package
-    # branches:
-    #   - main
 
+# Variables
 env:
   CVP_BUILD_IMAGE: ghcr.io/aristanetworks/vane-cvp-build:latest
   CVP_IMAGE: vane-cvp
   CVP_IMAGE_FILE: vane-cvp.tar.gz
 
+# Job definitions
 jobs:
 
+  # Create the container we use to build the RPM
+  #   This is a Centos container to match the CVP environment
   create_centos_build_container:
 
     runs-on: ubuntu-latest
@@ -39,6 +50,8 @@ jobs:
           docker build -t $CVP_BUILD_IMAGE -f Dockerfile.build-CVP . --build-arg UID=$(id -u) --build-arg GID=$(id -g)
           docker push $CVP_BUILD_IMAGE
 
+  # Create the container that will be running in the CVP environment
+  #   This is a minimal container with Vane and its requirements installed
   create_cvp_container:
 
     runs-on: ubuntu-latest
@@ -53,13 +66,14 @@ jobs:
           docker build -t $CVP_IMAGE -f Dockerfile.CVP . --network=host
           docker save $CVP_IMAGE | gzip > $CVP_IMAGE_FILE
 
-      - name: Upload the CVP Vane container tar.gz artifact for later use
+      - name: Upload the CVP Vane container tar.gz artifact for use in the next job
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.CVP_IMAGE_FILE }}
           path: ${{ env.CVP_IMAGE_FILE }}
           retention-days: 2
 
+  # Create the RPM package and upload the package as an artifact
   package_cvp_container:
 
     # This job depends on the previous two containers being built
@@ -67,9 +81,9 @@ jobs:
 
     runs-on: ubuntu-latest
     container:
-      # Build the RPM in the vane-cvp-build container (a centos container to match the
-      # CVP environment)
-      # Can't use the CVP_BUILD_IMAGE variable here because we are not in an "environment" yet
+      # Use the previously built vane-cvp-build container
+      # We can't use the CVP_BUILD_IMAGE variable here, because the context is not
+      # available in the "job" scope
       image: ghcr.io/aristanetworks/vane-cvp-build:latest
 
     steps:
