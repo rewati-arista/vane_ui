@@ -85,6 +85,7 @@ jobs:
 
       - name: Commit the coverage badge
         # Commit the coverage badge file, if it was created
+        # if [ $(git ls-files --others | grep coverage.svg ) ] ; then
         run: |
           git status || true
           git config --local user.name actions-user
@@ -94,7 +95,11 @@ jobs:
           echo -e "\n----------------"
           git status
           echo -e "\n----------------"
-          if [ $(git ls-files --others | grep coverage.svg ) ] ; then
+          git checkout coverage-badge
+          echo -e "\n----------------"
+          git status
+          echo -e "\n----------------"
+          if ! git diff --quiet coverage.svg; then
             echo "Updating coverage badge"
             git add coverage.svg
             git commit -am "Updating coverage badge"
