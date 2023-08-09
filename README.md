@@ -2,7 +2,7 @@
 
 Network Certification Tool
 
-![Coverage](https://raw.githubusercontent.com/aristanetworks/vane/coverage-badge/resources/coverage.svg)
+![Coverage](https://raw.githubusercontent.com/aristanetworks/vane/coverage-badge/coverage.svg)
 
 ## Description
 
