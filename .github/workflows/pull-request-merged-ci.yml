@@ -86,6 +86,23 @@ jobs:
       - name: Commit the coverage badge
         # Commit the coverage badge file, if it was created
         # if [ $(git ls-files --others | grep coverage.svg ) ] ; then
+            # shopt -s dotglob extglob
+            # rm -rf (README.md|coverage.md|.git)
+        # run: |
+        #   git status || true
+        #   git config --local user.name actions-user
+        #   git config --local user.email "actions@github.com"
+        #   echo -e "\n----------------"
+        #   ls -la
+        #   echo -e "\n----------------"
+        #   git status
+        #   echo -e "\n----------------"
+        #   if ! git diff --quiet coverage.svg; then
+        #     echo "Updating coverage badge"
+        #     git add coverage.svg
+        #     git commit -am "Updating coverage badge"
+        #     git push -f origin ${{ github.ref }}:coverage-badge
+        #   fi
         run: |
           git status || true
           git config --local user.name actions-user
@@ -95,15 +112,14 @@ jobs:
           echo -e "\n----------------"
           git status
           echo -e "\n----------------"
-          git stash
-          git checkout coverage-badge
-          git stash pop
-          echo -e "\n----------------"
-          git status
-          echo -e "\n----------------"
           if ! git diff --quiet coverage.svg; then
             echo "Updating coverage badge"
-            git add coverage.svg
+            shopt -s dotglob extglob
+            rm -rf (README.md|coverage.md|.git)
+            ls -la
+            curl https://raw.githubusercontent.com/aristanetworks/vane/coverage-badge/README.md -o README.md
+            git add --all
+            git status
             git commit -am "Updating coverage badge"
             git push -f origin ${{ github.ref }}:coverage-badge
           fi
