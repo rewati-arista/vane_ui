@@ -10,9 +10,6 @@ on:
       - develop
     types:
       - closed
-  push:
-    branches:
-      - gar-cov-badge-update
 
 env:
   POETRY_VERSION: 1.5.1
@@ -24,8 +21,7 @@ jobs:
 
     # Only run the tests when the pull request is merged
     # A closed (canceled) PR does not need to be processed
-    # XXX remove this temporarily for testing XXX
-    # if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
 
     runs-on: ubuntu-latest
 
