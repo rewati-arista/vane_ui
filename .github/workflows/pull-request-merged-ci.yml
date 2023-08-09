@@ -10,6 +10,9 @@ on:
       - develop
     types:
       - closed
+  push:
+    branches:
+      - gar-cov-badge-update
 
 env:
   POETRY_VERSION: 1.5.1
@@ -91,5 +94,5 @@ jobs:
             echo "Updating coverage badge"
             git add resources/coverage.svg
             git commit -am "Updating coverage badge"
-            git push -f origin ${{ github.base_ref }}
+            git push -f origin ${{ github.base_ref }}:coverage-badge
           fi
