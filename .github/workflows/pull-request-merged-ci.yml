@@ -115,7 +115,7 @@ jobs:
           if ! git diff --quiet coverage.svg; then
             echo "Updating coverage badge"
             shopt -s dotglob extglob
-            rm -rf (README.md|coverage.md|.git)
+            rm -rf !(README.md|coverage.md|.git)
             ls -la
             curl https://raw.githubusercontent.com/aristanetworks/vane/coverage-badge/README.md -o README.md
             git add --all
