@@ -94,7 +94,7 @@ jobs:
           echo -e "\n----------------"
           ls -la resources/
           echo -e "\n----------------"
-          git diff
+          git status
           echo -e "\n----------------"
           if ! git diff --quiet resources/coverage.svg; then
             echo "Updating coverage badge"
