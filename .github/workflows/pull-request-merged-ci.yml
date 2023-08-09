@@ -113,6 +113,7 @@ jobs:
           echo -e "\n----------------"
           git status
           echo -e "\n--HERE--------------"
+          # Remove all the files
           shopt -s dotglob extglob
           rm -rf !(README.md|coverage.svg|.git) || true
           echo -e "\n--THERE--------------"
