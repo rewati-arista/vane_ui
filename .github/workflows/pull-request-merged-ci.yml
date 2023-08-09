@@ -24,7 +24,8 @@ jobs:
 
     # Only run the tests when the pull request is merged
     # A closed (canceled) PR does not need to be processed
-    if: github.event.pull_request.merged == true
+    # XXX remove this temporarily for testing XXX
+    # if: github.event.pull_request.merged == true
 
     runs-on: ubuntu-latest
 
