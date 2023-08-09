@@ -113,7 +113,7 @@ jobs:
           git status
           echo -e "\n--HERE--------------"
           shopt -s dotglob extglob
-          rm -rf !(README.md|coverage.svg|.git)
+          rm -rf !(README.md|coverage.svg|.git) || true
           echo -e "\n--THERE--------------"
           if ! git diff --quiet coverage.svg; then
             echo "Updating coverage badge"
