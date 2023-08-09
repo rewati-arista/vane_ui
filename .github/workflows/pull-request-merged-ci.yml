@@ -85,6 +85,7 @@ jobs:
 
       - name: Commit the coverage badge
         # Commit the coverage badge file, if it was created
+        # if ! git diff --quiet coverage.svg; then
         # if [ $(git ls-files --others | grep coverage.svg ) ] ; then
             # shopt -s dotglob extglob
             # rm -rf (README.md|coverage.md|.git)
@@ -115,7 +116,7 @@ jobs:
           shopt -s dotglob extglob
           rm -rf !(README.md|coverage.svg|.git) || true
           echo -e "\n--THERE--------------"
-          if ! git diff --quiet coverage.svg; then
+          if [ $(git ls-files --others | grep coverage.svg ) ] ; then
             echo "Updating coverage badge"
             ls -la
             curl https://raw.githubusercontent.com/aristanetworks/vane/coverage-badge/README.md -o README.md
