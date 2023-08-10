@@ -55,8 +55,6 @@ ARG UID=10010
 ARG GID=10010
 # Create the sudo and UNAME groups and add the sudo group to sudoers
 RUN addgroup -S -g 1002 sudo
-# XXX temporarily remove the dialout group (group 20) so we can test on local machine
-RUN delgroup dialout
 RUN addgroup -S -g $GID $UNAME
 RUN adduser -S -D -u $UID -G sudo -G $UNAME $UNAME \
     && echo "$UNAME ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/$UNAME \
