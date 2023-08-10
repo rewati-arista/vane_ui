@@ -286,10 +286,8 @@ class NetmikoConn(DeviceConn):
             local_cmds = cmds
 
         if isinstance(cmds, list):
-            # pylint: disable=assignment-from-no-return
             cmds_op = self.send_list_cmds(cmds=local_cmds, encoding=encoding)
         elif isinstance(cmds, str):
-            # pylint: disable=assignment-from-no-return
             cmds_op = self.send_str_cmds(cmds=local_cmds, encoding=encoding)
 
         return cmds_op
