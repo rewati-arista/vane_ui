@@ -68,7 +68,7 @@ run the coverage report at any time after running the tests.
     (vane-py3.9) vane # make coverage_report
 ```
 
-For detailed information on the installation, please refer to [Getting Started with Vane docuement](docs/GettingStartedwithVane.pdf)
+For detailed information on the installation, please refer to [Getting Started with Vane document](docs/GettingStartedwithVane.pdf)
 
 ## Development
 
