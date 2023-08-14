@@ -62,6 +62,9 @@ class NrfuClient:
         # Generate duts_nrfu.yaml file from the duts data gathered above
         self.generate_duts_file(device_data, source)
 
+        # Generate definitions_nrfu.yaml file from preset definitions data structure
+        self.generate_definitions_file()
+
     def get_credentials(self):
         """Ask user to enter credentials for EOS/CloudVision
 
@@ -194,6 +197,8 @@ class NrfuClient:
         source (string): flag indicating if source of data is cvp or not
         """
 
+        logging.info("Generating duts file for nrfu testing")
+
         duts_yaml_data = []
 
         for device in device_data:
@@ -226,7 +231,7 @@ class NrfuClient:
         final_duts_data (list(dict)): List of device data (ip, name, neighbors, ...)
         """
 
-        duts_file = "duts_nrfu.yaml"
+        duts_file = "sample_network_tests/nrfu/duts_nrfu.yaml"
 
         try:
             with open(duts_file, "w", encoding="utf-8") as file:
@@ -238,4 +243,52 @@ class NrfuClient:
         except OSError as err:
             print(f">>> {duts_file} YAML FILE MISSING")
             logging.error(f"ERROR YAML FILE: {duts_file} NOT " + f"FOUND. {err}")
+            sys.exit(1)
+
+    def generate_definitions_file(self):
+        """Generate definitions_nrfu.yaml file from parameters needed
+        for NRFU testing"""
+
+        logging.info("Generating definitions file for nrfu testing")
+
+        test_dir = "sample_network_tests/nrfu"
+        user_choice = input("Do you want to specify a test case directory [y|n]:")
+        if user_choice.lower() in ("y", "yes"):
+            test_dir = input("Please specify test case directory: <path/to/test case dir>")
+
+        definitions_file = "sample_network_tests/nrfu/definitions_nrfu.yaml"
+
+        definitions_data = {
+            "parameters": {
+                "html_report": "reports/report",
+                "json_report": "reports/report",
+                "generate_test_definitions": True,
+                "master_definitions": "master_def.yaml",
+                "mark": None,
+                "processes": None,
+                "report_dir": "reports",
+                "results_file": "result.yml",
+                "results_dir": "reports/results",
+                "setup_show": False,
+                "show_log": "show_output.log",
+                "stdout": False,
+                "test_cases": "All",
+                "test_dirs": [test_dir],
+                "verbose": True,
+                "template_definitions": "test_definition.yaml.j2",
+                "test_definitions": "test_definition.yaml",
+                "report_summary_style": "modern",
+            }
+        }
+
+        try:
+            with open(definitions_file, "w", encoding="utf-8") as file:
+                try:
+                    yaml.dump(definitions_data, file, default_flow_style=False)
+                except yaml.YAMLError as err:
+                    logging.error(f"ERROR IN YAML FILE: {err}")
+                    sys.exit(1)
+        except OSError as err:
+            print(f">>> {definitions_file} YAML FILE MISSING")
+            logging.error(f"ERROR YAML FILE: {definitions_file} NOT " + f"FOUND. {err}")
             sys.exit(1)
