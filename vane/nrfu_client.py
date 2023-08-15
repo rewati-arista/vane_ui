@@ -262,7 +262,9 @@ class NrfuClient:
         user_choice = input("Do you want to specify a test case directory [y|n]:")
 
         if user_choice.lower() in ("y", "yes"):
-            test_dir = input("Please specify test case directory <path/to/test case dir>:")
+            test_dir = ""
+            while not os.path.exists(test_dir):
+                test_dir = input("Please specify test case directory <path/to/test case dir>:")
 
         self.definitions_file = "sample_network_tests/nrfu/definitions_nrfu.yaml"
 
