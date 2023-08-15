@@ -35,6 +35,8 @@ import getpass
 import os
 import sys
 import yaml
+from prompt_toolkit import prompt
+from prompt_toolkit.completion import PathCompleter
 from cvprac.cvp_client import CvpClient
 from cvprac.cvp_api import CvpApi
 from vane.vane_logging import logging
@@ -139,7 +141,11 @@ class NrfuClient:
             device_list_file = ""
             text_flag = False
             while not os.path.exists(device_list_file) or not text_flag:
-                device_list_file = input("Please input Name/Path of device list file (.txt): ")
+                device_list_file = prompt(
+                    "Please input Name/Path of device list file (.txt)"
+                    " (Use tab for autocompletion): ",
+                    completer=PathCompleter(),
+                )
                 if len(device_list_file) > 4 and device_list_file[-4:] == ".txt":
                     text_flag = True
             device_data = self.read_device_list_file(device_list_file)
@@ -264,7 +270,11 @@ class NrfuClient:
         if user_choice.lower() in ("y", "yes"):
             test_dir = ""
             while not os.path.exists(test_dir):
-                test_dir = input("Please specify test case directory <path/to/test case dir>:")
+                test_dir = prompt(
+                    "Please specify test case directory <path/to/test case dir>"
+                    " (Use tab for autocompletion):",
+                    completer=PathCompleter(),
+                )
 
         self.definitions_file = "sample_network_tests/nrfu/definitions_nrfu.yaml"
 
