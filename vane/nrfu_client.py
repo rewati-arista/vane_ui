@@ -46,15 +46,21 @@ class NrfuClient:
     def __init__(self):
         """NrfuClient initialisation"""
 
+        # initialise default values
+        self.definitions_file = ""
+        self.duts_file = ""
+        self.username = ""
+        self.password = ""
+
         # Getting credentials from user
-        self.username, self.password = self.get_credentials()
+        self.get_credentials()
 
         # Determine if Vane is running as CVP application
-        self.cvp = self.determine_if_cvp_application()
+        cvp = self.determine_if_cvp_application()
 
         # Depending on if it is CVP application or not,
         # get the device data to generate duts.yaml file
-        if self.cvp:
+        if cvp:
             device_data, source = self.cvp_application()
         else:
             device_data, source = self.not_cvp_application()
@@ -65,6 +71,9 @@ class NrfuClient:
         # Generate definitions_nrfu.yaml file from preset definitions data structure
         self.generate_definitions_file()
 
+        # Run Vane with the generated duts and definitions file
+        print("\x1b[32mStarting Execution of NRFU tests via Vane\x1b[0m")
+
     def get_credentials(self):
         """Ask user to enter credentials for EOS/CloudVision
 
@@ -73,9 +82,8 @@ class NrfuClient:
         password (string): EOS/CloudVision password
         """
 
-        username = input("Please input Arista device username: ")
-        password = getpass.getpass("Please input Arista device password: ")
-        return username, password
+        self.username = input("Please input Arista device username: ")
+        self.password = getpass.getpass("Please input Arista device password: ")
 
     def determine_if_cvp_application(self):
         """Determine if Vane is running as CVP application
@@ -221,7 +229,6 @@ class NrfuClient:
             duts_yaml_data.append(current_device_data)
         final_duts_data = {"duts": duts_yaml_data}
 
-        logging.info("Generating duts_nrfu.yaml file for NRFU testing")
         self.write_duts(final_duts_data)
 
     def write_duts(self, final_duts_data):
@@ -231,18 +238,18 @@ class NrfuClient:
         final_duts_data (list(dict)): List of device data (ip, name, neighbors, ...)
         """
 
-        duts_file = "sample_network_tests/nrfu/duts_nrfu.yaml"
+        self.duts_file = "sample_network_tests/nrfu/duts_nrfu.yaml"
 
         try:
-            with open(duts_file, "w", encoding="utf-8") as file:
+            with open(self.duts_file, "w", encoding="utf-8") as file:
                 try:
                     yaml.dump(final_duts_data, file, default_flow_style=False)
                 except yaml.YAMLError as err:
                     logging.error(f"ERROR IN YAML FILE: {err}")
                     sys.exit(1)
         except OSError as err:
-            print(f">>> {duts_file} YAML FILE MISSING")
-            logging.error(f"ERROR YAML FILE: {duts_file} NOT " + f"FOUND. {err}")
+            print(f">>> {self.duts_file} YAML FILE MISSING")
+            logging.error(f"ERROR YAML FILE: {self.duts_file} NOT " + f"FOUND. {err}")
             sys.exit(1)
 
     def generate_definitions_file(self):
@@ -253,17 +260,18 @@ class NrfuClient:
 
         test_dir = "sample_network_tests/nrfu"
         user_choice = input("Do you want to specify a test case directory [y|n]:")
-        if user_choice.lower() in ("y", "yes"):
-            test_dir = input("Please specify test case directory: <path/to/test case dir>")
 
-        definitions_file = "sample_network_tests/nrfu/definitions_nrfu.yaml"
+        if user_choice.lower() in ("y", "yes"):
+            test_dir = input("Please specify test case directory <path/to/test case dir>:")
+
+        self.definitions_file = "sample_network_tests/nrfu/definitions_nrfu.yaml"
 
         definitions_data = {
             "parameters": {
                 "html_report": "reports/report",
                 "json_report": "reports/report",
                 "generate_test_definitions": True,
-                "master_definitions": "master_def.yaml",
+                "master_definitions": "sample_network_tests/nrfu/master_def.yaml",
                 "mark": None,
                 "processes": None,
                 "report_dir": "reports",
@@ -282,13 +290,13 @@ class NrfuClient:
         }
 
         try:
-            with open(definitions_file, "w", encoding="utf-8") as file:
+            with open(self.definitions_file, "w", encoding="utf-8") as file:
                 try:
                     yaml.dump(definitions_data, file, default_flow_style=False)
                 except yaml.YAMLError as err:
                     logging.error(f"ERROR IN YAML FILE: {err}")
                     sys.exit(1)
         except OSError as err:
-            print(f">>> {definitions_file} YAML FILE MISSING")
-            logging.error(f"ERROR YAML FILE: {definitions_file} NOT " + f"FOUND. {err}")
+            print(f">>> {self.definitions_file} YAML FILE MISSING")
+            logging.error(f"ERROR YAML FILE: {self.definitions_file} NOT " + f"FOUND. {err}")
             sys.exit(1)

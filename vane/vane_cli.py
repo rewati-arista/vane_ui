@@ -277,36 +277,39 @@ def main():
         )
         write_test_steps(args.generate_test_steps)
 
-    elif args.nrfu:
-        logging.info("Invoking the Nrfu client to run Nrfu tests")
-        nrfu_client.NrfuClient()
-
     else:
-        if args.definitions_file:
-            logging.warning(f"Changing Definitions file name to {args.definitions_file}")
-            vane.config.DEFINITIONS_FILE = args.definitions_file
+        if args.nrfu:
+            logging.info("Invoking the Nrfu client to run Nrfu tests")
+            nrfu = nrfu_client.NrfuClient()
+            vane.config.DEFINITIONS_FILE = nrfu.definitions_file
+            vane.config.DUTS_FILE = nrfu.duts_file
 
-        if args.duts_file:
-            logging.warning(f"Changing DUTS file name to {args.duts_file}")
-            vane.config.DUTS_FILE = args.duts_file
+        else:
+            if args.definitions_file:
+                logging.warning(f"Changing Definitions file name to {args.definitions_file}")
+                vane.config.DEFINITIONS_FILE = args.definitions_file
 
-        if args.generate_duts_file:
-            logging.info(
-                f"Generating DUTS File from topology: {args.generate_duts_file[0]} and "
-                f"inventory: {args.generate_duts_file[1]} file.\n"
-            )
-            vane.config.DUTS_FILE = tests_tools.create_duts_file(
-                args.generate_duts_file[0], args.generate_duts_file[1]
-            )
+            if args.duts_file:
+                logging.warning(f"Changing DUTS file name to {args.duts_file}")
+                vane.config.DUTS_FILE = args.duts_file
 
-        if args.environment:
-            vane.config.ENVIRONMENT = args.environment
+            if args.generate_duts_file:
+                logging.info(
+                    f"Generating DUTS File from topology: {args.generate_duts_file[0]} and "
+                    f"inventory: {args.generate_duts_file[1]} file.\n"
+                )
+                vane.config.DUTS_FILE = tests_tools.create_duts_file(
+                    args.generate_duts_file[0], args.generate_duts_file[1]
+                )
 
-        if args.generate_duts_from_topo:
-            logging.info(
-                f"Generating DUTS File from topology: {args.generate_duts_from_topo[0]} file.\n"
-            )
-            create_duts_from_topo(args.generate_duts_from_topo[0])
+            if args.environment:
+                vane.config.ENVIRONMENT = args.environment
+
+            if args.generate_duts_from_topo:
+                logging.info(
+                    f"Generating DUTS File from topology: {args.generate_duts_from_topo[0]} file.\n"
+                )
+                create_duts_from_topo(args.generate_duts_from_topo[0])
 
         run_tests(vane.config.DEFINITIONS_FILE, vane.config.DUTS_FILE)
         write_results(vane.config.DEFINITIONS_FILE)
