@@ -33,6 +33,7 @@
 import getpass
 import os
 import sys
+import urllib3
 import yaml
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import PathCompleter
@@ -46,6 +47,9 @@ class NrfuClient:
 
     def __init__(self):
         """NrfuClient initialisation"""
+
+        # Disabling the unverified HTTPS requests warning
+        urllib3.disable_warnings()
 
         # initialise default values
         self.definitions_file = ""
