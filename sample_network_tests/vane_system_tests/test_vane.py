@@ -427,7 +427,7 @@ class VaneTests:
             tops.actual_output = str(exception)
             tops.output_msg += (
                 f"EXCEPTION encountered on device {tops.dut_name}, while "
-                f"investigating if ssh can be used to run cmds. Vane recorded error: {exception}"
+                f"investigating if eapi can be used to run cmds. Vane recorded error: {exception}"
             )
 
         tops.parse_test_steps(self.test_run_cfg_cmds_eapi_func)

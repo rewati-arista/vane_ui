@@ -957,7 +957,6 @@ class TestOps:
 
         self.show_cmds = {self.dut_name: []}
         self._show_cmds = {self.dut_name: []}
-        self._cfg_cmds = {self.dut_name: []}
 
         if self.show_clock_flag:
             self._show_cmds[self.dut_name].append("show clock")
@@ -980,7 +979,6 @@ class TestOps:
         self.show_cmd_txts = {self.dut_name: []}
         self.show_cmd_txt = ""
         self._show_cmd_txts = {self.dut_name: []}
-        self._cfg_cmd_txts = {self.dut_name: []}
 
         if len(self._show_cmds[self.dut_name]) > 0 and self.dut:
             self._verify_show_cmd(self._show_cmds[self.dut_name], self.dut)
@@ -1040,7 +1038,6 @@ class TestOps:
         """Write the text output of show command to a text file"""
 
         self._write_evidence(self._show_cmds, self._show_cmd_txts, "Verification")
-        self._write_evidence(self._cfg_cmds, self._cfg_cmd_txts, "Configuration")
 
     def _write_evidence(self, cmds, cmds_outputs, file_substring):
         """Write the cmds and their outputs to the file"""
@@ -1132,8 +1129,6 @@ class TestOps:
         self.test_parameters["show_cmd_txts"] = self._show_cmd_txts
         self.test_parameters["test_steps"] = self.test_steps
         self.test_parameters["show_cmds"] = self._show_cmds
-        self.test_parameters["cfg_cmds"] = self._cfg_cmds
-        self.test_parameters["cfg_cmd_txts"] = self._cfg_cmd_txts
 
         if str(self.show_cmd_txt):
             self.test_parameters["show_cmd"] += ":\n\n" + self.show_cmd_txt
@@ -1232,8 +1227,6 @@ class TestOps:
         self._show_cmd_txts.setdefault(dut_name, [])
         self._show_cmds.setdefault(dut_name, [])
         self.show_cmd_txts.setdefault(dut_name, [])
-        self._cfg_cmd_txts.setdefault(dut_name, [])
-        self._cfg_cmds.setdefault(dut_name, [])
 
     def get_new_conn(self, dut, conn_type, timeout):
         """get new conn returns a new connection to dut of type 'conn_type'
@@ -1372,17 +1365,6 @@ class TestOps:
 
         self.set_evidence_default(dut_name)
 
-        # depending on type of cmd_type set the local variables
-        # to point to right class members
-        if cmd_type == "show":
-            int_cmds_list = self._show_cmds[dut_name]
-            ext_cmd_txts = self.show_cmd_txts[dut_name]
-            int_cmd_txts = self._show_cmd_txts[dut_name]
-        else:
-            int_cmds_list = self._cfg_cmds[dut_name]
-            int_cmd_txts = self._cfg_cmd_txts[dut_name]
-            ext_cmd_txts = None
-
         # first run show clock if flag is set
         if self.show_clock_flag:
             show_clock_cmds = ["show clock"]
@@ -1390,21 +1372,18 @@ class TestOps:
             try:
                 show_clock_op = conn.enable(show_clock_cmds, "text")
             except BaseException as e:
-                # add the show clock cmd to internal evidence cmds list
+                # add the show clock cmd to _show_cmds evidence list
                 for cmd in show_clock_cmds:
-                    int_cmds_list.append(cmd)
-                # add the exception result to internal evidence output list
-                int_cmd_txts.append(str(e))
-                # add the exception result to external evidence output list
-                if ext_cmd_txts is not None:
-                    ext_cmd_txts.append(e)
+                    self._show_cmds[dut_name].append(cmd)
+                # add the exception result to _show_cmd_txts evidence output list
+                self._show_cmd_txts[dut_name].append(str(e))
                 raise e
 
-            # add the show_clock_cmds to internal cmds list
-            # also add the o/p of show_clock_cmds to external cmd output list
+            # add the show_clock_cmds to _show_cmds list
+            # also add the o/p of show_clock_cmds to _show_cmd_txts list
             for result_dict in show_clock_op:
-                int_cmds_list.append(result_dict["command"])
-                int_cmd_txts.append(result_dict["result"]["output"])
+                self._show_cmds[dut_name].append(result_dict["command"])
+                self._show_cmd_txts[dut_name].append(result_dict["result"]["output"])
 
         # then run commands
         try:
@@ -1419,30 +1398,26 @@ class TestOps:
                 txt_results = conn.config(cmds)
         except BaseException as e:
             logging.error(f"Following cmds {cmds} generated exception {str(e)}")
-            # add the cmds to internal cmds list
+            # add the cmds to _show_cmds cmds list
             # add the exception result for all the cmds in cmds list
             for cmd in cmds:
-                int_cmds_list.append(cmd)
-                int_cmd_txts.append(str(e))
-                if ext_cmd_txts is not None:
-                    ext_cmd_txts.append(e)
+                self._show_cmds[dut_name].append(cmd)
+                self._show_cmd_txts[dut_name].append(str(e))
 
             raise e
 
-        # add the cmds to internal cmds list
+        # add the cmds to _show_cmds list
         for cmd in cmds:
-            int_cmds_list.append(cmd)
+            self._show_cmds[dut_name].append(cmd)
 
-        # also add the text o/p of cmds to internal and external cmd output list
+        # also add the text o/p of cmds to _show_cmd_txts cmd output list
         if cmd_type == "cfg" and conn_type == "ssh":
             for cmd in cmds:
-                int_cmd_txts.append(txt_results)
+                self._show_cmd_txts[dut_name].append(txt_results)
         else:
             for result_dict in txt_results:
                 result = result_dict.get("result", {"output": ""})
-                int_cmd_txts.append(result["output"])
-                if ext_cmd_txts is not None:
-                    ext_cmd_txts.append(result["output"])
+                self._show_cmd_txts[dut_name].append(result["output"])
 
         if cmd_type == "show" and encoding == "json":
             return json_results

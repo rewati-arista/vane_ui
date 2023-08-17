@@ -1218,8 +1218,6 @@ def test_test_ops_generate_report(logdebug, mocker):
         "test_steps": [],
         "show_cmds": {"DCBBW1": ["show version", "show version"]},
         "fail_or_skip_reason": "",
-        "cfg_cmd_txts": {"DCBBW1": []},
-        "cfg_cmds": {"DCBBW1": []},
     }
 
     tops.generate_report("DCBBW1", "Output")
@@ -1383,12 +1381,6 @@ def test_test_ops_run_show_cmds_json(mocker):
         "neighbor": ["show clock", "show interfaces status"],
     }
 
-    assert tops.show_cmd_txts == {
-        "DCBBW1": [
-            OUTPUT,
-        ],
-        "neighbor": ["TEXT_INTERFACE_STATUS_result"],
-    }
     assert tops._show_cmd_txts == {
         "DCBBW1": [OUTPUT, OUTPUT],
         "neighbor": [
@@ -1446,12 +1438,6 @@ def test_test_ops_run_show_cmds_text(mocker):
         "neighbor": ["show lldp neighbors", "show interfaces status"],
     }
 
-    assert tops.show_cmd_txts == {
-        "DCBBW1": [
-            OUTPUT,
-        ],
-        "neighbor": ["TEXT_result", "TEXT_result"],
-    }
     assert tops._show_cmd_txts == {
         "DCBBW1": [
             OUTPUT,
@@ -1554,13 +1540,28 @@ def test_test_ops_run_cfg_cmds_pyeapi(mocker):
         {},
         {},
     ]
-    assert tops._cfg_cmds == {
-        "DCBBW1": [],
+    assert tops._show_cmds == {
+        "DCBBW1": ["show version", "show version"],
         "neighbor": ["show clock", "interface eth16", "description unittest"],
     }
 
-    assert tops._cfg_cmd_txts == {
-        "DCBBW1": [],
+    assert tops._show_cmd_txts == {
+        "DCBBW1": [
+            "Arista vEOS-lab\nHardware version: \nSerial number: SN-DCBBW1\n"
+            "Hardware MAC address: a486.49d7.e2d9\nSystem MAC address: a486.49d7."
+            "e2d9\n\nSoftware image version: 4.27.2F\nArchitecture: x86_64\n"
+            "Internal build version: 4.27.2F-26069621.4272F\nInternal build "
+            "ID: 2fd003fd-04c4-4b44-9c26-417e6ca42009\nImage format version"
+            ": 1.0\nImage optimization: None\n\nUptime: 3 days, 4 hours and "
+            "56 minutes\nTotal memory: 3938900 kB\nFree memory: 2755560 kB\n\n",
+            "Arista vEOS-lab\nHardware version: \nSerial number: SN-DCBBW1\nHardware "
+            "MAC address: a486.49d7.e2d9\nSystem MAC address: a486.49d7.e2d9\n\n"
+            "Software image version: 4.27.2F\nArchitecture: x86_64\nInternal build "
+            "version: 4.27.2F-26069621.4272F\nInternal build ID: 2fd003fd-04c4"
+            "-4b44-9c26-417e6ca42009\nImage format version: 1.0\nImage optimization: "
+            "None\n\nUptime: 3 days, 4 hours and 56 minutes\nTotal memory: 3938900 "
+            "kB\nFree memory: 2755560 kB\n\n",
+        ],
         "neighbor": ["Thu Jun  1 14:03:59 2023\nTimezone: UTC\nClock source: local\n", "", ""],
     }
 
@@ -1606,13 +1607,28 @@ def test_test_ops_run_cfg_cmds_ssh(mocker):
     # assert return values
     assert actual_output == config_return_value
 
-    assert tops._cfg_cmds == {
-        "DCBBW1": [],
+    assert tops._show_cmds == {
+        "DCBBW1": ["show version", "show version"],
         "neighbor": ["show clock", "interface eth16", "description unittest"],
     }
 
-    assert tops._cfg_cmd_txts == {
-        "DCBBW1": [],
+    assert tops._show_cmd_txts == {
+        "DCBBW1": [
+            "Arista vEOS-lab\nHardware version: \nSerial number: SN-DCBBW1\n"
+            "Hardware MAC address: a486.49d7.e2d9\nSystem MAC address: a486.49d7."
+            "e2d9\n\nSoftware image version: 4.27.2F\nArchitecture: x86_64\n"
+            "Internal build version: 4.27.2F-26069621.4272F\nInternal build "
+            "ID: 2fd003fd-04c4-4b44-9c26-417e6ca42009\nImage format version"
+            ": 1.0\nImage optimization: None\n\nUptime: 3 days, 4 hours and "
+            "56 minutes\nTotal memory: 3938900 kB\nFree memory: 2755560 kB\n\n",
+            "Arista vEOS-lab\nHardware version: \nSerial number: SN-DCBBW1\nHardware "
+            "MAC address: a486.49d7.e2d9\nSystem MAC address: a486.49d7.e2d9\n\n"
+            "Software image version: 4.27.2F\nArchitecture: x86_64\nInternal build "
+            "version: 4.27.2F-26069621.4272F\nInternal build ID: 2fd003fd-04c4"
+            "-4b44-9c26-417e6ca42009\nImage format version: 1.0\nImage optimization: "
+            "None\n\nUptime: 3 days, 4 hours and 56 minutes\nTotal memory: 3938900 "
+            "kB\nFree memory: 2755560 kB\n\n",
+        ],
         "neighbor": [
             "Thu Jun  1 14:03:59 2023\nTimezone: UTC\nClock source: local\n",
             config_return_value,
