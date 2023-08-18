@@ -1246,6 +1246,8 @@ class TestOps:
         device_data["enable_pwd"] = dut.get("enable_pwd", "")
         device_data["timeout"] = timeout
         device_data["name"] = dut["name"]
+        if dut.get("session_log"):
+            device_data["session_log"] = dut["session_log"]
         if conn_type == "eapi":
             logging.info(f"Creating new eapi connection to {dut['name']}")
             pyeapi_conn = device_interface.PyeapiConn()
