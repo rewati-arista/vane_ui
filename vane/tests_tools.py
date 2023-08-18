@@ -36,6 +36,7 @@ import copy
 import concurrent.futures
 import sys
 import os
+import time
 import inspect
 import re
 import pprint
@@ -1423,3 +1424,80 @@ class TestOps:
             return json_results
 
         return txt_results
+
+    def transfer_file(self, src_file, dest_file, file_system, operation, dut=None, sftp=False):
+        """
+        transfer_file will transfer filename to/from the the dut depending
+        on the operation mentioned.
+
+        dut: device to/from which file needs to be transferred
+        src_file: full filename of src file
+        dest_file: full filename of dest file
+        operation: 'get' or 'put'
+        sftp: whether to use sftp transport or not
+        """
+
+        if dut is None:
+            dut = self.dut
+
+        dut_name = dut["name"]
+
+        if operation not in ("get", "put"):
+            raise ValueError(f"operation [{operation}] not supported")
+
+        new_dut = dut.copy()
+        session_log = (
+            f"netmiko-logs/file_transfer_{new_dut['name']}-{time.strftime('%Y%m%d-%H%M%S')}.log"
+        )
+        new_dut["session_log"] = session_log
+        conn = self.get_new_conn(new_dut, conn_type="ssh", timeout=60)
+
+        # first run show clock if flag is set
+        if self.show_clock_flag:
+            show_clock_cmds = ["show clock"]
+            # run the show_clock_cmds
+            try:
+                show_clock_op = conn.enable(show_clock_cmds, "text")
+            except BaseException as e:
+                # add the show clock cmd to _show_cmds
+                for cmd in show_clock_cmds:
+                    self._show_cmds[dut_name].append(cmd)
+                    # add the exception result to _show_cmds_txts
+                    self._show_cmd_txts[dut_name].append(str(e))
+                raise e
+
+            # add the show_clock_cmds to internal cmds list
+            # also add the o/p of show_clock_cmds to external cmd output list
+            for result_dict in show_clock_op:
+                self._show_cmds[dut_name].append(result_dict["command"])
+                self._show_cmd_txts[dut_name].append(result_dict["result"]["output"])
+
+        if sftp:
+            cmd_str = "sftp"
+        else:
+            cmd_str = "scp"
+
+        # form request for evidence gathering
+        transfer_request = f"{cmd_str} src_file: {src_file} dest_file: {dest_file} op: {operation}"
+
+        # transfer file
+        try:
+            result = conn.transfer_file(src_file, dest_file, file_system, operation, sftp)
+        except BaseException as e:
+            self._show_cmds[new_dut["name"]].append(transfer_request)
+            self._show_cmd_txts[new_dut["name"]].append(str(e))
+            raise e
+
+        self._show_cmds[new_dut["name"]].append(transfer_request)
+        # open session log and copy over the evidence
+        # hide the username from the evidence collection
+        with open(session_log, "r", encoding="utf-8") as file:
+            self._show_cmd_txts[new_dut["name"]].append(
+                file.read().replace(new_dut["username"], "XXXXX")
+            )
+
+        try:
+            os.remove(session_log)
+        except OSError:
+            pass
+        return result
