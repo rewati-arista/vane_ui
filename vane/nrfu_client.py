@@ -247,7 +247,7 @@ class NrfuClient:
         final_duts_data (list(dict)): List of device data (ip, name, neighbors, ...)
         """
 
-        self.duts_file = "sample_network_tests/nrfu/duts_nrfu.yaml"
+        self.duts_file = "nrfu_tests/duts_nrfu.yaml"
 
         try:
             with open(self.duts_file, "w", encoding="utf-8") as file:
@@ -267,7 +267,7 @@ class NrfuClient:
 
         logging.info("Generating definitions file for nrfu testing")
 
-        test_dir = "sample_network_tests/nrfu"
+        test_dir = "nrfu_tests"
         user_choice = input("Do you want to specify a test case directory [y|n]:")
 
         if user_choice.lower() in ("y", "yes"):
@@ -279,14 +279,14 @@ class NrfuClient:
                     completer=PathCompleter(),
                 )
 
-        self.definitions_file = "sample_network_tests/nrfu/definitions_nrfu.yaml"
+        self.definitions_file = "nrfu_tests/definitions_nrfu.yaml"
 
         definitions_data = {
             "parameters": {
                 "html_report": "reports/report",
                 "json_report": "reports/report",
                 "generate_test_definitions": True,
-                "master_definitions": "sample_network_tests/nrfu/master_def.yaml",
+                "master_definitions": "nrfu_tests/master_def.yaml",
                 "mark": None,
                 "processes": None,
                 "report_dir": "reports",
