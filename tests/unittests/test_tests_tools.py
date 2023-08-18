@@ -1613,7 +1613,7 @@ def test_test_ops_run_cfg_cmds_ssh(mocker):
     }
 
     assert tops._show_cmd_txts == {
-        "DCBBW1": [OUTPUT, OUTPUT ],
+        "DCBBW1": [OUTPUT, OUTPUT],
         "neighbor": [
             "Thu Jun  1 14:03:59 2023\nTimezone: UTC\nClock source: local\n",
             config_return_value,
