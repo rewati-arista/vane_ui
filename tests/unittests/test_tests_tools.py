@@ -1613,22 +1613,7 @@ def test_test_ops_run_cfg_cmds_ssh(mocker):
     }
 
     assert tops._show_cmd_txts == {
-        "DCBBW1": [
-            "Arista vEOS-lab\nHardware version: \nSerial number: SN-DCBBW1\n"
-            "Hardware MAC address: a486.49d7.e2d9\nSystem MAC address: a486.49d7."
-            "e2d9\n\nSoftware image version: 4.27.2F\nArchitecture: x86_64\n"
-            "Internal build version: 4.27.2F-26069621.4272F\nInternal build "
-            "ID: 2fd003fd-04c4-4b44-9c26-417e6ca42009\nImage format version"
-            ": 1.0\nImage optimization: None\n\nUptime: 3 days, 4 hours and "
-            "56 minutes\nTotal memory: 3938900 kB\nFree memory: 2755560 kB\n\n",
-            "Arista vEOS-lab\nHardware version: \nSerial number: SN-DCBBW1\nHardware "
-            "MAC address: a486.49d7.e2d9\nSystem MAC address: a486.49d7.e2d9\n\n"
-            "Software image version: 4.27.2F\nArchitecture: x86_64\nInternal build "
-            "version: 4.27.2F-26069621.4272F\nInternal build ID: 2fd003fd-04c4"
-            "-4b44-9c26-417e6ca42009\nImage format version: 1.0\nImage optimization: "
-            "None\n\nUptime: 3 days, 4 hours and 56 minutes\nTotal memory: 3938900 "
-            "kB\nFree memory: 2755560 kB\n\n",
-        ],
+        "DCBBW1": [OUTPUT, OUTPUT ],
         "neighbor": [
             "Thu Jun  1 14:03:59 2023\nTimezone: UTC\nClock source: local\n",
             config_return_value,
