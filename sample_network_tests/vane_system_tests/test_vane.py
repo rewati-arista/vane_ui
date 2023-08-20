@@ -472,7 +472,8 @@ class VaneTests:
             tops.actual_output = str(exception)
             tops.output_msg += (
                 f"EXCEPTION encountered on device {tops.dut_name}, while "
-                f"investigating file transfer over ssh functionality. Vane recorded error: {exception}"
+                f"investigating file transfer over ssh functionality. Vane "
+                f"recorded error: {exception}"
             )
 
         tops.parse_test_steps(self.test_file_transfer)
@@ -520,7 +521,8 @@ class VaneTests:
             tops.actual_output = str(exception)
             tops.output_msg += (
                 f"EXCEPTION encountered on device {tops.dut_name}, while "
-                f"investigating file transfer over sftp functionality. Vane recorded error: {exception}"
+                f"investigating file transfer over sftp functionality. Vane "
+                f"recorded error: {exception}"
             )
 
         tops.parse_test_steps(self.test_file_transfer_using_sftp)
