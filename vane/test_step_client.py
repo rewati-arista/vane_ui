@@ -47,7 +47,7 @@ class TestStepClient:
         """Initializes the Test Step Client
 
         Args:
-            test_dir (str): directory of test cases for which to generate
+            test_dir (list): directory of test cases for which to generate
             test steps
         """
 
@@ -79,6 +79,11 @@ class TestStepClient:
             logging.debug(f"Discovered test files: {test_files} for parsing")
             self.parse_file(test_files)
 
+    def now(self):
+        """Return current date and time"""
+
+        return (datetime.datetime.now()).strftime("%d/%m/%Y %H:%M:%S")
+
     def parse_file(self, test_files):
         """Parses Files for Test Steps & Definitions
 
@@ -99,8 +104,7 @@ class TestStepClient:
             comments = [x.strip() for x in comments]
             if not comments:
                 comments.append("N/a no Test Steps found")
-            now = (datetime.datetime.now()).strftime("%d/%m/%Y %H:%M:%S")
-            comments.insert(0, now)
+            comments.insert(0, self.now())
 
             logging.debug(f"Create JSON and MD files for {test_file} using {comments}")
             self.output_json({test_file: comments})
