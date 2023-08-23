@@ -113,4 +113,4 @@ def remove_comments(input_string):
 def now():
     """Return current date and time"""
 
-    return (datetime.datetime.now()).strftime("%d/%m/%Y %H:%M:%S")
+    return (datetime.datetime.now()).strftime("%d-%m-%Y %H:%M:%S")
