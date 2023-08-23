@@ -1,4 +1,6 @@
-# Copyright (c) 2019, Arista Networks EOS+
+#!/usr/bin/env python3
+#
+# Copyright (c) 2023, Arista Networks EOS+
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -27,10 +29,17 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-""" vane - Network Certification Tool
+
+"""TD: Verify hostname is set on device is correct"""
+
 """
-from importlib import metadata
+TS: Collecting the output of 'show hostname' command from DUT
+"""
 
-__version__ = metadata.version(__package__)
+"""
+TS: Verify LLDP system name
+"""
 
-__author__ = "Arista Networks, Inc."
+"""
+TS: Creating test report based on results
+"""

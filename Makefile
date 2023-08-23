@@ -12,7 +12,7 @@
 #       make pylint -- source code checks
 #       make rpm-cvp -- build RPM package for CVP extension
 #       make sdist-cvp -- build python source distribution for CVP extension
-#       make tests -- run all of the tests
+#       make sample_network_tests -- runs the sample network tests
 #       make unittest -- runs the unit tests
 #
 # Notes:
@@ -59,7 +59,7 @@ PEP8_IGNORE = E302,E203,E261,W503,C0209,E501
 ########################################################
 
 # Removed 'check' target as we need to work out the MANEFEST.IN issues
-all: clean flake8 pylint tests
+all: clean flake8 pylint unittest
 
 .PHONY: check
 check:
@@ -99,9 +99,6 @@ unittest:
 .PHONY: coverage_report
 coverage_report:
 	$(COVERAGE) report -m
-
-.PHONY: tests
-tests: unittest
 
 .PHONY: exec
 exec:
