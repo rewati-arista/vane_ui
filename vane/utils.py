@@ -34,6 +34,7 @@ Collection of misc functions that dont fit anywhere else but are still required.
 
 import sys
 import collections
+import datetime
 
 
 def make_iterable(value):
@@ -107,3 +108,9 @@ def remove_comments(input_string):
 
     output_string = "\n".join(output_string_arr)
     return output_string
+
+
+def now():
+    """Return current date and time"""
+
+    return (datetime.datetime.now()).strftime("%d/%m/%Y %H:%M:%S")

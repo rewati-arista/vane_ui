@@ -114,7 +114,7 @@ def test_parse_file(loginfo, logdebug, mocker):
 
     # Set datetime to a known value
     mocker.patch(
-        "vane.test_step_client.TestStepClient.now",
+        "vane.utils.now",
         return_value="01/01/2023 00:00:00",
     )
     mocker_object_one = mocker.patch("vane.test_step_client.TestStepClient.output_json")
@@ -140,7 +140,7 @@ def test_parse_file_no_steps(loginfo, logdebug, mocker):
 
     # Set datetime to a known value
     mocker.patch(
-        "vane.test_step_client.TestStepClient.now",
+        "vane.utils.now",
         return_value="01/01/2023 00:00:00",
     )
     mocker_object_one = mocker.patch("vane.test_step_client.TestStepClient.output_json")
