@@ -35,7 +35,7 @@ import re
 import pytest
 from py.xml import html
 
-pytest_plugins = ("vane.fixtures")
+pytest_plugins = "vane.fixtures"
 
 
 def pytest_addoption(parser):
@@ -104,7 +104,7 @@ def pytest_html_results_table_row(report, cells):
         cells: Cell data
     """
 
-    cells.insert(2, html.td(getattr(report, 'description', '')))
+    cells.insert(2, html.td(getattr(report, "description", "")))
     cells.insert(1, html.td(find_nodeid(report.nodeid), class_="col-device"))
     cells.pop()
 
@@ -125,4 +125,3 @@ def pytest_runtest_makereport(item, call):
         report.description = str(item.function.__doc__)
     else:
         report.description = "No Description"
-
