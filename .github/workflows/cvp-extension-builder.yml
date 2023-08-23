@@ -16,7 +16,6 @@ on:
   push:
     branches:
       - example-rpm-package-testing-branch
-      - gar-copy-nrfu-to-cvp-container
 
 # Variables
 env:
