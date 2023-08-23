@@ -28,6 +28,7 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
+# pylint: disable=import-error,no-name-in-module,invalid-name
 
 """ Alter behavior of PyTest """
 
@@ -80,8 +81,8 @@ def find_nodeid(nodeid):
 
     if re.match(r".*\[(.*)\]", nodeid):
         return re.match(r".*\[(.*)\]", nodeid)[1]
-    else:
-        return "NONE"
+
+    return "NONE"
 
 
 def pytest_html_results_table_header(cells):
@@ -110,7 +111,7 @@ def pytest_html_results_table_row(report, cells):
 
 
 @pytest.hookimpl(hookwrapper=True)
-def pytest_runtest_makereport(item, call):
+def pytest_runtest_makereport(item):
     """Called to create a _pytest.reports.TestReport for each of the setup,
     call and teardown runtest phases of a test item.
 
@@ -119,8 +120,8 @@ def pytest_runtest_makereport(item, call):
     outcome = yield
     report = outcome.get_result()
 
-    if str(item.function.__doc__).split("Args:")[0]:
-        report.description = str(item.function.__doc__).split("Args:")[0]
+    if str(item.function.__doc__).split("Args:", maxsplit=1)[0]:
+        report.description = str(item.function.__doc__).split("Args:", maxsplit=1)[0]
     elif str(item.function.__doc__):
         report.description = str(item.function.__doc__)
     else:
