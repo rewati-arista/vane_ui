@@ -53,7 +53,7 @@ import yaml
 from jinja2 import Template, Undefined
 from pytest import ExitCode
 from vane.vane_logging import logging
-from vane import tests_tools
+from vane import tests_tools, utils
 
 
 class NullUndefined(Undefined):
@@ -246,7 +246,9 @@ class TestsClient:
         """Set html_report for test run"""
 
         html_report = self.data_model["parameters"].get("html_report")
-        html_name = f"--html={html_report}.html"
+        dt_string = utils.now()
+        html_title = html_report + dt_string
+        html_name = f"--html={html_title}.html"
         list_out = [x for x in self.test_parameters if "--html" in x]
 
         if html_report and html_name not in self.test_parameters:
