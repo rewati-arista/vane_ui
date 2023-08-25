@@ -34,7 +34,7 @@
 import pytest
 from pyeapi.eapilib import EapiError
 from vane import tests_tools
-from vane import logger
+from vane import test_case_logger as logger
 from vane.config import dut_objs, test_defs
 
 
