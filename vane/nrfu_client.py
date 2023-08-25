@@ -48,14 +48,19 @@ class NrfuClient:
     def __init__(self):
         """NrfuClient initialisation"""
 
-        # Disabling the unverified HTTPS requests warning
-        urllib3.disable_warnings()
-
         # initialise default values
         self.definitions_file = ""
         self.duts_file = ""
         self.username = ""
         self.password = ""
+
+        self.setup()
+
+    def setup(self):
+        """Starts the flow of nrfu client and makes the necessary calls"""
+
+        # Disabling the unverified HTTPS requests warning
+        urllib3.disable_warnings()
 
         # Getting credentials from user
         self.get_credentials()
