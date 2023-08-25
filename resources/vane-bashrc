@@ -50,6 +50,10 @@ if [ -n "$VANE_CVP" ]; then
   if [ -d "/vane-data" ] && [ ! -d "/vane-data/sample_network_tests" ]; then
     cp -r /project/sample_network_tests /vane-data/.
   fi
+  # Copy the nrfu tests if they do not exist in the vane-data directory
+  if [ -d "/vane-data" ] && [ ! -d "/vane-data/nrfu_tests" ]; then
+    cp -r /project/nrfu_tests /vane-data/.
+  fi
 
   # Check the stty size result
   #   Avoids instances where unusual screen wrapping occurs while typing a command, and the

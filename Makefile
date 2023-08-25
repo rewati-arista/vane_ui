@@ -30,7 +30,7 @@ NAME_CVP = $(NAME)-cvp
 PYTHON=python3
 COVERAGE=coverage
 
-VERSION := $(shell awk '/__version__/{print $$NF}' vane/__init__.py | sed "s/\"//g")
+VERSION := $(shell awk '/^version =/{print $$NF}' pyproject.toml | sed "s/\"//g")
 
 DOCKER = docker
 IMAGE_TAG = latest
