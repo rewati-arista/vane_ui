@@ -44,7 +44,8 @@ LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
 dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
 test1_duts = dut_parameters["test_memory_utilization_on_"]["duts"]
 test1_ids = dut_parameters["test_memory_utilization_on_"]["ids"]
-logging = logger.setup_logger("memory.log")
+log_file_name = __file__.split("/")[-1:][0][:-3] + ".log"
+logging = logger.setup_logger(log_file_name)
 
 
 @pytest.mark.demo
