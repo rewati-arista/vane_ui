@@ -16,7 +16,6 @@ on:
   push:
     branches:
       - example-rpm-package-testing-branch
-      - gar-issue-470
 
 # Variables
 env:
