@@ -192,7 +192,7 @@ def test_download_test_results(loginfo):
     ARCHIVE folder"""
 
     dir_path = "reports/TEST RESULTS ARCHIVES"
-    if os.path.exists(dir_path):
+    if os.path.isdir(dir_path):
         length = len(list(os.listdir(dir_path)))
         vane_cli.download_test_results()
         new_length = len(os.listdir(dir_path))

@@ -116,7 +116,7 @@ class NrfuClient:
         ip_address = "127.0.0.1"
         source = "cvp"
         logging.info("Using CVP to gather duts data")
-        print("Using CVP to gather duts data")
+        print("\x1b[32mUsing CVP to gather duts data\x1b[0m")
         device_data = self.get_duts_data(ip_address)
         return device_data, source
 
