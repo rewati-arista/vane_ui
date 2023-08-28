@@ -1,139 +1,39 @@
-common_data:
-  report_style: modern # If report type is set to modern, then it will update steps, assumptions, and external systems in the docx report.
+global_dut_filter:
+  criteria: names
+  filter:
+    - BLFE1
 testcase_data:
-  NRFU1.1:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU1.2:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU1.3:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU1.4:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU2.1:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU2.2:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU2.3:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU2.4:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU2.5:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU2.6:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU3.1:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU4.1:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU4.2:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU4.3:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU4.4:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU5.1:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU5.2:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU5.3:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU5.4:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU5.5:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU5.6:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU5.7:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU5.8:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU6.1:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU6.2:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU6.3:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU6.4:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU6.5:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU6.6:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU6.7:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU6.8:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU6.9:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU6.10:
-    criteria: names
-    filter:
-      - BLFE1
-  NRFU6.11:
-    criteria: names
-    filter:
-      - BLFE1
+  NRFU1.1: {}
+  NRFU1.2: {}
+  NRFU1.3: {}
+  NRFU1.4: {}
+  NRFU2.1: {}
+  NRFU2.2: {}
+  NRFU2.3: {}
+  NRFU2.4: {}
+  NRFU2.5: {}
+  NRFU2.6: {}
+  NRFU3.1: {}
+  NRFU4.1: {}
+  NRFU4.2: {}
+  NRFU4.3: {}
+  NRFU4.4: {}
+  NRFU5.1: {}
+  NRFU5.2: {}
+  NRFU5.3: {}
+  NRFU5.4: {}
+  NRFU5.5: {}
+  NRFU5.6: {}
+  NRFU5.7: {}
+  NRFU5.8: {}
+  NRFU6.1: {}
+  NRFU6.2: {}
+  NRFU6.3: {}
+  NRFU6.4: {}
+  NRFU6.5: {}
+  NRFU6.6: {}
+  NRFU6.7: {}
+  NRFU6.8: {}
+  NRFU6.9: {}
+  NRFU6.10: {}
+  NRFU6.11: {}
