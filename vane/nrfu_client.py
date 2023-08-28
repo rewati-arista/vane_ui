@@ -273,7 +273,7 @@ class NrfuClient:
         logging.info("Generating definitions file for nrfu testing")
 
         test_dir = "nrfu_tests"
-        user_choice = input("Do you want to specify a test case directory [y|n]:")
+        user_choice = input("Do you want to specify a custom test case directory [y|n]:")
 
         if user_choice.lower() in ("y", "yes"):
             test_dir = ""
