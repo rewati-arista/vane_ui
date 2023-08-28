@@ -54,6 +54,7 @@ class NrfuClient:
         self.username = ""
         self.password = ""
 
+        logging.info("Starting the NRFU client")
         self.setup()
 
     def setup(self):
