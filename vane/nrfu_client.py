@@ -34,12 +34,12 @@ import getpass
 import os
 import sys
 import urllib3
-import yaml
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import PathCompleter
 from cvprac.cvp_client import CvpClient
 from cvprac.cvp_api import CvpApi
 from vane.vane_logging import logging
+from vane.tests_tools import export_yaml
 
 
 class NrfuClient:
@@ -254,17 +254,7 @@ class NrfuClient:
 
         self.duts_file = "nrfu_tests/duts_nrfu.yaml"
 
-        try:
-            with open(self.duts_file, "w", encoding="utf-8") as file:
-                try:
-                    yaml.dump(final_duts_data, file, default_flow_style=False)
-                except yaml.YAMLError as err:
-                    logging.error(f"ERROR IN YAML FILE: {err}")
-                    sys.exit(1)
-        except OSError as err:
-            print(f">>> {self.duts_file} YAML FILE MISSING")
-            logging.error(f"ERROR YAML FILE: {self.duts_file} NOT " + f"FOUND. {err}")
-            sys.exit(1)
+        export_yaml(self.duts_file, final_duts_data)
 
     def generate_definitions_file(self):
         """Generate definitions_nrfu.yaml file from parameters needed
@@ -309,17 +299,7 @@ class NrfuClient:
             }
         }
 
-        try:
-            with open(self.definitions_file, "w", encoding="utf-8") as file:
-                try:
-                    yaml.dump(definitions_data, file, default_flow_style=False)
-                except yaml.YAMLError as err:
-                    logging.error(f"ERROR IN YAML FILE: {err}")
-                    sys.exit(1)
-        except OSError as err:
-            print(f">>> {self.definitions_file} YAML FILE MISSING")
-            logging.error(f"ERROR YAML FILE: {self.definitions_file} NOT " + f"FOUND. {err}")
-            sys.exit(1)
+        export_yaml(self.definitions_file, definitions_data)
 
     def is_valid_text_file(self, file_path):
         """Utility function to check for validity of file input"""
