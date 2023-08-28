@@ -149,14 +149,13 @@ class NrfuClient:
             source = "non-cvp"
             device_list_file = ""
             text_flag = False
-            while not os.path.exists(device_list_file) or not text_flag:
+            while not text_flag:
                 device_list_file = prompt(
                     "Please input Name/Path of device list file (.txt)"
                     " (Use tab for autocompletion): ",
                     completer=PathCompleter(),
                 )
-                if len(device_list_file) > 4 and device_list_file[-4:] == ".txt":
-                    text_flag = True
+                text_flag = self.is_valid_text_file(device_list_file)
             device_data = self.read_device_list_file(device_list_file)
         return device_data, source
 
@@ -321,3 +320,22 @@ class NrfuClient:
             print(f">>> {self.definitions_file} YAML FILE MISSING")
             logging.error(f"ERROR YAML FILE: {self.definitions_file} NOT " + f"FOUND. {err}")
             sys.exit(1)
+
+    def is_valid_text_file(self, file_path):
+        """Utility function to check for validity of file input"""
+        # Check if the file exists
+        if not os.path.exists(file_path):
+            return False
+
+        # Check if the file is a regular file (not a directory)
+        if not os.path.isfile(file_path):
+            return False
+
+        try:
+            # Attempt to open and read the file as text
+            with open(file_path, "r", encoding="utf-8") as file:
+                file.read()
+            return True
+        except UnicodeDecodeError:
+            # If the file is not a valid text file, UnicodeDecodeError will be raised
+            return False
