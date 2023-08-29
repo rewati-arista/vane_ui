@@ -228,12 +228,14 @@
       criteria: names
       filter:
         - BLFE1
-    - name: test_
-      description: null
+    - name: test_hardware_core_dump_files
+      description: Test case for verification of core dump files
       test_id: NRFU6.3
-      show_cmd: null
-      expected_output: null
-      report_style: modern
+      show_cmd: show system coredump
+      expected_output:
+        core_dump_files_not_found: True
+      test_criteria: Core dump files should not found on the device. # Setting test case’s pass/fail criteria for reporting
+      report_style: modern # Setting report_style as modern If report type is set to modern, then it will update steps, assumptions, and external systems in the docx report.
       criteria: names
       filter:
         - BLFE1
