@@ -81,12 +81,13 @@
       criteria: names
       filter:
         - BLFE1
-    - name: test_
-      description: null
+    - name: test_port_channel_member_interface_details
+      description: Testcases for the verification of port channel member interfaces should be collecting and distributing.
       test_id: NRFU2.6
-      show_cmd: null
-      expected_output: null
-      report_style: modern
+      show_cmd: show lacp interface all-ports
+      expected_output: null # Forming expected output dynamically inside the testcase.
+      test_criteria: All the port channel members interfaces should be collecting and distributing. # Setting test case’s pass/fail criteria for reporting
+      report_style: modern # Setting report_style as modern, If a report type is set to modern, then it will update steps, assumptions, and external systems in the docx report.
       criteria: names
       filter:
         - BLFE1
