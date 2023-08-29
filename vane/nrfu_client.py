@@ -243,15 +243,6 @@ class NrfuClient:
             duts_yaml_data.append(current_device_data)
         final_duts_data = {"duts": duts_yaml_data}
 
-        self.write_duts(final_duts_data)
-
-    def write_duts(self, final_duts_data):
-        """Generates and writes to the duts.yaml file the processed data which is passed in
-
-        Args:
-        final_duts_data (list(dict)): List of device data (ip, name, neighbors, ...)
-        """
-
         self.duts_file = "nrfu_tests/duts_nrfu.yaml"
 
         export_yaml(self.duts_file, final_duts_data)
