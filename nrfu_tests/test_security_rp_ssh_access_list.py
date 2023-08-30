@@ -1,8 +1,8 @@
-# Copyright (c) 2022 Arista Networks, Inc.  All rights reserved.
+# Copyright (c) 2023 Arista Networks, Inc.  All rights reserved.
 # Arista Networks, Inc. Confidential and Proprietary.
 
 """
-Test cases to verifies that ACLs applied to each VRF SSH is enabled on
+Test case to verify that ACL is configured for each VRF on which SSH is enabled
 """
 
 import pytest
@@ -18,7 +18,7 @@ TEST_SUITE = "nrfu_tests"
 @pytest.mark.security
 class VrfSshAclTests:
     """
-    Test cases to verifies that ACLs applied to each VRF SSH is enabled on
+    Test case to verify that ACL is configured for each VRF on which SSH is enabled
     """
 
     dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
@@ -28,7 +28,7 @@ class VrfSshAclTests:
     @pytest.mark.parametrize("dut", test_duts, ids=test_ids)
     def test_security_rp_ssh_access_list(self, dut, tests_definitions):
         """
-        TD: Test case to verifies that ACLs applied to each VRF SSH is enabled on
+        TD: Test case to verify that ACL is configured for each VRF on which SSH is enabled
         Args:
             dut(dict): details related to a particular DUT
             tests_definitions(dict): test suite and test case parameters.
@@ -53,11 +53,25 @@ class VrfSshAclTests:
                 vrfs,
             )
             self.output += f"Output of {show_cmds[0]} command is: \n{vrfs}\n"
-            # Check each vrf to see if SSH is enabled
+
+            """
+            TS: Running `show management ssh ip access-list summary` command on dut and verifying
+            that VRF has SSH ACL configured.
+            """
+            ssh_acls = dut["output"][show_cmds[1]]["json"]
+            logger.info(
+                "On device %s, %s command output is:\n%s\n",
+                tops.dut_name,
+                show_cmds[1],
+                ssh_acls,
+            )
+            self.output += f"Output of {show_cmds[1]} command is: \n{ssh_acls}\n"
+            ssh_acls = ssh_acls["ipAclList"]["aclList"]
+            assert ssh_acls, "SSH IP access-list summary details are not found."
+
+            # Iterate over each vrf to see if SSH is enabled
             for vrf in vrfs["vrfs"]:
                 ssh_status = ""
-
-                # the command for the default vrf is different than for other vrfs
                 ssh_cmd = "show management ssh"
                 if vrf != "default":
                     ssh_cmd = f"show management ssh vrf {vrf}"
@@ -67,44 +81,26 @@ class VrfSshAclTests:
                     command on dut and verifying that SSH is enabled.
                     """
                     ssh_status = tops.run_show_cmds([ssh_cmd])
+                    logger.info(
+                        "On device %s, %s command output is:\n%s\n",
+                        tops.dut_name,
+                        ssh_cmd,
+                        ssh_status,
+                    )
+                    self.output += f"Output of {ssh_cmd} command is: \n{ssh_status}\n"
                 except EapiError as error:
                     if "not found under SSH" in str(error):
                         logger.info(
                             "On device %s, SSH on VRF %s is disabled.\n", tops.dut_name, vrf
                         )
-                        # print('%s: SSH on VRF %s is disabled' % (hostname, vrf))
-                logger.info(
-                    "On device %s, %s command output is:\n%s\n",
-                    tops.dut_name,
-                    ssh_cmd,
-                    ssh_status,
-                )
-                self.output += f"Output of {ssh_cmd} command is: \n{ssh_status}\n"
-                # Will be populated if the vrf exists under management ssh
+
                 if ssh_status:
-                    # The output is a str as the command is not in JSON yet.
                     for line in ssh_status[0]["result"]["output"].split("\n"):
                         # Example of line it is looking for: SSHD status for Default VRF is enabled
                         if "SSHD status" in line:
                             ssh_enabled = line.split(" ")[-1]
-
                             if ssh_enabled == "enabled":
                                 tops.expected_output["vrfs"][vrf] = {"ssh_acl_configured": True}
-                                """
-                                TS: Running `show management ssh ip access-list summary` command on
-                                dut and verifying that VRF has SSH ACL configured.
-                                """
-                                ssh_acls = dut["output"][show_cmds[1]]["json"]
-                                logger.info(
-                                    "On device %s, %s command output is:\n%s\n",
-                                    tops.dut_name,
-                                    show_cmds[1],
-                                    ssh_acls,
-                                )
-                                self.output += (
-                                    f"Output of {show_cmds[1]} command is: \n{ssh_acls}\n"
-                                )
-                                ssh_acls = ssh_acls["ipAclList"]["aclList"]
                                 acl_found = False
                                 for acl in ssh_acls:
                                     if vrf in acl["activeVrfs"]:
@@ -120,7 +116,8 @@ class VrfSshAclTests:
                         incorrect_acl_vrfs.append(vrf)
                 if incorrect_acl_vrfs:
                     tops.output_msg += (
-                        f"Following VRF has no SSH ACL configured: {', '.join(incorrect_acl_vrfs)}."
+                        "For following VRFs, SSH ACL is not configured:"
+                        f" {', '.join(incorrect_acl_vrfs)}."
                     )
 
         except (AssertionError, AttributeError, LookupError, EapiError) as excep:
