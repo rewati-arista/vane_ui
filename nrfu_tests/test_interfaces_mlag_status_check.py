@@ -1,8 +1,8 @@
-# Copyright (c) 2022 Arista Networks, Inc.  All rights reserved.
+# Copyright (c) 2023 Arista Networks, Inc.  All rights reserved.
 # Arista Networks, Inc. Confidential and Proprietary.
 
 """
-Test cases for verification of system hardware free memory functionality
+Testcase for verification of mlag interfaces status check.
 """
 
 import pytest
@@ -14,7 +14,7 @@ from vane import tests_tools
 TEST_SUITE = "nrfu_tests"
 
 
-@pytest.mark.nrfu_tests
+@pytest.mark.nrfu_test
 @pytest.mark.interfaces
 class InterfacesMlagStatusCheckTests:
     """
@@ -39,11 +39,12 @@ class InterfacesMlagStatusCheckTests:
         tops.expected_output = {"mlag_details": {}}
 
         # Forming output message if test result is passed
-        tops.output_msg = "The mlag status is displayed."
+        tops.output_msg = "MLAG is configured on the device."
 
         try:
             """
-            TS: Running 'show mlag' command on DUT and verifying the mlag status.
+            TS: Running 'show mlag' command on DUT and verifying that the MLAG is configured
+            on the device.
             """
             output = dut["output"][tops.show_cmd]["json"]
             logger.info(
