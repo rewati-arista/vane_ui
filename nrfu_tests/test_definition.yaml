@@ -45,12 +45,13 @@
       criteria: names
       filter:
         - BLFE1
-    - name: test_
-      description: null
+    - name: test_interfaces_errdisabled_status
+      description: Test case for verification of interface errdisabled status.
       test_id: NRFU2.2
-      show_cmd: null
-      expected_output: null
-      report_style: modern
+      show_cmd: show interfaces status errdisabled
+      expected_output: null  # Forming the expected output dictionary in test file
+      test_criteria: No interface should be in error disabled state. . # Setting test case’s pass/fail criteria for reporting
+      report_style: modern # Setting report_style as modern If report type is set to modern, then it will update steps, assumptions, and external systems in the docx report.
       criteria: names
       filter:
         - BLFE1
