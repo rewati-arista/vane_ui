@@ -254,9 +254,13 @@ class NrfuClient:
         logging.info("Generating definitions file for nrfu testing")
 
         test_dir = "nrfu_tests"
-        user_choice = input("Do you want to specify a custom test case directory [y|n]:")
+        user_choice = ""
 
-        if user_choice.lower() in ("y", "yes"):
+        while user_choice not in ("y", "yes", "n", "no"):
+            user_choice = input("Do you want to specify a custom test case directory [y|n]:")
+            user_choice = user_choice.lower()
+
+        if user_choice in ("y", "yes"):
             test_dir = ""
             while not os.path.exists(test_dir):
                 test_dir = prompt(
