@@ -50,8 +50,8 @@ class NrfuClient:
 
         # initialise default values
         self.definitions_file = ""
-        self.duts_file = ""
-        self.username = ""
+        self.duts_file = "nrfu_tests/duts_nrfu.yaml"
+        self.username = "nrfu_tests/definitions_nrfu.yaml"
         self.password = ""
 
         logging.info("Starting the NRFU client")
@@ -243,8 +243,6 @@ class NrfuClient:
             duts_yaml_data.append(current_device_data)
         final_duts_data = {"duts": duts_yaml_data}
 
-        self.duts_file = "nrfu_tests/duts_nrfu.yaml"
-
         export_yaml(self.duts_file, final_duts_data)
 
     def generate_definitions_file(self):
@@ -268,8 +266,6 @@ class NrfuClient:
                     " (Use tab for autocompletion):",
                     completer=PathCompleter(),
                 )
-
-        self.definitions_file = "nrfu_tests/definitions_nrfu.yaml"
 
         definitions_data = {
             "parameters": {
