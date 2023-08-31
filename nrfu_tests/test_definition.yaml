@@ -153,12 +153,13 @@
       criteria: names
       filter:
         - BLFE1
-    - name: test_
-      description: null
+    - name: test_eos_no_config_functionality
+      description: Testcases for verification of security root port EOS no configurations functionality.
       test_id: NRFU5.3
-      show_cmd: null
-      expected_output: null
-      report_style: modern
+      show_cmd: show lldp neighbors detail
+      expected_output: null   # Forming expected output dictionary in testcase file
+      test_criteria: No localhost should found in LLDP information on device.   # Setting test case’s pass/fail criteria for reporting
+      report_style: modern   # Setting report_style as modern If report type is set to modern, then it will update steps, assumptions, and external systems in the docx report.
       criteria: names
       filter:
         - BLFE1
