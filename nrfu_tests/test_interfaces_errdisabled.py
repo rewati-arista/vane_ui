@@ -70,7 +70,7 @@ class InterfaceStatusTests:
                     )
                     description = interface_statuses.get(interface, {}).get("description")
                     tops.output_msg += (
-                        f"\n{interface},\nDescription: {description} and Causes: {causes}"
+                        f"\n{interface}:\nDescription: {description} and cause: {causes}."
                     )
 
         except (AssertionError, AttributeError, LookupError, EapiError) as excep:
