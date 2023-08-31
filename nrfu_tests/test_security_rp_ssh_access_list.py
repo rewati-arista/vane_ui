@@ -116,7 +116,7 @@ class VrfSshAclTests:
                         incorrect_acl_vrfs.append(vrf)
                 if incorrect_acl_vrfs:
                     tops.output_msg += (
-                        "For following VRFs, SSH ACL is not configured:"
+                        "For the following VRFs, SSH ACL is not configured on the device:"
                         f" {', '.join(incorrect_acl_vrfs)}."
                     )
 
