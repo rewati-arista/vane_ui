@@ -49,9 +49,9 @@ class NrfuClient:
         """NrfuClient initialisation"""
 
         # initialise default values
-        self.definitions_file = ""
+        self.definitions_file = "nrfu_tests/definitions_nrfu.yaml"
         self.duts_file = "nrfu_tests/duts_nrfu.yaml"
-        self.username = "nrfu_tests/definitions_nrfu.yaml"
+        self.username = ""
         self.password = ""
 
         logging.info("Starting the NRFU client")
