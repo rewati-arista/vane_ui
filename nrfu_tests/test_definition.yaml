@@ -50,7 +50,7 @@
       test_id: NRFU2.2
       show_cmd: show interfaces status errdisabled
       expected_output: null  # Forming the expected output dictionary in test file
-      test_criteria: No interface should be in error disabled state. # Setting test case’s pass/fail criteria for reporting
+      test_criteria: None of the interface should be in error disabled state. # Setting test case’s pass/fail criteria for reporting
       report_style: modern # Setting report_style as modern If report type is set to modern, then it will update steps, assumptions, and external systems in the docx report.
       criteria: names
       filter:

@@ -1,7 +1,7 @@
 # Copyright (c) 2023 Arista Networks, Inc.  All rights reserved.
 # Arista Networks, Inc. Confidential and Proprietary.
 
-"""Testcases for verification of Interface status functionality"""
+"""Testcases for verification of interface  status functionality"""
 
 import pytest
 from pyeapi.eapilib import EapiError
@@ -16,7 +16,7 @@ TEST_SUITE = "nrfu_tests"
 @pytest.mark.interfaces
 class InterfaceStatusTests:
 
-    """Testcases for verification of Interface status functionality"""
+    """Testcases for verification of interface  status functionality"""
 
     dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
     test_duts = dut_parameters["test_interfaces_errdisabled_status"]["duts"]
@@ -37,12 +37,12 @@ class InterfaceStatusTests:
         tops.actual_output = {"interface_state_details": {}}
 
         # Forming output message if test result is pass
-        tops.output_msg = "No interface is in error disabled state."
+        tops.output_msg = "None of the interface is in error disabled state."
 
         try:
             """
-            TS: Running `show interfaces status errdisabled` command and verifying the
-            no interface is in error disabled state.
+            TS: Running `show interfaces status errdisabled` command and verifying that the
+            none of the interface is in error disabled state.
             """
             interface_details = dut["output"][tops.show_cmd]["json"]
             logger.info(
@@ -73,7 +73,7 @@ class InterfaceStatusTests:
                         f"\n{interface}:\nDescription: {description} and cause: {causes}."
                     )
 
-        except (AssertionError, AttributeError, LookupError, EapiError) as excep:
+        except (AttributeError, LookupError, EapiError) as excep:
             tops.actual_output = tops.output_msg = str(excep).split("\n", maxsplit=1)[0]
             logger.error(
                 "On device %s: Error while running the testcase is:\n%s",
