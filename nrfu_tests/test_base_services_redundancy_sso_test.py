@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Arista Networks, Inc.  All rights reserved.
+# Copyright (c) 2023 Arista Networks, Inc.  All rights reserved.
 # Arista Networks, Inc. Confidential and Proprietary.
 
 """
@@ -35,15 +35,17 @@ class RedundantSupervisorCardTests:
         """
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
         self.output = ""
-        tops.actual_output = {"protocol_details": {}}
+        tops.actual_output = {"sso_protocol_details": {}}
 
         # Forming output message if test result is passed
-        tops.output_msg = "Redundancy SSO protocol is configured and operational."
+        tops.output_msg = (
+            "Redundancy SSO protocol is configured, operational and ready for switchover."
+        )
 
         try:
             """
-            TS: Running 'show redundancy status' command on the device.
-            Verifying that the SSO protocol is configured and operational.
+            TS: Running 'show redundancy status' command on the device and
+            verifying that the SSO protocol is configured, operational and ready for switchover.
             """
             output = dut["output"][tops.show_cmd]["json"]
             logger.info(
@@ -53,6 +55,10 @@ class RedundantSupervisorCardTests:
                 output,
             )
             self.output += f"\n\nOutput of {tops.show_cmd} command is: \n{output}"
+            peer_card_details = output["peerState"] != "notInserted"
+            assert (
+                peer_card_details
+            ), f"Peer supervisor card is not inserted on device {tops.dut_name}"
 
             # Skipping testcase if SSO protocol is not configured on the device.
             if output.get("configuredProtocol") != "sso":
@@ -60,7 +66,7 @@ class RedundantSupervisorCardTests:
                     f"SSO is not configured on {tops.dut_name}, hence skipping the testcase."
                 )
 
-            tops.actual_output["protocol_details"].update(
+            tops.actual_output["sso_protocol_details"].update(
                 {
                     "configured_protocol": output["configuredProtocol"],
                     "operational_protocol": output["operationalProtocol"],
@@ -71,16 +77,16 @@ class RedundantSupervisorCardTests:
             # Forming the output message if the testcase is failed
             if tops.expected_output != tops.actual_output:
                 tops.output_msg = "\n"
-                expected_details = tops.expected_output["protocol_details"]
-                actual_details = tops.actual_output["protocol_details"]
+                expected_details = tops.expected_output["sso_protocol_details"]
+                actual_details = tops.actual_output["sso_protocol_details"]
                 if (
                     expected_details["operational_protocol"]
                     != actual_details["operational_protocol"]
                 ):
                     tops.output_msg += (
                         "Expected operational protocol is"
-                        f" {expected_details['operational_protocol']}, however in actual it is"
-                        f" found as {actual_details['operational_protocol']}.\n"
+                        f" `{expected_details['operational_protocol']}`, however in actual it is"
+                        f" found as `{actual_details['operational_protocol']}`.\n"
                     )
                 if not actual_details["switch_over_ready"]:
                     tops.output_msg += "Redundancy protocol sso is not ready for switch over.\n"
