@@ -88,12 +88,16 @@
       report_style: modern
       criteria: {{ global_dut_filter.criteria }}
       filter: {{ global_dut_filter.filter }}
-    - name: test_
-      description:
+    - name: test_routing_bgp_evpn_peers_state
+      description: Test case for verification of routing BGP EVPN functionality.
       test_id: NRFU4.1
-      show_cmd: null
+      {% set test_data = testcase_data["NRFU4.1"] %}
+      show_cmd: show bgp evpn summary
       expected_output: null
+      test_criteria: All BGP EVPN peers state should be established.
       report_style: modern
+      input:
+        skip_on_command_unavailable: {{ test_data["skip_on_command_unavailable"] }}
       criteria: {{ global_dut_filter.criteria }}
       filter: {{ global_dut_filter.filter }}
     - name: test_
