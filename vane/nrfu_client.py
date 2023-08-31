@@ -262,7 +262,7 @@ class NrfuClient:
 
         if user_choice in ("y", "yes"):
             test_dir = ""
-            while not os.path.exists(test_dir):
+            while not os.path.exists(test_dir) or not os.path.isdir(test_dir):
                 test_dir = prompt(
                     "Please specify test case directory <path/to/test case dir>"
                     " (Use tab for autocompletion):",
