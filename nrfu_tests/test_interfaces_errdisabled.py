@@ -61,17 +61,14 @@ class InterfaceStatusTests:
 
             # forming output message if test result is fail
             if tops.actual_output != tops.expected_output:
-                tops.output_msg = "\nFollowing interfaces are in errdisabled state:"
+                tops.output_msg = "\nFollowing interfaces are in errdisabled state with causes:"
                 for interface in interface_statuses:
                     causes = (
                         str(interface_statuses.get(interface, {}).get("causes"))
                         .lstrip("[")
                         .rstrip("]")
                     )
-                    description = interface_statuses.get(interface, {}).get("description")
-                    tops.output_msg += (
-                        f"\n{interface}:\nDescription: {description} and cause: {causes}."
-                    )
+                    tops.output_msg += f"\n{interface}: {causes}."
 
         except (AttributeError, LookupError, EapiError) as excep:
             tops.actual_output = tops.output_msg = str(excep).split("\n", maxsplit=1)[0]
