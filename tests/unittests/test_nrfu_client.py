@@ -46,6 +46,7 @@ def test_setup_not_cvp(mocker, capsys):
     """Testing to see if nrfu setup functions are called correctly"""
 
     mocker.patch("vane.nrfu_client.urllib3.disable_warnings")
+    mocker.patch("vane.nrfu_client.readline.parse_and_bind")
     mocker.patch("vane.nrfu_client.NrfuClient.get_credentials")
     mocker.patch("vane.nrfu_client.NrfuClient.determine_if_cvp_application", return_value=False)
     mocker.patch("vane.nrfu_client.NrfuClient.not_cvp_application", return_value=([], "cvp"))
