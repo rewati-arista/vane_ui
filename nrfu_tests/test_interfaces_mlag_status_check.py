@@ -2,7 +2,7 @@
 # Arista Networks, Inc. Confidential and Proprietary.
 
 """
-Testcase for verification of mlag interfaces status check.
+Testcase for verification of MLAG functionality
 """
 
 import pytest
@@ -16,9 +16,9 @@ TEST_SUITE = "nrfu_tests"
 
 @pytest.mark.nrfu_test
 @pytest.mark.interfaces
-class InterfacesMlagStatusCheckTests:
+class MlagStatusTests:
     """
-    Testcase for verification of mlag interfaces status check.
+    Testcase for verification of MLAG functionality
     """
 
     dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
@@ -28,7 +28,7 @@ class InterfacesMlagStatusCheckTests:
     @pytest.mark.parametrize("dut", test_duts, ids=test_ids)
     def test_interfaces_mlag_status_check(self, dut, tests_definitions):
         """
-        TD: Testcase for verification of mlag interfaces status check.
+        TD: Testcase for verification of MLAG functionality
         Args:
             dut(dict): details related to a particular DUT
             tests_definitions(dict): test suite and test case parameters
@@ -39,7 +39,7 @@ class InterfacesMlagStatusCheckTests:
         tops.expected_output = {"mlag_details": {}}
 
         # Forming output message if test result is passed
-        tops.output_msg = "MLAG is configured on the device."
+        tops.output_msg = "MLAG is configured as active, connected and consistent on the device."
 
         try:
             """
@@ -61,12 +61,16 @@ class InterfacesMlagStatusCheckTests:
                 tops.actual_output["mlag_details"].update(
                     {
                         "state": output.get("state"),
-                        "negStatus": output.get("negStatus"),
-                        "configSanity": output.get("configSanity"),
+                        "negotiation_status": output.get("negStatus"),
+                        "config_sanity": output.get("configSanity"),
                     }
                 )
                 tops.expected_output["mlag_details"].update(
-                    {"state": "active", "negStatus": "connected", "configSanity": "consistent"}
+                    {
+                        "state": "active",
+                        "negotiation_status": "connected",
+                        "config_sanity": "consistent",
+                    }
                 )
             else:
                 pytest.skip(f"For {tops.dut_name} MLAG is not configured, hence test skipped.")
@@ -77,7 +81,7 @@ class InterfacesMlagStatusCheckTests:
                 for mlag_key, mlag_value in tops.expected_output["mlag_details"].items():
                     if mlag_value != tops.actual_output["mlag_details"].get(mlag_key):
                         tops.output_msg += (
-                            f"Expected value of {mlag_key.replace('_', ' ')} is '{mlag_value}',"
+                            f"Expected MLAG {mlag_key.replace('_', ' ')} is '{mlag_value}',"
                             " however actual found as"
                             f" '{tops.actual_output['mlag_details'].get(mlag_key)}'.\n"
                         )
