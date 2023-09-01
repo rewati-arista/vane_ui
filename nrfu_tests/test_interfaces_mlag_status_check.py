@@ -22,11 +22,11 @@ class MlagStatusTests:
     """
 
     dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
-    test_duts = dut_parameters["test_interfaces_mlag_status_check"]["duts"]
-    test_ids = dut_parameters["test_interfaces_mlag_status_check"]["ids"]
+    test_duts = dut_parameters["test_interfaces_mlag_status"]["duts"]
+    test_ids = dut_parameters["test_interfaces_mlag_status"]["ids"]
 
     @pytest.mark.parametrize("dut", test_duts, ids=test_ids)
-    def test_interfaces_mlag_status_check(self, dut, tests_definitions):
+    def test_interfaces_mlag_status(self, dut, tests_definitions):
         """
         TD: Testcase for verification of MLAG functionality
         Args:
@@ -77,7 +77,7 @@ class MlagStatusTests:
 
             # Output message formation in case of testcase fails.
             if tops.actual_output != tops.expected_output:
-                tops.output_msg = ""
+                tops.output_msg = "\n"
                 for mlag_key, mlag_value in tops.expected_output["mlag_details"].items():
                     if mlag_value != tops.actual_output["mlag_details"].get(mlag_key):
                         tops.output_msg += (
@@ -95,6 +95,6 @@ class MlagStatusTests:
             )
 
         tops.test_result = tops.expected_output == tops.actual_output
-        tops.parse_test_steps(self.test_interfaces_mlag_status_check)
+        tops.parse_test_steps(self.test_interfaces_mlag_status)
         tops.generate_report(tops.dut_name, self.output)
         assert tops.expected_output == tops.actual_output
