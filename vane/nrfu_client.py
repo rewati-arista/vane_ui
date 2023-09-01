@@ -33,6 +33,7 @@
 import getpass
 import os
 import sys
+import readline
 import urllib3
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import PathCompleter
@@ -62,6 +63,9 @@ class NrfuClient:
 
         # Disabling the unverified HTTPS requests warning
         urllib3.disable_warnings()
+
+        # Configure readline to enable arrow key navigation
+        readline.parse_and_bind("set editing-mode vi")  # Use 'vi' mode for navigation
 
         # Getting credentials from user
         self.get_credentials()
