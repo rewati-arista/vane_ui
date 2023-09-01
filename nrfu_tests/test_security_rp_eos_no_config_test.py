@@ -33,16 +33,16 @@ class EosNoConfigTests:
 
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
         self.output = ""
-        tops.expected_output = {"rp_eos_configurations": {}}
-        tops.actual_output = {"rp_eos_configurations": {}}
+        tops.expected_output = {"lldp_neighbor_information": {"interfaces": {}}}
+        tops.actual_output = {"lldp_neighbor_information": {"interfaces": {}}}
 
         # Forming output message if test result is pass
-        tops.output_msg = "No localhost found in LLDP information on device."
+        tops.output_msg = "Localhost is not found in the LLDP neighbor information on device."
 
         try:
             """
-            TS: Running 'show lldp neighbors detail' command and Verifying device is configured
-            successfully with EOS configurations.
+            TS: Running 'show lldp neighbors detail' command and verifying that localhost should not
+            found on the LLDP neighbor information..
             """
             lldp_info = dut["output"][tops.show_cmd]["json"]
             logger.info(
@@ -55,12 +55,17 @@ class EosNoConfigTests:
                 f"On device {tops.dut_name}, Output of {tops.show_cmd} is:\n{lldp_info}\n"
             )
             neighbor_details = lldp_info.get("lldpNeighbors")
-            assert neighbor_details, f"lldp neighbor details not found on device {tops.dut_name}."
+            assert neighbor_details, "lldp neighbor details not found on device."
 
             for interface, interface_details in lldp_info.get("lldpNeighbors").items():
+                tops.actual_output["lldp_neighbor_information"]["interfaces"][interface] = {
+                    "localhost_not_found": True
+                }
+                tops.expected_output["lldp_neighbor_information"]["interfaces"][interface] = {
+                    "localhost_not_found": True
+                }
+
                 if not interface_details.get("lldpNeighborInfo"):
-                    tops.actual_output["rp_eos_configurations"][interface] = True
-                    tops.expected_output["rp_eos_configurations"][interface] = True
                     continue
 
                 system_name = interface_details.get("lldpNeighborInfo", [])[0].get("systemName")
@@ -74,18 +79,21 @@ class EosNoConfigTests:
 
                 if system_name == "localhost":
                     if "Arista" in system_description:
-                        tops.expected_output["rp_eos_configurations"][interface] = True
-                        tops.actual_output["rp_eos_configurations"][interface] = False
+                        tops.actual_output["lldp_neighbor_information"]["interfaces"][interface] = {
+                            "localhost_not_found": False
+                        }
 
             # forming output message if test result is fail
             if tops.actual_output != tops.expected_output:
                 localhost_found_interfaces = []
-                for interface in tops.actual_output["rp_eos_configurations"]:
-                    if not tops.actual_output["rp_eos_configurations"][interface]:
+                for interface in tops.actual_output["lldp_neighbor_information"]["interfaces"]:
+                    if not tops.actual_output["lldp_neighbor_information"]["interfaces"][interface][
+                        "localhost_not_found"
+                    ]:
                         localhost_found_interfaces.append(interface)
                 tops.output_msg = (
-                    f"\nOn device {tops.dut_name}, following interfaces found with localhost in"
-                    f" LLDP information:\n{', '.join(localhost_found_interfaces)}"
+                    "\nfollowing interfaces found with localhost in"
+                    f" LLDP neighbor information:\n{', '.join(localhost_found_interfaces)}"
                 )
 
         except (AssertionError, AttributeError, LookupError, EapiError) as excep:
