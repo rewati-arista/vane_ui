@@ -8,6 +8,7 @@ import logging
 def setup_logger(log_file):
     """Creating logger per test case basis"""
 
+    log_file = log_file.split("/")[-1:][0][:-3] + ".log"
     # Creating a logger object for the given test case file
     logger = logging.getLogger(log_file)
     logger.setLevel(logging.INFO)
