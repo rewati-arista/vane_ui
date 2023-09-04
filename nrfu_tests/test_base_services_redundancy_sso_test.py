@@ -6,6 +6,7 @@ Testcases for verification of redundant supervisor card.
 """
 
 import pytest
+import pyeapi.eapilib
 from pyeapi.eapilib import EapiError
 from vane.logger import logger
 from vane.config import dut_objs, test_defs
@@ -36,6 +37,7 @@ class RedundantSupervisorCardTests:
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
         self.output = ""
         tops.actual_output = {"sso_protocol_details": {}}
+        tops.show_cmd = "show redundancy status"
 
         # Forming output message if test result is passed
         tops.output_msg = (
@@ -47,24 +49,27 @@ class RedundantSupervisorCardTests:
             TS: Running 'show redundancy status' command on the device and
             verifying that the SSO protocol is configured, operational and ready for switchover.
             """
-            output = dut["output"][tops.show_cmd]["json"]
-            logger.info(
-                "On device %s, output of %s command is: \n%s\n",
-                tops.dut_name,
-                tops.show_cmd,
-                output,
-            )
-            self.output += f"\n\nOutput of {tops.show_cmd} command is: \n{output}"
-            peer_card_details = output["peerState"] != "notInserted"
-            assert (
-                peer_card_details
-            ), f"Peer supervisor card is not inserted on device {tops.dut_name}"
+            try:
+                output = tops.run_show_cmds([tops.show_cmd])
+                logger.info(
+                    "On device %s, output of %s command is: \n%s\n",
+                    tops.dut_name,
+                    tops.show_cmd,
+                    output,
+                )
+                self.output += f"\n\nOutput of {tops.show_cmd} command is: \n{output}"
+                output = output[0]["result"]
+
+            except pyeapi.eapilib.CommandError as error:
+                if "Unavailable command" in str(error):
+                    pytest.skip(
+                        f"Skipping the testcase as the device {tops.dut_name}, is not a dual"
+                        " supervisor device."
+                    )
 
             # Skipping testcase if SSO protocol is not configured on the device.
-            if output.get("configuredProtocol") != "sso":
-                pytest.skip(
-                    f"SSO is not configured on {tops.dut_name}, hence skipping the testcase."
-                )
+            if output["peerState"] == "notInserted":
+                pytest.skip(f"Peer supervisor card is not inserted on device {tops.dut_name}")
 
             tops.actual_output["sso_protocol_details"].update(
                 {
@@ -79,6 +84,12 @@ class RedundantSupervisorCardTests:
                 tops.output_msg = "\n"
                 expected_details = tops.expected_output["sso_protocol_details"]
                 actual_details = tops.actual_output["sso_protocol_details"]
+                if expected_details["configured_protocol"] != actual_details["configured_protocol"]:
+                    tops.output_msg += (
+                        "Expected configured protocol is"
+                        f" '{expected_details['configured_protocol']}', however in actual it is"
+                        f" found as '{actual_details['configured_protocol']}'.\n"
+                    )
                 if (
                     expected_details["operational_protocol"]
                     != actual_details["operational_protocol"]
