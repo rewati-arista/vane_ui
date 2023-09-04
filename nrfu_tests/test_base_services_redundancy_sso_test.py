@@ -102,7 +102,7 @@ class RedundantSupervisorCardTests:
                 if not actual_details["switch_over_ready"]:
                     tops.output_msg += "Redundancy protocol sso is not ready for switch over.\n"
 
-        except (AssertionError, AttributeError, LookupError, EapiError) as excep:
+        except (AttributeError, LookupError, EapiError) as excep:
             tops.output_msg = tops.actual_output = str(excep).split("\n", maxsplit=1)[0]
             logger.error(
                 "On device %s, Error while running the testcase is:\n%s",
