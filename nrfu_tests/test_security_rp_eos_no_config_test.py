@@ -41,8 +41,8 @@ class EosNoConfigTests:
 
         try:
             """
-            TS: Running 'show lldp neighbors detail' command and verifying that localhost should not
-            found on the LLDP neighbor information..
+            TS: Running `show lldp neighbors detail` command and verifying that localhost should not
+            found on the LLDP neighbor information.
             """
             lldp_info = dut["output"][tops.show_cmd]["json"]
             logger.info(
@@ -55,23 +55,22 @@ class EosNoConfigTests:
                 f"On device {tops.dut_name}, Output of {tops.show_cmd} is:\n{lldp_info}\n"
             )
             neighbor_details = lldp_info.get("lldpNeighbors")
-            assert neighbor_details, "lldp neighbor details not found on device."
+            assert neighbor_details, "LLDP neighbor details are not found on device."
 
-            for interface, interface_details in lldp_info.get("lldpNeighbors").items():
+            for interface, interface_details in neighbor_details.items():
                 tops.actual_output["lldp_neighbor_information"]["interfaces"][interface] = {
                     "localhost_not_found": True
                 }
                 tops.expected_output["lldp_neighbor_information"]["interfaces"][interface] = {
                     "localhost_not_found": True
                 }
-
-                if not interface_details.get("lldpNeighborInfo"):
+                neighbor_info = interface_details.get("lldpNeighborInfo")
+                if not neighbor_info:
                     continue
 
-                system_name = interface_details.get("lldpNeighborInfo", [])[0].get("systemName")
-                system_description = interface_details.get("lldpNeighborInfo", [])[0].get(
-                    "systemDescription"
-                )
+                system_name = neighbor_info[0].get("systemName")
+                system_description = neighbor_info[0].get("systemDescription")
+
                 # If details for above keys are not found then skipping the verification part for
                 # the same considering no localhost in configurations.
                 if not system_description or not system_name:
@@ -92,8 +91,8 @@ class EosNoConfigTests:
                     ]:
                         localhost_found_interfaces.append(interface)
                 tops.output_msg = (
-                    "\nfollowing interfaces found with localhost in"
-                    f" LLDP neighbor information:\n{', '.join(localhost_found_interfaces)}"
+                    "\nFollowing interfaces found with localhost in"
+                    f" LLDP neighbor information: {', '.join(localhost_found_interfaces)}"
                 )
 
         except (AssertionError, AttributeError, LookupError, EapiError) as excep:
