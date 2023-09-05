@@ -54,26 +54,26 @@ class MlagStatusTests:
                 output,
             )
             self.output += f"\nOutput of {tops.show_cmd} command is: \n{output}"
-            assert output, "MLAG details are not found"
+
+            # Skipping, if MLAG is not configured.
+            if output["state"] == "disabled":
+                pytest.skip(f"For {tops.dut_name} MLAG is not configured, hence test skipped.")
 
             # collecting actual output.
-            if output["state"] != "disabled":
-                tops.actual_output["mlag_details"].update(
-                    {
-                        "state": output.get("state"),
-                        "negotiation_status": output.get("negStatus"),
-                        "config_sanity": output.get("configSanity"),
-                    }
-                )
-                tops.expected_output["mlag_details"].update(
-                    {
-                        "state": "active",
-                        "negotiation_status": "connected",
-                        "config_sanity": "consistent",
-                    }
-                )
-            else:
-                pytest.skip(f"For {tops.dut_name} MLAG is not configured, hence test skipped.")
+            tops.actual_output["mlag_details"].update(
+                {
+                    "state": output.get("state"),
+                    "negotiation_status": output.get("negStatus"),
+                    "config_sanity": output.get("configSanity"),
+                }
+            )
+            tops.expected_output["mlag_details"].update(
+                {
+                    "state": "active",
+                    "negotiation_status": "connected",
+                    "config_sanity": "consistent",
+                }
+            )
 
             # Output message formation in case of testcase fails.
             if tops.actual_output != tops.expected_output:
