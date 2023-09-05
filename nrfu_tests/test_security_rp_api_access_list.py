@@ -43,9 +43,9 @@ class AclsApiAccessTests:
 
         try:
             """
-            TS: Running `show management api http-commands` command, collecting VRFs and
-            running `show management api http-commands ip access-list summary` command,
-            collecting ACLs. Also, verifying VRFs are acl configured.
+            TS: Running `show management api http-commands` and
+            `show management api http-commands ip access-list summary` commands
+            and verifying that all the VRFs are ACL configured.
             """
             output_api_vrfs = dut["output"][tops.show_cmds[tops.dut_name][0]]["json"]
             output_api_acls = dut["output"][tops.show_cmds[tops.dut_name][1]]["json"]
@@ -91,12 +91,11 @@ class AclsApiAccessTests:
                 tops.output_msg = "\n"
                 non_configured_vrfs = []
                 for vrf_name, vrf_status in tops.expected_output["vrf_details"].items():
-                    actual_vrf_status = tops.actual_output["vrf_details"].get(vrf_name)
                     if vrf_status != tops.actual_output["vrf_details"].get(vrf_name):
-                        non_configured_vrfs.append(f"{vrf_name} - {actual_vrf_status}")
-                vrf_configured_status = "\n".join(non_configured_vrfs)
+                        non_configured_vrfs.append(vrf_name)
+                vrf_configured_status = ", ".join(non_configured_vrfs)
                 tops.output_msg += (
-                    f"Following Vrfs are not ACL configured:\n{vrf_configured_status}."
+                    f"Following vrfs are not ACL configured: {vrf_configured_status}."
                 )
 
         except (AssertionError, AttributeError, LookupError, EapiError) as excep:
