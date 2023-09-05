@@ -5,6 +5,7 @@
 Testcases for the verification of system hardware inventory on the device
 """
 
+import re
 import pytest
 from pyeapi.eapilib import EapiError
 from vane import tests_tools
@@ -38,20 +39,7 @@ class SystemHardwareInventoryTests:
         test_params = tops.test_parameters
         tops.actual_output = {"hardware_inventory_details": {}}
         tops.expected_output = {"hardware_inventory_details": {}}
-        actual_output = {
-            "power_supply_slot_details": {},
-            "fan_tray_slot_details": {},
-            "supervisor_slot_details": {},
-            "fabric_slot_details": {},
-            "linecard_slot_details": {},
-        }
-        expected_output = {
-            "power_supply_slot_details": {},
-            "fan_tray_slot_details": {},
-            "supervisor_slot_details": {},
-            "fabric_slot_details": {},
-            "linecard_slot_details": {},
-        }
+        actual_output, expected_output = {}, {}
 
         # Forming output message if test result is pass
         tops.output_msg = (
@@ -88,87 +76,51 @@ class SystemHardwareInventoryTests:
             )
             self.output += f"\n\nOutput of {tops.show_cmd} command is: \n{output}"
 
-            power_supply_slots = output["powerSupplySlots"]
-            if test_params["hardware_inventory_verification_check"]["missing_power_supply_check"]:
-                assert power_supply_slots, "Power Supply Slots are not inserted.\n"
-            for slot_name, slot_details in power_supply_slots.items():
-                expected_output["power_supply_slot_details"].update(
-                    {slot_name: {"card_slot_name_found": True}}
-                )
-                actual_output["power_supply_slot_details"].update(
-                    {
-                        slot_name: {
-                            "card_slot_name_found": "Not Inserted" not in slot_details["name"]
-                        }
-                    }
-                )
-
-            fan_tray_slots = output["fanTraySlots"]
-            if test_params["hardware_inventory_verification_check"]["missing_fan_tray_check"]:
-                assert fan_tray_slots, "Fan tray slots are not inserted.\n"
-            for slot_name, slot_details in fan_tray_slots.items():
-                expected_output["fan_tray_slot_details"].update(
-                    {slot_name: {"card_slot_name_found": True}}
-                )
-                actual_output["fan_tray_slot_details"].update(
-                    {
-                        slot_name: {
-                            "card_slot_name_found": "Not Inserted" not in slot_details["name"]
-                        }
-                    }
-                )
-
-            card_slots = output["cardSlots"]
-            if test_params["hardware_inventory_verification_check"]["missing_supervisor_check"]:
-                assert card_slots, "Card slots are not inserted.\n"
-            for slot_name, slot_details in card_slots.items():
-                if "Super" in slot_name:
-                    expected_output["supervisor_slot_details"].update(
-                        {slot_name: {"card_slot_name_found": True}}
-                    )
-                    actual_output["supervisor_slot_details"].update(
-                        {
-                            slot_name: {
-                                "card_slot_name_found": (
-                                    "Not Inserted" not in slot_details["modelName"]
-                                )
+            for slot, verify_slot in test_params["hardware_inventory_checks"].items():
+                if verify_slot and "CardSlots" not in slot:
+                    slot = slot.split("_")[1]
+                    # Converting slot name from camel case.
+                    converted_slot_name = re.sub("([A-Z])", r"_\1", slot).lower()
+                    slot_output = output[slot]
+                    expected_output.update({converted_slot_name: {}})
+                    actual_output.update({converted_slot_name: {}})
+                    for slot_name, slot_details in slot_output.items():
+                        expected_output[converted_slot_name].update(
+                            {slot_name: {"card_slot_name_found": True}}
+                        )
+                        actual_output[converted_slot_name].update(
+                            {
+                                slot_name: {
+                                    "card_slot_name_found": (
+                                        "Not Inserted" not in slot_details["name"]
+                                    )
+                                }
                             }
-                        }
-                    )
+                        )
 
-            if test_params["hardware_inventory_verification_check"]["missing_fabric_check"]:
-                assert card_slots, "Card slots are not inserted.\n"
-            for slot_name, slot_details in card_slots.items():
-                if "Fabric" in slot_name:
-                    expected_output["fabric_slot_details"].update(
-                        {slot_name: {"card_slot_name_found": True}}
-                    )
-                    actual_output["fabric_slot_details"].update(
-                        {
-                            slot_name: {
-                                "card_slot_name_found": (
-                                    "Not Inserted" not in slot_details["modelName"]
-                                )
-                            }
-                        }
-                    )
-
-            if test_params["hardware_inventory_verification_check"]["missing_linecard_check"]:
-                assert card_slots, "Card slots are not inserted.\n"
-            for slot_name, slot_details in card_slots.items():
-                if "Linecard" in slot_name:
-                    expected_output["linecard_slot_details"].update(
-                        {slot_name: {"card_slot_name_found": True}}
-                    )
-                    actual_output["linecard_slot_details"].update(
-                        {
-                            slot_name: {
-                                "card_slot_name_found": (
-                                    "Not Inserted" not in slot_details["modelName"]
-                                )
-                            }
-                        }
-                    )
+            for slot, verify_slot in test_params["hardware_inventory_checks"].items():
+                if verify_slot and "CardSlots" in slot:
+                    slot = slot.split("_")[1]
+                    # Converting slot name from camel case.
+                    converted_slot_name = re.sub("([A-Z])", r"_\1", slot).lower()
+                    card_name = converted_slot_name.split("_")[0]
+                    slot_output = output["cardSlots"]
+                    expected_output.update({converted_slot_name: {}})
+                    actual_output.update({converted_slot_name: {}})
+                    for slot_name, slot_details in slot_output.items():
+                        if card_name.capitalize() in slot_name:
+                            expected_output[converted_slot_name].update(
+                                {slot_name: {"card_slot_name_found": True}}
+                            )
+                            actual_output[converted_slot_name].update(
+                                {
+                                    slot_name: {
+                                        "card_slot_name_found": (
+                                            "Not Inserted" not in slot_details["modelName"]
+                                        )
+                                    }
+                                }
+                            )
 
             tops.actual_output["hardware_inventory_details"].update(actual_output)
             tops.expected_output["hardware_inventory_details"].update(expected_output)
