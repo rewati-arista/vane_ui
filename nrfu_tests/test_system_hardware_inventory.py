@@ -43,7 +43,7 @@ class SystemHardwareInventoryTests:
 
         # Forming output message if test result is pass
         tops.output_msg = (
-            "Power supply, fan tray and other card slots are inserted and present on the device."
+            "Power supply, fan tray and other card slots are installed on the device."
         )
 
         try:
