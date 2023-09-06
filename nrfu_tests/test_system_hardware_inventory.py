@@ -42,9 +42,7 @@ class SystemHardwareInventoryTests:
         actual_output, expected_output = {}, {}
 
         # Forming output message if test result is pass
-        tops.output_msg = (
-            "Power supply, fan tray and other card slots are installed on the device."
-        )
+        tops.output_msg = "Power supply, fan tray and other card slots are installed on the device."
 
         try:
             """
@@ -77,67 +75,66 @@ class SystemHardwareInventoryTests:
             self.output += f"\n\nOutput of {tops.show_cmd} command is: \n{output}"
 
             for slot, verify_slot in test_params["hardware_inventory_checks"].items():
-                if verify_slot and "CardSlots" not in slot:
-                    slot = slot.split("_")[1]
-                    # Converting slot name from camel case.
-                    converted_slot_name = re.sub("([A-Z])", r"_\1", slot).lower()
-                    slot_output = output[slot]
-                    expected_output.update({converted_slot_name: {}})
-                    actual_output.update({converted_slot_name: {}})
-                    for slot_name, slot_details in slot_output.items():
-                        expected_output[converted_slot_name].update(
-                            {slot_name: {"card_slot_name_found": True}}
-                        )
-                        actual_output[converted_slot_name].update(
-                            {
-                                slot_name: {
-                                    "card_slot_name_found": (
-                                        "Not Inserted" not in slot_details["name"]
-                                    )
-                                }
-                            }
-                        )
-
-            for slot, verify_slot in test_params["hardware_inventory_checks"].items():
-                if verify_slot and "CardSlots" in slot:
-                    slot = slot.split("_")[1]
-                    # Converting slot name from camel case.
-                    converted_slot_name = re.sub("([A-Z])", r"_\1", slot).lower()
-                    card_name = converted_slot_name.split("_")[0]
-                    slot_output = output["cardSlots"]
-                    expected_output.update({converted_slot_name: {}})
-                    actual_output.update({converted_slot_name: {}})
-                    for slot_name, slot_details in slot_output.items():
-                        if card_name.capitalize() in slot_name:
-                            expected_output[converted_slot_name].update(
-                                {slot_name: {"card_slot_name_found": True}}
-                            )
-                            actual_output[converted_slot_name].update(
+                if verify_slot:
+                    slot = slot.split("missing_")[1]
+                    # Converting slot name from snake case to camel case.
+                    converted_slot_name = re.sub(
+                        r"(?!^)_([a-zA-Z])", lambda name: name.group(1).upper(), slot
+                    )
+                    if "CardSlots" not in converted_slot_name:
+                        slot_output = output[converted_slot_name]
+                        assert slot_output, f"{converted_slot_name} are not inserted on the device."
+                        expected_output.update({slot: {}})
+                        actual_output.update({slot: {}})
+                        for slot_name, slot_details in slot_output.items():
+                            expected_output[slot].update({slot_name: {"card_slot_inserted": True}})
+                            actual_output[slot].update(
                                 {
                                     slot_name: {
-                                        "card_slot_name_found": (
-                                            "Not Inserted" not in slot_details["modelName"]
+                                        "card_slot_inserted": (
+                                            "Not Inserted" not in slot_details["name"]
                                         )
                                     }
                                 }
                             )
+
+                    else:
+                        card_name = slot.split("_")[0]
+                        slot_output = output["cardSlots"]
+                        assert slot_output, f"{converted_slot_name} are not inserted on the device."
+                        expected_output.update({slot: {}})
+                        actual_output.update({slot: {}})
+                        for slot_name, slot_details in slot_output.items():
+                            if card_name.capitalize() in slot_name:
+                                expected_output[slot].update(
+                                    {slot_name: {"card_slot_inserted": True}}
+                                )
+                                actual_output[slot].update(
+                                    {
+                                        slot_name: {
+                                            "card_slot_inserted": (
+                                                "Not Inserted" not in slot_details["modelName"]
+                                            )
+                                        }
+                                    }
+                                )
 
             tops.actual_output["hardware_inventory_details"].update(actual_output)
             tops.expected_output["hardware_inventory_details"].update(expected_output)
 
             # Forming the output message if the testcase is failed
             if tops.expected_output != tops.actual_output:
-                tops.output_msg = "The following cards are not inserted:"
+                tops.output_msg = "\nThe following card slots are not inserted:"
                 output_msg = []
                 for slot_name, slot_details in tops.actual_output[
                     "hardware_inventory_details"
                 ].items():
                     slot_status = []
                     for card_slot, card_slot_status in slot_details.items():
-                        if not card_slot_status["card_slot_name_found"]:
+                        if not card_slot_status["card_slot_inserted"]:
                             slot_status.append(card_slot)
                     if slot_status:
-                        message = f"\nFor {slot_name.replace('_', ' ')}: \n"
+                        message = f"\n{slot_name.replace('_', ' ')}: "
                         message += f"{', '.join(slot_status)}\n"
                         output_msg.append(message)
                 tops.output_msg += "".join(output_msg)
