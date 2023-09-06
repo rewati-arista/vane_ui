@@ -35,12 +35,13 @@ import pprint
 import time
 import pytest
 from pyeapi.eapilib import EapiError
-from vane import tests_tools
-from vane.vane_logging import logging
+from vane import tests_tools, test_case_logger
 
 
 TEST_SUITE = __file__
 LOG_FILE = {"parameters": {"show_log": "show_output.log"}}
+
+logging = test_case_logger.setup_logger(__file__)
 
 
 @pytest.mark.vane_system_tests
