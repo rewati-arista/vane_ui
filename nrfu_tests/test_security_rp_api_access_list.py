@@ -2,7 +2,7 @@
 # Arista Networks, Inc. Confidential and Proprietary.
 
 """
-Testcase for verification of ACLs are applied to each VRF the API is enabled on.
+Test case to verify that ACL is configured for each VRF on which API is enabled.
 """
 
 import pytest
@@ -18,7 +18,7 @@ TEST_SUITE = "nrfu_tests"
 @pytest.mark.security
 class AclsApiAccessTests:
     """
-    Testcase for verification of ACLs are applied to each VRF the API is enabled on.
+    Test case to verify that ACL is configured for each VRF on which API is enabled.
     """
 
     dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
@@ -28,45 +28,46 @@ class AclsApiAccessTests:
     @pytest.mark.parametrize("dut", test_duts, ids=test_ids)
     def test_acls_api_vrfs_enabled(self, dut, tests_definitions):
         """
-        TD: Testcase for verification of ACLs are applied to each VRF the API is enabled on.
+        TD: Test case to verify that ACL is configured for each VRF on which API is enabled.
         Args:
             dut(dict): details related to a particular DUT
             tests_definitions(dict): test suite and test case parameters.
         """
         tops = tests_tools.TestOps(tests_definitions, TEST_SUITE, dut)
-        tops.expected_output = {"vrf_details": {}}
-        tops.actual_output = {"vrf_details": {}}
+        tops.expected_output = {"vrfs": {}}
+        tops.actual_output = {"vrfs": {}}
         self.output = ""
+        show_cmds = tops.show_cmds[tops.dut_name]
 
         # Forming output message if test result is passed.
-        tops.output_msg = "All VRFs that the API is active are ACL configured."
+        tops.output_msg = "All VRFs that the API is active on, an ACL is configured."
 
         try:
             """
-            TS: Running `show management api http-commands` and
-            `show management api http-commands ip access-list summary` commands
-            and verifying that all the VRFs are ACL configured.
+            TS: Running `show management api http-commands` command on dut
+            and collecting the list of VRFs.
             """
-            output_api_vrfs = dut["output"][tops.show_cmds[tops.dut_name][0]]["json"]
-            output_api_acls = dut["output"][tops.show_cmds[tops.dut_name][1]]["json"]
+            output_api_vrfs = dut["output"][show_cmds[0]]["json"]
             logger.info(
                 "On device %s, output of %s command is:\n%s\n",
                 tops.dut_name,
-                [tops.show_cmds[tops.dut_name][0]],
+                show_cmds[0],
                 output_api_vrfs,
             )
-            self.output = (
-                f"Output of {[tops.show_cmds[tops.dut_name][0]]} command is:\n{output_api_vrfs}\n"
-            )
+            self.output = f"Output of {show_cmds[0]} command is:\n{output_api_vrfs}\n"
+
+            """
+            TS: Running `show management api http-commands ip access-list summary` command on dut
+            and verifying that all the VRFs are API ACL configured.
+            """
+            output_api_acls = dut["output"][show_cmds[1]]["json"]
             logger.info(
                 "On device %s, output of %s command is:\n%s\n",
                 tops.dut_name,
-                [tops.show_cmds[tops.dut_name][1]],
+                show_cmds[1],
                 output_api_acls,
             )
-            self.output = (
-                f"Output of {[tops.show_cmds[tops.dut_name][1]]} command is:\n{output_api_acls}\n"
-            )
+            self.output = f"Output of {show_cmds[1]} command is:\n{output_api_acls}\n"
 
             # Collecting VRFs and ACLs from output.
             api_vrfs = output_api_vrfs.get("vrfs")
@@ -79,23 +80,24 @@ class AclsApiAccessTests:
             for vrf in api_vrfs:
                 acl_found = False
                 for acl in api_acls:
-                    tops.expected_output["vrf_details"].update({vrf: "Configured"})
+                    tops.expected_output["vrfs"].update({vrf: {"api_acl_configured": True}})
                     if vrf in acl["activeVrfs"]:
                         acl_found = True
-                        tops.actual_output["vrf_details"].update({vrf: "Configured"})
-                    if not acl_found:
-                        tops.actual_output["vrf_details"].update({vrf: "Not Configured"})
+                        tops.actual_output["vrfs"].update({vrf: {"api_acl_configured": True}})
+                if not acl_found:
+                    tops.actual_output["vrfs"].update({vrf: {"api_acl_configured": False}})
 
             # Forming output message if test result is failed.
             if tops.actual_output != tops.expected_output:
                 tops.output_msg = "\n"
                 non_configured_vrfs = []
-                for vrf_name, vrf_status in tops.expected_output["vrf_details"].items():
-                    if vrf_status != tops.actual_output["vrf_details"].get(vrf_name):
+                for vrf_name, vrf_status in tops.expected_output["vrfs"].items():
+                    if vrf_status != tops.actual_output["vrfs"].get(vrf_name):
                         non_configured_vrfs.append(vrf_name)
                 vrf_configured_status = ", ".join(non_configured_vrfs)
                 tops.output_msg += (
-                    f"Following vrfs are not ACL configured: {vrf_configured_status}."
+                    "For the following VRFs, API ACL is not configured on the device:"
+                    f" {vrf_configured_status}."
                 )
 
         except (AssertionError, AttributeError, LookupError, EapiError) as excep:
