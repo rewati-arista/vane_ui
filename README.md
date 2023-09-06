@@ -6,16 +6,17 @@ Network Certification Tool
 
 ## Description
 
-Vane is an open source, network validation tool which runs tests against Arista networking 
-devices, by connecting to devices on a given network, executing commands and performing 
+Vane is an open source, network validation tool which runs tests against Arista networking
+devices, by connecting to devices on a given network, executing commands and performing
 tests against their output.  Vane eliminates repetitive testing tasks by automating network
 validation which can take users months to complete.
 
 ## Installation
 
-The Vane application is installed using the Python poetry packaging system. 
+Once cloned, the Vane application is installed using the Python poetry packaging system.
 
-Install vane with the following command:
+Execute the following commands to set up Vane within your poetry virtual environment
+
 ```
     vane # poetry install
 ```
