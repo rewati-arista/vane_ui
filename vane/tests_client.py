@@ -153,6 +153,7 @@ class TestsClient:
         logging.info("Starting test setup")
         self._remove_result_files()
         self._remove_test_results_dir()
+        self._remove_test_case_logs()
         self._set_test_parameters()
 
     def test_runner(self):
@@ -383,9 +384,26 @@ class TestsClient:
     def _remove_test_results_dir(self):
         """Removing the subdirectories and the files within them belonging to TEST RESULTS dir"""
 
-        test_results_dir = "reports/TEST RESULTS"
+        test_results_dir = self.data_model["parameters"]["report_dir"] + "/TEST RESULTS"
 
         if os.path.exists(test_results_dir):
             # Deleting a non-empty folder
             shutil.rmtree(test_results_dir, ignore_errors=True)
             logging.info(f"Deleted {test_results_dir} directory successfully")
+
+    def _remove_test_case_logs(self):
+        """Removing the test case logs"""
+
+        logging.info("Remove any existing log files in logs directory: logs")
+
+        # Get the list of files in the logs folder
+        # This folder will always exist as it gets created
+        # in the root logging configuration file
+        files = os.listdir("logs")
+
+        # Iterate over the files and delete each one
+        for file_name in files:
+            if file_name != "vane.log":
+                file_path = os.path.join("logs", file_name)
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
