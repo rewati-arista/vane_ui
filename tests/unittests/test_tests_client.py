@@ -289,7 +289,7 @@ def test__set_test_parameters(loginfo, logwarn, mocker):
         "tests/unittests/fixtures/defs_set_test_params.yaml", DUTS
     )
 
-    mocker.patch("vane.tests_client.now", return_value="-08-01-2023 15:18:22")
+    mocker.patch("vane.tests_client.now", return_value="-08-01-2023 15:18:21")
 
     # Run _set_test_parameters
     client._set_test_parameters()
@@ -303,7 +303,7 @@ def test__set_test_parameters(loginfo, logwarn, mocker):
         call("Running All test cases."),
         call(
             "Set HTML report name to: --html=tests/unittests/fixtures/reports/"
-            "report-08-01-2023 15:18:22.html"
+            "report-08-01-2023 15:18:21.html"
         ),
         call("Set --json report name to: --json=tests/unittests/fixtures/reports/report.json"),
     ]
