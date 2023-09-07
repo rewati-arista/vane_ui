@@ -45,6 +45,7 @@ import yaml
 from jinja2 import Template
 from vane import config, device_interface
 from vane.vane_logging import logging
+from vane.utils import render_cmds
 
 
 DEFAULT_EOS_CONN = "eapi"
@@ -1391,11 +1392,14 @@ class TestOps:
         # then run commands
         try:
             if cmd_type == "show":
+                # see if cmds need are template, if they are, then render them using
+                # dut object
+                actual_cmds, cmds_changed = render_cmds(dut, cmds)
                 # if encoding is json run the commands, store the results
                 if encoding == "json":
-                    json_results = conn.enable(cmds)
+                    json_results = conn.enable(actual_cmds)
                 # also run the commands in text mode
-                txt_results = conn.enable(cmds, encoding="text")
+                txt_results = conn.enable(actual_cmds, encoding="text")
             else:
                 # run the config cmd
                 txt_results = conn.config(cmds)
@@ -1403,10 +1407,14 @@ class TestOps:
             logging.error(f"Following cmds {cmds} generated exception {str(e)}")
             # add the cmds to _show_cmds cmds list
             # add the exception result for all the cmds in cmds list
+            import pdb
+            pdb.set_trace()
             for cmd in cmds:
                 self._show_cmds[dut_name].append(cmd)
-                self._show_cmd_txts[dut_name].append(str(e))
-
+                if cmds_changed:
+                    self._show_cmd_txts[dut_name].append(f"{cmd} failed")
+                else:
+                    self._show_cmd_txts[dut_name].append(str(e))
             raise e
 
         # add the cmds to _show_cmds list
