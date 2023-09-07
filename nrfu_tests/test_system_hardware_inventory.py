@@ -17,7 +17,7 @@ TEST_SUITE = "nrfu_tests"
 
 @pytest.mark.nrfu_test
 @pytest.mark.system
-class SystemHardwareInventoryTests:
+class HardwareInventoryTests:
     """
     Testcases for the verification of system hardware inventory on the device
     """
@@ -56,6 +56,11 @@ class SystemHardwareInventoryTests:
                 version_output,
             )
             self.output += f"\n\nOutput of {tops.show_cmd} command is: \n{version_output}"
+
+            # Skipping the testcase if all the inventory slots are not inserted.
+            inventory_verification_status = list(test_params["hardware_inventory_checks"].values())
+            if not any(inventory_verification_status):
+                pytest.skip(f"Inventory slots are not inserted on {tops.dut_name}")
 
             # Skipping testcase if device is vEOS.
             if "vEOS" in version_output.get("modelName"):
@@ -135,7 +140,7 @@ class SystemHardwareInventoryTests:
                             slot_status.append(card_slot)
                     if slot_status:
                         message = f"\n{slot_name.replace('_', ' ')}: "
-                        message += f"{', '.join(slot_status)}\n"
+                        message += f"{', '.join(slot_status)}"
                         output_msg.append(message)
                 tops.output_msg += "".join(output_msg)
 
