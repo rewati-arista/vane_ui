@@ -39,6 +39,7 @@ class BgpEvpnTests:
         self.output = ""
         tops.actual_output = {"bgp_peers": {}}
         tops.expected_output = {"bgp_peers": {}}
+        show_cmd = "show bgp evpn summary"
         input_parameters = tops.test_parameters["input"]
         skip_on_command_unavailable = input_parameters["skip_on_command_unavailable"]
         evpn_output = {}
@@ -53,7 +54,7 @@ class BgpEvpnTests:
             """
 
             try:
-                evpn_output = dut["output"][tops.show_cmd]["json"]
+                evpn_output = tops.run_show_cmds([show_cmd])
 
             except CommandError:
                 # Checking for the condition whether to skip the test case or
@@ -72,15 +73,13 @@ class BgpEvpnTests:
             logger.info(
                 "On device %s, output of %s command is:\n%s\n",
                 tops.dut_name,
-                tops.show_cmd,
+                show_cmd,
                 evpn_output,
             )
             self.output += (
-                f"On device {tops.dut_name}, output of {tops.show_cmd} command is:\n{evpn_output}\n"
+                f"On device {tops.dut_name}, output of {show_cmd} command is:\n{evpn_output}\n"
             )
-            assert evpn_output, "BGP EVPN output is not found."
-
-            bgp_evpn_neighbors = evpn_output.get("vrfs")
+            bgp_evpn_neighbors = evpn_output[0].get("result", {}).get("vrfs")
             assert bgp_evpn_neighbors, "VRFs details are not found in the output."
 
             # Collecting peer details and forming expected and actual output dictionaries
