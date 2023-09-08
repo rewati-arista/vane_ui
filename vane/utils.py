@@ -116,6 +116,7 @@ def now():
 
     return (datetime.datetime.now()).strftime("%d-%m-%Y %H:%M:%S")
 
+
 def render_cmds(dut, cmds):
     """
     Method to convert cmds from jinja template using dut data
@@ -125,7 +126,6 @@ def render_cmds(dut, cmds):
     Returns: actual_cmds - rendered cmds
     """
     actual_cmds = []
-    cmd_changed = False
     for cmd in cmds:
         cmd_template = Template(cmd)
         actual_cmd = cmd_template.render(dut)

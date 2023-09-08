@@ -1292,7 +1292,14 @@ class TestOps:
         )
 
     def run_show_cmds(
-        self, show_cmds, dut=None, encoding="json", conn_type="eapi", timeout=0, new_conn=False, hidden_cmd=False,
+        self,
+        show_cmds,
+        dut=None,
+        encoding="json",
+        conn_type="eapi",
+        timeout=0,
+        new_conn=False,
+        hidden_cmd=False,
     ):
         """run_show_cmds is a wrapper which runs the 'show_cmds'
         conn_type determines how the cmds are being run
@@ -1330,7 +1337,15 @@ class TestOps:
         )
 
     def _run_and_record_cmds(
-        self, cmds, conn_type, timeout, new_conn, encoding="json", cmd_type="show", dut=None, hidden_cmd=False
+        self,
+        cmds,
+        conn_type,
+        timeout,
+        new_conn,
+        encoding="json",
+        cmd_type="show",
+        dut=None,
+        hidden_cmd=False,
     ):
         """_run_and_record_cmds runs both config and show cmds and records the output
         of these commands
@@ -1407,7 +1422,7 @@ class TestOps:
             else:
                 # run the config cmd
                 txt_results = conn.config(cmds)
-        except BaseException as e:
+        except (EapiError, Exception) as e:# pylint: disable=broad-except
             logging.error(f"Following cmds {cmds} generated exception {str(e)}")
             # add the cmds to _show_cmds cmds list
             # add the exception result for all the cmds in cmds list
@@ -1415,10 +1430,9 @@ class TestOps:
                 self._show_cmds[dut_name].append(cmd)
                 if hidden_cmd:
                     self._show_cmd_txts[dut_name].append(f"{cmd} failed")
-                    logging.error(f"Caught {e} while running {cmd}")
                     msg = f"{cmd} failed to run. See logs for more details"
-                    raise EapiError(message=msg)
-                else:
+                    raise EapiError(message=msg) from e
+                if not hidden_cmd:
                     self._show_cmd_txts[dut_name].append(str(e))
                     raise e
 

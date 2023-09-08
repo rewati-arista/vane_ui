@@ -529,7 +529,6 @@ class VaneTests:
         tops.test_result = tops.expected_output == tops.actual_output
         tops.generate_report(tops.dut_name, tops.output_msg)
         assert tops.expected_output == tops.actual_output
-        
 
     def test_cmd_template(self, dut, tests_definitions):
         """
@@ -568,12 +567,6 @@ class VaneTests:
             dut["snmp_local_interface_ip"] = "192.168.0.9"
             output = self.tops.run_show_cmds([snmp_walk_cmd], dut=dut, hidden_cmd=True)
             snmp_output = output[0]["result"]["messages"][0].split("hrProcessorLoad\n")
-            logger.info(
-                "On device %s output of %s command is:\n%s\n",
-                self.tops.dut_name,
-                snmp_walk_cmd,
-                snmp_output,
-            )
 
             # Verifying the snmpwalk command output is not empty and updating the actual output
             # with snmp status
@@ -600,4 +593,3 @@ class VaneTests:
         self.tops.parse_test_steps(self.test_cmd_template)
         self.tops.generate_report(dut["name"], self.output)
         assert self.tops.expected_output == self.tops.actual_output
-
