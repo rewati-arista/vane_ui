@@ -54,7 +54,7 @@ from jinja2 import Template, Undefined
 from pytest import ExitCode
 from vane.vane_logging import logging
 from vane import tests_tools
-from vane.utils import now
+from vane.utils import return_date
 
 
 class NullUndefined(Undefined):
@@ -248,11 +248,14 @@ class TestsClient:
         """Set html_report for test run"""
 
         html_report = self.data_model["parameters"].get("html_report")
-        dt_string = now()
-        html_title = html_report + dt_string
+        self_contained = self.data_model["parameters"].get("self_contained")
+        _, dt_string = return_date()
+        html_title = html_report + "_" + dt_string
         html_name = f"--html={html_title}.html"
         list_out = [x for x in self.test_parameters if "--html" in x]
 
+        if self_contained:
+            self.test_parameters.append("--self-contained-html")
         if html_report and html_name not in self.test_parameters:
             logging.info(f"Set HTML report name to: {html_name}")
             self.test_parameters.append(html_name)
