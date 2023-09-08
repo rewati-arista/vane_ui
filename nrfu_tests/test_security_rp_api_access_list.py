@@ -7,11 +7,12 @@ Test case to verify that ACL is configured for each VRF on which API is enabled.
 
 import pytest
 from pyeapi.eapilib import EapiError
-from vane.logger import logger
 from vane.config import dut_objs, test_defs
 from vane import tests_tools
+from vane import test_case_logger
 
 TEST_SUITE = "nrfu_tests"
+logging = test_case_logger.setup_logger(__file__)
 
 
 @pytest.mark.nrfu_test
@@ -39,16 +40,16 @@ class AclsApiAccessTests:
         self.output = ""
         show_cmds = tops.show_cmds[tops.dut_name]
 
-        # Forming output message if test result is passed.
+        # Forming output message if the test result is passed.
         tops.output_msg = "All VRFs that the API is active on, an ACL is configured."
 
         try:
             """
-            TS: Running `show management api http-commands` command on dut
+            TS: Running `show management API http-commands` command on dut
             and collecting the list of VRFs.
             """
             output_api_vrfs = dut["output"][show_cmds[0]]["json"]
-            logger.info(
+            logging.info(
                 "On device %s, output of %s command is:\n%s\n",
                 tops.dut_name,
                 show_cmds[0],
@@ -57,11 +58,11 @@ class AclsApiAccessTests:
             self.output = f"Output of {show_cmds[0]} command is:\n{output_api_vrfs}\n"
 
             """
-            TS: Running `show management api http-commands ip access-list summary` command on dut
+            TS: Running `show management API http-commands ip access-list summary` command on dut
             and verifying that all the VRFs are API ACL configured.
             """
             output_api_acls = dut["output"][show_cmds[1]]["json"]
-            logger.info(
+            logging.info(
                 "On device %s, output of %s command is:\n%s\n",
                 tops.dut_name,
                 show_cmds[1],
@@ -84,12 +85,13 @@ class AclsApiAccessTests:
                     if vrf in acl["activeVrfs"]:
                         acl_found = True
                         tops.actual_output["vrfs"].update({vrf: {"api_acl_configured": True}})
+                        break
                 if not acl_found:
                     tops.actual_output["vrfs"].update({vrf: {"api_acl_configured": False}})
 
-            # Forming output message if test result is failed.
+            # Forming output message if the test result is failed.
             if tops.actual_output != tops.expected_output:
-                tops.output_msg = "\n"
+                tops.output_msg = ""
                 non_configured_vrfs = []
                 for vrf_name, vrf_status in tops.expected_output["vrfs"].items():
                     if vrf_status != tops.actual_output["vrfs"].get(vrf_name):
@@ -102,8 +104,8 @@ class AclsApiAccessTests:
 
         except (AssertionError, AttributeError, LookupError, EapiError) as excep:
             tops.output_msg = tops.actual_output = str(excep).split("\n", maxsplit=1)[0]
-            logger.error(
-                "On device %s, Error while running the testcase is:\n%s",
+            logging.error(
+                "On device %s, Error while running the test case is:\n%s",
                 tops.dut_name,
                 tops.actual_output,
             )
