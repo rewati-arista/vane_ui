@@ -33,7 +33,8 @@
 
 import pytest
 from pyeapi.eapilib import EapiError
-from vane import tests_tools, test_case_logger
+from vane import tests_tools
+from vane.vane_logging import logging
 from vane.config import dut_objs, test_defs
 
 
@@ -46,8 +47,6 @@ test1_ids = dut_parameters["test_if_extensions_are_installed_on_"]["ids"]
 
 test2_duts = dut_parameters["test_if_extensions_are_erroring_on_"]["duts"]
 test2_ids = dut_parameters["test_if_extensions_are_erroring_on_"]["ids"]
-
-logging = test_case_logger.setup_logger(__file__)
 
 
 @pytest.mark.nrfu
