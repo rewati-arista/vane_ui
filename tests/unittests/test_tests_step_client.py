@@ -11,7 +11,7 @@ TEST_DIR = "tests/unittests/fixtures/host"
 TEST_FILE = ["tests/unittests/fixtures/host/test_host.py"]
 TEST_STEP = [
     "September 07, 2023 06:22:55PM",
-    "TD: Verify hostname is set on device is correct",
+    "TD: Verify hostname set on device is correct",
     "TS: Collecting the output of 'show hostname' command from DUT",
     "TS: Verify LLDP system name",
     "TS: Creating test report based on results",
