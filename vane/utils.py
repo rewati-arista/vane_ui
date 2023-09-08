@@ -117,7 +117,7 @@ def now():
 
 
 def return_date():
-    """Genreate a formatted date and return to calling
+    """Generate a formatted date and return to calling
     function.
     """
 
