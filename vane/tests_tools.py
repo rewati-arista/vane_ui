@@ -1422,7 +1422,7 @@ class TestOps:
             else:
                 # run the config cmd
                 txt_results = conn.config(cmds)
-        except (EapiError, Exception) as e:# pylint: disable=broad-except
+        except (EapiError, Exception) as e:  # pylint: disable=broad-except
             logging.error(f"Following cmds {cmds} generated exception {str(e)}")
             # add the cmds to _show_cmds cmds list
             # add the exception result for all the cmds in cmds list
