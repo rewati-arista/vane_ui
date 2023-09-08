@@ -566,7 +566,7 @@ class VaneTests:
             dut["snmp_privacy_protocol_passphrase"] = "arista123"
             dut["snmp_username"] = "Arista"
             dut["snmp_local_interface_ip"] = "192.168.0.9"
-            output = self.tops.run_show_cmds([snmp_walk_cmd], dut=dut)
+            output = self.tops.run_show_cmds([snmp_walk_cmd], dut=dut, hidden_cmd=True)
             snmp_output = output[0]["result"]["messages"][0].split("hrProcessorLoad\n")
             logger.info(
                 "On device %s output of %s command is:\n%s\n",

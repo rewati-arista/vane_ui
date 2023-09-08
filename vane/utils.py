@@ -123,17 +123,12 @@ def render_cmds(dut, cmds):
     Args: dut - data used in template renedering
     cmds - list of cmds that could be jinja template
     Returns: actual_cmds - rendered cmds
-    cmd_changed - if {{ variable }} construct was found in cmd
     """
-    import pdb
-    pdb.set_trace()
     actual_cmds = []
     cmd_changed = False
     for cmd in cmds:
-        if '{{' in cmd:
-            cmd_changed = True
         cmd_template = Template(cmd)
         actual_cmd = cmd_template.render(dut)
         actual_cmds.append(actual_cmd)
 
-    return actual_cmds, cmd_changed
+    return actual_cmds
