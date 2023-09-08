@@ -121,7 +121,7 @@ def render_cmds(dut, cmds):
     """
     Method to convert cmds from jinja template using dut data
 
-    Args: dut - data used in template renedering
+    Args: dut - data used in template rendering
     cmds - list of cmds that could be jinja template
     Returns: actual_cmds - rendered cmds
     """
