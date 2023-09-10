@@ -73,9 +73,9 @@ class AclsApiAccessTests:
             # Collecting VRFs and ACLs from output.
             api_vrfs = output_api_vrfs.get("vrfs")
             api_acls = output_api_acls.get("ipAclList").get("aclList")
-            assert api_vrfs, "Vrfs details are not found in output."
+            assert api_vrfs, "Vrfs details are not found in the output."
 
-            assert api_acls, "ACL details for APIs is not found in output."
+            assert api_acls, "ACL details for APIs is not found in the output."
 
             # Collecting actual and expected output.
             for vrf in api_vrfs:
