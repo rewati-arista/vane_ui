@@ -2,24 +2,25 @@
 # Arista Networks, Inc. Confidential and Proprietary.
 
 """
-Testcases for the verification of system hardware inventory on the device
+Test case for the verification of system hardware inventory on the device
 """
 
 import re
 import pytest
 from pyeapi.eapilib import EapiError
 from vane import tests_tools
-from vane.logger import logger
+from vane import test_case_logger
 from vane.config import dut_objs, test_defs
 
 TEST_SUITE = "nrfu_tests"
+logging = test_case_logger.setup_logger(__file__)
 
 
 @pytest.mark.nrfu_test
 @pytest.mark.system
 class HardwareInventoryTests:
     """
-    Testcases for the verification of system hardware inventory on the device
+    Test case for the verification of system hardware inventory on the device
     """
 
     dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
@@ -41,41 +42,39 @@ class HardwareInventoryTests:
         tops.expected_output = {"hardware_inventory_details": {}}
         actual_output, expected_output = {}, {}
 
-        # Forming output message if test result is pass
+        # Forming output message if the test result is pass
         tops.output_msg = "Power supply, fan tray and other card slots are installed on the device."
 
         try:
             """
-            TS: Running 'show version' command on device and skipping the test case
-            for device if platform is vEOS.
+            TS: Running the 'show version' command on the device and skipping the test case
+            for the device if the platform is vEOS.
             """
             version_output = dut["output"]["show version"]["json"]
-            logger.info(
-                "On device %s, output of `show version` command is: \n%s\n",
-                tops.dut_name,
-                version_output,
+            logging.info(
+                (
+                    f"On device {tops.dut_name}, the output of the `show version` command is:"
+                    f" \n{version_output}\n"
+                ),
             )
             self.output += f"\n\nOutput of {tops.show_cmd} command is: \n{version_output}"
 
-            # Skipping the testcase if all the inventory slots are not inserted.
+            # Skipping the test case if all the inventory slots are not inserted.
             inventory_verification_status = list(test_params["hardware_inventory_checks"].values())
             if not any(inventory_verification_status):
                 pytest.skip(f"Inventory slots are not inserted on {tops.dut_name}")
 
-            # Skipping testcase if device is vEOS.
+            # Skipping test case if the device is vEOS.
             if "vEOS" in version_output.get("modelName"):
                 pytest.skip(f"{tops.dut_name} is vEOS device, hence test skipped.")
 
             """
-            TS: Running `show inventory` command on the device and verifying the power supply
+            TS: Running the `show inventory` command on the device and verifying the power supply
             slots, fan tray slots and other card slots are inserted on the device.
             """
             output = dut["output"][tops.show_cmd]["json"]
-            logger.info(
-                "On device %s, output of %s command is: \n%s\n",
-                tops.dut_name,
-                tops.show_cmd,
-                output,
+            logging.info(
+                f"On device {tops.dut_name}, output of {tops.show_cmd} command is: \n{output}\n",
             )
             self.output += f"\n\nOutput of {tops.show_cmd} command is: \n{output}"
 
@@ -106,7 +105,7 @@ class HardwareInventoryTests:
                     else:
                         card_name = slot.split("_")[0]
                         slot_output = output["cardSlots"]
-                        assert slot_output, f"{converted_slot_name} are not inserted on the device."
+                        assert slot_output, f"{converted_slot_name} is not inserted on the device."
                         expected_output.update({slot: {}})
                         actual_output.update({slot: {}})
                         for slot_name, slot_details in slot_output.items():
@@ -127,7 +126,7 @@ class HardwareInventoryTests:
             tops.actual_output["hardware_inventory_details"].update(actual_output)
             tops.expected_output["hardware_inventory_details"].update(expected_output)
 
-            # Forming the output message if the testcase is failed
+            # Forming the output message if the test case is failed
             if tops.expected_output != tops.actual_output:
                 tops.output_msg = "\nThe following card slots are not inserted:"
                 output_msg = []
@@ -146,10 +145,9 @@ class HardwareInventoryTests:
 
         except (AssertionError, AttributeError, LookupError, EapiError) as excp:
             tops.actual_output = tops.output_msg = str(excp).split("\n", maxsplit=1)[0]
-            logger.error(
-                "On device %s: Error occurred while running testcase is:\n%s",
-                tops.dut_name,
-                tops.actual_output,
+            logging.error(
+                f"On device {tops.dut_name}, Error while running the test case"
+                f" is:\n{tops.actual_output}"
             )
 
         tops.test_result = tops.expected_output == tops.actual_output

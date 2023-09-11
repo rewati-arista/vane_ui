@@ -294,10 +294,10 @@
       description: Test case for the verification of system hardware inventory on the device.
       test_id: NRFU6.8
       show_cmd: show inventory
-      expected_output: null # Expected output is set dynamically inside the testsuite file.
+      expected_output: null # Expected output is set dynamically inside the test suite file.
       test_criteria: Power supply, fan tray and other card slots should be installed on the device. # Setting test case’s pass/fail criteria for reporting
-      report_style: modern # Setting report_style as modern If report type is set to modern, then it will update steps, assumptions, and external systems in the docx report.
-      hardware_inventory_checks: # Change to True or False based on if you want to fail if a particular module type is missing.
+      report_style: modern # Setting report_style as modern If the report type is set to modern, then it will update steps, assumptions, and external systems in the docx report.
+      hardware_inventory_checks: # Change to True or False based on whether you want to fail if a particular module type is missing.
         fail_on_missing_fan_tray_slots: True
         fail_on_missing_power_supply_slots: True
         fail_on_missing_supervisor_card_slots: True
