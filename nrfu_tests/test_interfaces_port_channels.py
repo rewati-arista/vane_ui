@@ -5,11 +5,11 @@
 
 import pytest
 from pyeapi.eapilib import EapiError
-from vane import tests_tools
-from vane.logger import logger
+from vane import tests_tools, test_case_logger
 from vane.config import dut_objs, test_defs
 
 TEST_SUITE = "nrfu_tests"
+logging = test_case_logger.setup_logger(__file__)
 
 
 @pytest.mark.nrfu_test
@@ -24,7 +24,7 @@ class PortChannelMemberInterfacesTests:
     @pytest.mark.parametrize("dut", test_duts, ids=test_ids)
     def test_port_channel_member_interface_details(self, dut, tests_definitions):
         """
-        TD: Testcases for the verification of port channel members interfaces should
+        TD: Testcases to verify that port channel members interfaces should
         be collecting and distributing.
         Args:
           dut(dict): Details related to the switches
@@ -43,11 +43,8 @@ class PortChannelMemberInterfacesTests:
             port channel members interfaces are collecting and distributing.
             """
             output = dut["output"][tops.show_cmd]["json"]
-            logger.info(
-                "On device %s, output of %s command is:\n%s\n",
-                tops.dut_name,
-                tops.show_cmd,
-                output,
+            logging.info(
+                f"On device {tops.dut_name}, output of {tops.show_cmd} command is:\n{output}\n",
             )
             self.output = f"\nOutput of {tops.show_cmd} command is: \n{output}"
 
@@ -116,10 +113,9 @@ class PortChannelMemberInterfacesTests:
 
         except (AttributeError, LookupError, EapiError) as excp:
             tops.actual_output = tops.output_msg = str(excp).split("\n", maxsplit=1)[0]
-            logger.error(
-                "On device %s: Error occurred while running testcase is:\n%s",
-                tops.dut_name,
-                tops.actual_output,
+            logging.error(
+                f"On device {tops.dut_name}: Error occurred while running testcase"
+                f" is:\n{tops.actual_output}"
             )
 
         tops.test_result = tops.expected_output == tops.actual_output

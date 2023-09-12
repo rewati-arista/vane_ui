@@ -82,7 +82,7 @@
       filter:
         - BLFE1
     - name: test_port_channel_member_interface_details
-      description: Testcases for the verification of port channel member interfaces should be collecting and distributing.
+      description: Testcases to verify that port channel member interfaces should be collecting and distributing.
       test_id: NRFU2.6
       show_cmd: show lacp interface all-ports
       expected_output: null # Forming expected output dynamically inside the testcase.
