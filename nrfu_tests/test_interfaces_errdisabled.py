@@ -5,11 +5,11 @@
 
 import pytest
 from pyeapi.eapilib import EapiError
-from vane import tests_tools
-from vane.logger import logger
+from vane import tests_tools, test_case_logger
 from vane.config import dut_objs, test_defs
 
 TEST_SUITE = "nrfu_tests"
+logging = test_case_logger.setup_logger(__file__)
 
 
 @pytest.mark.nrfu_test
@@ -45,11 +45,8 @@ class InterfaceStatusTests:
             none of the interface is in error disabled state.
             """
             interface_details = dut["output"][tops.show_cmd]["json"]
-            logger.info(
-                "On device %s, Output of %s command is:\n%s\n",
-                tops.dut_name,
-                tops.show_cmd,
-                interface_details,
+            logging.info(
+                f"On device {tops.dut_name}, Output of {tops.show_cmd} command is:\n{interface_details}\n"
             )
             interface_statuses = interface_details.get("interfaceStatuses")
             tops.expected_output["interface_state_details"] = {
@@ -72,10 +69,8 @@ class InterfaceStatusTests:
 
         except (AttributeError, LookupError, EapiError) as excep:
             tops.actual_output = tops.output_msg = str(excep).split("\n", maxsplit=1)[0]
-            logger.error(
-                "On device %s: Error while running the testcase is:\n%s",
-                tops.dut_name,
-                tops.actual_output,
+            logging.error(
+                f"On device {tops.dut_name}: Error while running the testcase is:\n{tops.actual_output}"
             )
 
         tops.test_result = tops.expected_output == tops.actual_output
