@@ -2,24 +2,24 @@
 # Arista Networks, Inc. Confidential and Proprietary.
 
 """
-Testcases for verification of redundant supervisor card.
+Test case for the verification of redundant supervisor card.
 """
 
 import pytest
 import pyeapi.eapilib
 from pyeapi.eapilib import EapiError
-from vane.logger import logger
 from vane.config import dut_objs, test_defs
-from vane import tests_tools
+from vane import tests_tools, test_case_logger
 
 TEST_SUITE = "nrfu_tests"
+logging = test_case_logger.setup_logger(__file__)
 
 
 @pytest.mark.nrfu_test
 @pytest.mark.base_services
 class RedundantSupervisorCardTests:
     """
-    Testcases for verification of redundant supervisor card.
+    Test case for the verification of redundant supervisor card.
     """
 
     dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
@@ -29,7 +29,7 @@ class RedundantSupervisorCardTests:
     @pytest.mark.parametrize("dut", test_duts, ids=test_ids)
     def test_redundant_sso_card(self, dut, tests_definitions):
         """
-        TD: Testcase for verification of redundant supervisor card.
+        TD: Test case for the verification of redundant supervisor card.
         Args:
             dut(dict): details related to a particular device.
             tests_definitions(dict): test suite and test case parameters.
@@ -39,23 +39,23 @@ class RedundantSupervisorCardTests:
         tops.actual_output = {"sso_protocol_details": {}}
         tops.show_cmd = "show redundancy status"
 
-        # Forming output message if test result is passed
+        # Forming output message if the test result is passed
         tops.output_msg = (
             "Redundancy SSO protocol is configured, operational and ready for switchover."
         )
 
         try:
             """
-            TS: Running 'show redundancy status' command on the device and
+            TS: Running the 'show redundancy status' command on the device and
             verifying that the SSO protocol is configured, operational and ready for switchover.
             """
             try:
                 output = tops.run_show_cmds([tops.show_cmd])
-                logger.info(
-                    "On device %s, output of %s command is: \n%s\n",
-                    tops.dut_name,
-                    tops.show_cmd,
-                    output,
+                logging.info(
+                    (
+                        f"On device {tops.dut_name}, the output of the `{tops.show_cmd}` command"
+                        f" is: \n{output}\n"
+                    ),
                 )
                 self.output += f"\n\nOutput of {tops.show_cmd} command is: \n{output}"
                 output = output[0]["result"]
@@ -63,11 +63,11 @@ class RedundantSupervisorCardTests:
             except pyeapi.eapilib.CommandError as error:
                 if "Unavailable command" in str(error):
                     pytest.skip(
-                        f"Skipping the testcase as the device {tops.dut_name}, is not a dual"
+                        f"Skipping the test case as the device {tops.dut_name}, is not a dual"
                         " supervisor device."
                     )
 
-            # Skipping testcase if SSO protocol is not configured on the device.
+            # Skipping test case if SSO protocol is not configured on the device.
             if output["peerState"] == "notInserted":
                 pytest.skip(f"Peer supervisor card is not inserted on device {tops.dut_name}")
 
@@ -79,7 +79,7 @@ class RedundantSupervisorCardTests:
                 }
             )
 
-            # Forming the output message if the testcase is failed
+            # Forming the output message if the test result is failed
             if tops.expected_output != tops.actual_output:
                 tops.output_msg = "\n"
                 expected_details = tops.expected_output["sso_protocol_details"]
@@ -104,10 +104,9 @@ class RedundantSupervisorCardTests:
 
         except (AttributeError, LookupError, EapiError) as excep:
             tops.output_msg = tops.actual_output = str(excep).split("\n", maxsplit=1)[0]
-            logger.error(
-                "On device %s, Error while running the testcase is:\n%s",
-                tops.dut_name,
-                tops.actual_output,
+            logging.error(
+                f"On device {tops.dut_name}, Error while running the test case"
+                f" is:\n{tops.actual_output}"
             )
 
         tops.test_result = tops.expected_output == tops.actual_output
