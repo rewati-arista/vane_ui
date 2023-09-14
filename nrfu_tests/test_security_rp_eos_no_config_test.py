@@ -95,7 +95,8 @@ class EosNoConfigTests:
         except (AssertionError, AttributeError, LookupError, EapiError) as excep:
             tops.actual_output = tops.output_msg = str(excep).split("\n", maxsplit=1)[0]
             logging.error(
-                f"On device {tops.dut_name}: Error while running the testcase is:\n{tops.actual_output}"
+                f"On device {tops.dut_name}: Error while running the testcase"
+                f" is:\n{tops.actual_output}"
             )
 
         tops.test_result = tops.expected_output == tops.actual_output
