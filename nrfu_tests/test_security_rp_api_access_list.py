@@ -8,8 +8,7 @@ Test case to verify that ACL is configured for each VRF on which API is enabled.
 import pytest
 from pyeapi.eapilib import EapiError
 from vane.config import dut_objs, test_defs
-from vane import tests_tools
-from vane import test_case_logger
+from vane import tests_tools, test_case_logger
 
 TEST_SUITE = "nrfu_tests"
 logging = test_case_logger.setup_logger(__file__)
@@ -50,10 +49,8 @@ class AclsApiAccessTests:
             """
             output_api_vrfs = dut["output"][show_cmds[0]]["json"]
             logging.info(
-                "On device %s, output of %s command is:\n%s\n",
-                tops.dut_name,
-                show_cmds[0],
-                output_api_vrfs,
+                f"On device {tops.dut_name}, output of {show_cmds[0]} command"
+                f" is:\n{output_api_vrfs}\n"
             )
             self.output = f"Output of {show_cmds[0]} command is:\n{output_api_vrfs}\n"
 
@@ -63,10 +60,8 @@ class AclsApiAccessTests:
             """
             output_api_acls = dut["output"][show_cmds[1]]["json"]
             logging.info(
-                "On device %s, output of %s command is:\n%s\n",
-                tops.dut_name,
-                show_cmds[1],
-                output_api_acls,
+                f"On device {tops.dut_name}, output of {show_cmds[1]} command"
+                f" is:\n{output_api_acls}\n"
             )
             self.output = f"Output of {show_cmds[1]} command is:\n{output_api_acls}\n"
 
@@ -105,9 +100,8 @@ class AclsApiAccessTests:
         except (AssertionError, AttributeError, LookupError, EapiError) as excep:
             tops.output_msg = tops.actual_output = str(excep).split("\n", maxsplit=1)[0]
             logging.error(
-                "On device %s, Error while running the test case is:\n%s",
-                tops.dut_name,
-                tops.actual_output,
+                f"On device {tops.dut_name}, Error while running the test case"
+                f" is:\n{tops.actual_output}"
             )
 
         tops.test_result = tops.expected_output == tops.actual_output
