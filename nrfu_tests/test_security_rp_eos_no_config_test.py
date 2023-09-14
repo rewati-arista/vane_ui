@@ -5,11 +5,11 @@
 
 import pytest
 from pyeapi.eapilib import EapiError
-from vane import tests_tools
-from vane.logger import logger
+from vane import tests_tools, test_case_logger
 from vane.config import dut_objs, test_defs
 
 TEST_SUITE = "nrfu_tests"
+logging = test_case_logger.setup_logger(__file__)
 
 
 @pytest.mark.nrfu_test
@@ -25,7 +25,7 @@ class EosNoConfigTests:
     @pytest.mark.parametrize("dut", test_duts, ids=test_ids)
     def test_eos_no_config_functionality(self, dut, tests_definitions):
         """
-        TD: Testcases for verification of security root port EOS no configurations functionality
+        TD: Testcases for verification of security root port "EOS no configurations" functionality
         Args:
           dut(dict): Details related to the switches
           tests_definitions(dict): Test suite and test case parameters
@@ -42,14 +42,11 @@ class EosNoConfigTests:
         try:
             """
             TS: Running `show lldp neighbors detail` command and verifying that localhost should not
-            found on the LLDP neighbor information.
+            be found in the LLDP neighbor information.
             """
             lldp_info = dut["output"][tops.show_cmd]["json"]
-            logger.info(
-                "On device %s, Output of %s command is:\n%s\n",
-                tops.dut_name,
-                tops.show_cmd,
-                lldp_info,
+            logging.info(
+                f"On device {tops.dut_name}, Output of {tops.show_cmd} command is:\n{lldp_info}\n"
             )
             self.output += (
                 f"On device {tops.dut_name}, Output of {tops.show_cmd} is:\n{lldp_info}\n"
@@ -97,10 +94,8 @@ class EosNoConfigTests:
 
         except (AssertionError, AttributeError, LookupError, EapiError) as excep:
             tops.actual_output = tops.output_msg = str(excep).split("\n", maxsplit=1)[0]
-            logger.error(
-                "On device %s: Error while running the testcase is:\n%s",
-                tops.dut_name,
-                tops.actual_output,
+            logging.error(
+                f"On device {tops.dut_name}: Error while running the testcase is:\n{tops.actual_output}"
             )
 
         tops.test_result = tops.expected_output == tops.actual_output
