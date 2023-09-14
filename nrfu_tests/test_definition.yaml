@@ -1,313 +1,314 @@
 - name: nrfu_tests
   testcases:
-    - name: test_
-      description: null
-      test_id: NRFU1.1
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU1.2
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU1.3
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU1.4
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU2.1
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU2.2
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU2.3
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU2.4
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU2.5
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU2.6
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU3.1
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU4.1
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU4.2
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU4.3
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU4.4
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU5.1
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU5.2
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU5.3
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU5.4
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU5.5
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_security_rp_ssh_access_list
-      description: Test case to verify that ACL is configured for each VRF on which SSH is enabled
-      test_id: NRFU5.6
-      show_cmds:
-        - show vrf
-        - show management ssh ip access-list summary
-      expected_output: null # Expected output is formed inside a test case file dynamically.
-      test_criteria: All VRFs that the API is active on should have an ACL to be configured.
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU5.7
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU5.8
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU6.1
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU6.2
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_hardware_core_dump_files
-      description: Test case for verification of core dump files
-      test_id: NRFU6.3
-      show_cmd: show system coredump
-      expected_output:
-        core_dump_files_not_found: True
-      test_criteria: Core dump files should not found on the device. # Setting test case’s pass/fail criteria for reporting
-      report_style: modern # Setting report_style as modern If report type is set to modern, then it will update steps, assumptions, and external systems in the docx report.
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU6.4
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU6.5
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU6.6
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU6.7
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU6.8
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU6.9
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU6.10
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
-    - name: test_
-      description: null
-      test_id: NRFU6.11
-      show_cmd: null
-      expected_output: null
-      report_style: modern
-      criteria: names
-      filter:
-        - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU1.1
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU1.2
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU1.3
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU1.4
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU2.1
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU2.2
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU2.3
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU2.4
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU2.5
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU2.6
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU3.1
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU4.1
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU4.2
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU4.3
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU4.4
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU5.1
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU5.2
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU5.3
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU5.4
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU5.5
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_security_rp_ssh_access_list
+    description: Test case to verify that ACL is configured for each VRF on which
+      SSH is enabled
+    test_id: NRFU5.6
+    show_cmds:
+    - show vrf
+    - show management ssh ip access-list summary
+    expected_output: null
+    test_criteria: All VRFs that the API is active on should have an ACL to be configured.
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU5.7
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU5.8
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU6.1
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU6.2
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_hardware_core_dump_files
+    description: Test case for verification of core dump files
+    test_id: NRFU6.3
+    show_cmd: show system coredump
+    expected_output:
+      core_dump_files_not_found: true
+    test_criteria: Core dump files should not be found on the device.
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU6.4
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU6.5
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU6.6
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU6.7
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU6.8
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU6.9
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU6.10
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1
+  - name: test_
+    description: null
+    test_id: NRFU6.11
+    show_cmd: null
+    expected_output: null
+    report_style: modern
+    criteria: names
+    filter:
+    - BLFE1

@@ -7,11 +7,11 @@ Test case for verification of core dump files
 
 import pytest
 from pyeapi.eapilib import EapiError
-from vane.logger import logger
 from vane.config import dut_objs, test_defs
-from vane import tests_tools
+from vane import tests_tools, test_case_logger
 
 TEST_SUITE = "nrfu_tests"
+logging = test_case_logger.setup_logger(__file__)
 
 
 @pytest.mark.nrfu_test
@@ -42,29 +42,25 @@ class CoreDumpFilesTests:
         try:
             """
             TS: Running `show system coredump` command on dut and verifying that core dump files
-            should not found on the device.
+            should not be found on the device.
             """
             core_dump = dut["output"][tops.show_cmd]["json"]
-            logger.info(
-                "On device %s, output of %s command is:\n%s\n",
-                tops.dut_name,
-                tops.show_cmd,
-                core_dump,
+            logging.info(
+                f"On device {tops.dut_name}, output of {tops.show_cmd} command is:\n{core_dump}\n"
             )
             self.output = f"Output of {tops.show_cmd} command is:\n{core_dump}"
             core_dump = core_dump["coreFiles"]
             tops.actual_output["core_dump_files_not_found"] = not bool(core_dump)
 
-            # Output message formation in case of testcase fails.
+            # Output message formation in case test case fails.
             if tops.actual_output != tops.expected_output:
                 tops.output_msg = "Core dump files are found on the device."
 
         except (AttributeError, LookupError, EapiError) as excep:
             tops.output_msg = tops.actual_output = str(excep).split("\n", maxsplit=1)[0]
-            logger.error(
-                "On device %s, Error while running the testcase is:\n%s",
-                tops.dut_name,
-                tops.actual_output,
+            logging.error(
+                f"On device {tops.dut_name}, Error while running the test case"
+                f" is:\n{tops.actual_output}"
             )
 
         tops.test_result = tops.expected_output == tops.actual_output
