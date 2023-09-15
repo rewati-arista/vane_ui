@@ -28,7 +28,7 @@ class BgpEvpnTests:
     @pytest.mark.parametrize("dut", test_duts, ids=test_ids)
     def test_routing_bgp_evpn_peers_state(self, dut, tests_definitions):
         """
-        TD: Test case for verification of routing BGP EVPN functionality.
+        TD: Test case for verification of BGP EVPN functionality.
         Args:
             dut(dict): details related to a particular DUT
             tests_definitions(dict): test suite and test case parameters.
