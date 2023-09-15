@@ -4,4 +4,4 @@ global_dut_filter: # This stanza is optional. If it is not provided by users the
     - BLFE1
 testcase_data:
   NRFU4.1:
-    skip_on_command_unavailable: False
+    skip_on_command_unavailable: False # Skip the test case if the command is unavailable when set to True, otherwise check with assert messaging

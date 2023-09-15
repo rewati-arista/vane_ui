@@ -2,7 +2,7 @@
 # Arista Networks, Inc. Confidential and Proprietary.
 
 """
-Test cases for verification of routing BGP EVPN functionality.
+Test case for verification of BGP EVPN functionality.
 """
 
 import pytest
@@ -18,7 +18,7 @@ logging = test_case_logger.setup_logger(__file__)
 @pytest.mark.routing
 class BgpEvpnTests:
     """
-    Test cases for verification of routing BGP EVPN functionality.
+    Test case for verification of BGP EVPN functionality.
     """
 
     dut_parameters = tests_tools.parametrize_duts(TEST_SUITE, test_defs, dut_objs)
@@ -92,18 +92,17 @@ class BgpEvpnTests:
 
             # Forming output message if the test result is failed
             if tops.expected_output != tops.actual_output:
-                tops.output_msg = ""
+                tops.output_msg = (
+                    "\nExpected state for all BGP EVPN peers is Established but following peers are"
+                    " having different state:"
+                )
                 for peer, peer_state in tops.expected_output["bgp_peers"].items():
                     actual_peer_state = (
                         tops.actual_output.get("bgp_peers", {}).get(peer, {}).get("peer_state")
                     )
                     expected_peer_state = peer_state.get("peer_state")
                     if actual_peer_state != expected_peer_state:
-                        tops.output_msg += (
-                            f"\nFor BGP EVPN peer {peer}, expected peer state is"
-                            f" '{expected_peer_state}', however, actual is found as"
-                            f" '{actual_peer_state}'."
-                        )
+                        tops.output_msg += f"\nPeer {peer} is in '{actual_peer_state}' state."
 
         except (AssertionError, AttributeError, LookupError, EapiError) as excep:
             tops.output_msg = tops.actual_output = str(excep).split("\n", maxsplit=1)[0]

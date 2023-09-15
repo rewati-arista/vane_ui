@@ -100,7 +100,7 @@
       filter:
         - BLFE1
     - name: test_routing_bgp_evpn_peers_state
-      description: Test case for verification of routing BGP EVPN functionality.
+      description: Test case for verification of BGP EVPN functionality.
       test_id: NRFU4.1
       show_cmd: null # Forming show command dynamically in the test file
       expected_output: null # Forming expected output dynamically in the test file
