@@ -7,11 +7,11 @@ Test cases for verification of routing BGP EVPN functionality.
 
 import pytest
 from pyeapi.eapilib import EapiError, CommandError
-from vane.logger import logger
 from vane.config import dut_objs, test_defs
-from vane import tests_tools
+from vane import tests_tools, test_case_logger
 
 TEST_SUITE = "nrfu_tests"
+logging = test_case_logger.setup_logger(__file__)
 
 
 @pytest.mark.nrfu_test
@@ -39,22 +39,21 @@ class BgpEvpnTests:
         self.output = ""
         tops.actual_output = {"bgp_peers": {}}
         tops.expected_output = {"bgp_peers": {}}
-        show_cmd = "show bgp evpn summary"
         input_parameters = tops.test_parameters["input"]
         skip_on_command_unavailable = input_parameters["skip_on_command_unavailable"]
         evpn_output = {}
 
-        # Forming output message if test result is passed
-        tops.output_msg = "All BGP EVPN peers state is established."
+        # Forming output message if the test result is passed
+        tops.output_msg = "All BGP EVPN peers' state is established."
 
         try:
             """
-            TS: Running `show bgp evpn summary` command on device and verifying all the BGP EVPN
+            TS: Running `show bgp evpn summary` command on the device and verifying all the BGP EVPN
             peers state is established.
             """
 
             try:
-                evpn_output = tops.run_show_cmds([show_cmd])
+                evpn_output = dut["output"][tops.show_cmd]["json"]
 
             except CommandError:
                 # Checking for the condition whether to skip the test case or
@@ -70,17 +69,13 @@ class BgpEvpnTests:
                         " ribd mode."
                     )
 
-            logger.info(
-                "On device %s, output of %s command is:\n%s\n",
-                tops.dut_name,
-                show_cmd,
-                evpn_output,
+            logging.info(
+                f"On device {tops.dut_name}, output of {tops.show_cmd} command is:\n{evpn_output}\n"
             )
             self.output += (
-                f"On device {tops.dut_name}, output of {show_cmd} command is:\n{evpn_output}\n"
+                f"On device {tops.dut_name}, output of {tops.show_cmd} command is:\n{evpn_output}\n"
             )
-            bgp_evpn_neighbors = evpn_output[0].get("result", {}).get("vrfs")
-            assert bgp_evpn_neighbors, "VRFs details are not found in the output."
+            bgp_evpn_neighbors = evpn_output.get("vrfs")
 
             # Collecting peer details and forming expected and actual output dictionaries
             # with the peer state
@@ -93,7 +88,7 @@ class BgpEvpnTests:
                     tops.expected_output["bgp_peers"].update({peer: {"peer_state": "Established"}})
                     tops.actual_output["bgp_peers"].update({peer: {"peer_state": peer_state}})
 
-            # Forming output message if test result is failed
+            # Forming output message if the test result is failed
             if tops.expected_output != tops.actual_output:
                 tops.output_msg = ""
                 for peer, peer_state in tops.expected_output["bgp_peers"].items():
@@ -103,17 +98,16 @@ class BgpEvpnTests:
                     expected_peer_state = peer_state.get("peer_state")
                     if actual_peer_state != expected_peer_state:
                         tops.output_msg += (
-                            f"\nFor BGP EVPN peer {peer}, expected state is"
-                            f" '{expected_peer_state}', however actual is found as"
+                            f"\nFor BGP EVPN peer {peer}, expected peer state is"
+                            f" '{expected_peer_state}', however, actual is found as"
                             f" '{actual_peer_state}'."
                         )
 
         except (AssertionError, AttributeError, LookupError, EapiError) as excep:
             tops.output_msg = tops.actual_output = str(excep).split("\n", maxsplit=1)[0]
-            logger.error(
-                "On device %s, Error while running the testcase is:\n%s",
-                tops.dut_name,
-                tops.actual_output,
+            logging.error(
+                f"On device {tops.dut_name}, Error while running the test case"
+                f" is:\n{tops.actual_output}"
             )
 
         tops.test_result = tops.expected_output == tops.actual_output

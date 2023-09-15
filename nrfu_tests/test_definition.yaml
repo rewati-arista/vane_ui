@@ -102,12 +102,12 @@
     - name: test_routing_bgp_evpn_peers_state
       description: Test case for verification of routing BGP EVPN functionality.
       test_id: NRFU4.1
-      show_cmd: null
-      expected_output: null # Forming expected output dynamically in test file
-      test_criteria: All BGP EVPN peers state should be established. # Setting test case’s pass/fail criteria for reporting
-      report_style: modern # Setting report_style as modern If report type is set to modern, then it will update steps, assumptions, and external systems in the docx report
+      show_cmd: show bgp evpn summary
+      expected_output: null # Forming expected output dynamically in the test file
+      test_criteria: All BGP EVPN peers' states should be established. # Setting test case’s pass/fail criteria for reporting
+      report_style: modern # Setting report_style as modern If the report type is set to modern, then it will update steps, assumptions, and external systems in the docx report
       input:
-        skip_on_command_unavailable: False # skip the test case if command is unavailable when set to True, otherwise check with assert messaging
+        skip_on_command_unavailable: False # Skip the test case if the command is unavailable when set to True, otherwise check with assert messaging
       criteria: names
       filter:
         - BLFE1
