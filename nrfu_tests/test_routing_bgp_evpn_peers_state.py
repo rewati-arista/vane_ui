@@ -41,6 +41,7 @@ class BgpEvpnTests:
         tops.expected_output = {"bgp_peers": {}}
         input_parameters = tops.test_parameters["input"]
         skip_on_command_unavailable = input_parameters["skip_on_command_unavailable"]
+        show_cmd = "show bgp evpn summary"
         evpn_output = {}
 
         # Forming output message if the test result is passed
@@ -53,7 +54,7 @@ class BgpEvpnTests:
             """
 
             try:
-                evpn_output = dut["output"][tops.show_cmd]["json"]
+                evpn_output = tops.run_show_cmds([show_cmd])
 
             except CommandError:
                 # Checking for the condition whether to skip the test case or
@@ -75,7 +76,8 @@ class BgpEvpnTests:
             self.output += (
                 f"On device {tops.dut_name}, output of {tops.show_cmd} command is:\n{evpn_output}\n"
             )
-            bgp_evpn_neighbors = evpn_output.get("vrfs")
+            bgp_evpn_neighbors = evpn_output[0].get("result", {}).get("vrfs")
+            assert bgp_evpn_neighbors, "VRFs details are not found in the output."
 
             # Collecting peer details and forming expected and actual output dictionaries
             # with the peer state
