@@ -16,11 +16,16 @@
       report_style: modern
       criteria: {{ global_dut_filter.criteria }}
       filter: {{ global_dut_filter.filter }}
-    - name: test_
-      description:
+    - name: test_redundant_sso_card
+      description: Test case for the verification of redundant supervisor card.
       test_id: NRFU1.3
       show_cmd: null
-      expected_output: null
+      expected_output:
+        sso_protocol_details:
+          configured_protocol: sso
+          operational_protocol: sso
+          switch_over_ready: True
+      test_criteria: Redundancy SSO protocol should be configured, operational and ready for switchover.
       report_style: modern
       criteria: {{ global_dut_filter.criteria }}
       filter: {{ global_dut_filter.filter }}
