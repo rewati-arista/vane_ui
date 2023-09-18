@@ -73,11 +73,12 @@
       report_style: modern
       criteria: {{ global_dut_filter.criteria }}
       filter: {{ global_dut_filter.filter }}
-    - name: test_
-      description:
+    - name: test_port_channel_member_interface_details
+      description: Testcases to verify that port channel member interfaces should be collecting and distributing.
       test_id: NRFU2.6
-      show_cmd: null
+      show_cmd: show lacp interface all-ports
       expected_output: null
+      test_criteria: All the port channel members interfaces should be collecting and distributing.
       report_style: modern
       criteria: {{ global_dut_filter.criteria }}
       filter: {{ global_dut_filter.filter }}
