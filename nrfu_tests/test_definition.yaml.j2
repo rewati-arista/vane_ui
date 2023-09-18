@@ -136,11 +136,12 @@
       report_style: modern
       criteria: {{ global_dut_filter.criteria }}
       filter: {{ global_dut_filter.filter }}
-    - name: test_
-      description:
+    - name: test_eos_no_config_functionality
+      description: Testcases for verification of security root port "EOS no configurations" functionality.
       test_id: NRFU5.3
-      show_cmd: null
+      show_cmd: show lldp neighbors detail
       expected_output: null
+      test_criteria: Localhost should not be found in the LLDP neighbor information on device.
       report_style: modern
       criteria: {{ global_dut_filter.criteria }}
       filter: {{ global_dut_filter.filter }}
