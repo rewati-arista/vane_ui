@@ -93,8 +93,8 @@ class BgpEvpnTests:
             # Forming output message if the test result is failed
             if tops.expected_output != tops.actual_output:
                 tops.output_msg = (
-                    "\nExpected state for all BGP EVPN peers is Established but following peers are"
-                    " having different state:"
+                    "\nExpected state for not all BGP EVPN peers is Established as following peers"
+                    " are in a different state:"
                 )
                 for peer, peer_state in tops.expected_output["bgp_peers"].items():
                     actual_peer_state = (
