@@ -142,7 +142,7 @@
         - show management api http-commands
         - show management api http-commands ip access-list summary
       expected_output: null # Forming expected output in test case.
-      test_criteria: All VRFs that the API is active on should have an ACL to be configured. # Setting test case’s pass/fail criteria for reporting
+      test_criteria: ACL should be configured on all VRFs on which API is enabled. # Setting test case’s pass/fail criteria for reporting
       report_style: modern
       criteria: names # Criteria to run the test case.
       filter:

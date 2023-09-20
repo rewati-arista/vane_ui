@@ -127,7 +127,7 @@
         - show management api http-commands
         - show management api http-commands ip access-list summary
       expected_output: null
-      test_criteria: All VRFs that the API is active on should have an ACL to be configured.
+      test_criteria: ACL should be configured on all VRFs on which API is enabled.
       report_style: modern
       criteria: {{ global_dut_filter.criteria }}
       filter: {{ global_dut_filter.filter }}

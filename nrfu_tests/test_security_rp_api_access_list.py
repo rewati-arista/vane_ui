@@ -40,7 +40,7 @@ class AclsApiAccessTests:
         show_cmds = tops.show_cmds[tops.dut_name]
 
         # Forming output message if the test result is passed.
-        tops.output_msg = "All VRFs that the API is active on, an ACL is configured."
+        tops.output_msg = "ACL is configured on all VRFs which have API enabled."
 
         try:
             """
@@ -70,7 +70,7 @@ class AclsApiAccessTests:
             api_acls = output_api_acls.get("ipAclList").get("aclList")
             assert api_vrfs, "Vrfs details are not found in the output."
 
-            assert api_acls, "ACL details for APIs is not found in the output."
+            assert api_acls, "ACL details for APIs are not found in the output."
 
             # Collecting actual and expected output.
             for vrf in api_vrfs:
