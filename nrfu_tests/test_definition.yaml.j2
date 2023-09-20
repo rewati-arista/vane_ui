@@ -261,12 +261,15 @@
       report_style: modern
       criteria: {{ global_dut_filter.criteria }}
       filter: {{ global_dut_filter.filter }}
-    - name: test_
-      description:
+    - name: test_hardware_inventory_status
+      description: Test case for the verification of system hardware inventory on the device.
       test_id: NRFU6.8
-      show_cmd: null
+      {% set test_data = testcase_data["NRFU6.8"] %}
+      show_cmd: show inventory
       expected_output: null
+      test_criteria: Power supply, fan tray and other card slots should be installed on the device.
       report_style: modern
+      hardware_inventory_checks: {{ test_data.hardware_inventory_checks }}
       criteria: {{ global_dut_filter.criteria }}
       filter: {{ global_dut_filter.filter }}
     - name: test_
