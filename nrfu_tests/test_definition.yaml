@@ -145,13 +145,16 @@
       criteria: names
       filter:
         - BLFE1
-    - name: test_
-      description: null
+    - name: test_acls_api_vrfs_enabled
+      description: Test case to verify that ACL is configured for each VRF on which API is enabled.
       test_id: NRFU5.1
-      show_cmd: null
-      expected_output: null
+      show_cmds:
+        - show management api http-commands
+        - show management api http-commands ip access-list summary
+      expected_output: null # Forming expected output in test case.
+      test_criteria: ACL should be configured on all VRFs on which API is enabled. # Setting test case’s pass/fail criteria for reporting
       report_style: modern
-      criteria: names
+      criteria: names # Criteria to run the test case.
       filter:
         - BLFE1
     - name: test_
