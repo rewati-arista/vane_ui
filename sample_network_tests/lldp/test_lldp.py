@@ -238,7 +238,7 @@ class LldpLocalInfoTests:
         if tops.actual_output == tops.expected_output:
             tops.test_result = True
             tops.output_msg = (
-                f"{tops.dut_name}'s LLDP System Name is correct: " f"{tops.expected_output}"
+                f"{tops.dut_name}'s LLDP System Name is correct: {tops.expected_output}"
             )
         else:
             tops.test_result = False

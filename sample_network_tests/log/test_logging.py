@@ -89,7 +89,7 @@ class LoggingTests:
                 else:
                     actual_output = False
                     tops.output_msg += (
-                        f"{tops.dut_name} system logs does NOT contains message: " f"{sys_msg}. "
+                        f"{tops.dut_name} system logs does NOT contains message: {sys_msg}. "
                     )
 
             except (AttributeError, LookupError, EapiError) as exp:
