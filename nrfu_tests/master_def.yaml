@@ -3,5 +3,13 @@ global_dut_filter: # This stanza is optional. If it is not provided by users the
   filter:
     - BLFE1
 testcase_data:
+  NRFU2.1:
+    descriptions_to_ignore: # Interfaces to ignore for the following descriptions
+      - unused
+      - available
+      - reserved
+      - test
+      - future
+    fail_on_no_description: True # The Test case will fail if the description is not found, if the trigger is set to true, otherwise test case will be passed for interfaces with a description not found.
   NRFU4.1:
     skip_on_command_unavailable: False # Skip the test case if the command is unavailable when set to True, otherwise check with assert messaging
