@@ -35,6 +35,8 @@ pytest-json = "^0.4.0"
 pytest-xdist = "^3.2.1"
 pytest-mock = "^3.10.0"
 prompt-toolkit = "^3.0.39"
+flask = "^2.3.3"
+flask-cors = "^4.0.0"
 
 [tool.poetry.dev-dependencies]
 pylint = "2.17.0"
