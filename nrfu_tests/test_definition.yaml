@@ -48,16 +48,16 @@
         - show interfaces description
         - show vlan
       expected_output: null # Forming expected output dynamically in the test file.
-      test_criteria: Except for the interfaces with description to ignore, all other interfaces' status should be up and should have description. # Setting test case’s pass/fail criteria for reporting
+      test_criteria: Except for the interfaces with description to ignore, all other interfaces' status should be up and should have a description. # Setting test case’s pass/fail criteria for reporting
       report_style: modern # Setting report_style as modern If the report type is set to modern, then it will update steps, assumptions, and external systems in the docx report
       input:
-        descriptions_to_ignore: # Interfaces to ignore for the following descriptions
+        descriptions_to_ignore: # Interfaces to ignore the following descriptions
           - unused
           - available
           - reserved
           - test
           - future
-        fail_on_no_description: True # The Test case will fail if the description is not found, if the trigger is set to true, otherwise test case will be passed for interfaces with description not found.
+        fail_on_no_description: True # If this field is set to True, the Test case will fail when the description is not found. Otherwise test case will pass even when interfaces do not have a description.
       criteria: names
       filter:
         - BLFE1

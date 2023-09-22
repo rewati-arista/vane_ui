@@ -59,13 +59,13 @@ class InterfacesDescriptionStatusTests:
         # Forming output message if the test result is passed
         tops.output_msg = (
             "Except for the interfaces with description to ignore, all other interfaces' status is"
-            " up and having description."
+            " up and have a description."
         )
 
         try:
             """
             TS: Running `show interfaces description` command on the device and verifying the
-            interfaces having description and status is up.
+            interfaces have a description and their status is up.
             """
             interface_output = dut["output"][tops.show_cmds[tops.dut_name][0]]["json"]
             logging.info(
@@ -109,15 +109,19 @@ class InterfacesDescriptionStatusTests:
                 if interface.lstrip("Vlan") in dynamic_vlans:
                     continue
 
-                # Flag to check the description is to ignore or not
+                # Flag to check if the description is to be ignored or not
                 description_to_ignore_flag = any(
                     description_to_ignore in description.lower()
                     for description_to_ignore in descriptions_to_ignore
                 )
 
-                # Checking for the interfaces with descriptions is required or not and forming
+                # Checking for the interfaces with description requirements and forming
                 # expected and actual output accordingly.
+                # Checking if the description needs to be ignored or not, with test case fail
+                # condition
                 if (description or fail_on_no_description) and not description_to_ignore_flag:
+                    # Forming actual output based on whether the test case needs to fail when
+                    # description is not found
                     if not description:
                         tops.expected_output["interfaces"]["descriptions_found"].update(
                             {interface: {"description_found": True}}
@@ -125,6 +129,7 @@ class InterfacesDescriptionStatusTests:
                         tops.actual_output["interfaces"]["descriptions_found"].update(
                             {interface: {"description_found": False}}
                         )
+                    # Getting status for the interfaces whose description is found
                     else:
                         tops.expected_output["interfaces"]["descriptions_found"].update(
                             {interface: {"description": description, "status": "up"}}
@@ -140,8 +145,8 @@ class InterfacesDescriptionStatusTests:
             if tops.expected_output != tops.actual_output:
                 tops.output_msg = ""
 
-                # Checking if the test case needs to fail or not, based on the description required
-                # or not and forming output messages accordingly.
+                # Checking if the test case needs to fail or not, based on the description
+                # requirement and forming output messages accordingly.
                 for interface, interface_details in tops.expected_output["interfaces"][
                     "descriptions_found"
                 ].items():
@@ -172,7 +177,7 @@ class InterfacesDescriptionStatusTests:
                 if description_not_found:
                     description_not_found = ", ".join(description_not_found)
                     tops.output_msg += (
-                        "\nFor the following interfaces expected a description, however, it is"
+                        "\nFor the following interfaces description was expected, however, it is"
                         f" not found:\n{description_not_found}\n"
                     )
 
