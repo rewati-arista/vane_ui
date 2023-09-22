@@ -469,7 +469,6 @@ def initialization():
         html_template = ""
         with open(report_html_path, 'w') as outfile:
             outfile.write(html_template)
-    print("END OF INITIALIZATION")
 
 # check the workspace folder, templates folder(within report.html), workspace.json
 initialization()
