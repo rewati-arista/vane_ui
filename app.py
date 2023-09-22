@@ -116,7 +116,7 @@ def delete_workspace():
         return jsonify("Workspace removed sucessfully!")
     except OSError as o:
         # ths happens when user click the refresh button without saving the workspace
-        print(f"Error: {o.strerror}: saved before")
+        # print(f"Error: {o.strerror}: saved before")
         return jsonify("No Workspace saved")
 
 
@@ -217,13 +217,19 @@ def vane():
         #  the directory of the script being run
         root_dir = os.path.dirname(os.path.abspath(__file__))
 
-        old_html_path = root_dir + "/reports/report.html"
         old_json_path = root_dir + "/reports/report.json"
 
-        shutil.copy2(old_html_path, workspace_path + "/report.html")
         shutil.copy2(old_json_path, workspace_path + "/report.json")
 
-        # update report.html in templates
+        # find the latest report.html
+        doc_dir = root_dir + "/reports/*.html"
+        list_of_files = glob.glob(doc_dir)
+        latest_file = max(list_of_files, key=os.path.getctime)
+        print("Latest Html File: ", latest_file)
+        old_html_path = latest_file
+        shutil.copy2(old_html_path, workspace_path + "/report.html")
+
+         # update report.html in templates
         temp_html_path = root_dir + "/templates/report.html"
         os.remove(temp_html_path)
         shutil.copy2(old_html_path, temp_html_path)
